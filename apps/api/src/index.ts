@@ -1,6 +1,18 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { env } from "./config/env";
+import { logger } from "hono/logger";
+import { showRoutes } from "hono/dev";
+import { env, validateEnv } from "./config/env";
+import { auth } from "./lib/auth";
+import {
+  authRateLimiter,
+  globalRateLimiter,
+  sessionRateLimiter,
+} from "./middleware/rate-limit";
+import { authMiddleware } from "./middleware/auth";
+import { authRouter } from "./routes/auth";
+
+validateEnv();
 
 const app = new Hono();
 
@@ -19,9 +31,28 @@ app.use(
   }),
 );
 
-app.get("/", (c) => c.json({ status: "ok" }));
+app.use("*", logger());
+app.use("*", globalRateLimiter); // (200 req / 15min total)
+
+app.all("/api/auth/*", (c) => {
+  return auth.handler(c.req.raw);
+});
+
+app.use("/api/auth/get-session", sessionRateLimiter);
+app.use("/api/auth/email-otp/*", authRateLimiter);
+app.use("/api/auth/sign-in/*", authRateLimiter);
+app.use("/api/user", authMiddleware);
+
+// custom routes
+app.route("/api/user", authRouter);
+
+app.get("/", (c) => {
+  return c.text("Hello Hono!");
+});
+
+showRoutes(app);
 
 export default {
-  port: 9000,
+  port: env.PORT || 9000,
   fetch: app.fetch,
 };
