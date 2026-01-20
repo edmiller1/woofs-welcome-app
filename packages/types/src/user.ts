@@ -1,4 +1,4 @@
-import { UserNotificationPreferences } from "./notification";
+import type { UserNotificationPreferences } from "./notification";
 
 export interface User {
   id: string;
@@ -14,4 +14,16 @@ export interface User {
   updatedAt: Date;
   deletedAt: Date;
   notificationPreferences: UserNotificationPreferences;
+}
+
+export interface BAUser {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image?: string;
+  isAdmin: boolean;
+  activeContext: "business" | "personal";
+  createdAt: string;
+  updatedAt: string;
 }

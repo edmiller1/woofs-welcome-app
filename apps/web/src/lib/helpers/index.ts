@@ -1,0 +1,244 @@
+import type { Hours, DayOfWeekHours, DayOfWeek } from "@woofs/types";
+
+export const getNameFromSlug = (slug: string) => {
+  return slug.split("-").join(" ");
+};
+
+export const orderHoursByDay = (hours: Hours) => {
+  const dayOrder = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ] as const;
+
+  return dayOrder
+    .map((day) => ({
+      day,
+      hours: hours[day] || null,
+    }))
+    .filter((day) => day.hours !== null);
+};
+
+export const getCurrentDayStatus = (hours: DayOfWeekHours): string | null => {
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+  }) as DayOfWeek;
+  const todayHours = hours[today];
+
+  if (!todayHours) {
+    return "Closed today";
+  }
+
+  if (todayHours.toLowerCase() === "closed") {
+    return "Closed today";
+  }
+
+  // Parse the hours (handles formats like "8am - 9pm", "9am - 8:30pm", "8:30am - 5:30pm")
+  const timeMatch = todayHours.match(
+    /(\d+(?::\d+)?)\s*([ap]m)\s*-\s*(\d+(?::\d+)?)\s*([ap]m)/i,
+  );
+
+  if (!timeMatch) {
+    return `Open today: ${todayHours}`;
+  }
+
+  const [, openTime, openPeriod, closeTime, closePeriod] = timeMatch;
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // Helper function to convert time string to 24-hour format
+  const convertTo24Hour = (
+    timeStr: string,
+    period: string,
+  ): { hour: number; minute: number } => {
+    const [hourStr, minuteStr = "0"] = timeStr.split(":");
+    let hour = parseInt(hourStr);
+    const minute = parseInt(minuteStr);
+
+    if (period.toLowerCase() === "pm" && hour !== 12) {
+      hour += 12;
+    } else if (period.toLowerCase() === "am" && hour === 12) {
+      hour = 0;
+    }
+
+    return { hour, minute };
+  };
+
+  const openTime24 = convertTo24Hour(openTime, openPeriod);
+  const closeTime24 = convertTo24Hour(closeTime, closePeriod);
+
+  const currentTimeInMinutes = currentHour * 60 + currentMinute;
+  const openTimeInMinutes = openTime24.hour * 60 + openTime24.minute;
+  const closeTimeInMinutes = closeTime24.hour * 60 + closeTime24.minute;
+
+  if (currentTimeInMinutes < openTimeInMinutes) {
+    return `Opens at ${openTime}${openPeriod.toLowerCase()}`;
+  } else if (currentTimeInMinutes >= closeTimeInMinutes) {
+    return "Closed now";
+  } else {
+    return `Open till ${closeTime}${closePeriod.toLowerCase()}`;
+  }
+};
+
+export const calculateRatingStats = (reviews: number[]) => {
+  const totalReviews = reviews.length;
+  const ratingCounts: { [key: number]: number } = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  };
+
+  reviews.forEach((review) => {
+    ratingCounts[review]++;
+  });
+
+  const averageRating = totalReviews
+    ? reviews.reduce((sum, review) => sum + review) / totalReviews
+    : 0;
+
+  return {
+    averageRating: Math.round(averageRating * 10) / 10,
+    totalReviews,
+    distribution: Object.entries(ratingCounts)
+      .map(([stars, count]) => ({
+        stars: parseInt(stars),
+        count,
+        percentage:
+          totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0,
+      }))
+      .reverse(),
+  };
+};
+
+export function classNames(...classes: any) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export const generateUID = (): string => {
+  let firstPart: number | string = (Math.random() * 46656) | 0;
+  let secondPart: number | string = (Math.random() * 46656) | 0;
+  firstPart = ("000" + firstPart.toString(36)).slice(-3);
+  secondPart = ("000" + secondPart.toString(36)).slice(-3);
+  return firstPart + secondPart;
+};
+
+export function getUserInitials(name: string): string {
+  if (!name) return "?";
+
+  // If it's an email, use first letter
+  if (name.includes("@")) {
+    return name.charAt(0).toUpperCase();
+  }
+
+  // Split name and get initials
+  const parts = name.trim().split(/\s+/);
+
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase();
+  }
+
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number,
+): T & { cancel: () => void; flush: () => void } {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  let lastArgs: Parameters<T> | null = null;
+  let lastThis: any = null;
+
+  const debounced = function (this: any, ...args: Parameters<T>) {
+    // Store the latest arguments and context
+    lastArgs = args;
+    lastThis = this;
+
+    // Clear existing timeout
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    // Set new timeout
+    timeoutId = setTimeout(() => {
+      if (lastArgs) {
+        func.apply(lastThis, lastArgs);
+        lastArgs = null;
+        lastThis = null;
+      }
+      timeoutId = null;
+    }, delay);
+  } as T;
+
+  // Add cancel method
+  (debounced as any).cancel = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+    lastArgs = null;
+    lastThis = null;
+  };
+
+  // Add flush method - immediately execute pending invocation
+  (debounced as any).flush = () => {
+    if (timeoutId && lastArgs) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+      func.apply(lastThis, lastArgs);
+      lastArgs = null;
+      lastThis = null;
+    }
+  };
+
+  return debounced as T & { cancel: () => void; flush: () => void };
+}
+
+export const boundsToParams = (
+  bounds: mapboxgl.LngLatBounds | null | undefined,
+) => {
+  if (!bounds) return null;
+
+  const ne = bounds.getNorthEast();
+  const sw = bounds.getSouthWest();
+
+  return {
+    north: ne.lat,
+    south: sw.lat,
+    east: ne.lng,
+    west: sw.lng,
+    // Or calculate center and radius from bounds
+    centerLat: (ne.lat + sw.lat) / 2,
+    centerLng: (ne.lng + sw.lng) / 2,
+    // Calculate approximate radius in km
+    radius: Math.max(
+      haversineDistance(ne.lat, ne.lng, sw.lat, sw.lng) / 2,
+      5, // minimum 5km
+    ),
+  };
+};
+
+export const haversineDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number => {
+  const R = 6371; // Earth's radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
