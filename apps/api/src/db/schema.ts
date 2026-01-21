@@ -194,10 +194,9 @@ export const Business = pgTable(
     website: text("website"),
     description: text("description"),
 
-    logoImageId: uuid("logo_image_id").references(
-      (): AnyPgColumn => Image.id,
-      { onDelete: "set null" },
-    ),
+    logoImageId: uuid("logo_image_id").references((): AnyPgColumn => Image.id, {
+      onDelete: "set null",
+    }),
 
     // Verification & subscription
     verified: boolean("verified").default(false).notNull(),
@@ -273,7 +272,6 @@ export const Location = pgTable(
     // Display properties
     image: text("image"),
     isPopular: boolean("is_popular").default(false),
-    displayOrder: integer("display_order").default(0),
 
     // SEO
     metaTitle: text("meta_title"),
