@@ -10,7 +10,8 @@ import {
   sessionRateLimiter,
 } from "./middleware/rate-limit";
 import { authMiddleware } from "./middleware/auth";
-import { authRouter } from "./routes/auth";
+import { authRouter } from "./routes/auth/auth";
+import { imageRouter } from "./routes/image";
 
 validateEnv();
 
@@ -45,6 +46,7 @@ app.use("/api/user", authMiddleware);
 
 // custom routes
 app.route("/api/user", authRouter);
+app.route("/api/image", imageRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

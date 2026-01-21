@@ -46,6 +46,16 @@ const envSchema = z.object({
   DISCORD_CLAIM_WEBHOOK_URL: z
     .string()
     .min(1, "DISCORD_CLAIM_WEBHOOK_URL is required"),
+
+  // Cloudflare
+  CF_ACCOUNT_ID: z.string().min(1, "R2_ACCOUNT_ID is required"),
+  CF_TOKEN: z.string().min(1, "R2_TOKEN is required"),
+  CF_ACCESS_KEY_ID: z.string().min(1, "R2_ACCESS_KEY_ID is required"),
+  CF_SECRET_ACCESS_KEY: z.string().min(1, "R2_SECRET_ACCESS_KEY is required"),
+  CF_ENDPOINT: z.url().min(1, "R2_ENDPOINT is required"),
+  CF_BUCKET_NAME: z.string().min(1, "R2_BUCKET_NAME is required"),
+  CF_IMAGES_API_TOKEN: z.string().min(1, "R2_IMAGES_API_TOKEN is required"),
+  CF_IMAGES_DELIVERY_URL: z.url().min(1, "R2_IMAGES_DELIVERY_URL is required"),
 });
 
 export function validateEnv() {

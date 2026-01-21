@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware } from "../../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
-import { welcomeUserSchema, type WelcomeUserInput } from "./schemas";
-import { AuthService } from "../services/auth.service";
-import { UnauthorizedError } from "../lib/errors";
+import { AuthService } from "../../services/auth.service";
+import { UnauthorizedError } from "../../lib/errors";
+import { welcomeUserSchema } from "./schemas";
 
 export const authRouter = new Hono();
 
@@ -17,6 +17,7 @@ authRouter.post(
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
     }
+
     const { name, image } = c.req.valid("form");
 
     const result = await AuthService.welcomeUser(auth.id, name, image);

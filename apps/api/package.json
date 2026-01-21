@@ -5,7 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "build": "echo 'bun build handled at runtime'"
+    "build": "echo 'bun build handled at runtime'",
+    "cf:login": "wrangler login",
+    "r2:create": "wrangler r2 bucket create woofs-welcome-images",
+    "r2:list": "wrangler r2 bucket list",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -16,12 +21,15 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.971.0",
+    "@aws-sdk/s3-request-presigner": "^3.971.0",
     "@hono/zod-validator": "^0.7.6",
     "@neondatabase/serverless": "^1.0.2",
     "@react-email/components": "^1.0.4",
     "@sentry/bun": "^10.34.0",
     "@types/react": "^19.2.8",
     "@upstash/redis": "^1.36.1",
+    "@woofs/image-config": "workspace:*",
     "@woofs/types": "workspace:*",
     "better-auth": "^1.4.15",
     "date-fns": "^4.1.0",
@@ -30,11 +38,13 @@
     "hono": "^4.11.4",
     "hono-rate-limiter": "^0.5.3",
     "isomorphic-dompurify": "^2.35.0",
+    "nanoid": "^5.1.6",
     "postgres": "^3.4.8",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-email": "^5.2.5",
     "resend": "^6.7.0",
+    "wrangler": "^4.59.2",
     "zod": "^4.3.5"
   }
 }

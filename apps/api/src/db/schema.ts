@@ -64,6 +64,21 @@ export const notificationContextEnum = pgEnum("notification_context", [
   "business",
 ]);
 
+export const imageTypeEnum = pgEnum("image_type", [
+  "place_hero",
+  "place_gallery",
+  "review_photo",
+  "user_avatar",
+  "business_logo",
+]);
+
+export const imageSourceEnum = pgEnum("image_source", [
+  "user_upload",
+  "business_upload",
+  "admin_upload",
+  "import",
+]);
+
 // ============================================================================
 // TABLES
 // ============================================================================
@@ -77,8 +92,10 @@ export const user = pgTable(
     emailVerified: boolean("email_verified")
       .$defaultFn(() => false)
       .notNull(),
-    image: text("image"),
-    imagePublicId: text("image_public_id"),
+    profileImageId: uuid("profile_image_id").references(
+      (): AnyPgColumn => Image.id,
+      { onDelete: "set null" },
+    ),
     provider: varchar("provider", { length: 255 }),
     isAdmin: boolean("is_admin").default(false),
     activeContext: text("active_context").default("personal"), // 'personal' | 'business'
@@ -114,6 +131,7 @@ export const user = pgTable(
   },
   (table) => ({
     emailIdx: uniqueIndex("email_idx").on(table.email),
+    profileImageIdx: index("user_profile_image_idx").on(table.profileImageId),
   }),
 );
 
@@ -176,9 +194,10 @@ export const Business = pgTable(
     website: text("website"),
     description: text("description"),
 
-    // Branding
-    logoUrl: text("logo_url"),
-    logoPublicId: text("logo_public_id"),
+    logoImageId: uuid("logo_image_id").references(
+      (): AnyPgColumn => Image.id,
+      { onDelete: "set null" },
+    ),
 
     // Verification & subscription
     verified: boolean("verified").default(false).notNull(),
@@ -219,6 +238,7 @@ export const Business = pgTable(
   (table) => ({
     ownerIdx: index("business_owner_idx").on(table.ownerId),
     emailIdx: index("business_email_idx").on(table.email),
+    logoImageIdx: index("business_logo_image_idx").on(table.logoImageId),
   }),
 );
 
@@ -371,33 +391,98 @@ export const Place = pgTable(
   }),
 );
 
-export const PlaceImage = pgTable(
-  "place_image",
+export const Image = pgTable(
+  "image",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    placeId: uuid("place_id")
-      .notNull()
-      .references(() => Place.id, { onDelete: "cascade" }),
-    publicId: text("public_id").notNull(),
-    url: text("url").notNull(),
-    caption: text("caption"),
+
+    // Cloudflare Images ID (this is what we get back from CF after upload)
+    cfImageId: varchar("cf_image_id", { length: 255 }).notNull().unique(),
+
+    // Original file info
+    filename: varchar("filename", { length: 255 }).notNull(),
+    mimeType: varchar("mime_type", { length: 50 }).notNull(),
+    fileSize: integer("file_size").notNull(), // bytes
+
+    // Dimensions (optional, can extract from CF Images API)
+    width: integer("width"),
+    height: integer("height"),
+
+    // What type of image is this?
+    imageType: imageTypeEnum("image_type").notNull(),
+
+    // Who uploaded it?
+    uploadedBy: text("uploaded_by").references(() => user.id, {
+      onDelete: "set null",
+    }),
+    uploadedByBusiness: uuid("uploaded_by_business").references(
+      () => Business.id,
+      { onDelete: "set null" },
+    ),
+
+    // Source tracking
+    source: imageSourceEnum("source").notNull().default("user_upload"),
+
+    // Alt text for accessibility
     altText: text("alt_text"),
-    isPrimary: boolean("is_primary").default(false),
-    source: text("source").notNull(),
-    uploadedBy: uuid("uploaded_by").references(() => Business.id),
-    isApproved: boolean("is_approved").default(true),
-    displayOrder: integer("display_order").default(0),
+
+    // Optional metadata (JSON)
+    metadata: jsonb("metadata").$type<Record<string, any>>(),
+
+    // Moderation (for user-uploaded content)
+    isApproved: boolean("is_approved").default(true).notNull(),
+    moderatedBy: text("moderated_by").references(() => user.id),
+    moderatedAt: timestamp("moderated_at"),
+
+    // Timestamps
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
+    cfImageIdIdx: index("image_cf_image_id_idx").on(table.cfImageId),
+    uploadedByIdx: index("image_uploaded_by_idx").on(table.uploadedBy),
+    imageTypeIdx: index("image_image_type_idx").on(table.imageType),
+    approvalIdx: index("image_approval_idx").on(
+      table.isApproved,
+      table.imageType,
+    ),
+  }),
+);
+
+export const PlaceImage = pgTable(
+  "place_image",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    placeId: uuid("place_id")
+      .notNull()
+      .references(() => Place.id, { onDelete: "cascade" }),
+    imageId: uuid("image_id")
+      .notNull()
+      .references(() => Image.id, { onDelete: "cascade" }),
+
+    // Is this the featured/hero image for the place?
+    isPrimary: boolean("is_primary").default(false).notNull(),
+
+    // Display order for gallery
+    displayOrder: integer("display_order").default(0).notNull(),
+
+    // Optional caption
+    caption: text("caption"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    placeIdIdx: index("place_image_place_id_idx").on(table.placeId),
+    imageIdIdx: index("place_image_image_id_idx").on(table.imageId),
+    primaryIdx: index("place_image_primary_idx").on(
+      table.placeId,
+      table.isPrimary,
+    ),
     displayOrderIdx: index("place_image_display_order_idx").on(
       table.placeId,
       table.displayOrder,
-    ),
-    isPrimaryIdx: index("place_image_is_primary_idx").on(
-      table.placeId,
-      table.isPrimary,
     ),
   }),
 );
@@ -477,17 +562,27 @@ export const ReviewImage = pgTable(
   "review_image",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+
     reviewId: uuid("review_id")
       .notNull()
       .references(() => Review.id, { onDelete: "cascade" }),
-    publicId: text("public_id").notNull(),
-    url: text("url").notNull(),
-    altText: text("alt_text"),
+    imageId: uuid("image_id")
+      .notNull()
+      .references(() => Image.id, { onDelete: "cascade" }),
+
+    // Display order for multiple images
+    displayOrder: integer("display_order").default(0).notNull(),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
-    reviewIdIdx: index("review_image_place_idx").on(table.reviewId),
+    reviewIdIdx: index("review_image_review_id_idx").on(table.reviewId),
+    imageIdIdx: index("review_image_image_id_idx").on(table.imageId),
+    displayOrderIdx: index("review_image_display_order_idx").on(
+      table.reviewId,
+      table.displayOrder,
+    ),
   }),
 );
 
@@ -730,6 +825,11 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.activeBusinessId],
     references: [Business.id],
   }),
+  profileImage: one(Image, {
+    fields: [user.profileImageId],
+    references: [Image.id],
+  }),
+  uploadedImages: many(Image),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -741,7 +841,6 @@ export const sessionRelations = relations(session, ({ one }) => ({
 
 export const businessRelations = relations(Business, ({ many, one }) => ({
   owner: one(user, {
-    // ADDED
     fields: [Business.ownerId],
     references: [user.id],
   }),
@@ -749,6 +848,11 @@ export const businessRelations = relations(Business, ({ many, one }) => ({
   collections: many(Collection),
   reviews: many(Review),
   placeClaims: many(Claim),
+  logoImage: one(Image, {
+    fields: [Business.logoImageId],
+    references: [Image.id],
+  }),
+  uploadedImages: many(Image),
 }));
 
 export const businessPlaceRelations = relations(BusinessPlace, ({ one }) => ({
@@ -799,14 +903,27 @@ export const placeRelations = relations(Place, ({ one, many }) => ({
   }),
 }));
 
+export const imageRelations = relations(Image, ({ one, many }) => ({
+  uploadedBy: one(user, {
+    fields: [Image.uploadedBy],
+    references: [user.id],
+  }),
+  uploadedByBusiness: one(Business, {
+    fields: [Image.uploadedByBusiness],
+    references: [Business.id],
+  }),
+  placeImages: many(PlaceImage),
+  reviewImages: many(ReviewImage),
+}));
+
 export const placeImageRelations = relations(PlaceImage, ({ one }) => ({
   place: one(Place, {
     fields: [PlaceImage.placeId],
     references: [Place.id],
   }),
-  uploadedByUser: one(Business, {
-    fields: [PlaceImage.uploadedBy],
-    references: [Business.id],
+  image: one(Image, {
+    fields: [PlaceImage.imageId],
+    references: [Image.id],
   }),
 }));
 
@@ -849,6 +966,10 @@ export const reviewImageRelations = relations(ReviewImage, ({ one }) => ({
   review: one(Review, {
     fields: [ReviewImage.reviewId],
     references: [Review.id],
+  }),
+  image: one(Image, {
+    fields: [ReviewImage.imageId],
+    references: [Image.id],
   }),
 }));
 

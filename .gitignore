@@ -22,6 +22,8 @@ out
 .env.production.local
 .env*.local
 
+apps/images/.dev.vars
+
 # IDE
 .idea
 .vscode

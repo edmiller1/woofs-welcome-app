@@ -1,0 +1,19 @@
+name = "woofs-images"
+main = "src/index.ts"
+compatibility_date = "2024-01-20"
+
+# R2 bucket binding
+[[r2_buckets]]
+binding = "IMAGES_BUCKET"
+bucket_name = "woofs-welcome-images"
+
+routes = [
+  { pattern = "images.woofswelcome.app/*", custom_domain = true }
+]
+
+# Environment variables
+[vars]
+ALLOWED_ORIGINS = "https://woofswelcome.app,https://www.woofswelcome.app,http://localhost:5173"
+CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
+CF_ACCOUNT_ID = "08e981cecb92746f1f2cf59ac9969f40"
+CF_ACCOUNT_HASH = "WGsCUST9DldetrA1NTPARQ"
