@@ -18,6 +18,7 @@
   } from "./ui/dropdown-menu";
   import type { BAUser } from "@woofs/types";
   import { getUserInitials } from "$lib/helpers";
+  import { buildImageUrl } from "@woofs/image-config";
 
   interface Props {
     user: BAUser;
@@ -25,13 +26,19 @@
   }
 
   const { user, className }: Props = $props();
+
+  const userImage = $derived(
+    user && user.image
+      ? user.image
+      : buildImageUrl(user?.profileImageId ?? "", "thumbnail"),
+  );
 </script>
 
 <DropdownMenu>
   <DropdownMenuTrigger class={cn("cursor-pointer", className)}>
     <Avatar class="ml-auto">
       <AvatarImage
-        src={user.image}
+        src={userImage}
         alt={user.name}
         referrerpolicy="no-referrer"
         class="object-cover object-center"

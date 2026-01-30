@@ -22,6 +22,20 @@
       "when": 1768967794932,
       "tag": "0002_bumpy_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769072286331,
+      "tag": "0003_bent_logan",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1769290630173,
+      "tag": "0004_deep_amazoness",
+      "breakpoints": true
     }
   ]
 }

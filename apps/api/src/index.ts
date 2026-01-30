@@ -12,6 +12,8 @@ import {
 import { authMiddleware } from "./middleware/auth";
 import { authRouter } from "./routes/auth/auth";
 import { imageRouter } from "./routes/image";
+import { notificationRouter } from "./routes/notification";
+import { locationRouter } from "./routes/location";
 
 validateEnv();
 
@@ -47,6 +49,8 @@ app.use("/api/user", authMiddleware);
 // custom routes
 app.route("/api/user", authRouter);
 app.route("/api/image", imageRouter);
+app.route("/api/notification", notificationRouter);
+app.route("/api/location", locationRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

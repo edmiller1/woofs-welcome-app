@@ -13,7 +13,7 @@ interface CloudflareUploadResult {
   variants: string[];
 }
 
-interface UploadResult {
+export interface UploadResult {
   id: string;
   cfImageId: string;
   filename: string;
@@ -60,6 +60,7 @@ export class ImageUploadService {
       const [dbImage] = await db
         .insert(Image)
         .values({
+          id: cfResult.id,
           cfImageId: cfResult.id,
           filename: file.name,
           mimeType: file.type,
@@ -221,6 +222,82 @@ export class ImageUploadService {
     }
 
     return updated;
+  }
+
+  /**
+   * Upload image from external URL to Cloudflare Images AND save to database
+   * Useful for importing images from Google Places, etc.
+   */
+  async uploadImageFromUrl(
+    url: string,
+    options: UploadOptions & { filename?: string },
+  ): Promise<UploadResult> {
+    try {
+      // Fetch the image from the URL
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new BadRequestError(`Failed to fetch image from URL: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type") || "image/jpeg";
+      const blob = await response.blob();
+
+      // Generate filename if not provided
+      const filename = options.filename || `external-${Date.now()}.jpg`;
+
+      // Create a File object from the blob
+      const file = new File([blob], filename, { type: contentType });
+
+      // Use existing upload method
+      return this.uploadImage(file, options);
+    } catch (error) {
+      if (error instanceof BadRequestError || error instanceof InternalServerError) {
+        throw error;
+      }
+      console.error("Image upload from URL error:", error);
+      throw new InternalServerError("Failed to upload image from URL");
+    }
+  }
+
+  /**
+   * Upload multiple images from URLs in batches
+   */
+  async uploadMultipleImagesFromUrls(
+    urls: string[],
+    options: UploadOptions,
+  ): Promise<UploadResult[]> {
+    const BATCH_SIZE = 3; // Smaller batch for URL fetching
+    const results: UploadResult[] = [];
+
+    for (let i = 0; i < urls.length; i += BATCH_SIZE) {
+      const batch = urls.slice(i, i + BATCH_SIZE);
+
+      const batchResults = await Promise.allSettled(
+        batch.map((url, index) =>
+          this.uploadImageFromUrl(url, {
+            ...options,
+            filename: `place-image-${i + index}-${Date.now()}.jpg`,
+          }),
+        ),
+      );
+
+      // Only add successful uploads
+      for (const result of batchResults) {
+        if (result.status === "fulfilled") {
+          results.push(result.value);
+        } else {
+          console.error("Failed to upload image:", result.reason);
+        }
+      }
+
+      // Add delay between batches
+      if (i + BATCH_SIZE < urls.length) {
+        await this.delay(200);
+      }
+    }
+
+    return results;
   }
 
   // ============================================================================

@@ -57,3 +57,29 @@ export const authMiddleware = async (c: Context, next: Next) => {
     return c.json({ error: "Unauthorized - Server error" }, 401);
   }
 };
+
+export const optionalAuthMiddleware = async (c: Context, next: Next) => {
+  const authHeader = c.req.header("Authorization");
+  const token = authHeader?.split(" ")[1] || "";
+
+  if (!token) {
+    return next();
+  }
+
+  const userSession = await db.query.session.findFirst({
+    where: eq(session.token, token),
+    with: {
+      user: true,
+    },
+  });
+
+  if (!userSession) {
+    c.set("user", null);
+    c.set("session", null);
+    return next();
+  }
+
+  c.set("user", userSession.user);
+  c.set("session", userSession);
+  return next();
+};

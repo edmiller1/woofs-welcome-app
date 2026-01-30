@@ -39,3 +39,21 @@ export const getUserProvider = async (
 
   return userRecord.provider;
 };
+
+export const getUserProfileImageId = async (userId: string) => {
+  const userRecord = await db.query.user.findFirst({
+    where: eq(user.id, userId),
+    with: {
+      profileImage: true,
+    },
+  });
+
+  if (!userRecord) {
+    return null;
+  }
+
+  return {
+    profileImageId: userRecord.profileImageId,
+    altText: userRecord.profileImage?.altText,
+  };
+};

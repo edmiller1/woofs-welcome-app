@@ -17,6 +17,8 @@ export interface Notification {
 export interface UserNotificationPreferences {
   email: {
     reviewReplies: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     reviewLikes: boolean;
     newReviewsOnFavourites: boolean;
     reportStatus: boolean;
@@ -26,9 +28,10 @@ export interface UserNotificationPreferences {
   };
   push: {
     reviewReplies: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     reviewLikes: boolean;
     newReviewsOnFavourites: boolean;
-    reportStatus: boolean;
     nearbyPlaces: boolean;
   };
 }
@@ -37,6 +40,8 @@ export interface BusinessNotificationPreferences {
   email: {
     reviewReplies: boolean;
     reviewLikes: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     newReviewsOnPlaces: boolean;
     placeUpdates: boolean;
     claimStatus: boolean;
@@ -47,9 +52,37 @@ export interface BusinessNotificationPreferences {
   push: {
     reviewReplies: boolean;
     reviewLikes: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     newReviewsOnPlaces: boolean;
     reportStatus: boolean;
     nearbyPlaces: boolean;
     claimStatus: boolean;
   };
+}
+
+export interface UserNotificationPreferencesInput {
+  email?:
+    | {
+        reviewReplies?: boolean | undefined;
+        reviewLikes?: boolean | undefined;
+        replyToYourReply?: boolean | undefined;
+        reviewThreadActivity?: boolean | undefined;
+        newReviewsOnFavourites?: boolean | undefined;
+        reportStatus?: boolean | undefined;
+        marketing?: boolean | undefined;
+        newsletter?: boolean | undefined;
+        nearbyPlaces?: boolean | undefined;
+      }
+    | undefined;
+  push?:
+    | {
+        reviewReplies?: boolean | undefined;
+        reviewLikes?: boolean | undefined;
+        replyToYourReply?: boolean | undefined;
+        reviewThreadActivity?: boolean | undefined;
+        newReviewsOnFavourites?: boolean | undefined;
+        nearbyPlaces?: boolean | undefined;
+      }
+    | undefined;
 }

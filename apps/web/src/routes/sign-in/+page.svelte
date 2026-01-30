@@ -3,7 +3,6 @@
   import fluffs from "$lib/assets/fluffs.jpg";
   import { Dog } from "@lucide/svelte";
   import SignInForm from "./components/sign-in-form.svelte";
-  import { buttonVariants } from "$lib/components/ui/button";
 
   const redirectTo = $derived(page.url.searchParams.get("redirect") || "/");
 </script>

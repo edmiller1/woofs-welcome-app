@@ -57,6 +57,8 @@ export const notificationTypeEnum = pgEnum("notification_type", [
   "review_like",
   "new_review_on_favourite",
   "place_update",
+  "reply_to_reply",
+  "review_author_reply",
 ]);
 
 export const notificationContextEnum = pgEnum("notification_context", [
@@ -92,6 +94,7 @@ export const user = pgTable(
     emailVerified: boolean("email_verified")
       .$defaultFn(() => false)
       .notNull(),
+    image: text("image"),
     profileImageId: uuid("profile_image_id").references(
       (): AnyPgColumn => Image.id,
       { onDelete: "set null" },
@@ -114,6 +117,8 @@ export const user = pgTable(
         email: {
           reviewReplies: true,
           reviewLikes: true,
+          replyToYourReply: true,
+          reviewThreadActivity: true,
           newReviewsOnFavourites: true,
           marketing: false,
           newsletter: false,
@@ -123,8 +128,11 @@ export const user = pgTable(
         push: {
           reviewReplies: true,
           reviewLikes: true,
+          replyToYourReply: true,
+          reviewThreadActivity: true,
           newReviewsOnFavourites: true,
           nearbyPlaces: false,
+          replyToReply: true,
         },
       })
       .$type<UserNotificationPreferences>(),
@@ -209,6 +217,8 @@ export const Business = pgTable(
         email: {
           reviewReplies: true,
           reviewLikes: true,
+          replyToYourReply: true,
+          reviewThreadActivity: true,
           newReviewsOnFavourites: true,
           placeUpdates: true,
           claimStatus: true,
@@ -219,6 +229,8 @@ export const Business = pgTable(
         push: {
           reviewReplies: true,
           reviewLikes: true,
+          replyToYourReply: true,
+          reviewThreadActivity: true,
           newReviewsOnPlaces: true,
           nearbyPlaces: false,
           claimStatus: true,
@@ -538,6 +550,8 @@ export const Review = pgTable(
 
     isFirstVisit: boolean("is_first_visit").default(true),
     likesCount: integer("likes_count").default(0),
+    repliesCount: integer("replies_count").default(0),
+    hasBusinessReply: boolean("has_business_reply").default(false),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
@@ -581,6 +595,84 @@ export const ReviewImage = pgTable(
       table.reviewId,
       table.displayOrder,
     ),
+  }),
+);
+
+export const ReviewReply = pgTable(
+  "review_reply",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    // Links to the original review
+    reviewId: uuid("review_id")
+      .notNull()
+      .references(() => Review.id, { onDelete: "cascade" }),
+
+    // Self-referential parent for threading
+    // NULL means this is a top-level reply to the review
+    parentReplyId: uuid("parent_reply_id").references(
+      (): AnyPgColumn => ReviewReply.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
+
+    // Who wrote this reply? (either user OR business, not both)
+    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+    businessId: uuid("business_id").references(() => Business.id, {
+      onDelete: "cascade",
+    }),
+
+    // The reply content
+    content: text("content").notNull(),
+
+    // Threading metadata
+    depth: integer("depth").default(0).notNull(), // 0 = reply to review, 1 = reply to reply, etc.
+
+    // Engagement
+    likesCount: integer("likes_count").default(0),
+
+    // Metadata
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    editedAt: timestamp("edited_at"), // Track if reply was edited
+  },
+  (table) => ({
+    reviewIdx: index("review_reply_review_idx").on(table.reviewId),
+    parentIdx: index("review_reply_parent_idx").on(table.parentReplyId),
+    userIdx: index("review_reply_user_idx").on(table.userId),
+    businessIdx: index("review_reply_business_idx").on(table.businessId),
+
+    // For efficient chronological ordering within a review
+    reviewCreatedIdx: index("review_reply_review_created_idx").on(
+      table.reviewId,
+      table.createdAt.asc(),
+    ),
+
+    // For efficient tree traversal
+    parentCreatedIdx: index("review_reply_parent_created_idx").on(
+      table.parentReplyId,
+      table.createdAt.asc(),
+    ),
+  }),
+);
+
+export const ReviewReplyLike = pgTable(
+  "review_reply_like",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    replyId: uuid("reply_id")
+      .notNull()
+      .references(() => ReviewReply.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    businessId: uuid("business_id").references(() => Business.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    userReplyUnique: unique().on(table.userId, table.replyId),
+    replyIdx: index("review_reply_like_reply_idx").on(table.replyId),
   }),
 );
 
@@ -710,6 +802,9 @@ export const Notification = pgTable(
       onDelete: "cascade",
     }),
     relatedReviewId: uuid("related_review_id").references(() => Review.id, {
+      onDelete: "cascade",
+    }),
+    relatedReplyId: uuid("related_reply_id").references(() => ReviewReply.id, {
       onDelete: "cascade",
     }),
 
@@ -958,6 +1053,7 @@ export const reviewRelations = relations(Review, ({ one, many }) => ({
   images: many(ReviewImage),
   likes: many(ReviewLike),
   reports: many(ReviewReport),
+  replies: many(ReviewReply),
 }));
 
 export const reviewImageRelations = relations(ReviewImage, ({ one }) => ({
@@ -970,6 +1066,52 @@ export const reviewImageRelations = relations(ReviewImage, ({ one }) => ({
     references: [Image.id],
   }),
 }));
+
+export const reviewReplyRelations = relations(ReviewReply, ({ one, many }) => ({
+  review: one(Review, {
+    fields: [ReviewReply.reviewId],
+    references: [Review.id],
+  }),
+  user: one(user, {
+    fields: [ReviewReply.userId],
+    references: [user.id],
+  }),
+  business: one(Business, {
+    fields: [ReviewReply.businessId],
+    references: [Business.id],
+  }),
+
+  // Threading relations
+  parentReply: one(ReviewReply, {
+    fields: [ReviewReply.parentReplyId],
+    references: [ReviewReply.id],
+    relationName: "replyThread",
+  }),
+  childReplies: many(ReviewReply, {
+    relationName: "replyThread",
+  }),
+
+  // Engagement
+  likes: many(ReviewReplyLike),
+}));
+
+export const reviewReplyLikeRelations = relations(
+  ReviewReplyLike,
+  ({ one }) => ({
+    reply: one(ReviewReply, {
+      fields: [ReviewReplyLike.replyId],
+      references: [ReviewReply.id],
+    }),
+    user: one(user, {
+      fields: [ReviewReplyLike.userId],
+      references: [user.id],
+    }),
+    business: one(Business, {
+      fields: [ReviewReplyLike.businessId],
+      references: [Business.id],
+    }),
+  }),
+);
 
 export const reviewLikeRelations = relations(ReviewLike, ({ one }) => ({
   review: one(Review, {
@@ -1037,6 +1179,10 @@ export const notificationRelations = relations(Notification, ({ one }) => ({
     fields: [Notification.relatedReviewId],
     references: [Review.id],
   }),
+  relatedReply: one(ReviewReply, {
+    fields: [Notification.relatedReplyId],
+    references: [ReviewReply.id],
+  }),
 }));
 
 // User notification preferences (personal context)
@@ -1044,6 +1190,8 @@ export type UserNotificationPreferences = {
   email: {
     // Engagement
     reviewReplies: boolean;
+    replyToYourReply: boolean; // Someone replied to your reply
+    reviewThreadActivity: boolean; // Activity in threads you're in
     reviewLikes: boolean;
     newReviewsOnFavourites: boolean;
     reportStatus: boolean;
@@ -1058,9 +1206,10 @@ export type UserNotificationPreferences = {
   push: {
     // Engagement
     reviewReplies: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     reviewLikes: boolean;
     newReviewsOnFavourites: boolean;
-    reportStatus: boolean;
 
     // Discovery
     nearbyPlaces: boolean;
@@ -1072,6 +1221,8 @@ export type BusinessNotificationPreferences = {
   email: {
     // Engagement
     reviewReplies: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     reviewLikes: boolean;
     newReviewsOnPlaces: boolean;
 
@@ -1087,6 +1238,8 @@ export type BusinessNotificationPreferences = {
   push: {
     // Engagement
     reviewReplies: boolean;
+    replyToYourReply: boolean;
+    reviewThreadActivity: boolean;
     reviewLikes: boolean;
     newReviewsOnPlaces: boolean;
     reportStatus: boolean;

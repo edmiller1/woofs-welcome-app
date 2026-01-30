@@ -10,7 +10,11 @@ export const welcomeUserSchema = z.object({
       /^[a-zA-Z\s'-]+$/,
       "Name can only contain letters, spaces, hyphens, and apostrophes",
     ),
-  image: z.string().optional(),
+  image: z.file().optional(),
 });
 
-export type WelcomeUserInput = z.infer<typeof welcomeUserSchema>;
+// Update profile schema
+export const updateProfileSchema = z.object({
+  name: z.string().optional(),
+  image: z.file().optional(),
+});

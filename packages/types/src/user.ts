@@ -5,7 +5,8 @@ export interface User {
   name: string;
   email: string;
   emailVerified: boolean;
-  image: string;
+  image: string | null;
+  profileImageId: string | null;
   provider: string;
   activeContext: string;
   isAdmin: boolean;
@@ -21,7 +22,9 @@ export interface BAUser {
   name: string;
   email: string;
   emailVerified: boolean;
-  image?: string;
+  image: string | null;
+  profileImageId: string | null;
+  altText: string;
   isAdmin: boolean;
   activeContext: "business" | "personal";
   createdAt: string;

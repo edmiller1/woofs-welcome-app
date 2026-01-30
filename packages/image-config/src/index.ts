@@ -1,7 +1,9 @@
 // Image transformation presets
 export const IMAGE_VARIANTS = {
   thumbnail: { width: 150, height: 150, quality: 80, fit: "cover" as const },
+  avatar: { width: 200, height: 200, quality: 85, fit: "cover" as const },
   card: { width: 400, height: 300, quality: 85, fit: "cover" as const },
+  hero: { width: 1200, height: 400, quality: 90, fit: "cover" as const },
   medium: { width: 800, height: 600, quality: 85, fit: "scale-down" as const },
   large: { width: 1200, height: 900, quality: 90, fit: "scale-down" as const },
   full: { width: 2000, height: 2000, quality: 95, fit: "scale-down" as const },

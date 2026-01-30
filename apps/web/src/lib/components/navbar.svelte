@@ -19,6 +19,7 @@
   import type { BAUser } from "@woofs/types";
   import * as Sheet from "$lib/components/ui/sheet/index.js";
   import NavbarSearch from "./navbar-search.svelte";
+  import UserNav from "./user-nav.svelte";
 
   interface Props {
     user: BAUser | null;
@@ -105,7 +106,7 @@
             <span class="text-muted-foreground text-xs">{user.email}</span>
           </div>
 
-          <!-- <UserNav {user} /> -->
+          <UserNav {user} />
         </div>
       {:else}
         <a href={signInUrl}>

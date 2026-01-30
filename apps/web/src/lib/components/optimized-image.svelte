@@ -16,6 +16,9 @@
     loading?: "lazy" | "eager";
     sizes?: string;
     responsive?: boolean;
+    srcsetVariants?: ImageVariant[];
+    width?: string;
+    height?: string;
   }
 
   let {
@@ -27,11 +30,14 @@
     loading = "lazy",
     sizes = "100vw",
     responsive = true,
+    srcsetVariants = ["thumbnail", "card", "medium", "large", "full"],
+    width = "100%",
+    height = "auto",
   }: Props = $props();
 
   const src = $derived(buildImageUrl(imageId, variant, format));
   const srcset = $derived(
-    responsive ? buildResponsiveSrcSet(imageId, undefined, format) : undefined,
+    responsive ? buildResponsiveSrcSet(imageId, srcsetVariants, format) : undefined,
   );
   const placeholder = $derived(getPlaceholderUrl(imageId));
 </script>
@@ -43,13 +49,12 @@
   {alt}
   {loading}
   class={className}
-  style="background-image: url({placeholder}); background-size: cover;"
+  style="background-image: url({placeholder}); background-size: cover; width: {width}; height: {height};"
 />
 
-<style>
+  <style>
   img {
-    width: 100%;
-    height: auto;
     display: block;
+    object-fit: cover;
   }
 </style>

@@ -3,6 +3,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@woofs/api";
+import { api } from "@woofs/api/api";
 import { authClient } from "./auth/auth-client";
 
 setTokenGetter(async () => {
@@ -10,4 +11,4 @@ setTokenGetter(async () => {
   return data?.session?.token ?? null;
 });
 
-export { protectedProcedure, publicProcedure };
+export { protectedProcedure, publicProcedure, api };

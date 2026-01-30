@@ -14,7 +14,12 @@ import * as schema from "../db/schema";
 import { env } from "../config/env";
 import { otpEmailHtml } from "../emails/otp-email";
 import { welcomeEmail } from "../emails/welcome-email";
-import { getContext, getUserProvider, isUserAdmin } from "./helpers/auth";
+import {
+  getContext,
+  getUserProfileImageId,
+  getUserProvider,
+  isUserAdmin,
+} from "./helpers/auth";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -43,12 +48,15 @@ export const auth = betterAuth({
       const provider = await getUserProvider(user.id);
       const context = await getContext(user.id);
       const isAdmin = await isUserAdmin(user.id);
+      const imageData = await getUserProfileImageId(user.id);
       return {
         user: {
           ...user,
           provider: provider || "google",
           activeContext: context || "personal",
           isAdmin,
+          profileImageId: imageData?.profileImageId,
+          altText: imageData?.altText,
         },
         session,
       };

@@ -9,7 +9,7 @@
     getSearchHistory,
     removeFromSearchHistory,
   } from "$lib/utils/search-history";
-  import { api } from "$lib/api/index";
+  import { api } from "$lib/api-helper";
 
   interface PlaceSuggestion {
     name: string;

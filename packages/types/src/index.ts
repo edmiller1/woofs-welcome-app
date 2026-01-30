@@ -3,3 +3,6 @@ export * from "./user";
 export * from "./search";
 export * from "./hours";
 export * from "./image";
+export * from "./location";
+export * from "./place";
+export * from "./review";

@@ -60,5 +60,5 @@
     {@render children()}
   {/if}
   <!-- <ModeWatcher /> -->
-  <Toaster />
+  <Toaster closeButton />
 </QueryClientProvider>
