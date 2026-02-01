@@ -23,7 +23,7 @@
     imageId?: string;
     imageIds?: string[];
     user: BAUser | null;
-    pathname: string;
+    locationPath: string;
     isVerified: boolean;
   }
 
@@ -39,7 +39,7 @@
     imageId,
     imageIds,
     user,
-    pathname,
+    locationPath,
     isVerified,
   }: Props = $props();
 
@@ -79,7 +79,7 @@
 </script>
 
 <a
-  href={`/${pathname}/places/${slug}`}
+  href={`/location/${locationPath}/places/${slug}`}
   class="m-0 flex w-full justify-center p-0"
 >
   <div

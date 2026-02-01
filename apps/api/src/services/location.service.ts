@@ -95,6 +95,7 @@ export class LocationService {
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -177,8 +178,7 @@ export class LocationService {
       console.log("Found location:", location?.name ?? "null");
 
       if (!location) {
-        console.log(path);
-        //throw new NotFoundError(`Location not found: ${validatedPath}`);
+        throw new NotFoundError(`Location not found: ${validatedPath}`);
       }
 
       const placeFilterType = validatePlaceFilter(filters.placeSort);

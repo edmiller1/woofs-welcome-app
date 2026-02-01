@@ -36,6 +36,7 @@ export const getPlacesByPlaceSort = async (
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -71,6 +72,7 @@ export const getPlacesByPlaceSort = async (
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -105,6 +107,7 @@ export const getPlacesByPlaceSort = async (
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -136,6 +139,7 @@ export const getPlacesByPlaceSort = async (
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))

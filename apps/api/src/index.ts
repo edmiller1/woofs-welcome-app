@@ -14,6 +14,8 @@ import { authRouter } from "./routes/auth/auth";
 import { imageRouter } from "./routes/image";
 import { notificationRouter } from "./routes/notification";
 import { locationRouter } from "./routes/location";
+import { placeRouter } from "./routes/place";
+import { collectionRouter } from "./routes/collection";
 
 validateEnv();
 
@@ -51,6 +53,8 @@ app.route("/api/user", authRouter);
 app.route("/api/image", imageRouter);
 app.route("/api/notification", notificationRouter);
 app.route("/api/location", locationRouter);
+app.route("/api/place", placeRouter);
+app.route("/api/collection", collectionRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

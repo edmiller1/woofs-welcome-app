@@ -26,6 +26,7 @@ export interface Place {
   reviewsCount: number;
   isVerified: boolean;
   isFeatured: boolean;
+  isSaved: boolean;
   createdAt: Date;
   updatedAt: Date;
   claimedBy: string;

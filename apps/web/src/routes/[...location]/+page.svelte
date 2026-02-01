@@ -154,7 +154,7 @@
               {#each mainPopularPlaces as place}
                 <div class="flex items-center gap-4">
                   <a
-                    href={`${pathname}/places/${place.slug}`}
+                    href={`${place.locationPath}/places/${place.slug}`}
                     aria-label={place.name}
                   >
                     <div
@@ -364,7 +364,7 @@
                       {user}
                       types={place.types}
                       isSaved={place.isSaved}
-                      {pathname}
+                      locationPath={place.locationPath}
                       isVerified={place.isVerified}
                     />
                   {/each}

@@ -17,12 +17,3 @@ export interface Review {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface ReviewImage {
-  id: string;
-  reviewId: string;
-  imageId: string;
-  displayOrder: number;
-  createdAt: Date;
-  updatedAt: Date;
-}

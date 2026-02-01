@@ -45,6 +45,7 @@ export interface PopularPlace {
   isSaved: boolean;
   cityName: string;
   regionName: string;
+  locationPath: string;
 }
 
 export interface LocationWithDetails extends Location {

@@ -1,11 +1,25 @@
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, eq, inArray } from "drizzle-orm";
 import { db } from "../db";
-import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
-import { Location, Place, PlaceImage, Review } from "../db/schema";
+import {
+  AppError,
+  BadRequestError,
+  DatabaseError,
+  NotFoundError,
+} from "../lib/errors";
+import {
+  Collection,
+  CollectionItem,
+  Location,
+  Place,
+  PlaceImage,
+  Review,
+} from "../db/schema";
 import { Google } from "../lib/google";
 import { ImageUploadService } from "./image-upload.service";
 import { locationPathSchema } from "../routes/location/schemas";
 import { placeSlugSchema } from "../routes/place/schemas";
+import { sanitizePlainText } from "../lib/sanitize";
+import { CollectionService } from "./collection.service";
 
 /**
  * Place Service
@@ -30,7 +44,12 @@ export class PlaceService {
         })
         .from(Place)
         .innerJoin(Location, eq(Place.locationId, Location.id))
-        .where(and(eq(Place.slug, validatedPlaceSlug), eq(Location.path, validatedLocationPath)))
+        .where(
+          and(
+            eq(Place.slug, validatedPlaceSlug),
+            eq(Location.path, validatedLocationPath),
+          ),
+        )
         .limit(1);
 
       if (!result) {
@@ -141,12 +160,18 @@ export class PlaceService {
         },
       ];
 
+      let isSaved = false;
+      if (userId) {
+        isSaved = await CollectionService.isPlaceSaved(place.id, userId);
+      }
+
       return {
         ...place,
         location,
         images,
         reviews,
         breadcrumbs,
+        isSaved,
       };
     } catch (error) {
       if (error instanceof AppError) {
