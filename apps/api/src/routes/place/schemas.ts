@@ -17,3 +17,9 @@ export const placeSlugSchema = z
     /^[a-z0-9-]+$/,
     "Slug can only contain lowercase letters, numbers, and hyphens",
   );
+
+export const placeReviewsSchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).default(10),
+  placeId: z.uuid(),
+});

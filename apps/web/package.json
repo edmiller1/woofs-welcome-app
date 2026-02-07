@@ -47,6 +47,7 @@
 		"canvas-confetti": "^1.9.4",
 		"mapbox-gl": "^3.18.0",
 		"mode-watcher": "^1.1.0",
+		"svelte-motion": "^0.12.2",
 		"tailwindcss": "^4.1.18",
 		"zod": "^4.3.5"
 	}

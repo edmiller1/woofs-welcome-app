@@ -154,7 +154,7 @@
               {#each mainPopularPlaces as place}
                 <div class="flex items-center gap-4">
                   <a
-                    href={`${place.locationPath}/places/${place.slug}`}
+                    href={`/location/${place.locationPath}/places/${place.slug}`}
                     aria-label={place.name}
                   >
                     <div

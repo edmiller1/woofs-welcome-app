@@ -36,6 +36,13 @@
       "when": 1769290630173,
       "tag": "0004_deep_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1770445651801,
+      "tag": "0005_talented_exodus",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { and, asc, count, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
 import { db } from "../db";
 import {
   AppError,
@@ -124,14 +124,6 @@ export class PlaceService {
         }
       }
 
-      // Get recent reviews
-      const reviews = await db
-        .select()
-        .from(Review)
-        .where(eq(Review.placeId, place.id))
-        .orderBy(Review.createdAt)
-        .limit(10);
-
       // Build breadcrumbs from location path + place
       const pathSegments = validatedLocationPath.split("/");
       const ancestorPaths = pathSegments.map((_, index) =>
@@ -165,11 +157,41 @@ export class PlaceService {
         isSaved = await CollectionService.isPlaceSaved(place.id, userId);
       }
 
+      // Review Stats
+      const stats = await db
+        .select({
+          rating: Review.rating,
+          count: count(),
+        })
+        .from(Review)
+        .where(eq(Review.placeId, place.id))
+        .groupBy(Review.rating);
+
+      const totalReviews = stats.reduce((sum, s) => sum + s.count, 0);
+      const averageRating =
+        totalReviews > 0
+          ? stats.reduce((sum, s) => sum + s.rating * s.count, 0) / totalReviews
+          : 0;
+
+      const reviewBreakdown = [5, 4, 3, 2, 1].map((rating) => {
+        const found = stats.find((s) => s.rating === rating);
+        const ratingCount = found?.count ?? 0;
+        return {
+          rating,
+          count: ratingCount,
+          percentage: totalReviews > 0 ? (ratingCount / totalReviews) * 100 : 0,
+        };
+      });
+
       return {
         ...place,
         location,
         images,
-        reviews,
+        reviewStats: {
+          totalReviews,
+          averageRating,
+          reviewBreakdown,
+        },
         breadcrumbs,
         isSaved,
       };
@@ -179,6 +201,55 @@ export class PlaceService {
         throw error;
       }
       throw new DatabaseError("Failed to get place", {
+        originalError: error,
+      });
+    }
+  }
+
+  static async getPlaceReviews(
+    placeId: string,
+    page: number,
+    limit: number,
+    userId?: string,
+  ) {
+    try {
+      const reviews = await db.query.Review.findMany({
+        where: eq(Review.placeId, placeId),
+        with: {
+          images: true,
+          likes: true,
+          replies: true,
+          reports: true,
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              profileImageId: true,
+            },
+          },
+        },
+        orderBy: desc(Review.createdAt),
+        limit: limit,
+        offset: page * limit,
+      });
+
+      return reviews.map((review) => ({
+        ...review,
+        isOwner: userId ? review.userId === userId : false,
+        hasLiked: userId
+          ? review.likes.some((like) => like.userId === userId)
+          : false,
+        hasReported: userId
+          ? review.reports.some((report) => report.userId === userId)
+          : false,
+      }));
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get place reviews error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get place reviews", {
         originalError: error,
       });
     }

@@ -2,8 +2,30 @@ import { Hono } from "hono";
 import { optionalAuthMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
+import { zValidator } from "@hono/zod-validator";
+import { placeReviewsSchema } from "./schemas";
 
 export const placeRouter = new Hono();
+
+placeRouter.get(
+  "/reviews",
+  optionalAuthMiddleware,
+  zValidator("query", placeReviewsSchema),
+  async (c) => {
+    const auth = c.get("user");
+
+    const { page, limit, placeId } = c.req.valid("query");
+
+    const result = await PlaceService.getPlaceReviews(
+      placeId,
+      page,
+      limit,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
 
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   const auth = c.get("user");

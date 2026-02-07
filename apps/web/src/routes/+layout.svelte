@@ -10,6 +10,7 @@
   import { auth, loading } from "$lib/auth/stores";
   import { Spinner } from "$lib/components/ui/spinner";
   import { Toaster } from "$lib/components/ui/sonner";
+  import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -57,7 +58,9 @@
       <Spinner />
     </div>
   {:else}
-    {@render children()}
+    <Tooltip.Provider>
+      {@render children()}
+    </Tooltip.Provider>
   {/if}
   <!-- <ModeWatcher /> -->
   <Toaster closeButton />

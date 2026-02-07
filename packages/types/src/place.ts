@@ -12,8 +12,8 @@ export interface Place {
   locationId: string;
   countryCode: string;
   address: string;
-  latitude: number;
-  longitude: number;
+  latitude: string;
+  longitude: string;
   phone: string;
   email: string;
   website: string;
@@ -35,9 +35,19 @@ export interface Place {
   viewsThisMonth: number;
 }
 
+export interface PlaceReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  reviewBreakdown: {
+    count: number;
+    percentage: number;
+    rating: number;
+  }[];
+}
+
 export interface PlaceWithDetails extends Place {
   breadcrumbs: BreadcrumbItem[];
   location: Location;
   images: PlaceImage[];
-  reviews: Review[];
+  reviewStats: PlaceReviewStats;
 }

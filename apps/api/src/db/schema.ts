@@ -548,7 +548,6 @@ export const Review = pgTable(
     dogBreeds: text("dog_breeds").array(),
     timeOfVisit: text("time_of_visit"),
 
-    isFirstVisit: boolean("is_first_visit").default(true),
     likesCount: integer("likes_count").default(0),
     repliesCount: integer("replies_count").default(0),
     hasBusinessReply: boolean("has_business_reply").default(false),

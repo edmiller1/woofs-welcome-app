@@ -59,7 +59,7 @@
     page.url.pathname.includes("/business/dashboard");
 </script>
 
-<nav class="bg-background sticky top-0 z-50 w-full border-b">
+<nav class="bg-background top-0 w-full border-b">
   <div class="mx-auto flex h-16 max-w-350 items-center justify-between">
     <div class="flex items-center gap-8">
       <!-- Logo/Brand -->

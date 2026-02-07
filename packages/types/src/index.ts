@@ -7,3 +7,4 @@ export * from "./location";
 export * from "./place";
 export * from "./review";
 export * from "./collection";
+export * from "./types";
