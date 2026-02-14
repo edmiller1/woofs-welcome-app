@@ -28,8 +28,11 @@
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="ghost" class="underline">
+    <Button variant="ghost" class="hidden md:flex underline">
       Share <Share class="size-3" />
+    </Button>
+    <Button variant="outline" class="md:hidden">
+      <Share class="size-3" />
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="z-999 mr-20">

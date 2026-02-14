@@ -237,7 +237,9 @@ export class ImageUploadService {
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new BadRequestError(`Failed to fetch image from URL: ${response.status}`);
+        throw new BadRequestError(
+          `Failed to fetch image from URL: ${response.status}`,
+        );
       }
 
       const contentType = response.headers.get("content-type") || "image/jpeg";
@@ -252,7 +254,10 @@ export class ImageUploadService {
       // Use existing upload method
       return this.uploadImage(file, options);
     } catch (error) {
-      if (error instanceof BadRequestError || error instanceof InternalServerError) {
+      if (
+        error instanceof BadRequestError ||
+        error instanceof InternalServerError
+      ) {
         throw error;
       }
       console.error("Image upload from URL error:", error);
@@ -303,6 +308,15 @@ export class ImageUploadService {
   // ============================================================================
   // PRIVATE METHODS
   // ============================================================================
+
+  /**
+   * Upload file to Cloudflare Images only (no database insert)
+   * Useful when you need to handle the database insert in a transaction
+   */
+  async uploadToCloudflareOnly(file: File): Promise<CloudflareUploadResult> {
+    this.validateImage(file);
+    return this.uploadToCloudflare(file);
+  }
 
   /**
    * Upload file to Cloudflare Images API

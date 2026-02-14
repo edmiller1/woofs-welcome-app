@@ -86,3 +86,14 @@ export interface PlaceReview extends Review {
   hasLiked: boolean;
   hasReported: boolean;
 }
+
+export interface CreateReviewInput {
+  placeId: string;
+  rating: number;
+  title: string;
+  content: string;
+  visitDate: Date;
+  numDogs: number;
+  dogBreeds: string[];
+  images: File[];
+}

@@ -1,7 +1,6 @@
 import type { DayOfWeekHours } from "./hours";
 import type { PlaceImage } from "./image";
 import type { BreadcrumbItem, Location } from "./location";
-import type { Review } from "./review";
 
 export interface Place {
   id: string;
@@ -50,4 +49,9 @@ export interface PlaceWithDetails extends Place {
   location: Location;
   images: PlaceImage[];
   reviewStats: PlaceReviewStats;
+}
+
+export interface NearbyPlace extends Place {
+  location: Location;
+  images: PlaceImage[];
 }

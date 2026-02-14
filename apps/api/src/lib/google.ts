@@ -33,7 +33,7 @@ export const Google = {
     const data = (await response.json()) as any;
 
     if (data.status === "OK" && data.result?.photos) {
-      const photos = data.result.photos.slice(0, 20); // Limit to 20 photos
+      const photos = data.result.photos.slice(0, 10); // Limit to 10 photos
       // Convert photo references to actual image URLs
       return photos.map((photo: any) => {
         return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photo.photo_reference}&key=${env.GOOGLE_PLACES_API_KEY}`;

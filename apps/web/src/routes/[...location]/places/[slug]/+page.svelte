@@ -21,6 +21,11 @@
   import PlaceMap from "$lib/components/place-map.svelte";
   import PlaceReviewStats from "./components/place-review-stats.svelte";
   import PlaceReviews from "./components/place-reviews.svelte";
+  import ReviewDrawer from "$lib/components/review-drawer.svelte";
+  import StickyHeader from "./components/sticky-header.svelte";
+  import { Maximize2, Star } from "@lucide/svelte";
+  import PlaceMapDialog from "./components/place-map-dialog.svelte";
+  import { map } from "zod";
 
   const mapboxToken = PUBLIC_MAPBOX_API_KEY;
 
@@ -56,6 +61,7 @@
   let showStickyHeader = $state(false);
   let mapOpen = $state<boolean>(false);
   let currentPage = $state<number>(1);
+  let reviewDrawerOpen = $state<boolean>(false);
 
   const coordinates = $derived(() => {
     if (place.isSuccess && place.data.latitude && place.data.longitude) {
@@ -66,6 +72,10 @@
     }
     return null;
   });
+
+  const openReviewDrawer = (rating: number = 0) => {
+    reviewDrawerOpen = true;
+  };
 
   const changePage = (newPage: number) => {
     currentPage = newPage;
@@ -108,7 +118,19 @@
 
   {#if place.isSuccess}
     <!-- Sticky Header -->
-    <div class="mx-auto max-w-375 px-2 sm:px-4 lg:px-8">
+    <StickyHeader
+      placeName={place.data.name}
+      {user}
+      placeId={place.data.id}
+      {currentTab}
+      {tabs}
+      {headerElement}
+      {scrollY}
+      {showStickyHeader}
+      isSaved={place.data.isSaved}
+      modalOpen={reviewDrawerOpen || imagesOpen || mapOpen}
+    />
+    <div class="mx-auto w-full max-w-375 px-2 sm:px-4 lg:px-8">
       <Navbar {user} />
 
       <div class="py-2 lg:flex lg:items-center lg:justify-between">
@@ -120,10 +142,18 @@
           >
             <div class="flex items-center gap-4">
               <h2
-                class="text-2xl/7 font-bold sm:truncate sm:text-4xl sm:tracking-tight"
+                class="w-full text-2xl/7 font-bold sm:truncate sm:text-4xl sm:tracking-tight"
               >
                 {place.data.name}
               </h2>
+              {#if place.data.rating > 0}
+                <div class="hidden md:flex items-center gap-1 mt-1">
+                  <Star class="size-5 fill-black text-black" />
+                  <span class="text-lg font-semibold mt-0.5"
+                    >{Number(place.data.rating).toFixed(1)}</span
+                  >
+                </div>
+              {/if}
             </div>
             <div class="flex items-center gap-4">
               <ShareButton url={page.url.href} name={place.data.name} />
@@ -138,7 +168,7 @@
           <!-- image grid -->
           <ImageGrid images={place.data.images} {openImageDrawer} />
           <ImageDrawer images={place.data.images} bind:imagesOpen />
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <div class="mr-3 w-2/3">
               <div class="hidden sm:block">
                 <div class="border-b border-gray-200 dark:border-white/10">
@@ -164,7 +194,11 @@
                 </div>
               </div>
               <!-- Main details -->
-              <div id="about" data-tab="About" class="py-4">
+              <div
+                id="about"
+                data-tab="About"
+                class="w-full py-4 px-2 md:pr-5 md:pl-0"
+              >
                 <PlaceDetails
                   address={place.data.address}
                   website={place.data.website ?? ""}
@@ -174,9 +208,14 @@
                 <PlaceDescription description={place.data.description} {user} />
               </div>
               <!-- Dog Policy -->
-              <div id="dog-policy" data-tab="Dog Policy" class="py-4">
-                <h3 class="text-2xl font-semibold">Dog Policy</h3>
-                {#if place.data.dogPolicy}
+              {#if place.data.dogPolicy}
+                <div
+                  id="dog-policy"
+                  data-tab="Dog Policy"
+                  class="px-2 md:px-0 py-4 w-full"
+                >
+                  <h3 class="text-2xl font-semibold">Dog Policy</h3>
+
                   <div
                     class="mt-4 rounded-lg border border-primary bg-accent p-4"
                   >
@@ -202,14 +241,14 @@
                       </div>
                     {/if}
                   </div>
-                {:else}
+                </div>
+                <!-- {:else}
                   <p class="mt-2 italic text-gray-500 dark:text-gray-400">
                     Dog policy information not available.
-                  </p>
-                {/if}
-              </div>
+                  </p> -->
+              {/if}
             </div>
-            <div class="flex w-1/3 flex-col gap-5">
+            <div class="flex md:w-1/3 flex-col gap-5">
               <!-- Hours -->
               {#if place.data.hours}
                 <PlaceHours hours={place.data.hours} />
@@ -217,14 +256,11 @@
               <!-- Map -->
               {#if coordinates() !== null}
                 {@const coords = coordinates()}
-                <div class="rounded-xl border p-4 shadow">
-                  <div class="flex items-center justify-between">
+                <div class=" z-0 rounded-xl border p-4 shadow">
+                  <div class="flex items-center justify-between mb-2">
                     <h4 class="text-lg font-semibold">Location</h4>
-                    <Button
-                      variant="link"
-                      class="rounded-full px-0"
-                      onclick={handleMapOpen}
-                      >View larger map
+                    <Button variant="outline" class="" onclick={handleMapOpen}
+                      ><Maximize2 class="size-3" />
                     </Button>
                   </div>
                   <PlaceMap
@@ -234,7 +270,7 @@
                     lat={coords!.lat}
                     zoom={15}
                     markerLabel={place.data.name}
-                    className="h-96"
+                    className="h-96 z-0"
                   />
                 </div>
               {:else}
@@ -248,17 +284,41 @@
               placeId={place.data.id}
               placeSlug={place.data.slug}
               reviewStats={place.data.reviewStats}
+              {reviewDrawerOpen}
+              {openReviewDrawer}
+              {user}
             />
             <PlaceReviews
               {user}
               placeId={place.data.id}
               placeName={place.data.name}
               reviewCount={place.data.reviewsCount}
+              {reviewDrawerOpen}
+              {openReviewDrawer}
             />
           </div>
         </div>
       </div>
+      <!-- Similar Places -->
       <!-- Footer -->
     </div>
+    <!-- Review Drawer/Dialog -->
+    <ReviewDrawer
+      open={reviewDrawerOpen}
+      onOpenChange={(open) => (reviewDrawerOpen = open)}
+      placeId={place.data.id}
+      placeName={place.data.name}
+    />
+    {#if coordinates() !== null}
+      {@const coords = coordinates()}
+      <PlaceMapDialog
+        open={mapOpen}
+        lng={coords!.lng}
+        lat={coords!.lat}
+        accessToken={mapboxToken}
+        place={place.data}
+        onOpenChange={(open) => (mapOpen = open)}
+      />
+    {/if}
   {/if}
 </ErrorBoundary>

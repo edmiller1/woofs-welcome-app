@@ -3,7 +3,7 @@ import { optionalAuthMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
-import { placeReviewsSchema } from "./schemas";
+import { nearbyPlacesSchema, placeReviewsSchema } from "./schemas";
 
 export const placeRouter = new Hono();
 
@@ -26,6 +26,34 @@ placeRouter.get(
     return c.json(result, 200);
   },
 );
+
+placeRouter.get(
+  "/nearby/:placeId",
+  optionalAuthMiddleware,
+  zValidator("query", nearbyPlacesSchema),
+  async (c) => {
+    const auth = c.get("user");
+
+    const { lat, lng, radius, limit } = c.req.valid("query");
+
+    const result = await PlaceService.getNearbyPlaces(
+      c.req.param("placeId"),
+      lat,
+      lng,
+      radius,
+      limit,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+placeRouter.get("/types", (c) => {
+  const result = PlaceService.getTypes();
+
+  return c.json(result, 200);
+});
 
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   const auth = c.get("user");

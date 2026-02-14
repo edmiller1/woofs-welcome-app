@@ -16,6 +16,7 @@ import { notificationRouter } from "./routes/notification";
 import { locationRouter } from "./routes/location";
 import { placeRouter } from "./routes/place";
 import { collectionRouter } from "./routes/collection";
+import { reviewRouter } from "./routes/review";
 
 validateEnv();
 
@@ -55,6 +56,7 @@ app.route("/api/notification", notificationRouter);
 app.route("/api/location", locationRouter);
 app.route("/api/place", placeRouter);
 app.route("/api/collection", collectionRouter);
+app.route("/api/review", reviewRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

@@ -5,13 +5,15 @@
     useQueryClient,
   } from "@tanstack/svelte-query";
   import { toast } from "svelte-sonner";
-  import { Button } from "./ui/button";
+  import { Button, buttonVariants } from "./ui/button";
   import { Input } from "./ui/input";
   import { Check, Heart, LoaderCircle, Plus, X } from "@lucide/svelte";
   import { api } from "$lib/api-helper";
   import type { BAUser } from "@woofs/types";
   import * as Dialog from "./ui/dialog";
   import OptimizedImage from "./optimized-image.svelte";
+  import { cn } from "$lib/utils";
+  import { page } from "$app/state";
 
   interface Props {
     user: BAUser | null;
@@ -127,16 +129,36 @@
 <Dialog.Root bind:open={dialogOpen}>
   <Dialog.Trigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>
-        {#if isSaved}
-          Saved
-        {:else}
-          Save
-        {/if}
-        <Heart
-          class={`size-3 ${isSaved ? "fill-rose-500 text-rose-500" : "text-primary"}`}
-        />
-      </Button>
+      {#if user}
+        <Button variant="outline" {...props} class="hidden md:flex">
+          {#if isSaved}
+            Saved
+          {:else}
+            Save
+          {/if}
+          <Heart
+            class={`size-3 ${isSaved ? "fill-rose-500 text-rose-500" : "text-primary"}`}
+          />
+        </Button>
+        <Button variant="outline" {...props} class="md:hidden">
+          <Heart
+            class={`size-3 ${isSaved ? "fill-rose-500 text-rose-500" : "text-primary"}`}
+          />
+        </Button>
+      {:else}
+        <a
+          href={`/sign-in?redirect=${page.url.pathname}`}
+          class={cn(buttonVariants({ variant: "outline" }), "hidden md:flex")}
+          >Save
+          <Heart class="size-3" />
+        </a>
+        <a
+          href={`/sign-in?redirect=${page.url.pathname}`}
+          class={cn(buttonVariants({ variant: "outline" }), "md:hidden")}
+          >Save
+          <Heart class="size-3" />
+        </a>
+      {/if}
     {/snippet}
   </Dialog.Trigger>
   <Dialog.Content class="max-w-md">

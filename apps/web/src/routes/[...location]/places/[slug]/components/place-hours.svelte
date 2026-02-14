@@ -10,11 +10,11 @@
 </script>
 
 {#if hours}
-  <div class="rounded-xl border p-2 shadow">
-    <h4 class="text-lg font-semibold">Hours</h4>
+  <div class="rounded-xl border px-2 py-4 shadow">
+    <h4 class="text-lg font-semibold pl-1">Hours</h4>
     {#if getCurrentDayStatus(hours)}
       {@const status = getCurrentDayStatus(hours)}
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 pl-2">
         {#if status?.includes("Open till")}
           <span class="relative flex size-2">
             <span

@@ -3,6 +3,7 @@ import { notification } from "./notification";
 import { location } from "./location";
 import { place } from "./place";
 import { collection } from "./collection";
+import { review } from "./review";
 
 export const api = {
   auth,
@@ -10,4 +11,5 @@ export const api = {
   notification,
   location,
   place,
+  review,
 };

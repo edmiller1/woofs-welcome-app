@@ -13,10 +13,13 @@
 </script>
 
 <div
-  class="group/gallery my-5 grid h-139 grid-cols-3 grid-rows-2 gap-3 overflow-hidden rounded-lg group-hover/gallery:overflow-visible"
+  class="group/gallery my-5 grid h-139 md:grid-cols-3 grid-rows-2 gap-3 overflow-hidden rounded-lg group-hover/gallery:overflow-visible"
 >
   <!-- Large main image - spans 2 columns and 2 rows  -->
-  <div class="group relative col-span-2 row-span-2 cursor-pointer">
+  <button
+    class="appearance-none group relative col-span-2 row-span-2 cursor-pointer"
+    onclick={openImageDrawer}
+  >
     {#if images[0]}
       <OptimizedImage
         imageId={images[0].imageId}
@@ -26,11 +29,14 @@
         height="100%"
       />
     {/if}
-  </div>
+  </button>
 
   <!-- Top right image - explicitly spans 1 row -->
   {#if images[1]}
-    <div class="group relative row-span-1 cursor-pointer">
+    <button
+      class="hidden md:block appearance-none group relative row-span-1 cursor-pointer"
+      onclick={openImageDrawer}
+    >
       <OptimizedImage
         imageId={images[1].imageId}
         alt={images[1].caption || ""}
@@ -38,12 +44,15 @@
         width="100%"
         height="100%"
       />
-    </div>
+    </button>
   {/if}
 
   <!-- Bottom right image with overlay button - explicitly spans 1 row -->
   {#if images[2]}
-    <div class="group relative row-span-1 cursor-pointer">
+    <button
+      class="hidden md:block appearance-none group relative row-span-1 cursor-pointer"
+      onclick={openImageDrawer}
+    >
       <OptimizedImage
         imageId={images[2].imageId}
         alt={images[2].caption || ""}
@@ -61,6 +70,6 @@
           <span class="ml-2 text-sm">{images.length}</span>
         </Button>
       </div>
-    </div>
+    </button>
   {/if}
 </div>

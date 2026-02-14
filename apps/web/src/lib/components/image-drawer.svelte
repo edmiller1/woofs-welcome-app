@@ -16,7 +16,7 @@
   let api = $state<CarouselAPI>();
 
   const count = $derived(api ? api.scrollSnapList().length : 0);
-  let current = $state(0);
+  let current = $state<number>(0);
 
   $effect(() => {
     if (api) {
@@ -63,30 +63,37 @@
             <Carousel.Previous />
             <Carousel.Next />
           </Carousel.Root>
-          <div
-            class="flex items-center gap-2 overflow-x-auto pb-2 px-4 pt-3 -mx-4 scrollbar-hide md:mx-auto"
+          <Carousel.Root
+            class="w-full flex justify-center"
+            opts={{
+              align: "center",
+              dragFree: true,
+            }}
           >
-            {#each images as image, index}
-              <button
-                type="button"
-                onclick={() => api?.scrollTo(index)}
-                class="cursor-pointer w-28 h-20 shrink-0 overflow-hidden rounded-md transition-all {current ===
-                index + 1
-                  ? 'ring-2 ring-primary ring-offset-2'
-                  : 'opacity-70 hover:opacity-100'}"
-              >
-                <OptimizedImage
-                  imageId={image.imageId}
-                  alt={image.caption || ""}
-                  variant="thumbnail"
-                  width="100%"
-                  height="100%"
-                  class="w-full h-full object-cover object-center"
-                />
-              </button>
-            {/each}
-          </div>
-          <!-- <ImageScroll {images} /> -->
+            <Carousel.Content class="-ml-2">
+              {#each images as image, index}
+                <Carousel.Item class="basis-auto ml-2 py-2">
+                  <button
+                    type="button"
+                    onclick={() => api?.scrollTo(index)}
+                    class="cursor-pointer w-28 h-20 shrink-0 overflow-hidden rounded-md transition-all {current ===
+                    index + 1
+                      ? 'ring-2 ring-primary ring-offset-2'
+                      : 'opacity-70 hover:opacity-100'}"
+                  >
+                    <OptimizedImage
+                      imageId={image.imageId}
+                      alt={image.caption || ""}
+                      variant="thumbnail"
+                      width="100%"
+                      height="100%"
+                      class="w-full h-full object-cover object-center"
+                    />
+                  </button>
+                </Carousel.Item>
+              {/each}
+            </Carousel.Content>
+          </Carousel.Root>
         </div>
       </div>
     </Drawer.Content>

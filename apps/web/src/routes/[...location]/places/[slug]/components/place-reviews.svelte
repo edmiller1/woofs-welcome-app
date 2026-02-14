@@ -4,56 +4,82 @@
   import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Spinner } from "$lib/components/ui/spinner";
   import { cn } from "$lib/utils";
-  import { Flag, Star, ThumbsUp } from "@lucide/svelte";
+  import { Flag, Star, ThumbsUp, PenLine } from "@lucide/svelte";
   import { createQuery } from "@tanstack/svelte-query";
   import * as Avatar from "$lib/components/ui/avatar/index.js";
   import { buildImageUrl } from "@woofs/image-config";
   import { formatDate, getUserInitials } from "$lib/helpers";
   import StarRating from "$lib/components/star-rating.svelte";
-  import type { BAUser } from "@woofs/types";
+  import StarRatingInput from "$lib/components/star-rating-input.svelte";
+  import ReviewDrawer from "$lib/components/review-drawer.svelte";
+  import type { BAUser, ReviewImage } from "@woofs/types";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import { Badge } from "$lib/components/ui/badge";
   import * as Pagination from "$lib/components/ui/pagination/index.js";
+  import { Separator } from "$lib/components/ui/separator";
+  import { page } from "$app/state";
+  import OptimizedImage from "$lib/components/optimized-image.svelte";
+  import ReviewImageDialog from "$lib/components/review-image-dialog.svelte";
 
   interface Props {
     placeId: string;
     placeName: string;
     user: BAUser | null;
     reviewCount: number;
+    reviewDrawerOpen: boolean;
+    openReviewDrawer: (rating: number) => void;
   }
 
-  const { placeId, placeName, user, reviewCount }: Props = $props();
+  let {
+    placeId,
+    placeName,
+    user,
+    reviewCount,
+    reviewDrawerOpen,
+    openReviewDrawer,
+  }: Props = $props();
 
-  let page = $state<number>(1);
+  let initialRating = $state(0);
+
+  let currentPage = $state<number>(1);
   const limit = $state<number>(10);
+  let imageDialogOpen = $state<boolean>(false);
+  let currentImage = $state<ReviewImage>();
 
   const reviews = createQuery(() => ({
-    queryKey: ["place-reviews", placeId, page, limit],
-    queryFn: () => api.place.getPlaceReviews(placeId, page, limit),
+    queryKey: ["place-reviews", placeId, currentPage, limit],
+    queryFn: () => api.place.getPlaceReviews(placeId, currentPage, limit),
   }));
 
   const handleChangePage = (newPage: number) => {
-    page = newPage;
+    currentPage = newPage;
   };
 
   const handleNextPage = () => {
-    page++;
+    currentPage++;
   };
 
   const handlePreviousPage = () => {
-    page--;
+    currentPage--;
+  };
+
+  const openImageDialog = (image: ReviewImage) => {
+    imageDialogOpen = true;
+    currentImage = image;
   };
 </script>
 
+<Separator />
+
 <ErrorBoundary error={reviews.error}>
   {#if reviews.isLoading}
-    <div class="flex min-h-screen items-center justify-center">
+    <div class="flex min-h-64 items-center justify-center">
       <Spinner />
     </div>
   {/if}
 
   {#if reviews.isSuccess && reviews.data.length > 0}
-    <div class="space-y-6">
+    <div class="space-y-6 my-6">
       {#each reviews.data as review}
         {@const reviewId = review.id}
         {@const reviewUserId = review.user.id}
@@ -141,7 +167,7 @@
                   </div>
                 {/if}
               </div>
-              <div class="mt-2 flex gap-1">
+              <div class="mt-2 flex flex-wrap gap-1">
                 {#each review.dogBreeds as breed}
                   <Badge
                     variant="secondary"
@@ -156,7 +182,30 @@
           <p class="mb-1 font-semibold leading-relaxed">{review.title}</p>
           <p class="mb-4 leading-relaxed">{review.content}</p>
           <!-- Review Image Dialog -->
+          {#each review.images as image}
+            <button
+              class="appearance-none group relative cursor-pointer overflow-hidden rounded-sm md:rounded-xl"
+              onclick={() => openImageDialog(image)}
+            >
+              <OptimizedImage
+                imageId={image.imageId}
+                alt="review image"
+                variant="thumbnail"
+                class="group-hover:brightness-80 size-24 md:size-32 object-cover object-center transition-all duration-200"
+                width="128"
+                height="128"
+              />
+            </button>
+          {/each}
         </div>
+        <!-- Review Image Dialog/Drawer -->
+        <ReviewImageDialog
+          open={imageDialogOpen}
+          onOpenChange={(open) => (imageDialogOpen = open)}
+          images={review.images}
+          image={currentImage}
+          reviewUserName={review.user.name}
+        />
       {/each}
     </div>
     {#if reviewCount > 10}
@@ -194,10 +243,24 @@
       </div>
     {/if}
   {:else}
-    <div>
-      <p class="text-muted-foreground mb-6">
+    <div class="text-center py-8">
+      <p class="text-muted-foreground mb-4">
         Be the first to review {placeName}!
       </p>
+      {#if user}
+        <Button onclick={() => openReviewDrawer(0)}>
+          <PenLine class="mr-2 size-4" />
+          Write the first review
+        </Button>
+      {:else}
+        <a
+          href={`/sign-in?redirect=${page.url.pathname}`}
+          class={cn(buttonVariants({ variant: "outline" }))}
+        >
+          <PenLine class="mr-2 size-4" />
+          Write the first review
+        </a>
+      {/if}
     </div>
   {/if}
 </ErrorBoundary>

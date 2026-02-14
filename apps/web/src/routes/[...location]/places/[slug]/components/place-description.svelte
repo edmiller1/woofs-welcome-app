@@ -11,15 +11,15 @@
   const { description, user }: Props = $props();
 </script>
 
-<div class="py-4">
-  <h4 class="text-xl font-semibold">Description</h4>
-  {#if description}
+{#if description}
+  <div class="py-4 w-full">
+    <h4 class="text-xl font-semibold">Description</h4>
     <p class="mt-2 leading-relaxed text-gray-700 dark:text-gray-300">
       {description}
     </p>
-  {:else}
+  </div>
+  <!-- {:else}
     <p class="mt-2 italic text-gray-500 dark:text-gray-400">
       Description coming soon...
-    </p>
-  {/if}
-</div>
+    </p> -->
+{/if}

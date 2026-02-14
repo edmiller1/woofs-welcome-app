@@ -36,6 +36,7 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"@lottiefiles/dotlottie-svelte": "^0.8.14",
 		"@sentry/sveltekit": "^10.34.0",
 		"@tailwindcss/vite": "^4.1.18",
 		"@tanstack/svelte-query": "^6.0.17",

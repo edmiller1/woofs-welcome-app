@@ -1,4 +1,14 @@
-import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
+import {
+  and,
+  asc,
+  between,
+  count,
+  desc,
+  eq,
+  inArray,
+  ne,
+  sql,
+} from "drizzle-orm";
 import { db } from "../db";
 import {
   AppError,
@@ -12,6 +22,7 @@ import {
   Location,
   Place,
   PlaceImage,
+  placeTypeEnum,
   Review,
 } from "../db/schema";
 import { Google } from "../lib/google";
@@ -20,6 +31,11 @@ import { locationPathSchema } from "../routes/location/schemas";
 import { placeSlugSchema } from "../routes/place/schemas";
 import { sanitizePlainText } from "../lib/sanitize";
 import { CollectionService } from "./collection.service";
+import {
+  calculateDistance,
+  getBoundingBox,
+  getPlaceDescription,
+} from "../lib/helpers/place";
 
 /**
  * Place Service
@@ -183,6 +199,17 @@ export class PlaceService {
         };
       });
 
+      if (!place.description) {
+        const AIdesc = await getPlaceDescription(place.name, location.path);
+
+        await db
+          .update(Place)
+          .set({
+            description: AIdesc,
+          })
+          .where(eq(Place.id, place.id));
+      }
+
       return {
         ...place,
         location,
@@ -231,7 +258,7 @@ export class PlaceService {
         },
         orderBy: desc(Review.createdAt),
         limit: limit,
-        offset: page * limit,
+        offset: (page - 1) * limit,
       });
 
       return reviews.map((review) => ({
@@ -250,6 +277,96 @@ export class PlaceService {
         throw error;
       }
       throw new DatabaseError("Failed to get place reviews", {
+        originalError: error,
+      });
+    }
+  }
+
+  static async getNearbyPlaces(
+    placeId: string,
+    lat: number,
+    lng: number,
+    radius: number,
+    limit: number,
+    userId?: string,
+  ) {
+    try {
+      const bbox = getBoundingBox(lat, lng, radius);
+
+      const conditions = [
+        between(
+          sql`CAST(${Place.latitude} AS DECIMAL)`,
+          bbox.minLat.toString(),
+          bbox.maxLat.toString(),
+        ),
+        between(
+          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          bbox.minLng.toString(),
+          bbox.maxLng.toString(),
+        ),
+      ];
+
+      //Exclude current place
+      conditions.push(ne(Place.id, placeId));
+
+      // Get places with conditions
+      const places = await db.query.Place.findMany({
+        where: and(...conditions),
+        with: {
+          location: true,
+          images: true,
+        },
+        limit: limit * 2,
+      });
+
+      //Calculate distances and filter by radius
+      const placesWithDistance = places
+        .map((place) => {
+          const distance = calculateDistance(
+            lat,
+            lng,
+            parseFloat(place.latitude!),
+            parseFloat(place.longitude!),
+          );
+          return {
+            ...place,
+            distance,
+          };
+        })
+        .filter((place) => place.distance <= radius)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, limit);
+
+      let isSaved = false;
+      if (userId) {
+        isSaved = await CollectionService.isPlaceSaved(placeId, userId);
+      }
+
+      return {
+        places: placesWithDistance.map((place) => ({ ...place, isSaved })),
+        center: { lat, lng },
+        radius,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get nearby places error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get nearby places", {
+        originalError: error,
+      });
+    }
+  }
+
+  static getTypes() {
+    try {
+      return placeTypeEnum.enumValues.sort((a, b) => a.localeCompare(b));
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get place types error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get place types", {
         originalError: error,
       });
     }

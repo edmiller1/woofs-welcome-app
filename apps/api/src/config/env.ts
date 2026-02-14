@@ -27,6 +27,9 @@ const envSchema = z.object({
   // Google Places API
   GOOGLE_PLACES_API_KEY: z.string().min(1, "GOOGLE_PLACES_API_KEY is required"),
 
+  // Google Gemini
+  GOOGLE_GEMINI_API_KEY: z.string().min(1, "GOOGLE_GEMINI_API_KEY is required"),
+
   // Resend (Email)
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
 

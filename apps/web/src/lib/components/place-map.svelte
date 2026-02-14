@@ -20,7 +20,7 @@
     lng,
     lat,
     zoom = 12,
-    style = "mapbox://styles/woofs-welcome/cmelw4hbe008r01rke62c99p2",
+    style = "",
     markerLabel = "hello",
     className = "",
     interactive = true,
@@ -119,6 +119,8 @@
     height: 350px;
     width: 100%;
     border-radius: 0.75rem;
+    z-index: 0;
+    isolation: isolate;
   }
 
   :global(.custom-marker) {

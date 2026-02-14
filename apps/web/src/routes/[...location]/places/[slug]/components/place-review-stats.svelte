@@ -1,17 +1,28 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import StarRating from "$lib/components/star-rating.svelte";
-  import { buttonVariants } from "$lib/components/ui/button";
+  import { Button, buttonVariants } from "$lib/components/ui/button";
   import { cn } from "$lib/utils";
-  import { Star } from "@lucide/svelte";
-  import type { PlaceReviewStats } from "@woofs/types";
+  import { PenLine, Star } from "@lucide/svelte";
+  import type { BAUser, PlaceReviewStats } from "@woofs/types";
 
   interface Props {
     placeId: string;
     placeSlug: string;
     reviewStats: PlaceReviewStats;
+    reviewDrawerOpen: boolean;
+    openReviewDrawer: (rating: number) => void;
+    user: BAUser | null;
   }
 
-  const { reviewStats, placeSlug, placeId }: Props = $props();
+  const {
+    reviewStats,
+    placeSlug,
+    placeId,
+    reviewDrawerOpen,
+    openReviewDrawer,
+    user,
+  }: Props = $props();
 </script>
 
 <div class="mb-6 flex items-center justify-between">
@@ -32,12 +43,18 @@
       </span>
     </div>
   </div>
-  <a
-    target="_blank"
-    href="/review/{placeSlug}-{placeId}"
-    class={cn(buttonVariants({ variant: "outline" }))}
-    ><Star class="size-4" /> Write a Review
-  </a>
+  {#if user}
+    <Button variant="outline" onclick={() => openReviewDrawer(0)}>
+      <PenLine class="size-4" /> Write a Review
+    </Button>
+  {:else}
+    <a
+      href={`/sign-in?redirect=${page.url.pathname}`}
+      class={cn(buttonVariants({ variant: "outline" }))}
+    >
+      <PenLine class="size-4" /> Write a Review
+    </a>
+  {/if}
 </div>
 
 <div class="border-muted border shadow-xs mb-8 rounded-lg p-6">
