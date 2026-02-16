@@ -1,4 +1,4 @@
-import { and, asc, count, eq } from "drizzle-orm";
+import { and, asc, count, eq, inArray } from "drizzle-orm";
 import { db } from "../db";
 import {
   Collection,
@@ -265,6 +265,33 @@ export class CollectionService {
         throw error;
       }
       throw new DatabaseError("Failed to check if place is saved", {
+        originalError: error,
+      });
+    }
+  }
+
+  static async getSavedPlaceIds(placeIds: string[], userId: string) {
+    try {
+      if (placeIds.length === 0) return new Set<string>();
+
+      const savedItems = await db
+        .select({ placeId: CollectionItem.placeId })
+        .from(CollectionItem)
+        .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
+        .where(
+          and(
+            inArray(CollectionItem.placeId, placeIds),
+            eq(Collection.userId, userId),
+          ),
+        );
+
+      return new Set(savedItems.map((item) => item.placeId));
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get saved place ids error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get saved place ids", {
         originalError: error,
       });
     }

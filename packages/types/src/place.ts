@@ -49,6 +49,7 @@ export interface PlaceWithDetails extends Place {
   location: Location;
   images: PlaceImage[];
   reviewStats: PlaceReviewStats;
+  parentLocationName?: string | null;
 }
 
 export interface NearbyPlace extends Place {

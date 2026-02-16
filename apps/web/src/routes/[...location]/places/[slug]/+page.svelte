@@ -26,6 +26,9 @@
   import { Maximize2, Star } from "@lucide/svelte";
   import PlaceMapDialog from "./components/place-map-dialog.svelte";
   import { map } from "zod";
+  import { Separator } from "$lib/components/ui/separator";
+  import RecommendedPlaces from "./components/recommended-places.svelte";
+  import Footer from "$lib/components/footer.svelte";
 
   const mapboxToken = PUBLIC_MAPBOX_API_KEY;
 
@@ -300,8 +303,10 @@
         </div>
       </div>
       <!-- Similar Places -->
+      <RecommendedPlaces placeId={place.data.id} {user} />
       <!-- Footer -->
     </div>
+    <Footer />
     <!-- Review Drawer/Dialog -->
     <ReviewDrawer
       open={reviewDrawerOpen}

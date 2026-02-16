@@ -10,15 +10,8 @@ import {
   sql,
 } from "drizzle-orm";
 import { db } from "../db";
+import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
-  AppError,
-  BadRequestError,
-  DatabaseError,
-  NotFoundError,
-} from "../lib/errors";
-import {
-  Collection,
-  CollectionItem,
   Location,
   Place,
   PlaceImage,
@@ -29,13 +22,13 @@ import { Google } from "../lib/google";
 import { ImageUploadService } from "./image-upload.service";
 import { locationPathSchema } from "../routes/location/schemas";
 import { placeSlugSchema } from "../routes/place/schemas";
-import { sanitizePlainText } from "../lib/sanitize";
 import { CollectionService } from "./collection.service";
 import {
   calculateDistance,
   getBoundingBox,
   getPlaceDescription,
 } from "../lib/helpers/place";
+import { RecommendationService } from "./recommendation.service";
 
 /**
  * Place Service
@@ -337,13 +330,19 @@ export class PlaceService {
         .sort((a, b) => a.distance - b.distance)
         .slice(0, limit);
 
-      let isSaved = false;
+      let savedPlaceIds = new Set<string>();
       if (userId) {
-        isSaved = await CollectionService.isPlaceSaved(placeId, userId);
+        savedPlaceIds = await CollectionService.getSavedPlaceIds(
+          placesWithDistance.map((place) => place.id),
+          userId,
+        );
       }
 
       return {
-        places: placesWithDistance.map((place) => ({ ...place, isSaved })),
+        places: placesWithDistance.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id),
+        })),
         center: { lat, lng },
         radius,
       };
@@ -367,6 +366,85 @@ export class PlaceService {
         throw error;
       }
       throw new DatabaseError("Failed to get place types", {
+        originalError: error,
+      });
+    }
+  }
+
+  static async getSimilarPlaces(
+    placeId: string,
+    limit: number = 6,
+    userId?: string,
+  ) {
+    try {
+      const sourcePlace = await db.query.Place.findFirst({
+        where: eq(Place.id, placeId),
+        with: {
+          location: {
+            with: {
+              parent: {
+                with: {
+                  parent: {
+                    columns: { name: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!sourcePlace) {
+        throw new Error("Place not found");
+      }
+
+      const candidates = await db.query.Place.findMany({
+        where: and(
+          eq(Place.locationId, sourcePlace.locationId),
+          ne(Place.id, placeId),
+        ),
+        with: {
+          location: true,
+          images: true,
+        },
+      });
+
+      const scored = candidates.map((candidate) => ({
+        place: candidate,
+        score: RecommendationService.calculateSimilarityScore(
+          sourcePlace,
+          candidate,
+        ),
+      }));
+
+      // 4. Sort by score and return top N
+      const topPlaces = scored
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map((item) => item.place);
+
+      let savedPlaceIds = new Set<string>();
+      if (userId) {
+        savedPlaceIds = await CollectionService.getSavedPlaceIds(
+          topPlaces.map((place) => place.id),
+          userId,
+        );
+      }
+
+      const parentLocationName =
+        sourcePlace.location?.parent?.parent?.name ?? null;
+
+      return topPlaces.map((place) => ({
+        ...place,
+        isSaved: savedPlaceIds.has(place.id),
+        parentLocationName,
+      }));
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get similar places error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get similar places", {
         originalError: error,
       });
     }

@@ -55,6 +55,16 @@ placeRouter.get("/types", (c) => {
   return c.json(result, 200);
 });
 
+placeRouter.get("/similar/:placeId", optionalAuthMiddleware, async (c) => {
+  const auth = c.get("user");
+
+  const placeId = c.req.param("placeId");
+
+  const result = await PlaceService.getSimilarPlaces(placeId, 6, auth?.id);
+
+  return c.json(result, 200);
+});
+
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   const auth = c.get("user");
   const path = c.req.param("path");
