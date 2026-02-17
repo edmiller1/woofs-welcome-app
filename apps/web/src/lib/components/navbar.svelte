@@ -53,10 +53,11 @@
     `/sign-in?redirect=${encodeURIComponent(page.url.pathname + page.url.search)}`,
   );
 
-  const isExplorePageOrProfilePage =
+  const isExplorePageOrAccountPage =
     page.url.pathname.includes("/explore") ||
-    page.url.pathname.includes("/profile") ||
-    page.url.pathname.includes("/business/dashboard");
+    page.url.pathname.includes("/account") ||
+    page.url.pathname.includes("/business/dashboard") ||
+    page.url.pathname.includes("/profile");
 </script>
 
 <nav class="bg-background top-0 w-full border-b">
@@ -114,7 +115,7 @@
         </a>
       {/if}
       <!-- Mobile Menu -->
-      {#if !isExplorePageOrProfilePage}
+      {#if !isExplorePageOrAccountPage}
         <div class="relative z-10 -ml-3 flex items-center lg:hidden">
           <Sheet.Root>
             <Sheet.Trigger
@@ -150,7 +151,7 @@
       {/if}
     </div>
   </div>
-  {#if !isExplorePageOrProfilePage}
+  {#if !isExplorePageOrAccountPage}
     <div class="hidden lg:flex lg:space-x-4 lg:py-2">
       {#each types as type}
         <a

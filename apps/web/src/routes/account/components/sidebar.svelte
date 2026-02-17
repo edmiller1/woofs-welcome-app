@@ -37,32 +37,32 @@
 
   const navItems = [
     {
-      name: "Profile",
-      href: "/profile",
+      name: "Account",
+      href: "/account",
       icon: CircleUser,
     },
     {
       name: "Saved",
-      href: "/profile/favourites",
+      href: "/account/favourites",
       icon: Bookmark,
     },
     {
       name: "Reviews",
-      href: "/profile/reviews",
+      href: "/account/reviews",
       icon: UserStar,
     },
     {
       name: "Settings",
-      href: "/profile/settings",
+      href: "/account/settings",
       icon: Settings,
       children: [
         {
           name: "Account",
-          href: "/profile/settings",
+          href: "/account/settings",
         },
         {
           name: "Notifications",
-          href: "/profile/settings/notifications",
+          href: "/account/settings/notifications",
         },
       ],
     },

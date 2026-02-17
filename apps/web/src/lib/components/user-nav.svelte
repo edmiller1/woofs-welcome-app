@@ -6,7 +6,13 @@
     AvatarImage,
   } from "$lib/components/ui/avatar";
   import { cn } from "$lib/utils";
-  import { CircleUser, Cog, LogOut, Users } from "@lucide/svelte";
+  import {
+    CircleUser,
+    Cog,
+    LogOut,
+    SquareUserRound,
+    Users,
+  } from "@lucide/svelte";
   import {
     DropdownMenu,
     DropdownMenuContent,
@@ -47,12 +53,17 @@
     </Avatar>
   </DropdownMenuTrigger>
   <DropdownMenuContent align="end" class="mt-2">
-    <a href="/profile">
+    <a href="/account">
       <DropdownMenuItem
-        ><CircleUser class="text-foreground" /> Profile</DropdownMenuItem
+        ><CircleUser class="text-foreground" /> Account</DropdownMenuItem
       >
     </a>
-    <a href="/profile/settings">
+    <a href="/profile">
+      <DropdownMenuItem
+        ><SquareUserRound class="text-foreground" /> Profile</DropdownMenuItem
+      >
+    </a>
+    <a href="/account/settings">
       <DropdownMenuItem
         ><Cog class="text-foreground" />Settings</DropdownMenuItem
       >

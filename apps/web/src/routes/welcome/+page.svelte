@@ -35,7 +35,7 @@
         if (redirectTo) {
           goto(redirectTo);
         } else {
-          goto("/profile");
+          goto("/account");
         }
       }, 1500);
     },
