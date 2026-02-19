@@ -1,1 +1,0 @@
-ALTER TABLE "location" DROP COLUMN "display_order";

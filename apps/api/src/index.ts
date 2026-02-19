@@ -17,6 +17,7 @@ import { locationRouter } from "./routes/location";
 import { placeRouter } from "./routes/place";
 import { collectionRouter } from "./routes/collection";
 import { reviewRouter } from "./routes/review";
+import { profileRouter } from "./routes/profile";
 
 validateEnv();
 
@@ -57,6 +58,7 @@ app.route("/api/location", locationRouter);
 app.route("/api/place", placeRouter);
 app.route("/api/collection", collectionRouter);
 app.route("/api/review", reviewRouter);
+app.route("/api/profile", profileRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

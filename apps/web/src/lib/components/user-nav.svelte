@@ -6,20 +6,11 @@
     AvatarImage,
   } from "$lib/components/ui/avatar";
   import { cn } from "$lib/utils";
-  import {
-    CircleUser,
-    Cog,
-    LogOut,
-    SquareUserRound,
-    Users,
-  } from "@lucide/svelte";
+  import { CircleUser, Cog, LogOut, SquareUserRound } from "@lucide/svelte";
   import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
   } from "./ui/dropdown-menu";
   import type { BAUser } from "@woofs/types";
@@ -38,6 +29,8 @@
       ? user.image
       : buildImageUrl(user?.profileImageId ?? "", "thumbnail"),
   );
+
+  const profileLink = $derived(user.name.split(" ").join("-").toLowerCase());
 </script>
 
 <DropdownMenu>
@@ -58,7 +51,7 @@
         ><CircleUser class="text-foreground" /> Account</DropdownMenuItem
       >
     </a>
-    <a href="/profile">
+    <a href={`/profile/${user.id}/${profileLink}`}>
       <DropdownMenuItem
         ><SquareUserRound class="text-foreground" /> Profile</DropdownMenuItem
       >

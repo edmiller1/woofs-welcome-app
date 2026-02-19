@@ -15,7 +15,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
-import type { InferSelectModel } from "drizzle-orm";
 
 // ============================================================================
 // ENUMS
@@ -72,6 +71,7 @@ export const imageTypeEnum = pgEnum("image_type", [
   "review_photo",
   "user_avatar",
   "business_logo",
+  "checkin_photo",
 ]);
 
 export const imageSourceEnum = pgEnum("image_source", [
@@ -99,6 +99,11 @@ export const user = pgTable(
       (): AnyPgColumn => Image.id,
       { onDelete: "set null" },
     ),
+    currentCity: text("current_city"),
+    instagram: text("instagram"),
+    facebook: text("facebook"),
+    x: text("x"),
+    tiktok: text("tiktok"),
     provider: varchar("provider", { length: 255 }),
     isAdmin: boolean("is_admin").default(false),
     activeContext: text("active_context").default("personal"), // 'personal' | 'business'
@@ -186,6 +191,86 @@ export const verification = pgTable("verification", {
     () => /* @__PURE__ */ new Date(),
   ),
 });
+
+export const UserSettings = pgTable(
+  "user_settings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    showReviews: boolean("show_reviews").default(true),
+    showCollections: boolean("show_collections").default(true),
+    showAbout: boolean("show_about").default(true),
+    showCheckIns: boolean("show_check_ins").default(true),
+    showDogs: boolean("show_dogs").default(true),
+    createdAt: timestamp("created_at").$defaultFn(
+      () => /* @__PURE__ */ new Date(),
+    ),
+    updatedAt: timestamp("updated_at").$defaultFn(
+      () => /* @__PURE__ */ new Date(),
+    ),
+  },
+  (table) => ({
+    userIdIndex: uniqueIndex("userId_idx").on(table.userId),
+  }),
+);
+
+export const CheckIn = pgTable("check_in", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  placeId: uuid("place_id")
+    .notNull()
+    .references(() => Place.id, { onDelete: "cascade" }),
+  date: timestamp("date").notNull(),
+  imageId: uuid("image_id").references((): AnyPgColumn => Image.id, {
+    onDelete: "set null",
+  }),
+  note: text("note"),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+export const Dog = pgTable("dog", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  breed: text("breed").notNull(),
+  imageId: uuid("image_id").references((): AnyPgColumn => Image.id, {
+    onDelete: "set null",
+  }),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const CheckInDog = pgTable(
+  "check_in_dog",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    checkInId: uuid("check_in_id")
+      .notNull()
+      .references(() => CheckIn.id, { onDelete: "cascade" }),
+    dogId: uuid("dog_id")
+      .notNull()
+      .references(() => Dog.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    checkInDogUnique: unique().on(table.checkInId, table.dogId),
+    checkInIdx: index("check_in_dog_check_in_idx").on(table.checkInId),
+    dogIdx: index("check_in_dog_dog_idx").on(table.dogId),
+  }),
+);
 
 export const Business = pgTable(
   "business",
@@ -922,6 +1007,51 @@ export const userRelations = relations(user, ({ many, one }) => ({
     references: [Image.id],
   }),
   uploadedImages: many(Image),
+  dogs: many(Dog),
+  checkIns: many(CheckIn),
+  userSettings: one(UserSettings, {
+    fields: [user.id],
+    references: [UserSettings.userId],
+  }),
+}));
+
+export const checkInRelations = relations(CheckIn, ({ many, one }) => ({
+  user: one(user, {
+    fields: [CheckIn.userId],
+    references: [user.id],
+  }),
+  place: one(Place, {
+    fields: [CheckIn.placeId],
+    references: [Place.id],
+  }),
+  dogs: many(CheckInDog),
+  image: one(Image, {
+    fields: [CheckIn.imageId],
+    references: [Image.id],
+  }),
+}));
+
+export const checkInDogRelations = relations(CheckInDog, ({ one }) => ({
+  checkIn: one(CheckIn, {
+    fields: [CheckInDog.checkInId],
+    references: [CheckIn.id],
+  }),
+  dog: one(Dog, {
+    fields: [CheckInDog.dogId],
+    references: [Dog.id],
+  }),
+}));
+
+export const dogRelations = relations(Dog, ({ many, one }) => ({
+  owner: one(user, {
+    fields: [Dog.ownerId],
+    references: [user.id],
+  }),
+  image: one(Image, {
+    fields: [Dog.imageId],
+    references: [Image.id],
+  }),
+  checkIns: many(CheckInDog),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -993,6 +1123,7 @@ export const placeRelations = relations(Place, ({ one, many }) => ({
     fields: [Place.id],
     references: [Claim.placeId],
   }),
+  checkIns: many(CheckIn),
 }));
 
 export const imageRelations = relations(Image, ({ one, many }) => ({

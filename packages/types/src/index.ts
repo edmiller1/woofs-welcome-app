@@ -8,3 +8,4 @@ export * from "./place";
 export * from "./review";
 export * from "./collection";
 export * from "./types";
+export * from "./profile";

@@ -61,7 +61,7 @@
 </script>
 
 <nav class="bg-background top-0 w-full border-b">
-  <div class="mx-auto flex h-16 max-w-350 items-center justify-between">
+  <div class="mx-auto flex h-16 max-w-350 items-center justify-between px-2">
     <div class="flex items-center gap-8">
       <!-- Logo/Brand -->
       <a href="/" class="flex items-center gap-2">

@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768860758471,
-      "tag": "0000_cynical_guardsmen",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1768962957198,
-      "tag": "0001_perpetual_ezekiel_stane",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1768967794932,
-      "tag": "0002_bumpy_sunfire",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1769072286331,
-      "tag": "0003_bent_logan",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1769290630173,
-      "tag": "0004_deep_amazoness",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1770445651801,
-      "tag": "0005_talented_exodus",
+      "when": 1771540379131,
+      "tag": "0000_talented_deadpool",
       "breakpoints": true
     }
   ]

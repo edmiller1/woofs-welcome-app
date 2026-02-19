@@ -1,5 +1,5 @@
 {
-  "id": "0af96ff1-8d86-44c3-85ea-6450f5b8d32f",
+  "id": "1e1fb287-dfe7-435d-91d2-acedaaf7b709",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -51,15 +51,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "logo_url": {
-          "name": "logo_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "logo_public_id": {
-          "name": "logo_public_id",
-          "type": "text",
+        "logo_image_id": {
+          "name": "logo_image_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -94,7 +88,7 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false,
-          "default": "'{\"email\":{\"reviewReplies\":true,\"reviewLikes\":true,\"newReviewsOnFavourites\":true,\"placeUpdates\":true,\"claimStatus\":true,\"reportStatus\":true,\"marketing\":false,\"newsletter\":false},\"push\":{\"reviewReplies\":true,\"reviewLikes\":true,\"newReviewsOnPlaces\":true,\"nearbyPlaces\":false,\"claimStatus\":true}}'::jsonb"
+          "default": "'{\"email\":{\"reviewReplies\":true,\"reviewLikes\":true,\"replyToYourReply\":true,\"reviewThreadActivity\":true,\"newReviewsOnFavourites\":true,\"placeUpdates\":true,\"claimStatus\":true,\"reportStatus\":true,\"marketing\":false,\"newsletter\":false},\"push\":{\"reviewReplies\":true,\"reviewLikes\":true,\"replyToYourReply\":true,\"reviewThreadActivity\":true,\"newReviewsOnPlaces\":true,\"nearbyPlaces\":false,\"claimStatus\":true}}'::jsonb"
         },
         "created_at": {
           "name": "created_at",
@@ -139,6 +133,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "business_logo_image_idx": {
+          "name": "business_logo_image_idx",
+          "columns": [
+            {
+              "expression": "logo_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -153,6 +162,19 @@
             "id"
           ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "business_logo_image_id_image_id_fk": {
+          "name": "business_logo_image_id_image_id_fk",
+          "tableFrom": "business",
+          "tableTo": "image",
+          "columnsFrom": [
+            "logo_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -309,6 +331,201 @@
           "columns": [
             "business_id",
             "place_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.check_in": {
+      "name": "check_in",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "place_id": {
+          "name": "place_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image_id": {
+          "name": "image_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "check_in_user_id_user_id_fk": {
+          "name": "check_in_user_id_user_id_fk",
+          "tableFrom": "check_in",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "check_in_place_id_place_id_fk": {
+          "name": "check_in_place_id_place_id_fk",
+          "tableFrom": "check_in",
+          "tableTo": "place",
+          "columnsFrom": [
+            "place_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "check_in_image_id_image_id_fk": {
+          "name": "check_in_image_id_image_id_fk",
+          "tableFrom": "check_in",
+          "tableTo": "image",
+          "columnsFrom": [
+            "image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.check_in_dog": {
+      "name": "check_in_dog",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "check_in_id": {
+          "name": "check_in_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dog_id": {
+          "name": "dog_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "check_in_dog_check_in_idx": {
+          "name": "check_in_dog_check_in_idx",
+          "columns": [
+            {
+              "expression": "check_in_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "check_in_dog_dog_idx": {
+          "name": "check_in_dog_dog_idx",
+          "columns": [
+            {
+              "expression": "dog_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "check_in_dog_check_in_id_check_in_id_fk": {
+          "name": "check_in_dog_check_in_id_check_in_id_fk",
+          "tableFrom": "check_in_dog",
+          "tableTo": "check_in",
+          "columnsFrom": [
+            "check_in_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "check_in_dog_dog_id_dog_id_fk": {
+          "name": "check_in_dog_dog_id_dog_id_fk",
+          "tableFrom": "check_in_dog",
+          "tableTo": "dog",
+          "columnsFrom": [
+            "dog_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "check_in_dog_check_in_id_dog_id_unique": {
+          "name": "check_in_dog_check_in_id_dog_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "check_in_id",
+            "dog_id"
           ]
         }
       },
@@ -807,6 +1024,89 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.dog": {
+      "name": "dog",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "breed": {
+          "name": "breed",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image_id": {
+          "name": "image_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "dog_image_id_image_id_fk": {
+          "name": "dog_image_id_image_id_fk",
+          "tableFrom": "dog",
+          "tableTo": "image",
+          "columnsFrom": [
+            "image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "dog_owner_id_user_id_fk": {
+          "name": "dog_owner_id_user_id_fk",
+          "tableFrom": "dog",
+          "tableTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.dog_breed": {
       "name": "dog_breed",
       "schema": "",
@@ -836,6 +1136,249 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.image": {
+      "name": "image",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cf_image_id": {
+          "name": "cf_image_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "filename": {
+          "name": "filename",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_size": {
+          "name": "file_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image_type": {
+          "name": "image_type",
+          "type": "image_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uploaded_by": {
+          "name": "uploaded_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uploaded_by_business": {
+          "name": "uploaded_by_business",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "image_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user_upload'"
+        },
+        "alt_text": {
+          "name": "alt_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_approved": {
+          "name": "is_approved",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "moderated_by": {
+          "name": "moderated_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "moderated_at": {
+          "name": "moderated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "image_cf_image_id_idx": {
+          "name": "image_cf_image_id_idx",
+          "columns": [
+            {
+              "expression": "cf_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "image_uploaded_by_idx": {
+          "name": "image_uploaded_by_idx",
+          "columns": [
+            {
+              "expression": "uploaded_by",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "image_image_type_idx": {
+          "name": "image_image_type_idx",
+          "columns": [
+            {
+              "expression": "image_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "image_approval_idx": {
+          "name": "image_approval_idx",
+          "columns": [
+            {
+              "expression": "is_approved",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "image_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "image_uploaded_by_user_id_fk": {
+          "name": "image_uploaded_by_user_id_fk",
+          "tableFrom": "image",
+          "tableTo": "user",
+          "columnsFrom": [
+            "uploaded_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "image_uploaded_by_business_business_id_fk": {
+          "name": "image_uploaded_by_business_business_id_fk",
+          "tableFrom": "image",
+          "tableTo": "business",
+          "columnsFrom": [
+            "uploaded_by_business"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "image_moderated_by_user_id_fk": {
+          "name": "image_moderated_by_user_id_fk",
+          "tableFrom": "image",
+          "tableTo": "user",
+          "columnsFrom": [
+            "moderated_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "image_cf_image_id_unique": {
+          "name": "image_cf_image_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cf_image_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -918,13 +1461,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
         },
         "meta_title": {
           "name": "meta_title",
@@ -1168,6 +1704,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "related_reply_id": {
+          "name": "related_reply_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "data": {
           "name": "data",
           "type": "jsonb",
@@ -1321,6 +1863,19 @@
           "tableTo": "review",
           "columnsFrom": [
             "related_review_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "notification_related_reply_id_review_reply_id_fk": {
+          "name": "notification_related_reply_id_review_reply_id_fk",
+          "tableFrom": "notification",
+          "tableTo": "review_reply",
+          "columnsFrom": [
+            "related_reply_id"
           ],
           "columnsTo": [
             "id"
@@ -1684,62 +2239,31 @@
           "primaryKey": false,
           "notNull": true
         },
-        "public_id": {
-          "name": "public_id",
-          "type": "text",
+        "image_id": {
+          "name": "image_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "url": {
-          "name": "url",
-          "type": "text",
+        "is_primary": {
+          "name": "is_primary",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": false
+        },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "caption": {
           "name": "caption",
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "alt_text": {
-          "name": "alt_text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_primary": {
-          "name": "is_primary",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "source": {
-          "name": "source",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "uploaded_by": {
-          "name": "uploaded_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_approved": {
-          "name": "is_approved",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -1757,6 +2281,57 @@
         }
       },
       "indexes": {
+        "place_image_place_id_idx": {
+          "name": "place_image_place_id_idx",
+          "columns": [
+            {
+              "expression": "place_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_image_image_id_idx": {
+          "name": "place_image_image_id_idx",
+          "columns": [
+            {
+              "expression": "image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "place_image_primary_idx": {
+          "name": "place_image_primary_idx",
+          "columns": [
+            {
+              "expression": "place_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_primary",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "place_image_display_order_idx": {
           "name": "place_image_display_order_idx",
           "columns": [
@@ -1768,27 +2343,6 @@
             },
             {
               "expression": "display_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "place_image_is_primary_idx": {
-          "name": "place_image_is_primary_idx",
-          "columns": [
-            {
-              "expression": "place_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "is_primary",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1814,17 +2368,17 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "place_image_uploaded_by_business_id_fk": {
-          "name": "place_image_uploaded_by_business_id_fk",
+        "place_image_image_id_image_id_fk": {
+          "name": "place_image_image_id_image_id_fk",
           "tableFrom": "place_image",
-          "tableTo": "business",
+          "tableTo": "image",
           "columnsFrom": [
-            "uploaded_by"
+            "image_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -2087,19 +2641,26 @@
           "primaryKey": false,
           "notNull": false
         },
-        "is_first_visit": {
-          "name": "is_first_visit",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
         "likes_count": {
           "name": "likes_count",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "default": 0
+        },
+        "replies_count": {
+          "name": "replies_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "has_business_reply": {
+          "name": "has_business_reply",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -2263,23 +2824,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "public_id": {
-          "name": "public_id",
-          "type": "text",
+        "image_id": {
+          "name": "image_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "url": {
-          "name": "url",
-          "type": "text",
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
-        },
-        "alt_text": {
-          "name": "alt_text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -2297,11 +2853,47 @@
         }
       },
       "indexes": {
-        "review_image_place_idx": {
-          "name": "review_image_place_idx",
+        "review_image_review_id_idx": {
+          "name": "review_image_review_id_idx",
           "columns": [
             {
               "expression": "review_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_image_image_id_idx": {
+          "name": "review_image_image_id_idx",
+          "columns": [
+            {
+              "expression": "image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_image_display_order_idx": {
+          "name": "review_image_display_order_idx",
+          "columns": [
+            {
+              "expression": "review_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "display_order",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2320,6 +2912,19 @@
           "tableTo": "review",
           "columnsFrom": [
             "review_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_image_image_id_image_id_fk": {
+          "name": "review_image_image_id_image_id_fk",
+          "tableFrom": "review_image",
+          "tableTo": "image",
+          "columnsFrom": [
+            "image_id"
           ],
           "columnsTo": [
             "id"
@@ -2437,6 +3042,356 @@
           "columns": [
             "user_id",
             "review_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.review_reply": {
+      "name": "review_reply",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "review_id": {
+          "name": "review_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_reply_id": {
+          "name": "parent_reply_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depth": {
+          "name": "depth",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "likes_count": {
+          "name": "likes_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "review_reply_review_idx": {
+          "name": "review_reply_review_idx",
+          "columns": [
+            {
+              "expression": "review_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_reply_parent_idx": {
+          "name": "review_reply_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_reply_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_reply_user_idx": {
+          "name": "review_reply_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_reply_business_idx": {
+          "name": "review_reply_business_idx",
+          "columns": [
+            {
+              "expression": "business_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_reply_review_created_idx": {
+          "name": "review_reply_review_created_idx",
+          "columns": [
+            {
+              "expression": "review_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_reply_parent_created_idx": {
+          "name": "review_reply_parent_created_idx",
+          "columns": [
+            {
+              "expression": "parent_reply_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "review_reply_review_id_review_id_fk": {
+          "name": "review_reply_review_id_review_id_fk",
+          "tableFrom": "review_reply",
+          "tableTo": "review",
+          "columnsFrom": [
+            "review_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_reply_parent_reply_id_review_reply_id_fk": {
+          "name": "review_reply_parent_reply_id_review_reply_id_fk",
+          "tableFrom": "review_reply",
+          "tableTo": "review_reply",
+          "columnsFrom": [
+            "parent_reply_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_reply_user_id_user_id_fk": {
+          "name": "review_reply_user_id_user_id_fk",
+          "tableFrom": "review_reply",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_reply_business_id_business_id_fk": {
+          "name": "review_reply_business_id_business_id_fk",
+          "tableFrom": "review_reply",
+          "tableTo": "business",
+          "columnsFrom": [
+            "business_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.review_reply_like": {
+      "name": "review_reply_like",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "reply_id": {
+          "name": "reply_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "business_id": {
+          "name": "business_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "review_reply_like_reply_idx": {
+          "name": "review_reply_like_reply_idx",
+          "columns": [
+            {
+              "expression": "reply_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "review_reply_like_reply_id_review_reply_id_fk": {
+          "name": "review_reply_like_reply_id_review_reply_id_fk",
+          "tableFrom": "review_reply_like",
+          "tableTo": "review_reply",
+          "columnsFrom": [
+            "reply_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_reply_like_user_id_user_id_fk": {
+          "name": "review_reply_like_user_id_user_id_fk",
+          "tableFrom": "review_reply_like",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "review_reply_like_business_id_business_id_fk": {
+          "name": "review_reply_like_business_id_business_id_fk",
+          "tableFrom": "review_reply_like",
+          "tableTo": "business",
+          "columnsFrom": [
+            "business_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "review_reply_like_user_id_reply_id_unique": {
+          "name": "review_reply_like_user_id_reply_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "reply_id"
           ]
         }
       },
@@ -2572,6 +3527,109 @@
             "id"
           ],
           "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_settings": {
+      "name": "user_settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "show_reviews": {
+          "name": "show_reviews",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "show_collections": {
+          "name": "show_collections",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "show_about": {
+          "name": "show_about",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "show_check_ins": {
+          "name": "show_check_ins",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "show_dogs": {
+          "name": "show_dogs",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "userId_idx": {
+          "name": "userId_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "user_settings_user_id_user_id_fk": {
+          "name": "user_settings_user_id_user_id_fk",
+          "tableFrom": "user_settings",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -2803,8 +3861,38 @@
           "primaryKey": false,
           "notNull": false
         },
-        "image_public_id": {
-          "name": "image_public_id",
+        "profile_image_id": {
+          "name": "profile_image_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_city": {
+          "name": "current_city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instagram": {
+          "name": "instagram",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facebook": {
+          "name": "facebook",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "x": {
+          "name": "x",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tiktok": {
+          "name": "tiktok",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -2858,7 +3946,7 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false,
-          "default": "'{\"email\":{\"reviewReplies\":true,\"reviewLikes\":true,\"newReviewsOnFavourites\":true,\"marketing\":false,\"newsletter\":false,\"nearbyPlaces\":false,\"reportStatus\":true},\"push\":{\"reviewReplies\":true,\"reviewLikes\":true,\"newReviewsOnFavourites\":true,\"nearbyPlaces\":false}}'::jsonb"
+          "default": "'{\"email\":{\"reviewReplies\":true,\"reviewLikes\":true,\"replyToYourReply\":true,\"reviewThreadActivity\":true,\"newReviewsOnFavourites\":true,\"marketing\":false,\"newsletter\":false,\"nearbyPlaces\":false,\"reportStatus\":true},\"push\":{\"reviewReplies\":true,\"reviewLikes\":true,\"replyToYourReply\":true,\"reviewThreadActivity\":true,\"newReviewsOnFavourites\":true,\"nearbyPlaces\":false,\"replyToReply\":true}}'::jsonb"
         }
       },
       "indexes": {
@@ -2876,9 +3964,37 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "user_profile_image_idx": {
+          "name": "user_profile_image_idx",
+          "columns": [
+            {
+              "expression": "profile_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
+        "user_profile_image_id_image_id_fk": {
+          "name": "user_profile_image_id_image_id_fk",
+          "tableFrom": "user",
+          "tableTo": "image",
+          "columnsFrom": [
+            "profile_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "user_active_business_id_business_id_fk": {
           "name": "user_active_business_id_business_id_fk",
           "tableFrom": "user",
@@ -2958,6 +4074,28 @@
     }
   },
   "enums": {
+    "public.image_source": {
+      "name": "image_source",
+      "schema": "public",
+      "values": [
+        "user_upload",
+        "business_upload",
+        "admin_upload",
+        "import"
+      ]
+    },
+    "public.image_type": {
+      "name": "image_type",
+      "schema": "public",
+      "values": [
+        "place_hero",
+        "place_gallery",
+        "review_photo",
+        "user_avatar",
+        "business_logo",
+        "checkin_photo"
+      ]
+    },
     "public.notification_context": {
       "name": "notification_context",
       "schema": "public",
@@ -2976,7 +4114,9 @@
         "review_reply",
         "review_like",
         "new_review_on_favourite",
-        "place_update"
+        "place_update",
+        "reply_to_reply",
+        "review_author_reply"
       ]
     },
     "public.place_type": {

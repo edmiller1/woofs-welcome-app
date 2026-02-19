@@ -1,3 +1,5 @@
+import type { ReviewImage } from "./image";
+
 export interface Review {
   id: string;
   placeId: string;
@@ -14,15 +16,6 @@ export interface Review {
   likesCount: number;
   repliesCount: number;
   hasBusinessReply: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ReviewImage {
-  id: string;
-  reviewId: string;
-  imageId: string;
-  displayOrder: number;
   createdAt: Date;
   updatedAt: Date;
 }

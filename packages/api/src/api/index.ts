@@ -4,6 +4,7 @@ import { location } from "./location";
 import { place } from "./place";
 import { collection } from "./collection";
 import { review } from "./review";
+import { profile } from "./profile";
 
 export const api = {
   auth,
@@ -12,4 +13,5 @@ export const api = {
   location,
   place,
   review,
+  profile,
 };

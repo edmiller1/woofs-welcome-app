@@ -1,3 +1,4 @@
+import { api } from "$lib/api-helper";
 import { getUser } from "$lib/auth/guard";
 import { redirect, type Load } from "@sveltejs/kit";
 
@@ -10,12 +11,12 @@ export const load: Load = async ({ params }) => {
 
   const user = await getUser();
 
-  const isOwner = user?.id === userId;
+  const initialProfile = await api.profile.getProfile(userId);
 
   return {
     user,
     userName,
     userId,
-    isOwner,
+    initialProfile,
   };
 };
