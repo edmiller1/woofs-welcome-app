@@ -4,9 +4,9 @@
  * Handles all auth-related business logic
  */
 
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "../db";
-import { user } from "../db/schema";
+import { Dog, user, UserSettings } from "../db/schema";
 import {
   AppError,
   DatabaseError,
@@ -79,7 +79,26 @@ export class AuthService {
     }
   }
 
-  static async updateProfile(userId: string, name?: string, image?: File) {
+  static async updateProfile(
+    userId: string,
+    data: {
+      name?: string;
+      image?: File;
+      currentCity?: string;
+      instagram?: string;
+      facebook?: string;
+      x?: string;
+      tiktok?: string;
+      dogs?: string;
+      removeDogIds?: string;
+      dogImages?: File[];
+      showAbout?: string;
+      showDogs?: string;
+      showCheckIns?: string;
+      showReviews?: string;
+      showCollections?: string;
+    },
+  ) {
     try {
       const userRecord = await db.query.user.findFirst({
         where: eq(user.id, userId),
@@ -89,22 +108,23 @@ export class AuthService {
         throw new NotFoundError("User not found");
       }
 
-      const updateData: { name?: string; profileImageId?: string } = {};
+      // Build user update data
+      const updateData: Record<string, unknown> = {};
 
-      if (name) {
-        const sanitizedName = sanitizePlainText(name);
+      if (data.name) {
+        const sanitizedName = sanitizePlainText(data.name);
 
         if (!sanitizedName || sanitizedName.length < 2) {
-          throw new Error("Name must be at least 2 characters");
+          throw new ValidationError("Name must be at least 2 characters");
         }
 
         if (sanitizedName.length > 50) {
-          throw new Error("Name must be less than 50 characters");
+          throw new ValidationError("Name must be less than 50 characters");
         }
 
         const nameRegex = /^[a-zA-Z\s'-]+$/;
         if (!nameRegex.test(sanitizedName)) {
-          throw new Error(
+          throw new ValidationError(
             "Name can only contain letters, spaces, hyphens, and apostrophes",
           );
         }
@@ -112,18 +132,114 @@ export class AuthService {
         updateData.name = sanitizedName;
       }
 
-      if (image) {
-        const uploadResult = await imageUploadService.uploadImage(image, {
+      if (data.image) {
+        const uploadResult = await imageUploadService.uploadImage(data.image, {
           imageType: "user_avatar",
           uploadedBy: userId,
-          altText: (updateData.name || userRecord.name) + " avatar",
+          altText: ((updateData.name as string) || userRecord.name) + " avatar",
         });
-
         updateData.profileImageId = uploadResult.id;
+      }
+
+      if (data.currentCity !== undefined) {
+        updateData.currentCity = sanitizePlainText(data.currentCity) || null;
+      }
+      if (data.instagram !== undefined) {
+        updateData.instagram = sanitizePlainText(data.instagram) || null;
+      }
+      if (data.facebook !== undefined) {
+        updateData.facebook = sanitizePlainText(data.facebook) || null;
+      }
+      if (data.x !== undefined) {
+        updateData.x = sanitizePlainText(data.x) || null;
+      }
+      if (data.tiktok !== undefined) {
+        updateData.tiktok = sanitizePlainText(data.tiktok) || null;
       }
 
       if (Object.keys(updateData).length > 0) {
         await db.update(user).set(updateData).where(eq(user.id, userId));
+      }
+
+      // Handle dog removals
+      if (data.removeDogIds) {
+        const idsToRemove: string[] = JSON.parse(data.removeDogIds);
+        if (idsToRemove.length > 0) {
+          await db
+            .delete(Dog)
+            .where(inArray(Dog.id, idsToRemove));
+        }
+      }
+
+      // Handle dog upserts
+      if (data.dogs) {
+        const dogs: Array<{
+          id?: string;
+          name: string;
+          breed: string;
+          imageIndex?: number;
+        }> = JSON.parse(data.dogs);
+
+        for (const dog of dogs) {
+          let imageId: string | undefined;
+
+          // Upload dog image if an imageIndex is provided
+          const dogImageFile =
+            dog.imageIndex !== undefined
+              ? data.dogImages?.[dog.imageIndex]
+              : undefined;
+          if (dogImageFile) {
+            const uploadResult = await imageUploadService.uploadImage(
+              dogImageFile,
+              {
+                imageType: "user_avatar",
+                uploadedBy: userId,
+                altText: sanitizePlainText(dog.name) + " photo",
+              },
+            );
+            imageId = uploadResult.id;
+          }
+
+          if (dog.id) {
+            // Update existing dog
+            const setData: Record<string, unknown> = {
+              name: sanitizePlainText(dog.name),
+              breed: sanitizePlainText(dog.breed),
+            };
+            if (imageId) {
+              setData.imageId = imageId;
+            }
+            await db.update(Dog).set(setData).where(eq(Dog.id, dog.id));
+          } else {
+            // Insert new dog
+            await db.insert(Dog).values({
+              name: sanitizePlainText(dog.name),
+              breed: sanitizePlainText(dog.breed),
+              ownerId: userId,
+              imageId: imageId || undefined,
+            });
+          }
+        }
+      }
+
+      // Handle user settings
+      const settingsUpdate: Record<string, boolean> = {};
+      if (data.showAbout !== undefined)
+        settingsUpdate.showAbout = data.showAbout === "true";
+      if (data.showDogs !== undefined)
+        settingsUpdate.showDogs = data.showDogs === "true";
+      if (data.showCheckIns !== undefined)
+        settingsUpdate.showCheckIns = data.showCheckIns === "true";
+      if (data.showReviews !== undefined)
+        settingsUpdate.showReviews = data.showReviews === "true";
+      if (data.showCollections !== undefined)
+        settingsUpdate.showCollections = data.showCollections === "true";
+
+      if (Object.keys(settingsUpdate).length > 0) {
+        await db
+          .update(UserSettings)
+          .set(settingsUpdate)
+          .where(eq(UserSettings.userId, userId));
       }
 
       return { success: true };

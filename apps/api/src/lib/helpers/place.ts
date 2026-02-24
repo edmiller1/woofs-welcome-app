@@ -38,6 +38,7 @@ export const calculateDistance = (
 
 export const getPlaceDescription = async (
   placeName: string,
+  placeAddress: string,
   locationPath: string,
 ) => {
   const geminiApiKey = env.GOOGLE_GEMINI_API_KEY;
@@ -45,7 +46,7 @@ export const getPlaceDescription = async (
 
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
-    contents: `Please google search and provide an accurate one paragraph description of this place or business for my dog friendly directory app: ${placeName}, ${locationPath.split("/").join(" ")}`,
+    contents: `Please google search and provide an accurate one paragraph description of this place or business for my dog friendly directory app: ${placeName}, ${locationPath.split("/").join(" ")}, ${placeAddress}`,
   });
 
   return response.text;

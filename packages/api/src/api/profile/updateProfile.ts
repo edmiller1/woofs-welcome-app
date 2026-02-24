@@ -40,7 +40,7 @@ export const updateProfile = async (data: UpdateProfileData) => {
 
   const response = await protectedProcedure.patch<{
     result: { success: boolean };
-  }>(`/user/update`, formData, {
+  }>(`/profile/update`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

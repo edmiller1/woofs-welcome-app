@@ -38,6 +38,8 @@ export const placeTypeEnum = pgEnum("place_type", [
   "Lake",
   "River",
   "Trail",
+  "Winery",
+  "Accomodation",
 ]);
 
 export const reportStatusEnum = pgEnum("report_status", [
@@ -99,7 +101,7 @@ export const user = pgTable(
       (): AnyPgColumn => Image.id,
       { onDelete: "set null" },
     ),
-    currentCity: text("current_city"),
+    currentCity: jsonb("current_city").$type<CityData | null>(),
     instagram: text("instagram"),
     facebook: text("facebook"),
     x: text("x"),
@@ -1314,6 +1316,12 @@ export const notificationRelations = relations(Notification, ({ one }) => ({
     references: [ReviewReply.id],
   }),
 }));
+
+export type CityData = {
+  city: string;
+  locality: string;
+  country: string;
+};
 
 // User notification preferences (personal context)
 export type UserNotificationPreferences = {

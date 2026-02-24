@@ -25,24 +25,3 @@ authRouter.post(
     return c.json(result, 200);
   },
 );
-
-authRouter.patch(
-  "/update",
-  authMiddleware,
-  zValidator("form", updateProfileSchema),
-  async (c) => {
-    const auth = c.get("user");
-
-    if (!auth) {
-      throw new UnauthorizedError("Unauthorized");
-    }
-
-    const { name, image } = c.req.valid("form");
-
-    console.log("Update profile request:", { name, image });
-
-    const result = await AuthService.updateProfile(auth.id, name, image);
-
-    return c.json(result, 200);
-  },
-);

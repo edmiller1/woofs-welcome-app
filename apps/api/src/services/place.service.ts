@@ -193,7 +193,11 @@ export class PlaceService {
       });
 
       if (!place.description) {
-        const AIdesc = await getPlaceDescription(place.name, location.path);
+        const AIdesc = await getPlaceDescription(
+          place.name,
+          location.path,
+          place.address || "",
+        );
 
         await db
           .update(Place)

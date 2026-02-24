@@ -1,0 +1,1 @@
+ALTER TYPE "public"."place_type" ADD VALUE 'Accomodation';

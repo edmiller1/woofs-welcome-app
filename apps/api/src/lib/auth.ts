@@ -9,7 +9,7 @@ import {
 import { db } from "../db";
 import { resend } from "./resend";
 import { eq } from "drizzle-orm";
-import { user } from "../db/schema";
+import { user, UserSettings } from "../db/schema";
 import * as schema from "../db/schema";
 import { env } from "../config/env";
 import { otpEmailHtml } from "../emails/otp-email";
@@ -106,6 +106,9 @@ export const auth = betterAuth({
           .set({ provider: "email" })
           .where(eq(user.id, newUser.id));
       }
+      // Create default user settings
+      await db.insert(UserSettings).values({ userId: newUser.id });
+
       // Send welcome email
       const { error } = await resend.emails.send({
         from: "Woofs Welcome <hello@woofswelcome.app>",
