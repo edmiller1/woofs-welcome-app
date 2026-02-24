@@ -4,15 +4,27 @@ import { ProfileService } from "../../services/profile.service";
 import { zValidator } from "@hono/zod-validator";
 import { updateProfileSchema } from "./schemas";
 import { UnauthorizedError } from "../../lib/errors";
+import { ImageUploadService } from "../../services/image-upload.service";
 
 export const profileRouter = new Hono();
 
 profileRouter.get("/:profileId", optionalAuthMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const profileService = new ProfileService(db, imageUploadService);
+
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
 
   const profileId = c.req.param("profileId");
 
-  const result = await ProfileService.getProfile(profileId, auth?.id);
+  const result = await profileService.getProfile(profileId, auth?.id);
 
   return c.json(result, 200);
 });
@@ -22,7 +34,14 @@ profileRouter.patch(
   authMiddleware,
   zValidator("form", updateProfileSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const profileService = new ProfileService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -30,20 +49,27 @@ profileRouter.patch(
 
     const formData = c.req.valid("form");
 
-    const result = await ProfileService.updateProfile(auth.id, formData);
+    const result = await profileService.updateProfile(auth.id, formData);
 
     return c.json(result, 200);
   },
 );
 
 profileRouter.get("/dogs", authMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const profileService = new ProfileService(db, imageUploadService);
 
   if (!auth) {
     throw new UnauthorizedError("Unauthorized");
   }
 
-  const result = await ProfileService.getProfileDogs(auth.id);
+  const result = await profileService.getProfileDogs(auth.id);
 
   return c.json(result, 200);
 });

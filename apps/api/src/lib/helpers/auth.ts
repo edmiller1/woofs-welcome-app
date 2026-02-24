@@ -1,46 +1,35 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../db";
+import type { Db } from "../../db";
 import { user } from "../../db/schema";
 
-export const getContext = async (userId: string) => {
+export const getContext = async (db: Db, userId: string) => {
   const userRecord = await db.query.user.findFirst({
     where: eq(user.id, userId),
   });
 
-  if (!userRecord) {
-    return null;
-  }
-
-  return userRecord.activeContext || "personal";
+  return userRecord?.activeContext || "personal";
 };
 
-export const isUserAdmin = async (userId: string) => {
+export const isUserAdmin = async (db: Db, userId: string) => {
   const userRecord = await db.query.user.findFirst({
     where: eq(user.id, userId),
   });
 
-  if (!userRecord) {
-    return false;
-  }
-
-  return userRecord.isAdmin;
+  return userRecord?.isAdmin ?? false;
 };
 
 export const getUserProvider = async (
+  db: Db,
   userId: string,
 ): Promise<string | null> => {
   const userRecord = await db.query.user.findFirst({
     where: eq(user.id, userId),
   });
 
-  if (!userRecord) {
-    return null;
-  }
-
-  return userRecord.provider;
+  return userRecord?.provider ?? null;
 };
 
-export const getUserProfileImageId = async (userId: string) => {
+export const getUserProfileImageId = async (db: Db, userId: string) => {
   const userRecord = await db.query.user.findFirst({
     where: eq(user.id, userId),
     with: {
@@ -48,9 +37,7 @@ export const getUserProfileImageId = async (userId: string) => {
     },
   });
 
-  if (!userRecord) {
-    return null;
-  }
+  if (!userRecord) return null;
 
   return {
     profileImageId: userRecord.profileImageId,

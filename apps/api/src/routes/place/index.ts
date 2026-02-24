@@ -4,6 +4,8 @@ import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
 import { nearbyPlacesSchema, placeReviewsSchema } from "./schemas";
+import { ImageUploadService } from "../../services/image-upload.service";
+import { CollectionService } from "../../services/collection.service";
 
 export const placeRouter = new Hono();
 
@@ -12,11 +14,24 @@ placeRouter.get(
   optionalAuthMiddleware,
   zValidator("query", placeReviewsSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+    const placeService = new PlaceService(
+      db,
+      imageUploadService,
+      collectionService,
+      env,
+    );
 
     const { page, limit, placeId } = c.req.valid("query");
 
-    const result = await PlaceService.getPlaceReviews(
+    const result = await placeService.getPlaceReviews(
       placeId,
       page,
       limit,
@@ -32,11 +47,24 @@ placeRouter.get(
   optionalAuthMiddleware,
   zValidator("query", nearbyPlacesSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+    const placeService = new PlaceService(
+      db,
+      imageUploadService,
+      collectionService,
+      env,
+    );
 
     const { lat, lng, radius, limit } = c.req.valid("query");
 
-    const result = await PlaceService.getNearbyPlaces(
+    const result = await placeService.getNearbyPlaces(
       c.req.param("placeId"),
       lat,
       lng,
@@ -50,23 +78,64 @@ placeRouter.get(
 );
 
 placeRouter.get("/types", (c) => {
-  const result = PlaceService.getTypes();
+  //Context
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(
+    db,
+    imageUploadService,
+    collectionService,
+    env,
+  );
+
+  const result = placeService.getTypes();
 
   return c.json(result, 200);
 });
 
 placeRouter.get("/similar/:placeId", optionalAuthMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(
+    db,
+    imageUploadService,
+    collectionService,
+    env,
+  );
 
   const placeId = c.req.param("placeId");
 
-  const result = await PlaceService.getSimilarPlaces(placeId, 6, auth?.id);
+  const result = await placeService.getSimilarPlaces(placeId, 6, auth?.id);
 
   return c.json(result, 200);
 });
 
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(
+    db,
+    imageUploadService,
+    collectionService,
+    env,
+  );
+
   const path = c.req.param("path");
 
   const segments = path.split("/");
@@ -77,7 +146,7 @@ placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
     throw new BadRequestError("Slug is required");
   }
 
-  const result = await PlaceService.getPlace(locationPath, slug, auth?.id);
+  const result = await placeService.getPlace(locationPath, slug, auth?.id);
 
   return c.json(result, 200);
 });

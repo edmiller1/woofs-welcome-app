@@ -1,8 +1,9 @@
-import { db } from "../db";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import type { UserPartialNotificationPreferencesInput } from "../routes/notification/schemas";
 import { user, type UserNotificationPreferences } from "../db/schema";
 import { eq } from "drizzle-orm";
+import type { ImageUploadService } from "./image-upload.service";
+import type { Db } from "../db";
 
 const DEFAULT_USER_NOTIFICATION_PREFERENCES = {
   email: {
@@ -41,10 +42,14 @@ type NotificationEventKey =
  * Handles all notification-related business logic
  */
 export class NotificationService {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
   /**
    * Check if a user should receive email and/or push notifications for a given event
    */
-  static async shouldNotify(
+  async shouldNotify(
     userId: string,
     event: NotificationEventKey,
   ): Promise<{ email: boolean; push: boolean }> {
@@ -58,9 +63,9 @@ export class NotificationService {
   /**
    * Get users notification preferences with defaults merged
    */
-  static async getPreferences(userId: string) {
+  async getPreferences(userId: string) {
     try {
-      const userRecord = await db.query.user.findFirst({
+      const userRecord = await this.db.query.user.findFirst({
         where: (user, { eq }) => eq(user.id, userId),
       });
 
@@ -98,7 +103,7 @@ export class NotificationService {
   /**
    * Update user's notification preferences (partial update)
    */
-  static async updateUserPreferences(
+  async updateUserPreferences(
     userId: string,
     updates: UserPartialNotificationPreferencesInput,
   ) {
@@ -117,7 +122,7 @@ export class NotificationService {
         },
       };
 
-      await db
+      await this.db
         .update(user)
         .set({
           notificationPreferences: updatedPrefs,
@@ -139,11 +144,11 @@ export class NotificationService {
   /**
    * Reset user preferences to defaults
    */
-  static async resetUserPreferences(userId: string) {
+  async resetUserPreferences(userId: string) {
     try {
       const defaultPrefs = DEFAULT_USER_NOTIFICATION_PREFERENCES;
 
-      await db
+      await this.db
         .update(user)
         .set({
           notificationPreferences: defaultPrefs,

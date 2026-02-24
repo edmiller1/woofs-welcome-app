@@ -1,6 +1,5 @@
 import { and, asc, count, desc, eq, gte, inArray, sql, sum } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { db } from "../db";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import { locationPathSchema } from "../routes/location/schemas";
 import {
@@ -15,6 +14,8 @@ import {
   validatePlaceFilter,
 } from "../lib/helpers/location";
 import type { PlaceFilter } from "@woofs/types";
+import type { Db } from "../db";
+import type { ImageUploadService } from "./image-upload.service";
 
 const CityLocation = alias(Location, "city");
 const RegionLocation = alias(Location, "region");
@@ -25,14 +26,18 @@ const RegionLocation = alias(Location, "region");
  * Handles all location-related business logic
  */
 export class LocationService {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
   /**
    * Get location
    */
-  static async getLocation(path: string, userId?: string) {
+  async getLocation(path: string, userId?: string) {
     try {
       const validatedPath = locationPathSchema.parse(path);
 
-      const location = await db.query.Location.findFirst({
+      const location = await this.db.query.Location.findFirst({
         where: eq(Location.path, validatedPath),
         with: {
           parent: true,
@@ -51,7 +56,7 @@ export class LocationService {
         pathSegments.slice(0, index + 1).join("/"),
       );
 
-      const breadcrumbs = await db
+      const breadcrumbs = await this.db
         .select({
           name: Location.name,
           slug: Location.slug,
@@ -62,7 +67,7 @@ export class LocationService {
         .where(inArray(Location.path, ancestorPaths))
         .orderBy(asc(Location.level));
 
-      const stats = await db
+      const stats = await this.db
         .select({
           totalPlaces: count(),
           totalAdventures: sum(
@@ -82,7 +87,7 @@ export class LocationService {
         .innerJoin(Location, eq(Place.locationId, Location.id))
         .where(sql`${Location.path} LIKE ${validatedPath + "%"}`);
 
-      const popularPlaces = await db
+      const popularPlaces = await this.db
         .select({
           id: Place.id,
           name: Place.name,
@@ -117,7 +122,7 @@ export class LocationService {
       let savedPlaceIds: Set<string> = new Set();
       if (userId && popularPlaces.length > 0) {
         const placeIds = popularPlaces.map((p) => p.id);
-        const savedItems = await db
+        const savedItems = await this.db
           .select({ placeId: CollectionItem.placeId })
           .from(CollectionItem)
           .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
@@ -156,7 +161,7 @@ export class LocationService {
     }
   }
 
-  static async getLocationPlaces(
+  async getLocationPlaces(
     path: string,
     filters: {
       placeSort?: PlaceFilter;
@@ -167,7 +172,7 @@ export class LocationService {
       const validatedPath = locationPathSchema.parse(path);
       console.log("Looking for location with path:", validatedPath);
 
-      const location = await db.query.Location.findFirst({
+      const location = await this.db.query.Location.findFirst({
         where: eq(Location.path, validatedPath),
         with: {
           parent: true,
@@ -183,12 +188,12 @@ export class LocationService {
 
       const placeFilterType = validatePlaceFilter(filters.placeSort);
 
-      const places = await getPlacesByPlaceSort(path, placeFilterType);
+      const places = await getPlacesByPlaceSort(this.db, path, placeFilterType);
 
       let savedPlaceIds: Set<string> = new Set();
       if (userId && places.length > 0) {
         const placeIds = places.map((p) => p.id);
-        const savedItems = await db
+        const savedItems = await this.db
           .select({ placeId: CollectionItem.placeId })
           .from(CollectionItem)
           .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))

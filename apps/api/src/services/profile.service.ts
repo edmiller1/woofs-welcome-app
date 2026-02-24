@@ -1,5 +1,4 @@
 import { avg, count, eq, inArray } from "drizzle-orm";
-import { db } from "../db";
 import {
   CheckIn,
   Collection,
@@ -15,18 +14,22 @@ import {
   ValidationError,
 } from "../lib/errors";
 import { sanitizePlainText } from "../lib/sanitize";
-import { ImageUploadService, type UploadResult } from "./image-upload.service";
-
-const imageUploadService = new ImageUploadService();
+import { ImageUploadService } from "./image-upload.service";
+import type { Db } from "../db";
 
 /**
  * Profile Service
  * Handles all profile-related business logic
  */
 export class ProfileService {
-  static async getProfile(profileId: string, userId?: string) {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
+
+  async getProfile(profileId: string, userId?: string) {
     try {
-      const profile = await db.query.user.findFirst({
+      const profile = await this.db.query.user.findFirst({
         where: eq(user.id, profileId),
         columns: {
           id: true,
@@ -148,18 +151,18 @@ export class ProfileService {
       }
 
       const [reviewStats, collectionStats, checkInStats] = await Promise.all([
-        db
+        this.db
           .select({
             reviewCount: count(),
             averageRating: avg(Review.rating),
           })
           .from(Review)
           .where(eq(Review.userId, profileId)),
-        db
+        this.db
           .select({ collectionCount: count() })
           .from(Collection)
           .where(eq(Collection.userId, profileId)),
-        db
+        this.db
           .select({ checkInCount: count() })
           .from(CheckIn)
           .where(eq(CheckIn.userId, profileId)),
@@ -184,7 +187,7 @@ export class ProfileService {
     }
   }
 
-  static async updateProfile(
+  async updateProfile(
     userId: string,
     data: {
       name?: string;
@@ -205,7 +208,7 @@ export class ProfileService {
     },
   ) {
     try {
-      const userRecord = await db.query.user.findFirst({
+      const userRecord = await this.db.query.user.findFirst({
         where: eq(user.id, userId),
       });
 
@@ -238,11 +241,15 @@ export class ProfileService {
       }
 
       if (data.image) {
-        const uploadResult = await imageUploadService.uploadImage(data.image, {
-          imageType: "user_avatar",
-          uploadedBy: userId,
-          altText: ((updateData.name as string) || userRecord.name) + " avatar",
-        });
+        const uploadResult = await this.imageUploadService.uploadImage(
+          data.image,
+          {
+            imageType: "user_avatar",
+            uploadedBy: userId,
+            altText:
+              ((updateData.name as string) || userRecord.name) + " avatar",
+          },
+        );
         updateData.profileImageId = uploadResult.id;
       }
 
@@ -280,14 +287,14 @@ export class ProfileService {
       }
 
       if (Object.keys(updateData).length > 0) {
-        await db.update(user).set(updateData).where(eq(user.id, userId));
+        await this.db.update(user).set(updateData).where(eq(user.id, userId));
       }
 
       // Handle dog removals
       if (data.removeDogIds) {
         const idsToRemove: string[] = JSON.parse(data.removeDogIds);
         if (idsToRemove.length > 0) {
-          await db.delete(Dog).where(inArray(Dog.id, idsToRemove));
+          await this.db.delete(Dog).where(inArray(Dog.id, idsToRemove));
         }
       }
 
@@ -309,7 +316,7 @@ export class ProfileService {
               ? data.dogImages?.[dog.imageIndex]
               : undefined;
           if (dogImageFile) {
-            const uploadResult = await imageUploadService.uploadImage(
+            const uploadResult = await this.imageUploadService.uploadImage(
               dogImageFile,
               {
                 imageType: "user_avatar",
@@ -329,10 +336,10 @@ export class ProfileService {
             if (imageId) {
               setData.imageId = imageId;
             }
-            await db.update(Dog).set(setData).where(eq(Dog.id, dog.id));
+            await this.db.update(Dog).set(setData).where(eq(Dog.id, dog.id));
           } else {
             // Insert new dog
-            await db.insert(Dog).values({
+            await this.db.insert(Dog).values({
               name: sanitizePlainText(dog.name),
               breed: sanitizePlainText(dog.breed),
               ownerId: userId,
@@ -356,7 +363,7 @@ export class ProfileService {
         settingsUpdate.showCollections = data.showCollections === "true";
 
       if (Object.keys(settingsUpdate).length > 0) {
-        await db
+        await this.db
           .update(UserSettings)
           .set(settingsUpdate)
           .where(eq(UserSettings.userId, userId));
@@ -374,9 +381,9 @@ export class ProfileService {
     }
   }
 
-  static async getProfileDogs(userId: string) {
+  async getProfileDogs(userId: string) {
     try {
-      const dogs = await db.query.Dog.findMany({
+      const dogs = await this.db.query.Dog.findMany({
         where: eq(Dog.ownerId, userId),
         columns: {
           name: true,

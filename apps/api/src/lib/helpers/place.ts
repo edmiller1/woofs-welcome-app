@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { env } from "../../config/env";
+import type { Env } from "../../config/env";
 
 export const getBoundingBox = (
   lat: number,
@@ -37,6 +37,7 @@ export const calculateDistance = (
 };
 
 export const getPlaceDescription = async (
+  env: Env,
   placeName: string,
   placeAddress: string,
   locationPath: string,

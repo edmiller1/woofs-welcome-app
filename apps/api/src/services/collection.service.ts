@@ -1,5 +1,4 @@
 import { and, asc, count, eq, inArray } from "drizzle-orm";
-import { db } from "../db";
 import {
   Collection,
   CollectionItem,
@@ -14,6 +13,8 @@ import {
   NotFoundError,
 } from "../lib/errors";
 import { sanitizePlainText } from "../lib/sanitize";
+import type { Db } from "../db";
+import type { ImageUploadService } from "./image-upload.service";
 
 /**
  * Collection Service
@@ -21,9 +22,14 @@ import { sanitizePlainText } from "../lib/sanitize";
  * Handles all collection-related business logic
  */
 export class CollectionService {
-  static async getCollections(userId: string) {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
+
+  async getCollections(userId: string) {
     try {
-      const collections = await db.query.Collection.findMany({
+      const collections = await this.db.query.Collection.findMany({
         where: eq(Collection.userId, userId),
         with: {
           items: true,
@@ -42,11 +48,7 @@ export class CollectionService {
     }
   }
 
-  static async createCollection(
-    userId: string,
-    name: string,
-    description?: string,
-  ) {
+  async createCollection(userId: string, name: string, description?: string) {
     try {
       const sanitizedName = sanitizePlainText(name);
 
@@ -64,7 +66,7 @@ export class CollectionService {
         }
       }
 
-      const newCollection = await db
+      const newCollection = await this.db
         .insert(Collection)
         .values({
           name: sanitizedName,
@@ -96,14 +98,14 @@ export class CollectionService {
     }
   }
 
-  static async savePlaceToCollection(
+  async savePlaceToCollection(
     placeId: string,
     userId: string,
     collectionId?: string,
   ) {
     try {
       // Verify place exists
-      const [place] = await db
+      const [place] = await this.db
         .select({ id: Place.id })
         .from(Place)
         .where(eq(Place.id, placeId))
@@ -124,7 +126,7 @@ export class CollectionService {
         targetCollectionId = newCollection.collectionId;
       } else {
         // Verify collection exists and belongs to user
-        const [collection] = await db
+        const [collection] = await this.db
           .select({ id: Collection.id })
           .from(Collection)
           .where(
@@ -140,7 +142,7 @@ export class CollectionService {
       }
 
       // Check if place is already in collection
-      const [existingItem] = await db
+      const [existingItem] = await this.db
         .select({ id: CollectionItem.id })
         .from(CollectionItem)
         .where(
@@ -156,18 +158,18 @@ export class CollectionService {
       }
 
       // Add place to collection
-      await db.insert(CollectionItem).values({
+      await this.db.insert(CollectionItem).values({
         collectionId: targetCollectionId,
         placeId,
       });
 
       // Update item count
-      const [countResult] = await db
+      const [countResult] = await this.db
         .select({ itemCount: count() })
         .from(CollectionItem)
         .where(eq(CollectionItem.collectionId, targetCollectionId));
 
-      await db
+      await this.db
         .update(Collection)
         .set({ itemCount: countResult?.itemCount ?? 0 })
         .where(eq(Collection.id, targetCollectionId));
@@ -187,14 +189,14 @@ export class CollectionService {
     }
   }
 
-  static async removePlaceFromCollection(
+  async removePlaceFromCollection(
     placeId: string,
     userId: string,
     collectionId: string,
   ) {
     try {
       // Verify collection exists and belongs to user
-      const [collection] = await db
+      const [collection] = await this.db
         .select({ id: Collection.id })
         .from(Collection)
         .where(
@@ -207,7 +209,7 @@ export class CollectionService {
       }
 
       // Delete the collection item
-      const deleted = await db
+      const deleted = await this.db
         .delete(CollectionItem)
         .where(
           and(
@@ -222,12 +224,12 @@ export class CollectionService {
       }
 
       // Update item count
-      const [countResult] = await db
+      const [countResult] = await this.db
         .select({ itemCount: count() })
         .from(CollectionItem)
         .where(eq(CollectionItem.collectionId, collectionId));
 
-      await db
+      await this.db
         .update(Collection)
         .set({ itemCount: countResult?.itemCount ?? 0 })
         .where(eq(Collection.id, collectionId));
@@ -244,9 +246,9 @@ export class CollectionService {
     }
   }
 
-  static async isPlaceSaved(placeId: string, userId: string) {
+  async isPlaceSaved(placeId: string, userId: string) {
     try {
-      const [saved] = await db
+      const [saved] = await this.db
         .select({ id: CollectionItem.id })
         .from(CollectionItem)
         .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
@@ -270,11 +272,11 @@ export class CollectionService {
     }
   }
 
-  static async getSavedPlaceIds(placeIds: string[], userId: string) {
+  async getSavedPlaceIds(placeIds: string[], userId: string) {
     try {
       if (placeIds.length === 0) return new Set<string>();
 
-      const savedItems = await db
+      const savedItems = await this.db
         .select({ placeId: CollectionItem.placeId })
         .from(CollectionItem)
         .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
@@ -297,10 +299,10 @@ export class CollectionService {
     }
   }
 
-  static async getPlaceCollections(placeId: string, userId: string) {
+  async getPlaceCollections(placeId: string, userId: string) {
     try {
       // Get all user's collections with hasPlace flag
-      const collections = await db
+      const collections = await this.db
         .select({
           id: Collection.id,
           name: Collection.name,
@@ -323,7 +325,7 @@ export class CollectionService {
       // Get preview images for each collection (first 4 places with images)
       const collectionsWithPreviews = await Promise.all(
         collections.map(async (c) => {
-          const previewImages = await db
+          const previewImages = await this.db
             .select({
               imageId: Image.cfImageId,
             })

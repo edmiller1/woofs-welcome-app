@@ -1,9 +1,10 @@
 import type { Context, Next } from "hono";
-import { db } from "../db";
+import { type Db } from "../db";
 import { eq } from "drizzle-orm";
-import { session, user } from "../db/schema";
+import { session } from "../db/schema";
 import type { Session, User as betterAuthUser } from "better-auth/types";
-import { auth } from "../lib/auth";
+import type { Env } from "../config/env";
+import type { Redis } from "@upstash/redis/cloudflare";
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -11,12 +12,16 @@ declare module "hono" {
     session: Session | null;
     userContext: "personal" | "business";
     isAdmin: boolean;
+    db: Db;
+    env: Env;
+    redis: Redis;
   }
 }
 
 // Authentication middleware
 export const authMiddleware = async (c: Context, next: Next) => {
   try {
+    const db = c.get("db");
     const authHeader = c.req.header("Authorization");
     const token = authHeader?.split(" ")[1] || "";
 
@@ -59,6 +64,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 };
 
 export const optionalAuthMiddleware = async (c: Context, next: Next) => {
+  const db = c.get("db");
   const authHeader = c.req.header("Authorization");
   const token = authHeader?.split(" ")[1] || "";
 

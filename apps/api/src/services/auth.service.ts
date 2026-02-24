@@ -5,7 +5,6 @@
  */
 
 import { eq, inArray } from "drizzle-orm";
-import { db } from "../db";
 import { Dog, user, UserSettings } from "../db/schema";
 import {
   AppError,
@@ -14,15 +13,18 @@ import {
   ValidationError,
 } from "../lib/errors";
 import { sanitizePlainText } from "../lib/sanitize";
-import { ImageUploadService, type UploadResult } from "./image-upload.service";
-
-const imageUploadService = new ImageUploadService();
+import type { Db } from "../db";
+import type { ImageUploadService } from "./image-upload.service";
 
 export class AuthService {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
   /**
    * Set name and image for user
    */
-  static async welcomeUser(userId: string, name: string, image?: File) {
+  async welcomeUser(userId: string, name: string, image?: File) {
     try {
       const sanitizedName = sanitizePlainText(name);
 
@@ -44,14 +46,14 @@ export class AuthService {
 
       if (image) {
         // Upload image to Cloudflare (this also saves to db)
-        const uploadResult = await imageUploadService.uploadImage(image, {
+        const uploadResult = await this.imageUploadService.uploadImage(image, {
           imageType: "user_avatar",
           uploadedBy: userId,
           altText: sanitizedName + " avatar",
         });
 
         // Update user with name and profile image
-        await db
+        await this.db
           .update(user)
           .set({
             name: sanitizedName,
@@ -61,7 +63,7 @@ export class AuthService {
           .where(eq(user.id, userId));
       } else {
         // Update user name only
-        await db
+        await this.db
           .update(user)
           .set({ name: sanitizedName, provider: "email" })
           .where(eq(user.id, userId));
@@ -79,7 +81,7 @@ export class AuthService {
     }
   }
 
-  static async updateProfile(
+  async updateProfile(
     userId: string,
     data: {
       name?: string;
@@ -100,7 +102,7 @@ export class AuthService {
     },
   ) {
     try {
-      const userRecord = await db.query.user.findFirst({
+      const userRecord = await this.db.query.user.findFirst({
         where: eq(user.id, userId),
       });
 
@@ -133,11 +135,15 @@ export class AuthService {
       }
 
       if (data.image) {
-        const uploadResult = await imageUploadService.uploadImage(data.image, {
-          imageType: "user_avatar",
-          uploadedBy: userId,
-          altText: ((updateData.name as string) || userRecord.name) + " avatar",
-        });
+        const uploadResult = await this.imageUploadService.uploadImage(
+          data.image,
+          {
+            imageType: "user_avatar",
+            uploadedBy: userId,
+            altText:
+              ((updateData.name as string) || userRecord.name) + " avatar",
+          },
+        );
         updateData.profileImageId = uploadResult.id;
       }
 
@@ -158,16 +164,14 @@ export class AuthService {
       }
 
       if (Object.keys(updateData).length > 0) {
-        await db.update(user).set(updateData).where(eq(user.id, userId));
+        await this.db.update(user).set(updateData).where(eq(user.id, userId));
       }
 
       // Handle dog removals
       if (data.removeDogIds) {
         const idsToRemove: string[] = JSON.parse(data.removeDogIds);
         if (idsToRemove.length > 0) {
-          await db
-            .delete(Dog)
-            .where(inArray(Dog.id, idsToRemove));
+          await this.db.delete(Dog).where(inArray(Dog.id, idsToRemove));
         }
       }
 
@@ -189,7 +193,7 @@ export class AuthService {
               ? data.dogImages?.[dog.imageIndex]
               : undefined;
           if (dogImageFile) {
-            const uploadResult = await imageUploadService.uploadImage(
+            const uploadResult = await this.imageUploadService.uploadImage(
               dogImageFile,
               {
                 imageType: "user_avatar",
@@ -209,10 +213,10 @@ export class AuthService {
             if (imageId) {
               setData.imageId = imageId;
             }
-            await db.update(Dog).set(setData).where(eq(Dog.id, dog.id));
+            await this.db.update(Dog).set(setData).where(eq(Dog.id, dog.id));
           } else {
             // Insert new dog
-            await db.insert(Dog).values({
+            await this.db.insert(Dog).values({
               name: sanitizePlainText(dog.name),
               breed: sanitizePlainText(dog.breed),
               ownerId: userId,
@@ -236,7 +240,7 @@ export class AuthService {
         settingsUpdate.showCollections = data.showCollections === "true";
 
       if (Object.keys(settingsUpdate).length > 0) {
-        await db
+        await this.db
           .update(UserSettings)
           .set(settingsUpdate)
           .where(eq(UserSettings.userId, userId));

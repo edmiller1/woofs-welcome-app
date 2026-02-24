@@ -74,6 +74,7 @@ export const imageTypeEnum = pgEnum("image_type", [
   "user_avatar",
   "business_logo",
   "checkin_photo",
+  "dog_photo",
 ]);
 
 export const imageSourceEnum = pgEnum("image_source", [

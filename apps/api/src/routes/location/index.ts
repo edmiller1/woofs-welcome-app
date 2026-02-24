@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { optionalAuthMiddleware } from "../../middleware/auth";
 import { LocationService } from "../../services/location.service";
+import { ImageUploadService } from "../../services/image-upload.service";
 
 export const locationRouter = new Hono();
 
@@ -8,7 +9,15 @@ export const locationRouter = new Hono();
 // Example: /location/new-zealand/canterbury/christchurch
 // Example: /location/new-zealand/canterbury/christchurch/places?placeSort=popular
 locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const locationService = new LocationService(db, imageUploadService);
+
   const fullPath = c.req.param("path");
 
   // Check if this is a /places request
@@ -21,7 +30,7 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
       | "surprise"
       | undefined;
 
-    const result = await LocationService.getLocationPlaces(
+    const result = await locationService.getLocationPlaces(
       locationPath,
       { placeSort },
       auth?.id,
@@ -31,7 +40,7 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
   }
 
   // Otherwise, it's a location request
-  const result = await LocationService.getLocation(fullPath, auth?.id);
+  const result = await locationService.getLocation(fullPath, auth?.id);
 
   return c.json(result, 200);
 });

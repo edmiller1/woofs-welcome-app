@@ -8,8 +8,18 @@ export function setTokenGetter(getter: TokenGetter) {
   getToken = getter;
 }
 
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return window.location.hostname === "localhost"
+      ? "http://localhost:9000/api"
+      : "https://api.woofswelcome.app/api";
+  }
+  // SSR fallback
+  return "https://api.woofswelcome.app/api";
+};
+
 const baseConfig = {
-  baseURL: "http://localhost:9000/api",
+  baseURL: getBaseUrl(),
   headers: {
     "Content-Type": "application/json",
   },

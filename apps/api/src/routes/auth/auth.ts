@@ -4,6 +4,9 @@ import { zValidator } from "@hono/zod-validator";
 import { AuthService } from "../../services/auth.service";
 import { UnauthorizedError } from "../../lib/errors";
 import { updateProfileSchema, welcomeUserSchema } from "./schemas";
+import { ImageUploadService } from "../../services/image-upload.service";
+import { CollectionService } from "../../services/collection.service";
+import { PlaceService } from "../../services/place.service";
 
 export const authRouter = new Hono();
 
@@ -12,7 +15,14 @@ authRouter.post(
   authMiddleware,
   zValidator("form", welcomeUserSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const authService = new AuthService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -20,7 +30,7 @@ authRouter.post(
 
     const { name, image } = c.req.valid("form");
 
-    const result = await AuthService.welcomeUser(auth.id, name, image);
+    const result = await authService.welcomeUser(auth.id, name, image);
 
     return c.json(result, 200);
   },

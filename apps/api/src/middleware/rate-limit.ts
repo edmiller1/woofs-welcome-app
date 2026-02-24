@@ -1,5 +1,7 @@
-import { rateLimiter } from "hono-rate-limiter";
+import { RedisStore } from "@hono-rate-limiter/redis";
+import { Redis } from "@upstash/redis/cloudflare";
 import type { Context } from "hono";
+import { rateLimiter } from "hono-rate-limiter";
 
 const getClientIdentifier = (c: Context) => {
   const forwardedFor =
@@ -23,127 +25,137 @@ const createRateLimitMessage = (limit: number, window: string) => {
 /**
  * Session Check Rate Limit - For get-session endpoint
  *
- * More lenient since it's called on every page load
  * Limit: 30 requests per 15 minutes per IP
  */
-export const sessionRateLimiter = rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 30, // ← More lenient
-  standardHeaders: "draft-6",
-  keyGenerator: getClientIdentifier,
-  handler: (c) => {
-    return c.json(
-      {
-        error: "Too many session check attempts",
-        message: createRateLimitMessage(30, "15 minutes"),
-        retryAfter: c.get("ratelimit-reset"),
-      },
-      429,
-    );
-  },
-});
+export const sessionRateLimiter = (redis: Redis) => {
+  return rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 30,
+    standardHeaders: "draft-6",
+    keyGenerator: getClientIdentifier,
+    store: new RedisStore({ client: redis }),
+    handler: (c) => {
+      return c.json(
+        {
+          error: "Too many session check attempts",
+          message: createRateLimitMessage(30, "15 minutes"),
+          retryAfter: c.get("ratelimit-reset" as any),
+        },
+        429,
+      );
+    },
+  });
+};
 
 /**
  * STRICT Rate Limit - For Authentication Endpoints
  *
  * Use Case: Sign-in, sign-up, OTP verification
- * Why Strict: Prevents brute force attacks, credential stuffing, OTP spam
  *
  * Limit: 5 requests per 15 minutes per IP
  */
-export const authRateLimiter = rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 5,
-  standardHeaders: "draft-6",
-  keyGenerator: getClientIdentifier,
-  handler: (c) => {
-    return c.json(
-      {
-        error: "Too many authentication attempts",
-        message: createRateLimitMessage(5, "15 minutes"),
-        retryAfter: c.get("ratelimit-reset"),
-      },
-      429,
-    );
-  },
-});
+export const authRateLimiter = (redis: Redis) => {
+  return rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 5,
+    standardHeaders: "draft-6",
+    keyGenerator: getClientIdentifier,
+    store: new RedisStore({ client: redis }),
+    handler: (c) => {
+      return c.json(
+        {
+          error: "Too many authentication attempts",
+          message: createRateLimitMessage(5, "15 minutes"),
+          retryAfter: c.get("ratelimit-reset" as any),
+        },
+        429,
+      );
+    },
+  });
+};
 
 /**
  * MODERATE Rate Limit - For Write Operations
  *
- * Use Case: Creating reviews, uploading images, favoriting places
- * Why Moderate: Prevents spam while allowing legitimate heavy usage
+ * Use Case: Creating reviews, uploading images, adding to collections
  *
  * Limit: 20 requests per 15 minutes per IP
  */
-export const writeRateLimiter = rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 20,
-  standardHeaders: "draft-6",
-  keyGenerator: getClientIdentifier,
-  handler: (c) => {
-    return c.json(
-      {
-        error: "Too many requests",
-        message: createRateLimitMessage(20, "15 minutes"),
-        retryAfter: c.get("ratelimit-reset"),
-      },
-      429,
-    );
-  },
-});
+export const writeRateLimiter = (redis: Redis) => {
+  return rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 20,
+    standardHeaders: "draft-6",
+    keyGenerator: getClientIdentifier,
+    store: new RedisStore({ client: redis }),
+    handler: (c) => {
+      return c.json(
+        {
+          error: "Too many requests",
+          message: createRateLimitMessage(20, "15 minutes"),
+          retryAfter: c.get("ratelimit-reset" as any),
+        },
+        429,
+      );
+    },
+  });
+};
 
 /**
  * LENIENT Rate Limit - For Read Operations
  *
  * Use Case: Browsing places, viewing reviews, searching
- * Why Lenient: Users legitimately browse many pages
  *
  * Limit: 100 requests per 15 minutes per IP
  */
-export const readRateLimiter = rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100,
-  standardHeaders: "draft-6",
-  keyGenerator: getClientIdentifier,
-  handler: (c) => {
-    return c.json(
-      {
-        error: "Too many requests",
-        message: createRateLimitMessage(100, "15 minutes"),
-        retryAfter: c.get("ratelimit-reset"),
-      },
-      429,
-    );
-  },
-});
+export const readRateLimiter = (redis: Redis) => {
+  return rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100,
+    standardHeaders: "draft-6",
+    keyGenerator: getClientIdentifier,
+    store: new RedisStore({ client: redis }),
+    handler: (c) => {
+      return c.json(
+        {
+          error: "Too many requests",
+          message: createRateLimitMessage(100, "15 minutes"),
+          retryAfter: c.get("ratelimit-reset" as any),
+        },
+        429,
+      );
+    },
+  });
+};
 
 /**
  * GLOBAL Rate Limit - For All Endpoints
  *
  * Use Case: Catch-all protection against DDoS
- * Why Needed: Prevents overwhelming the server
+ * Prevents overwhelming the server
  *
  * Limit: 200 requests per 15 minutes per IP
- * This should be higher than any specific limiter
  */
-export const globalRateLimiter = rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 200, // Total requests across all endpoints
-  standardHeaders: "draft-6",
-  keyGenerator: getClientIdentifier,
-  handler: (c) => {
-    return c.json(
-      {
-        error: "Too many requests from your IP",
-        message:
-          "You've exceeded the maximum number of requests. Please try again later.",
-        retryAfter: c.get("ratelimit-reset"),
-      },
-      429,
-    );
-  },
-});
+export const globalRateLimiter = (redis: Redis) => {
+  return rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 200,
+    standardHeaders: "draft-6",
+    keyGenerator: getClientIdentifier,
+    store: new RedisStore({ client: redis }),
+    handler: (c) => {
+      return c.json(
+        {
+          error: "Too many requests from your IP",
+          message:
+            "You've exceeded the maximum number of requests. Please try again later.",
+          retryAfter: c.get("ratelimit-reset" as any),
+        },
+        429,
+      );
+    },
+  });
+};
 
 /**
  * User-Specific Rate Limiter (for authenticated actions)
@@ -173,19 +185,3 @@ export const createUserRateLimiter = (limit: number, windowMs: number) => {
     },
   });
 };
-
-// Pre-configured user rate limiters for common use cases
-export const reviewRateLimiter = createUserRateLimiter(
-  5, // 5 reviews
-  60 * 60 * 1000, // per hour
-);
-
-export const favouriteRateLimiter = createUserRateLimiter(
-  50, // 50 favorites
-  60 * 60 * 1000, // per hour
-);
-
-export const imageUploadRateLimiter = createUserRateLimiter(
-  30, // 30 image uploads (5 reviews × 6 images)
-  60 * 60 * 1000, // per hour
-);

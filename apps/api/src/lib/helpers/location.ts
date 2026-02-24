@@ -1,6 +1,6 @@
 import type { PlaceFilter } from "@woofs/types";
-import { db } from "../../db";
 import { Location, Place, PlaceImage } from "../../db/schema";
+import type { Db } from "../../db";
 import { alias } from "drizzle-orm/pg-core";
 import { and, desc, eq, gte, or, sql } from "drizzle-orm";
 
@@ -16,6 +16,7 @@ export const validatePlaceFilter = (filter?: PlaceFilter) => {
 };
 
 export const getPlacesByPlaceSort = async (
+  db: Db,
   path: string,
   placeSort: PlaceFilter,
 ) => {

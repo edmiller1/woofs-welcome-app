@@ -9,17 +9,25 @@ import {
   placeIdSchema,
 } from "./schemas";
 import { CollectionService } from "../../services/collection.service";
+import { ImageUploadService } from "../../services/image-upload.service";
 
 export const collectionRouter = new Hono();
 
 collectionRouter.get("/collections", authMiddleware, async (c) => {
+  //Context
   const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
 
   if (!auth) {
     throw new UnauthorizedError("Unauthorized");
   }
 
-  const result = await CollectionService.getCollections(auth.id);
+  const result = await collectionService.getCollections(auth.id);
 
   return c.json(result, 200);
 });
@@ -29,7 +37,14 @@ collectionRouter.post(
   authMiddleware,
   zValidator("json", createCollectionSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -37,7 +52,7 @@ collectionRouter.post(
 
     const { name, description } = c.req.valid("json");
 
-    const result = await CollectionService.createCollection(
+    const result = await collectionService.createCollection(
       auth.id,
       name,
       description,
@@ -52,7 +67,14 @@ collectionRouter.post(
   authMiddleware,
   zValidator("json", savePlaceToCollectionSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -60,7 +82,7 @@ collectionRouter.post(
 
     const { placeId, collectionId } = c.req.valid("json");
 
-    const result = await CollectionService.savePlaceToCollection(
+    const result = await collectionService.savePlaceToCollection(
       placeId,
       auth.id,
       collectionId,
@@ -75,7 +97,14 @@ collectionRouter.post(
   authMiddleware,
   zValidator("json", removePlaceFromCollectionSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -83,7 +112,7 @@ collectionRouter.post(
 
     const { placeId, collectionId } = c.req.valid("json");
 
-    const result = await CollectionService.removePlaceFromCollection(
+    const result = await collectionService.removePlaceFromCollection(
       placeId,
       auth.id,
       collectionId,
@@ -98,7 +127,14 @@ collectionRouter.get(
   authMiddleware,
   zValidator("param", placeIdSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -106,7 +142,7 @@ collectionRouter.get(
 
     const { placeId } = c.req.valid("param");
 
-    const result = await CollectionService.isPlaceSaved(placeId, auth.id);
+    const result = await collectionService.isPlaceSaved(placeId, auth.id);
 
     return c.json(result, 200);
   },
@@ -117,7 +153,14 @@ collectionRouter.get(
   authMiddleware,
   zValidator("param", placeIdSchema),
   async (c) => {
+    //Context
     const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
 
     if (!auth) {
       throw new UnauthorizedError("Unauthorized");
@@ -125,7 +168,7 @@ collectionRouter.get(
 
     const { placeId } = c.req.valid("param");
 
-    const result = await CollectionService.getPlaceCollections(
+    const result = await collectionService.getPlaceCollections(
       placeId,
       auth.id,
     );

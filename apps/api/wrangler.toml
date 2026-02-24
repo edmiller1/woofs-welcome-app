@@ -1,0 +1,20 @@
+name = "woofs-welcome-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-20"
+compatibility_flags = ["nodejs_compat"]
+
+[dev]
+port = 9000
+
+[vars]
+NODE_ENV = "production"
+FRONTEND_BASE_URL = "https://www.woofswelcome.app"
+MOBILE_BASE_URL = "https://your-mobile-url.com"
+GOOGLE_REDIRECT_URI = "https://api.woofswelcome.app/api/auth/callback/google"
+CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
+CF_ENDPOINT = "https://08e981cecb92746f1f2cf59ac9969f40.r2.cloudflarestorage.com/woofs-welcome-images"
+CF_BUCKET_NAME = "woofs-welcome-images"
+
+routes = [
+  { pattern = "api.woofswelcome.app/*", custom_domain = true }
+]

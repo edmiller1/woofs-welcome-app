@@ -9,7 +9,6 @@ import {
   ne,
   sql,
 } from "drizzle-orm";
-import { db } from "../db";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
   Location,
@@ -29,6 +28,8 @@ import {
   getPlaceDescription,
 } from "../lib/helpers/place";
 import { RecommendationService } from "./recommendation.service";
+import type { Db } from "../db";
+import type { Env } from "../config/env";
 
 /**
  * Place Service
@@ -36,17 +37,20 @@ import { RecommendationService } from "./recommendation.service";
  * Handles all place-related business logic
  */
 export class PlaceService {
-  static async getPlace(
-    locationPath: string,
-    placeSlug: string,
-    userId?: string,
-  ) {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+    private collectionService: CollectionService,
+    private env: Env,
+  ) {}
+
+  async getPlace(locationPath: string, placeSlug: string, userId?: string) {
     try {
       const validatedLocationPath = locationPathSchema.parse(locationPath);
       const validatedPlaceSlug = placeSlugSchema.parse(placeSlug);
 
       // Query place with location join to verify the path
-      const [result] = await db
+      const [result] = await this.db
         .select({
           place: Place,
           location: Location,
@@ -68,7 +72,7 @@ export class PlaceService {
       const { place, location } = result;
 
       // Get place images
-      const images = await db
+      const images = await this.db
         .select()
         .from(PlaceImage)
         .where(eq(PlaceImage.placeId, place.id));
@@ -77,6 +81,7 @@ export class PlaceService {
       if (images.length === 0) {
         try {
           const placesData = await Google.searchPlaces(
+            this.env,
             place.name,
             location.countryCode,
           );
@@ -85,15 +90,14 @@ export class PlaceService {
             console.log("No Google Places results found");
           } else {
             const imageUrls = await Google.getPlacePhotos(
+              this.env,
               placesData[0].place_id,
             );
 
             if (imageUrls && imageUrls.length > 0) {
-              const imageUploadService = new ImageUploadService();
-
               // Upload images from Google to Cloudflare
               const uploadedImages =
-                await imageUploadService.uploadMultipleImagesFromUrls(
+                await this.imageUploadService.uploadMultipleImagesFromUrls(
                   imageUrls.slice(0, 20), // Limit to 20 images
                   {
                     imageType: "place_gallery",
@@ -107,7 +111,7 @@ export class PlaceService {
 
               // Create PlaceImage records linking images to the place
               if (uploadedImages.length > 0) {
-                await db.insert(PlaceImage).values(
+                await this.db.insert(PlaceImage).values(
                   uploadedImages.map((img, index) => ({
                     placeId: place.id,
                     imageId: img.id,
@@ -117,7 +121,7 @@ export class PlaceService {
                 );
 
                 // Re-fetch images after upload
-                const newImages = await db
+                const newImages = await this.db
                   .select()
                   .from(PlaceImage)
                   .where(eq(PlaceImage.placeId, place.id));
@@ -139,7 +143,7 @@ export class PlaceService {
         pathSegments.slice(0, index + 1).join("/"),
       );
 
-      const locationBreadcrumbs = await db
+      const locationBreadcrumbs = await this.db
         .select({
           name: Location.name,
           slug: Location.slug,
@@ -163,11 +167,11 @@ export class PlaceService {
 
       let isSaved = false;
       if (userId) {
-        isSaved = await CollectionService.isPlaceSaved(place.id, userId);
+        isSaved = await this.collectionService.isPlaceSaved(place.id, userId);
       }
 
       // Review Stats
-      const stats = await db
+      const stats = await this.db
         .select({
           rating: Review.rating,
           count: count(),
@@ -194,12 +198,13 @@ export class PlaceService {
 
       if (!place.description) {
         const AIdesc = await getPlaceDescription(
+          this.env,
           place.name,
           location.path,
           place.address || "",
         );
 
-        await db
+        await this.db
           .update(Place)
           .set({
             description: AIdesc,
@@ -230,14 +235,14 @@ export class PlaceService {
     }
   }
 
-  static async getPlaceReviews(
+  async getPlaceReviews(
     placeId: string,
     page: number,
     limit: number,
     userId?: string,
   ) {
     try {
-      const reviews = await db.query.Review.findMany({
+      const reviews = await this.db.query.Review.findMany({
         where: eq(Review.placeId, placeId),
         with: {
           images: true,
@@ -279,7 +284,7 @@ export class PlaceService {
     }
   }
 
-  static async getNearbyPlaces(
+  async getNearbyPlaces(
     placeId: string,
     lat: number,
     lng: number,
@@ -307,7 +312,7 @@ export class PlaceService {
       conditions.push(ne(Place.id, placeId));
 
       // Get places with conditions
-      const places = await db.query.Place.findMany({
+      const places = await this.db.query.Place.findMany({
         where: and(...conditions),
         with: {
           location: true,
@@ -336,7 +341,7 @@ export class PlaceService {
 
       let savedPlaceIds = new Set<string>();
       if (userId) {
-        savedPlaceIds = await CollectionService.getSavedPlaceIds(
+        savedPlaceIds = await this.collectionService.getSavedPlaceIds(
           placesWithDistance.map((place) => place.id),
           userId,
         );
@@ -361,7 +366,7 @@ export class PlaceService {
     }
   }
 
-  static getTypes() {
+  getTypes() {
     try {
       return placeTypeEnum.enumValues.sort((a, b) => a.localeCompare(b));
     } catch (error) {
@@ -375,13 +380,9 @@ export class PlaceService {
     }
   }
 
-  static async getSimilarPlaces(
-    placeId: string,
-    limit: number = 6,
-    userId?: string,
-  ) {
+  async getSimilarPlaces(placeId: string, limit: number = 6, userId?: string) {
     try {
-      const sourcePlace = await db.query.Place.findFirst({
+      const sourcePlace = await this.db.query.Place.findFirst({
         where: eq(Place.id, placeId),
         with: {
           location: {
@@ -402,7 +403,7 @@ export class PlaceService {
         throw new Error("Place not found");
       }
 
-      const candidates = await db.query.Place.findMany({
+      const candidates = await this.db.query.Place.findMany({
         where: and(
           eq(Place.locationId, sourcePlace.locationId),
           ne(Place.id, placeId),
@@ -429,7 +430,7 @@ export class PlaceService {
 
       let savedPlaceIds = new Set<string>();
       if (userId) {
-        savedPlaceIds = await CollectionService.getSavedPlaceIds(
+        savedPlaceIds = await this.collectionService.getSavedPlaceIds(
           topPlaces.map((place) => place.id),
           userId,
         );

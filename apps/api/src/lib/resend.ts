@@ -1,4 +1,10 @@
 import { Resend } from "resend";
-import { env } from "../config/env";
+import type { Env } from "../config/env";
 
-export const resend = new Resend(env.RESEND_API_KEY);
+let cachedResend: Resend | null = null;
+
+export function getResend(env: Env) {
+  if (cachedResend) return cachedResend;
+  cachedResend = new Resend(env.RESEND_API_KEY);
+  return cachedResend;
+}

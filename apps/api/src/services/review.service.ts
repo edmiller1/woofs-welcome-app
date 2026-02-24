@@ -4,12 +4,12 @@
  */
 
 import { and, asc, eq, sql } from "drizzle-orm";
-import { db } from "../db";
 import { Image, Place, Review, ReviewImage } from "../db/schema";
 import { AppError, ConflictError, DatabaseError } from "../lib/errors";
 import { sanitizePlainText, sanitizeRichText } from "../lib/sanitize";
 import type { CreateReviewInput } from "../routes/review/schemas";
 import { ImageUploadService } from "./image-upload.service";
+import type { Db } from "../db";
 
 interface CloudflareUploadResult {
   cfImageId: string;
@@ -19,18 +19,16 @@ interface CloudflareUploadResult {
 }
 
 export class ReviewService {
+  constructor(
+    private db: Db,
+    private imageUploadService: ImageUploadService,
+  ) {}
   /**
    * Create a review with optional images
    * Images are uploaded to Cloudflare first, then all database records
    * (Review, Image, ReviewImage) are inserted in a single transaction
    */
-  static async createReview(
-    userId: string,
-    data: CreateReviewInput,
-    images?: File[],
-  ) {
-    const imageUploadService = new ImageUploadService();
-
+  async createReview(userId: string, data: CreateReviewInput, images?: File[]) {
     try {
       const sanitizedData = {
         ...data,
@@ -40,7 +38,7 @@ export class ReviewService {
       };
 
       // Check for existing review for this user + place combo
-      const existingReview = await db.query.Review.findFirst({
+      const existingReview = await this.db.query.Review.findFirst({
         where: and(
           eq(Review.userId, userId),
           eq(Review.placeId, sanitizedData.placeId),
@@ -57,7 +55,7 @@ export class ReviewService {
       if (images && images.length > 0) {
         for (const file of images) {
           const cfResult =
-            await imageUploadService.uploadToCloudflareOnly(file);
+            await this.imageUploadService.uploadToCloudflareOnly(file);
           uploadedImages.push({
             cfImageId: cfResult.id,
             filename: file.name,
@@ -68,7 +66,7 @@ export class ReviewService {
       }
 
       // Step 2: Insert all database records in a transaction
-      const result = await db.transaction(async (tx) => {
+      const result = await this.db.transaction(async (tx) => {
         // Insert the review
         const [newReview] = await tx
           .insert(Review)
@@ -158,9 +156,9 @@ export class ReviewService {
     }
   }
 
-  static async getDogBreeds() {
+  async getDogBreeds() {
     try {
-      const dogBreeds = await db.query.DogBreed.findMany({
+      const dogBreeds = await this.db.query.DogBreed.findMany({
         orderBy: (breed) => asc(breed.name),
       });
 

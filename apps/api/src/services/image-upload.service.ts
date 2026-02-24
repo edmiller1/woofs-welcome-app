@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import type { ImageType } from "@woofs/types";
-import { env } from "../config/env";
-import { db } from "../db";
 import { Image } from "../db/schema";
 import { BadRequestError, InternalServerError } from "../lib/errors";
+import type { Db } from "../db";
+import type { Env } from "../config/env";
 
 interface CloudflareUploadResult {
   id: string;
@@ -39,7 +39,10 @@ export class ImageUploadService {
   private readonly apiToken: string;
   private readonly deliveryUrl: string;
 
-  constructor() {
+  constructor(
+    private db: Db,
+    env: Env,
+  ) {
     this.apiEndpoint = `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/images/v1`;
     this.apiToken = env.CF_IMAGES_API_TOKEN!;
     this.deliveryUrl = env.CF_IMAGES_DELIVERY_URL;
@@ -57,7 +60,7 @@ export class ImageUploadService {
       const cfResult = await this.uploadToCloudflare(file);
 
       // Save to database
-      const [dbImage] = await db
+      const [dbImage] = await this.db
         .insert(Image)
         .values({
           id: cfResult.id,
@@ -142,7 +145,7 @@ export class ImageUploadService {
   async deleteImage(imageId: string): Promise<void> {
     try {
       // Get image from database
-      const [image] = await db
+      const [image] = await this.db
         .select()
         .from(Image)
         .where(eq(Image.id, imageId))
@@ -167,7 +170,7 @@ export class ImageUploadService {
       }
 
       // Delete from database (cascade handles associations)
-      await db.delete(Image).where(eq(Image.id, imageId));
+      await this.db.delete(Image).where(eq(Image.id, imageId));
     } catch (error) {
       if (error instanceof BadRequestError) {
         throw error;
@@ -181,7 +184,7 @@ export class ImageUploadService {
    * Get image details from database
    */
   async getImage(imageId: string) {
-    const [image] = await db
+    const [image] = await this.db
       .select()
       .from(Image)
       .where(eq(Image.id, imageId))
@@ -208,7 +211,7 @@ export class ImageUploadService {
       isApproved?: boolean;
     },
   ) {
-    const [updated] = await db
+    const [updated] = await this.db
       .update(Image)
       .set({
         ...updates,

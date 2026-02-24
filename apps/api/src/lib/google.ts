@@ -1,7 +1,7 @@
-import { env } from "../config/env";
+import { type Env } from "../config/env";
 
 export const Google = {
-  searchPlaces: async (query: string, location?: string) => {
+  searchPlaces: async (env: Env, query: string, location?: string) => {
     const searchQuery = location ? `${query} in ${location}` : query;
 
     const response = await fetch(
@@ -25,7 +25,7 @@ export const Google = {
     return [];
   },
 
-  getPlacePhotos: async (placeId: string): Promise<string[]> => {
+  getPlacePhotos: async (env: Env, placeId: string): Promise<string[]> => {
     // First get place details to get photo references
     const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=photos&key=${env.GOOGLE_PLACES_API_KEY}`;
 
