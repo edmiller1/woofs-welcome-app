@@ -4,7 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [sveltekit(), tailwindcss()],
-  ssr: {
-    noExternal: ["axios"],
+  resolve: {
+    alias: {
+      "form-data": "./src/lib/empty-module.ts",
+    },
   },
 });
