@@ -3,10 +3,8 @@ import { authMiddleware } from "../../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import { AuthService } from "../../services/auth.service";
 import { UnauthorizedError } from "../../lib/errors";
-import { updateProfileSchema, welcomeUserSchema } from "./schemas";
+import { welcomeUserSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
-import { CollectionService } from "../../services/collection.service";
-import { PlaceService } from "../../services/place.service";
 
 export const authRouter = new Hono();
 
