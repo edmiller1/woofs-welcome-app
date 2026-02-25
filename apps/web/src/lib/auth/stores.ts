@@ -4,7 +4,6 @@ import { authClient } from "./auth-client";
 import { sessionCache } from "./session-cache";
 import type { Session } from "./auth-client";
 import { goto } from "$app/navigation";
-import { NODE_ENV } from "$env/static/private";
 
 // Auth state
 export const session = writable<Session | null>(null);
