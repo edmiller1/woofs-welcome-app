@@ -98,7 +98,11 @@ export function getAuth(env: Env, db: Db) {
       }),
     ],
     basePath: "/api/auth",
-    trustedOrigins: [env.FRONTEND_BASE_URL, env.MOBILE_BASE_URL],
+    trustedOrigins: [
+      env.FRONTEND_BASE_URL,
+      env.FRONTEND_BASE_URL_WWW,
+      env.MOBILE_BASE_URL,
+    ],
     secret: env.BETTER_AUTH_SECRET,
     create: {
       after: async (newUser: User) => {
