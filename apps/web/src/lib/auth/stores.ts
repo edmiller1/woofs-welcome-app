@@ -4,6 +4,7 @@ import { authClient } from "./auth-client";
 import { sessionCache } from "./session-cache";
 import type { Session } from "./auth-client";
 import { goto } from "$app/navigation";
+import { NODE_ENV } from "$env/static/private";
 
 // Auth state
 export const session = writable<Session | null>(null);
@@ -81,20 +82,25 @@ export const auth = {
     window.location.reload();
   },
 
-  async oAuthSignIn(provider: string, redirectTo: string) {
-    const encodedRedirect = encodeURIComponent(redirectTo);
-
-    const result = await authClient.signIn.social({
+  async oAuthSignIn(provider: string, redirect: string) {
+    const encodedRedirect = encodeURIComponent(redirect);
+    const baseUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://woofswelcome.app";
+    return await authClient.signIn.social({
       provider,
-      callbackURL: `http://localhost:5173/auth/callback?redirect=${encodedRedirect}`,
+      callbackURL: `${baseUrl}/auth/callback?redirect=${encodedRedirect}`,
     });
-    return result;
   },
 
   async displayOneTap() {
-    if (!browser) return;
+    const baseUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://woofswelcome.app";
     await authClient.oneTap({
-      callbackURL: "http://localhost:5173/auth/callback",
+      callbackURL: `${baseUrl}/auth/callback`,
     });
   },
 
