@@ -12,6 +12,7 @@ export const envSchema = z.object({
 
   // Web Frontend
   FRONTEND_BASE_URL: z.url(),
+  FRONTEND_BASE_URL_WWW: z.url(),
 
   // Mobile App
   MOBILE_BASE_URL: z.url(),

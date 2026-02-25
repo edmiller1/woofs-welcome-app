@@ -9,7 +9,8 @@ port = 9000
 [vars]
 NODE_ENV = "production"
 BETTER_AUTH_BASE_URL = "https://api.woofswelcome.app"
-FRONTEND_BASE_URL = "https://www.woofswelcome.app"
+FRONTEND_BASE_URL = "https://woofswelcome.app"
+FRONTEND_BASE_URL_WWW = "https://www.woofswelcome.app"
 MOBILE_BASE_URL = "https://your-mobile-url.com"
 GOOGLE_REDIRECT_URI = "https://api.woofswelcome.app/api/auth/callback/google"
 CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
