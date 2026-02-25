@@ -18,6 +18,7 @@ export const envSchema = z.object({
 
   // Auth
   BETTER_AUTH_SECRET: z.string().min(1),
+  BETTER_AUTH_BASE_URL: z.url(),
 
   // Google OAuth
   GOOGLE_CLIENT_ID: z.string().min(1),

@@ -28,6 +28,7 @@ export function getAuth(env: Env, db: Db) {
   if (cachedAuth) return cachedAuth;
 
   cachedAuth = betterAuth({
+    baseURL: env.BETTER_AUTH_BASE_URL,
     database: drizzleAdapter(db, {
       provider: "pg",
       schema: schema,
