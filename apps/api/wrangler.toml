@@ -18,3 +18,8 @@ CF_BUCKET_NAME = "woofs-welcome-images"
 routes = [
   { pattern = "api.woofswelcome.app/*", custom_domain = true }
 ]
+
+[observability]
+[observability.logs]
+enabled = false
+invocation_logs = true
