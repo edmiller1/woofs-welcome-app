@@ -39,8 +39,8 @@ app.use("*", async (c, next) =>
   cors({
     origin:
       c.env.NODE_ENV === "development"
-        ? "http://localhost:5173"
-        : "https://www.woofswelcome.app",
+        ? ["http://localhost:5173"]
+        : ["https://woofswelcome.app", "https://www.woofswelcome.app"],
     maxAge: 86400,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     exposeHeaders: ["Content-Length"],
