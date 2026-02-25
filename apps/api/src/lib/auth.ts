@@ -36,11 +36,13 @@ export function getAuth(env: Env, db: Db) {
     advanced: {
       crossSubDomainCookies: {
         enabled: true,
+        domain:
+          env.NODE_ENV === "production" ? "woofswelcome.app" : "localhost",
       },
       defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
-        partitioned: true,
+        sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+        secure: env.NODE_ENV === "production",
+        partitioned: env.NODE_ENV === "production",
       },
     },
     socialProviders: {
