@@ -9,4 +9,21 @@ export default defineConfig({
       "form-data": "./src/lib/empty-module.ts",
     },
   },
+  build: {
+    rollupOptions: {
+      external: [
+        "crypto",
+        "url",
+        "http",
+        "https",
+        "http2",
+        "util",
+        "stream",
+        "assert",
+        "tty",
+        "zlib",
+        "events",
+      ],
+    },
+  },
 });
