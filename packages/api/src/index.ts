@@ -33,7 +33,9 @@ class ApiClient {
 
   private buildUrl(path: string, params?: RequestOptions["params"]): string {
     const base = getBaseUrl();
-    const url = new URL(path, base);
+    // Remove leading slash from path to prevent URL constructor from ignoring base path
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    const url = new URL(`${base}/${cleanPath}`);
     if (params) {
       for (const [key, value] of Object.entries(params)) {
         if (value == null) continue;
