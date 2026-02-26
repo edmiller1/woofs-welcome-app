@@ -3,10 +3,6 @@ main = "src/index.ts"
 compatibility_date = "2024-01-20"
 compatibility_flags = ["nodejs_compat"]
 
-[env.dev]
-name = "woofs-welcome-api-dev"
-vars = { NODE_ENV = "development", FRONTEND_BASE_URL = "https://dev.woofs-welcome-app.pages.dev" }
-
 [dev]
 port = 9000
 
@@ -24,6 +20,21 @@ CF_BUCKET_NAME = "woofs-welcome-images"
 routes = [
   { pattern = "api.woofswelcome.app/*", custom_domain = true }
 ]
+
+[env.dev]
+name = "woofs-welcome-api-dev"
+
+[env.dev.vars]
+NODE_ENV = "development"
+BETTER_AUTH_BASE_URL = "https://woofs-welcome-api-dev.your-subdomain.workers.dev"
+FRONTEND_BASE_URL = "https://dev.woofs-welcome-app.pages.dev"
+FRONTEND_BASE_URL_WWW = "https://dev.woofs-welcome-app.pages.dev"
+MOBILE_BASE_URL = "https://your-mobile-url.com"
+GOOGLE_REDIRECT_URI = "https://woofs-welcome-api-dev.your-subdomain.workers.dev/api/auth/callback/google"
+CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
+CF_ENDPOINT = "https://08e981cecb92746f1f2cf59ac9969f40.r2.cloudflarestorage.com/woofs-welcome-images"
+CF_BUCKET_NAME = "woofs-welcome-images"
+MOBILE_BASE_URL = "http://localhost:19000"
 
 [observability]
 [observability.logs]
