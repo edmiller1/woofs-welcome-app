@@ -34,7 +34,6 @@ GOOGLE_REDIRECT_URI = "https://woofs-welcome-api-dev.your-subdomain.workers.dev/
 CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
 CF_ENDPOINT = "https://08e981cecb92746f1f2cf59ac9969f40.r2.cloudflarestorage.com/woofs-welcome-images"
 CF_BUCKET_NAME = "woofs-welcome-images"
-MOBILE_BASE_URL = "http://localhost:19000"
 
 [observability]
 [observability.logs]
