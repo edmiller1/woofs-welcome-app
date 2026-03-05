@@ -1,10 +1,12 @@
-import { and, asc, count, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
 import {
   Collection,
   CollectionItem,
   Image,
+  Location,
   Place,
   PlaceImage,
+  user,
 } from "../db/schema";
 import {
   AppError,
@@ -15,6 +17,10 @@ import {
 import { sanitizePlainText } from "../lib/sanitize";
 import type { Db } from "../db";
 import type { ImageUploadService } from "./image-upload.service";
+import { alias } from "drizzle-orm/pg-core";
+
+const CityLocation = alias(Location, "city");
+const RegionLocation = alias(Location, "region");
 
 /**
  * Collection Service
@@ -356,6 +362,159 @@ export class CollectionService {
         throw error;
       }
       throw new DatabaseError("Failed to get place collections", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getProfileCollections(profileId: string, userId?: string) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, profileId),
+        with: {
+          userSettings: true,
+        },
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const isOwner = userId === profileId;
+
+      if (!isOwner && !userRecord.userSettings?.showCollections) {
+        return { isPrivate: true, collections: [], isOwner: false };
+      }
+
+      const collections = await this.db.query.Collection.findMany({
+        where: eq(Collection.userId, profileId),
+        with: {
+          items: true,
+        },
+      });
+
+      const collectionsWithPreviews = await Promise.all(
+        collections.map(async (c) => {
+          const previewImages = await this.db
+            .select({
+              imageId: Image.cfImageId,
+            })
+            .from(CollectionItem)
+            .innerJoin(Place, eq(CollectionItem.placeId, Place.id))
+            .innerJoin(PlaceImage, eq(Place.id, PlaceImage.placeId))
+            .innerJoin(Image, eq(PlaceImage.imageId, Image.id))
+            .where(eq(CollectionItem.collectionId, c.id))
+            .orderBy(asc(CollectionItem.createdAt))
+            .limit(4);
+
+          return {
+            id: c.id,
+            name: c.name,
+            emoji: c.emoji,
+            color: c.color,
+            itemCount: c.itemCount,
+            description: c.description,
+            isPublic: c.isPublic,
+            previewImages: previewImages.map((p) => p.imageId),
+          };
+        }),
+      );
+
+      if (userId && userId === profileId) {
+        return collectionsWithPreviews;
+      }
+
+      return collectionsWithPreviews.filter((c) => c.isPublic);
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get profile collections error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get profile collections", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getCollectionWithPlaces(
+    collectionId: string,
+    profileId: string,
+    userId?: string,
+  ) {
+    try {
+      const collection = await this.db.query.Collection.findFirst({
+        where: and(
+          eq(Collection.id, collectionId),
+          eq(Collection.userId, profileId),
+        ),
+      });
+
+      if (!collection) {
+        throw new NotFoundError("Collection not found");
+      }
+
+      const places = await this.db
+        .select({
+          id: Place.id,
+          name: Place.name,
+          slug: Place.slug,
+          rating: Place.rating,
+          lat: Place.latitude,
+          lng: Place.longitude,
+          countryCode: Place.countryCode,
+          reviewsCount: Place.reviewsCount,
+          isVerified: Place.isVerified,
+          createdAt: Place.createdAt,
+          imageId: PlaceImage.imageId,
+          types: Place.types,
+          cfImageId: Image.cfImageId,
+          cityName: CityLocation.name,
+          regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
+        })
+        .from(CollectionItem)
+        .leftJoin(Place, eq(CollectionItem.placeId, Place.id))
+        .leftJoin(
+          PlaceImage,
+          and(eq(Place.id, PlaceImage.placeId), eq(PlaceImage.isPrimary, true)),
+        )
+        .leftJoin(Image, eq(PlaceImage.imageId, Image.id))
+        .leftJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+        .leftJoin(RegionLocation, eq(CityLocation.parentId, RegionLocation.id))
+        .where(eq(CollectionItem.collectionId, collection.id))
+        .orderBy(desc(CollectionItem.createdAt));
+
+      // Check which places are in user's collections
+      let savedPlaceIds: Set<string> = new Set();
+      if (userId && places.length > 0) {
+        const placeIds = places.map((p) => p.id!);
+        const savedItems = await this.db
+          .select({ placeId: CollectionItem.placeId })
+          .from(CollectionItem)
+          .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
+          .where(
+            and(
+              eq(Collection.userId, userId),
+              inArray(CollectionItem.placeId, placeIds),
+            ),
+          );
+        savedPlaceIds = new Set(savedItems.map((item) => item.placeId));
+      }
+
+      return {
+        isPrivate: false,
+        collection,
+        places: places.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id!),
+        })),
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get collection with places error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get collection with places", {
         originalError: error,
       });
     }

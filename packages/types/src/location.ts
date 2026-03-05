@@ -41,6 +41,7 @@ export interface PopularPlace {
   rating: string;
   reviewsCount: number;
   isVerified: boolean;
+  countryCode: string;
   imageId: string;
   isSaved: boolean;
   cityName: string;

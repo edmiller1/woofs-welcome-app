@@ -8,7 +8,6 @@
   import type { BAUser } from "@woofs/types";
   import { toast } from "svelte-sonner";
   import { goto } from "$app/navigation";
-  import { place } from "../../../../../packages/api/src/api/place";
   import OptimizedImage from "./optimized-image.svelte";
 
   interface Props {
@@ -18,6 +17,7 @@
     slug: string;
     cityName: string;
     regionName: string;
+    countryCode: string;
     types: string[];
     isSaved: boolean;
     imageId?: string;
@@ -34,6 +34,7 @@
     slug,
     cityName,
     regionName,
+    countryCode,
     types,
     isSaved,
     imageId,
@@ -80,10 +81,10 @@
 
 <a
   href={`/location/${locationPath}/places/${slug}`}
-  class="m-0 flex w-full justify-center p-0"
+  class="m-0 flex w-full p-0"
 >
   <div
-    class="m-0 flex h-full max-w-sm cursor-pointer flex-col overflow-hidden p-0"
+    class="m-0 flex h-full w-full cursor-pointer flex-col overflow-hidden p-0"
   >
     <div class="relative w-full overflow-hidden rounded-lg">
       {#if images.length > 1}
@@ -161,6 +162,7 @@
             </div>
             <div class="text-muted-foreground m-0 text-left text-sm">
               {cityName}, {regionName}
+              {countryCode}
             </div>
             <div class="mt-1 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}
@@ -197,21 +199,22 @@
               </Button>
             </div>
           </div>
-          <div class="space-y-3 py-2">
-            <div class="m-0 flex items-center justify-between">
-              <div class="flex items-center gap-1">
+          <div class="space-y-3 py-2 min-w-0">
+            <div class="m-0 flex items-center justify-between min-w-0">
+              <div class="flex items-center gap-1 overflow-hidden w-5/6">
                 <h3 class="truncate font-medium">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
               </div>
-              <div class="flex items-center gap-1">
+              <div class="flex items-center gap-1 shrink-0">
                 <Star class="size-3 fill-yellow-500 text-yellow-500" />
                 <span class="text-sm">{Number(rating).toFixed(1)}</span>
               </div>
             </div>
             <div class="text-muted-foreground m-0 text-left text-sm">
               {cityName}, {regionName}
+              {countryCode}
             </div>
             <div class="mt-1 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}

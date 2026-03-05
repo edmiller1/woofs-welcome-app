@@ -29,6 +29,11 @@
 
   {#if !isOwner && !showReviews}
     <!-- Section hidden by user settings -->
+    <div class="mt-4">
+      <p class="text-sm text-foreground">
+        {profileName} has chosen to keep their reviews private.
+      </p>
+    </div>
   {:else if reviews.length > 0}
     <div class="mt-6 grid gap-6 md:grid-cols-2">
       {#each displayed as review}

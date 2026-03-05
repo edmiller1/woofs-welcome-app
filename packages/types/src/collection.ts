@@ -32,3 +32,42 @@ export interface PlaceCollection {
 export interface CollectionWithItems extends Collection {
   items: CollectionItem[];
 }
+
+export interface UserCollection {
+  isPrivate: boolean;
+  collections: {
+    id: string;
+    name: string;
+    emoji: string | null;
+    color: string | null;
+    itemCount: number;
+    description: string;
+    isPublic: boolean;
+    previewImages: string[];
+  }[];
+  isOwner: boolean;
+}
+
+export interface CollectionPlace {
+  id: string;
+  name: string;
+  slug: string;
+  rating: string | null;
+  lat: number | null;
+  lng: number | null;
+  countryCode: string;
+  reviewsCount: number;
+  isVerified: boolean;
+  types: string[];
+  isSaved: boolean;
+  imageId: string;
+  cfImageId: string | null;
+  cityName: string;
+  regionName: string;
+  locationPath: string;
+}
+
+export interface CollectionWithPlaces {
+  collection: Collection;
+  places: CollectionPlace[];
+}

@@ -6,7 +6,9 @@ import type { Env } from "../config/env";
 type DbInstance = ReturnType<typeof drizzle<typeof schema>>;
 
 export function createDb(env: Env): DbInstance {
-  const sql = neon(env.DATABASE_URL);
+  const url =
+    env.NODE_ENV === "production" ? env.DATABASE_URL : env.DATABASE_URL_DEV;
+  const sql = neon(url);
   return drizzle(sql, { schema });
 }
 

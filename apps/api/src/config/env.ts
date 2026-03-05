@@ -3,6 +3,7 @@ import { z } from "zod";
 export const envSchema = z.object({
   // Database
   DATABASE_URL: z.url("DATABASE_URL must be a valid URL"),
+  DATABASE_URL_DEV: z.url("DATABASE_URL_LOCAL must be a valid URL"),
 
   // Server
   PORT: z.string().default("9000"),

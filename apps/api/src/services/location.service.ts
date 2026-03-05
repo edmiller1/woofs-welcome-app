@@ -97,6 +97,7 @@ export class LocationService {
           rating: Place.rating,
           reviewsCount: Place.reviewsCount,
           isVerified: Place.isVerified,
+          countryCode: Place.countryCode,
           imageId: PlaceImage.imageId,
           cityName: CityLocation.name,
           regionName: RegionLocation.name,

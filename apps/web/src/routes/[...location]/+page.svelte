@@ -360,6 +360,7 @@
                       slug={place.slug}
                       cityName={place.cityName}
                       regionName={place.regionName}
+                      countryCode={place.countryCode}
                       imageId={place.imageId}
                       {user}
                       types={place.types}

@@ -168,9 +168,48 @@ export class ProfileService {
           .where(eq(CheckIn.userId, profileId)),
       ]);
 
+      const isOwner = userId === profileId;
+      const settings = profile.userSettings;
+
+      const collections =
+        isOwner || settings?.showCollections
+          ? isOwner
+            ? profile.collections
+            : profile.collections.filter((c) => c.isPublic)
+          : [];
+
+      const reviews = isOwner || settings?.showReviews ? profile.reviews : [];
+
+      const checkIns =
+        isOwner || settings?.showCheckIns ? profile.checkIns : [];
+
+      const dogs = isOwner || settings?.showDogs ? profile.dogs : [];
+
+      const about =
+        isOwner || settings?.showAbout
+          ? {
+              currentCity: profile.currentCity,
+              instagram: profile.instagram,
+              facebook: profile.facebook,
+              x: profile.x,
+              tiktok: profile.tiktok,
+            }
+          : {
+              currentCity: null,
+              instagram: null,
+              facebook: null,
+              x: null,
+              tiktok: null,
+            };
+
       return {
         ...profile,
-        isOwner: userId ? profile.id === userId : false,
+        ...about,
+        collections,
+        reviews,
+        checkIns,
+        dogs,
+        isOwner,
         reviewCount: reviewStats[0]?.reviewCount ?? 0,
         collectionCount: collectionStats[0]?.collectionCount ?? 0,
         checkInCount: checkInStats[0]?.checkInCount ?? 0,

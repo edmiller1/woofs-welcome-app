@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { authMiddleware } from "../../middleware/auth";
+import { authMiddleware, optionalAuthMiddleware } from "../../middleware/auth";
 import { UnauthorizedError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
 import {
@@ -7,6 +7,8 @@ import {
   savePlaceToCollectionSchema,
   removePlaceFromCollectionSchema,
   placeIdSchema,
+  getProfileCollectionsSchema,
+  getCollectionWithPlacesSchema,
 } from "./schemas";
 import { CollectionService } from "../../services/collection.service";
 import { ImageUploadService } from "../../services/image-upload.service";
@@ -171,6 +173,57 @@ collectionRouter.get(
     const result = await collectionService.getPlaceCollections(
       placeId,
       auth.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+collectionRouter.get(
+  "/profile/:userId",
+  optionalAuthMiddleware,
+  zValidator("param", getProfileCollectionsSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+
+    const { userId } = c.req.valid("param");
+
+    const result = await collectionService.getProfileCollections(
+      userId,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+collectionRouter.get(
+  ":profileId/:id",
+  authMiddleware,
+  zValidator("param", getCollectionWithPlacesSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+
+    const { profileId, id } = c.req.valid("param");
+
+    const result = await collectionService.getCollectionWithPlaces(
+      id,
+      profileId,
+      auth?.id,
     );
 
     return c.json(result, 200);

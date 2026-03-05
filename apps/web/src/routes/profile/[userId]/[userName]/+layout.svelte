@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import Navbar from "$lib/components/navbar.svelte";
   import { classNames } from "$lib/utils";
   import type { BAUser, Profile, Tab } from "@woofs/types";
@@ -15,7 +16,7 @@
   }
 
   const { data, children }: Props = $props();
-  const { user, userName, userId, initialProfile } = $derived(data);
+  const { user, userName, userId } = $derived(data);
 
   const tabs = $derived<Tab[]>([
     {
@@ -36,14 +37,22 @@
     },
   ]);
 
-  let currentTab = $state<string>("About");
+  const currentTab = $derived(
+    tabs.find(
+      (tab) =>
+        page.url.pathname.startsWith(tab.href) &&
+        tab.href !== `/profile/${userId}/${userName}`,
+    ) ??
+      tabs.find((tab) => page.url.pathname === tab.href) ??
+      tabs[0],
+  );
 </script>
 
 <div class="mx-auto max-w-full">
   <Navbar {user} />
-  <main class="mx-auto max-w-350 px-6">
+  <main class="">
     <header class="py-3 border-b border-gray-200">
-      <nav class="flex overflow-x-auto">
+      <nav class="flex overflow-x-auto px-6">
         <ul
           role="list"
           class="flex min-w-full flex-none gap-x-6 text-sm/6 font-semibold text-gray-500"
@@ -52,9 +61,9 @@
             <li>
               <a
                 href={tab.href}
-                aria-current={currentTab === tab.name ? "page" : undefined}
+                aria-current={currentTab.name === tab.name ? "page" : undefined}
                 class={classNames(
-                  currentTab === tab.name
+                  currentTab.name === tab.name
                     ? "text-white bg-primary"
                     : "text-gray-500 hover:text-gray-700 hover:bg-gray-200",
                   "inline-flex items-center px-4 py-2 font-medium whitespace-nowrap rounded-sm text-sm",
@@ -66,7 +75,7 @@
         </ul>
       </nav>
     </header>
-    <div class="my-10">
+    <div>
       {@render children()}
     </div>
   </main>

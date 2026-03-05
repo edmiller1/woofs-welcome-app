@@ -43,6 +43,7 @@
             slug={place.slug}
             cityName={place.location.name}
             regionName={place.parentLocationName!}
+            countryCode={place.location.countryCode}
             types={place.types}
             isSaved={place.isSaved}
             imageIds={place.images.map((i) => i.imageId)}

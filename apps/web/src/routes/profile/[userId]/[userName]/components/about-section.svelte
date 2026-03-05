@@ -51,51 +51,60 @@
       >
     {/if}
   </div>
-  <div class="mt-4 mb-6 flex flex-col gap-3">
-    {#if currentCity}
-      <div class="flex items-center gap-3 text-sm text-foreground">
-        <MapPin class="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span>
-          {[currentCity.city, currentCity.locality, currentCity.country]
-            .filter(Boolean)
-            .join(", ")}
-        </span>
-      </div>
-    {/if}
-    {#if instagram}
-      <div class="flex items-center gap-3 text-sm text-foreground">
-        <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span>{instagram}</span>
-      </div>
-    {/if}
-    {#if facebook}
-      <div class="flex items-center gap-3 text-sm text-foreground">
-        <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span>{facebook}</span>
-      </div>
-    {/if}
-    {#if x}
-      <div class="flex items-center gap-3 text-sm text-foreground">
-        <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span>{x}</span>
-      </div>
-    {/if}
-    {#if tiktok}
-      <div class="flex items-center gap-3 text-sm text-foreground">
-        <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
-        <span>{tiktok}</span>
-      </div>
-    {/if}
-    <div class="flex items-center gap-3 text-sm text-foreground">
-      <Calendar class="h-5 w-5 shrink-0 text-muted-foreground" />
-      <span class="text-xs text-muted-foreground"
-        >Joined {new Date(createdAt).toLocaleDateString("en-US", {
-          month: "short",
-          year: "numeric",
-        })}</span
-      >
+  {#if !isOwner && !showAbout}
+    <!-- Section hidden by user settings -->
+    <div class="mt-4">
+      <p class="text-sm text-foreground">
+        {profileName} has chosen to keep their about section private.
+      </p>
     </div>
-  </div>
+  {:else}
+    <div class="mt-4 mb-6 flex flex-col gap-3">
+      {#if currentCity}
+        <div class="flex items-center gap-3 text-sm text-foreground">
+          <MapPin class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <span>
+            {[currentCity.city, currentCity.locality, currentCity.country]
+              .filter(Boolean)
+              .join(", ")}
+          </span>
+        </div>
+      {/if}
+      {#if instagram}
+        <div class="flex items-center gap-3 text-sm text-foreground">
+          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <span>{instagram}</span>
+        </div>
+      {/if}
+      {#if facebook}
+        <div class="flex items-center gap-3 text-sm text-foreground">
+          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <span>{facebook}</span>
+        </div>
+      {/if}
+      {#if x}
+        <div class="flex items-center gap-3 text-sm text-foreground">
+          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <span>{x}</span>
+        </div>
+      {/if}
+      {#if tiktok}
+        <div class="flex items-center gap-3 text-sm text-foreground">
+          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <span>{tiktok}</span>
+        </div>
+      {/if}
+      <div class="flex items-center gap-3 text-sm text-foreground">
+        <Calendar class="h-5 w-5 shrink-0 text-muted-foreground" />
+        <span class="text-xs text-muted-foreground"
+          >Joined {new Date(createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            year: "numeric",
+          })}</span
+        >
+      </div>
+    </div>
+  {/if}
   <Separator />
   <div class="mt-6 flex items-center gap-2">
     <h2 class="text-2xl font-bold text-foreground">Dogs</h2>
@@ -107,14 +116,21 @@
   </div>
   {#if !isOwner && !showDogs}
     <!-- Section hidden by user settings -->
+    <div class="mt-4">
+      <p class="text-sm text-foreground">
+        {profileName} has chosen to keep their dogs private.
+      </p>
+    </div>
   {:else if dogs && dogs.length > 0}
-    <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div
+      class="mt-6 grid grid-cols-3 gap-2 sm:gap-4 xl:gap-2 sm:grid-cols-4 xl:grid-cols-6"
+    >
       {#each dogs as dog}
         <div class="flex flex-col items-center gap-2">
           <OptimizedImage
             imageId={dog.imageId}
             alt={dog.name}
-            class="h-32 w-32 rounded-full object-cover object-center"
+            class="size-20 sm:size-24 md:size-32 rounded-full object-cover object-center"
             variant="card"
             height="128"
             width="128"

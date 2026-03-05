@@ -18,10 +18,6 @@ profileRouter.get("/:profileId", optionalAuthMiddleware, async (c) => {
   const imageUploadService = new ImageUploadService(db, env);
   const profileService = new ProfileService(db, imageUploadService);
 
-  if (!auth) {
-    throw new UnauthorizedError("Unauthorized");
-  }
-
   const profileId = c.req.param("profileId");
 
   const result = await profileService.getProfile(profileId, auth?.id);

@@ -26,6 +26,11 @@
   </div>
   {#if !isOwner && !showCollections}
     <!-- Section hidden by user settings -->
+    <div class="mt-4">
+      <p class="text-sm text-foreground">
+        {profileName} has chosen to keep their collections private.
+      </p>
+    </div>
   {:else if collections.length > 0}
     <div class="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
       {#each collections as collection}

@@ -25,3 +25,12 @@ export const removePlaceFromCollectionSchema = z.object({
 export const placeIdSchema = z.object({
   placeId: z.string(),
 });
+
+export const getProfileCollectionsSchema = z.object({
+  userId: z.string(),
+});
+
+export const getCollectionWithPlacesSchema = z.object({
+  profileId: z.string(),
+  id: z.string(),
+});

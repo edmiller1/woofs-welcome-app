@@ -47,7 +47,7 @@
   {/if}
 
   {#if profile.isSuccess}
-    <div class="flex flex-col gap-8 lg:flex-row lg:gap-16">
+    <div class="flex px-6 flex-col gap-8 lg:flex-row lg:gap-16 py-10">
       <!-- Left sidebar - Profile card -->
       <aside class="w-full shrink-0 lg:w-[320px]">
         <div class="flex flex-col gap-6">
