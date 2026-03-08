@@ -18,3 +18,19 @@ export const updateProfileSchema = z.object({
   showReviews: z.string().optional(),
   showCollections: z.string().optional(),
 });
+
+export const getProfileReviewsSchema = z.object({
+  limit: z.coerce.number().optional().default(12),
+  cursor: z.string().optional(),
+  rating: z.coerce.number().min(1).max(5).optional(),
+  sortBy: z
+    .enum(["createdAt_desc", "createdAt_asc", "rating_desc", "likes_desc"])
+    .optional()
+    .default("createdAt_desc"),
+});
+
+export const getProfileReviewStatsSchema = z.object({
+  profileId: z.string(),
+});
+
+export type GetProfileReviewsQuery = z.infer<typeof getProfileReviewsSchema>;

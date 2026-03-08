@@ -1,6 +1,6 @@
 import type { Review } from "./review";
 import type { Collection } from "./collection";
-import type { PlaceImage } from "./image";
+import type { PlaceImage, ReviewImage } from "./image";
 
 export interface CityData {
   city: string;
@@ -120,4 +120,45 @@ export interface UpdateProfileData {
   showCheckIns?: boolean;
   showReviews?: boolean;
   showCollections?: boolean;
+}
+
+export interface UserReview {
+  reviews: {
+    id: string;
+    title: string;
+    content: string | null;
+    rating: number;
+    likesCount: number | null;
+    repliesCount: number | null;
+    createdAt: Date;
+    visitDate: Date | null;
+    dogBreeds: string[];
+    images: ReviewImage[];
+    place: {
+      name: string;
+      slug: string;
+      rating: number | null;
+      countryCode: string;
+      images: PlaceImage[];
+      location: {
+        name: string;
+        path: string;
+        parent: {
+          name: string;
+        };
+      };
+    };
+    imageId: string | null;
+  }[];
+  isOwner: boolean;
+  isPrivate: boolean;
+  nextCursor?: string | null;
+}
+
+export interface ProfileReviewStats {
+  totalReviews: number;
+  averageRating: number;
+  totalLikes: number;
+  isPrivate: boolean;
+  isOwner: boolean;
 }

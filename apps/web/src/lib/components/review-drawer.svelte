@@ -27,6 +27,7 @@
   } from "@internationalized/date";
   import { cn } from "$lib/utils";
   import * as Select from "$lib/components/ui/select/index.js";
+  import { useMediaQuery } from "$lib/hooks/use-media-query.svelte";
 
   interface Props {
     open: boolean;
@@ -40,19 +41,7 @@
   const queryClient = useQueryClient();
 
   // Media query for desktop detection
-  let isDesktop = $state(false);
-
-  $effect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
-    isDesktop = mediaQuery.matches;
-
-    const handler = (e: MediaQueryListEvent) => {
-      isDesktop = e.matches;
-    };
-
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  });
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const breeds = createQuery(() => ({
     queryKey: ["reviewDogBreeds"],

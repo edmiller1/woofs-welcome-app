@@ -1,8 +1,20 @@
-import { avg, count, eq, inArray } from "drizzle-orm";
+import {
+  and,
+  asc,
+  avg,
+  count,
+  desc,
+  eq,
+  gt,
+  inArray,
+  lt,
+  sum,
+} from "drizzle-orm";
 import {
   CheckIn,
   Collection,
   Dog,
+  PlaceImage,
   Review,
   user,
   UserSettings,
@@ -16,6 +28,7 @@ import {
 import { sanitizePlainText } from "../lib/sanitize";
 import { ImageUploadService } from "./image-upload.service";
 import type { Db } from "../db";
+import type { GetProfileReviewsQuery } from "../routes/profile/schemas";
 
 /**
  * Profile Service
@@ -438,6 +451,163 @@ export class ProfileService {
         throw error;
       }
       throw new DatabaseError("Failed to get profile dogs", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getProfileReviews(
+    profileId: string,
+    query: GetProfileReviewsQuery,
+    userId?: string,
+  ) {
+    try {
+      const { limit, cursor, rating, sortBy } = query;
+
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, profileId),
+        with: {
+          userSettings: true,
+        },
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const isOwner = userId === profileId;
+
+      if (!isOwner && !userRecord.userSettings?.showReviews) {
+        return { isPrivate: true, reviews: [], isOwner: false };
+      }
+
+      const orderBy = (() => {
+        switch (sortBy) {
+          case "createdAt_asc":
+            return asc(Review.createdAt);
+          case "rating_desc":
+            return desc(Review.rating);
+          case "likes_desc":
+            return desc(Review.likesCount);
+          default:
+            return desc(Review.createdAt);
+        }
+      })();
+
+      const reviews = await this.db.query.Review.findMany({
+        where: and(
+          eq(Review.userId, profileId),
+          rating ? eq(Review.rating, rating) : undefined,
+          // TODO: cursor is createdAt-based, reset on sortBy change from frontend
+          cursor ? lt(Review.createdAt, new Date(cursor)) : undefined,
+        ),
+        orderBy: orderBy,
+        limit: limit,
+        with: {
+          place: {
+            columns: {
+              name: true,
+              slug: true,
+              rating: true,
+              countryCode: true,
+            },
+            with: {
+              images: {
+                limit: 1,
+                where: eq(PlaceImage.isPrimary, true),
+              },
+              location: {
+                columns: {
+                  name: true,
+                  path: true,
+                },
+                with: {
+                  parent: {
+                    columns: { name: true },
+                  },
+                },
+              },
+            },
+          },
+          images: {
+            limit: 1,
+            with: {
+              image: {
+                columns: {
+                  cfImageId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return {
+        reviews,
+        isOwner,
+        isPrivate: false,
+        nextCursor:
+          reviews.length === limit && reviews.length > 0
+            ? reviews[reviews.length - 1]?.createdAt.toISOString()
+            : null,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get profile reviews error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get profile reviews", {
+        originalError: error,
+      });
+    }
+  }
+  async getprofileReviewStats(profileId: string, userId?: string) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, profileId),
+        with: {
+          userSettings: true,
+        },
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const isOwner = userId === profileId;
+
+      if (!isOwner && !userRecord.userSettings?.showReviews) {
+        return {
+          totalreviews: null,
+          averagerating: null,
+          totalLikes: null,
+          isPrivate: true,
+          isOwner: false,
+        };
+      }
+
+      const stats = await this.db
+        .select({
+          totalReviews: count(),
+          averageRating: avg(Review.rating),
+          totalLikes: sum(Review.likesCount),
+        })
+        .from(Review)
+        .where(eq(Review.userId, profileId));
+
+      return {
+        totalReviews: stats[0]?.totalReviews ?? 0,
+        averageRating: Number(stats[0]?.averageRating) || 0,
+        totalLikes: Number(stats[0]?.totalLikes) ?? 0,
+        isPrivate: false,
+        isOwner,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get profile review stats error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get profile review stats", {
         originalError: error,
       });
     }

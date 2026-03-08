@@ -2,9 +2,14 @@ import { Hono } from "hono";
 import { authMiddleware, optionalAuthMiddleware } from "../../middleware/auth";
 import { ProfileService } from "../../services/profile.service";
 import { zValidator } from "@hono/zod-validator";
-import { updateProfileSchema } from "./schemas";
+import {
+  getProfileReviewsSchema,
+  getProfileReviewStatsSchema,
+  updateProfileSchema,
+} from "./schemas";
 import { UnauthorizedError } from "../../lib/errors";
 import { ImageUploadService } from "../../services/image-upload.service";
+import z, { optional } from "zod";
 
 export const profileRouter = new Hono();
 
@@ -69,3 +74,56 @@ profileRouter.get("/dogs", authMiddleware, async (c) => {
 
   return c.json(result, 200);
 });
+
+profileRouter.get(
+  "/:profileId/reviews/stats",
+  optionalAuthMiddleware,
+  zValidator("param", getProfileReviewStatsSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const profileService = new ProfileService(db, imageUploadService);
+
+    const { profileId } = c.req.valid("param");
+
+    const result = await profileService.getprofileReviewStats(
+      profileId,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+profileRouter.get(
+  ":profileId/reviews",
+  optionalAuthMiddleware,
+  zValidator("param", z.object({ profileId: z.string() })),
+  zValidator("query", getProfileReviewsSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const profileService = new ProfileService(db, imageUploadService);
+
+    const { profileId } = c.req.valid("param");
+    const query = c.req.valid("query");
+
+    const result = await profileService.getProfileReviews(
+      profileId,
+      query,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
