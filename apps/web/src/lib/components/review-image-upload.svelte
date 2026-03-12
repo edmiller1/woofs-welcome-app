@@ -1,10 +1,14 @@
 <script lang="ts">
   import { Camera, X, GripVertical } from "@lucide/svelte";
   import { Button } from "$lib/components/ui/button";
+  import OptimizedImage from "./optimized-image.svelte";
+  import type { ReviewImage } from "@woofs/types";
 
   interface Props {
     files: File[];
     onFilesChange: (files: File[]) => void;
+    existingImages?: ReviewImage[];
+    onExistingImageDelete?: (imageId: string) => void;
     maxFiles?: number;
     disabled?: boolean;
   }
@@ -12,9 +16,13 @@
   const {
     files,
     onFilesChange,
+    existingImages = [],
+    onExistingImageDelete,
     maxFiles = 5,
     disabled = false,
   }: Props = $props();
+
+  const totalCount = $derived(existingImages.length + files.length);
 
   let fileInput = $state<HTMLInputElement>();
   let dragOver = $state(false);
@@ -40,7 +48,8 @@
     const validFiles = newFiles.filter(
       (file) => file.type.startsWith("image/") && file.size <= 10 * 1024 * 1024,
     );
-    const combined = [...files, ...validFiles].slice(0, maxFiles);
+    const slotsLeft = maxFiles - totalCount;
+    const combined = [...files, ...validFiles].slice(0, files.length + slotsLeft);
     onFilesChange(combined);
   };
 
@@ -87,9 +96,40 @@
 </script>
 
 <div class="space-y-3">
-  <!-- File previews -->
-  {#if previews.length > 0}
+  <!-- Existing + new file previews -->
+  {#if existingImages.length > 0 || previews.length > 0}
     <div class="flex flex-wrap gap-2">
+      <!-- Existing saved images -->
+      {#each existingImages as image}
+        <div
+          class="group relative h-20 w-20 overflow-hidden rounded-lg border bg-muted"
+          role="listitem"
+        >
+          <OptimizedImage
+            imageId={image.imageId}
+            alt="Review image"
+            variant="thumbnail"
+            class="h-full w-full object-cover"
+            width="80"
+            height="80"
+          />
+          <div
+            class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            <button
+              type="button"
+              onclick={() => onExistingImageDelete?.(image.imageId)}
+              class="rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+              aria-label="Remove image"
+              {disabled}
+            >
+              <X class="size-4" />
+            </button>
+          </div>
+        </div>
+      {/each}
+
+      <!-- New file previews -->
       {#each previews as preview, index}
         <div
           class="group relative h-20 w-20 overflow-hidden rounded-lg border bg-muted"
@@ -126,7 +166,7 @@
   {/if}
 
   <!-- Upload area -->
-  {#if files.length < maxFiles}
+  {#if totalCount < maxFiles}
     <div
       class="relative rounded-lg border-2 border-dashed p-4 text-center transition-colors {dragOver
         ? 'border-primary bg-primary/5'
@@ -150,10 +190,10 @@
       <div class="flex flex-col items-center gap-2">
         <Camera class="size-8 text-muted-foreground" />
         <p class="text-sm text-muted-foreground">
-          {files.length === 0 ? "Add photos" : "Add more photos"}
+          {totalCount === 0 ? "Add photos" : "Add more photos"}
         </p>
         <p class="text-xs text-muted-foreground/70">
-          {files.length}/{maxFiles} · Max 10MB each
+          {totalCount}/{maxFiles} · Max 10MB each
         </p>
       </div>
     </div>

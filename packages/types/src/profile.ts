@@ -133,6 +133,7 @@ export interface UserReview {
     createdAt: Date;
     visitDate: Date | null;
     dogBreeds: string[];
+    numDogs: number;
     images: ReviewImage[];
     place: {
       name: string;

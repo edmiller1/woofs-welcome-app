@@ -3,13 +3,21 @@
  * Handles all review-related business logic
  */
 
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { Image, Place, Review, ReviewImage } from "../db/schema";
-import { AppError, ConflictError, DatabaseError } from "../lib/errors";
+import {
+  AppError,
+  ConflictError,
+  DatabaseError,
+  NotFoundError,
+} from "../lib/errors";
 import { sanitizePlainText, sanitizeRichText } from "../lib/sanitize";
-import type { CreateReviewInput } from "../routes/review/schemas";
+import type {
+  CreateReviewInput,
+  UpdateReviewInput,
+} from "../routes/review/schemas";
 import { ImageUploadService } from "./image-upload.service";
-import type { Db } from "../db";
+import type { AnyDb } from "../db";
 
 interface CloudflareUploadResult {
   cfImageId: string;
@@ -20,7 +28,7 @@ interface CloudflareUploadResult {
 
 export class ReviewService {
   constructor(
-    private db: Db,
+    private db: AnyDb,
     private imageUploadService: ImageUploadService,
   ) {}
   /**
@@ -169,6 +177,203 @@ export class ReviewService {
       }
       console.error("Get dog breeds error:", error);
       throw new DatabaseError("Failed to get dog breeds", {
+        originalError: error,
+      });
+    }
+  }
+
+  async updateReview(
+    userId: string,
+    reviewId: string,
+    data: UpdateReviewInput,
+    newImages?: File[],
+    deletedImages?: string[],
+  ) {
+    try {
+      const sanitizedData = {
+        ...data,
+        title: sanitizePlainText(data.title),
+        content: sanitizeRichText(data.content),
+        dogBreeds: data.dogBreeds.map((breed) => sanitizePlainText(breed)),
+      };
+
+      // Check if review exists and belongs to the user
+      const review = await this.db.query.Review.findFirst({
+        where: and(eq(Review.id, reviewId), eq(Review.userId, userId)),
+        with: {
+          images: true,
+        },
+      });
+
+      if (!review) {
+        throw new NotFoundError("Review not found");
+      }
+
+      // Upload images to Cloudflare
+      const uploadedImages: CloudflareUploadResult[] = [];
+
+      if (newImages && newImages.length > 0) {
+        for (const file of newImages) {
+          const cfresult =
+            await this.imageUploadService.uploadToCloudflareOnly(file);
+          uploadedImages.push({
+            cfImageId: cfresult.id,
+            filename: file.name,
+            mimeType: file.type,
+            fileSize: file.size,
+          });
+        }
+      }
+
+      // Update review, add new images, delete images in a transaction
+      const result = await this.db.transaction(async (tx) => {
+        // Update review
+        const [updatedreview] = await tx
+          .update(Review)
+          .set({
+            title: sanitizedData.title,
+            content: sanitizedData.content,
+            rating: sanitizedData.rating,
+            numDogs: sanitizedData.numDogs,
+            dogBreeds: sanitizedData.dogBreeds,
+            visitDate: sanitizedData.visitDate,
+          })
+          .returning({ id: Review.id })
+          .where(eq(Review.id, reviewId));
+
+        if (!updatedreview) {
+          throw new DatabaseError("Failed to update review");
+        }
+
+        const numImages = review.images.length;
+
+        // insert images
+        const newReviewImages: { imageId: string; displayOrder: number }[] = [];
+
+        for (let i = 0; i < uploadedImages.length; i++) {
+          const img = uploadedImages[i]!;
+
+          //Insert into Image table
+          const [dbImage] = await tx
+            .insert(Image)
+            .values({
+              id: img.cfImageId,
+              cfImageId: img.cfImageId,
+              filename: img.filename,
+              mimeType: img.mimeType,
+              fileSize: img.fileSize,
+              imageType: "review_photo",
+              uploadedBy: userId,
+              source: "user_upload",
+              isApproved: true,
+              altText: sanitizedData.title,
+            })
+            .returning({ id: Image.id });
+
+          if (!dbImage) {
+            throw new DatabaseError("Failed to save image to database");
+          }
+
+          newReviewImages.push({
+            imageId: dbImage.id,
+            displayOrder: numImages + i,
+          });
+        }
+
+        // Insert ReviewImage junction records
+        if (newReviewImages.length > 0) {
+          await tx.insert(ReviewImage).values(
+            newReviewImages.map((ri) => ({
+              reviewId: review.id,
+              imageId: ri.imageId,
+              displayOrder: ri.displayOrder,
+            })),
+          );
+        }
+
+        if (deletedImages && deletedImages.length > 0) {
+          for (const imageId of deletedImages) {
+            const [deleted] = await tx
+              .delete(ReviewImage)
+              .where(
+                and(
+                  eq(ReviewImage.reviewId, review.id),
+                  eq(ReviewImage.imageId, imageId),
+                ),
+              )
+              .returning({ id: ReviewImage.id });
+
+            if (!deleted) {
+              throw new DatabaseError("Failed to delete image from database");
+            }
+          }
+        }
+
+        return {
+          reviewId: review.id,
+        };
+      });
+
+      if (deletedImages && deletedImages.length > 0) {
+        for (const imageId of deletedImages) {
+          await this.imageUploadService.deleteImage(imageId);
+        }
+      }
+
+      return result;
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Update review error:", error);
+      throw new DatabaseError("Failed to update review", {
+        originalError: error,
+      });
+    }
+  }
+
+  async deleteReview(userId: string, reviewId: string) {
+    try {
+      //Check if review exists and belongs to the user
+      const review = await this.db.query.Review.findFirst({
+        where: and(eq(Review.id, reviewId), eq(Review.userId, userId)),
+        with: {
+          images: {
+            with: {
+              image: true,
+            },
+          },
+        },
+      });
+
+      if (!review) {
+        throw new NotFoundError("Review not found");
+      }
+
+      const cfImageIds = review.images.map((ri) => ri.image.cfImageId);
+
+      await this.db.transaction(async (tx) => {
+        // Cascade handles ReviewImage cleanup
+        await tx.delete(Review).where(eq(Review.id, reviewId));
+
+        // Manually clean up Image records
+        if (cfImageIds.length > 0) {
+          await tx.delete(Image).where(inArray(Image.cfImageId, cfImageIds));
+        }
+      });
+
+      // Only after DB transaction succeeds
+      for (const cfImageId of cfImageIds) {
+        await this.imageUploadService.deleteImage(cfImageId);
+      }
+
+      return { isSuccess: true };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Delete review error:", error);
+      throw new DatabaseError("Failed to delete review", {
         originalError: error,
       });
     }

@@ -11,11 +11,13 @@
     UserStar,
   } from "@lucide/svelte";
   import { createQuery, createInfiniteQuery } from "@tanstack/svelte-query";
-  import type { ProfileReviewStats } from "@woofs/types";
+  import type { ProfileReviewStats, UpdateReviewData } from "@woofs/types";
   import * as Select from "$lib/components/ui/select/index.js";
   import { Separator } from "$lib/components/ui/separator";
   import { format } from "date-fns";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
+  import DeleteReviewDialog from "$lib/components/delete-review-dialog.svelte";
+  import EditReviewDialog from "$lib/components/edit-review-dialog.svelte";
 
   interface Props {
     data: {
@@ -34,6 +36,20 @@
   let isSticky = $state<boolean>(false);
   let expandedReviews = $state(new Set<string>());
   let sentinel = $state<HTMLDivElement>();
+  let deleteOpen = $state<boolean>(false);
+  let deleteReviewId = $state<string>("");
+  let editOpen = $state<boolean>(false);
+  let editReviewData = $state<UpdateReviewData>({
+    reviewId: "",
+    title: "",
+    content: "",
+    rating: 0,
+    dogBreeds: [],
+    numDogs: 0,
+    visitDate: new Date(),
+    images: [],
+  });
+  let editPlaceName = $state<string>("");
 
   const profileReviewStats = createQuery(() => ({
     queryKey: ["profileReviewStats", userId],
@@ -69,6 +85,17 @@
 
     return () => observer.disconnect();
   });
+
+  const openDeleteDialog = (reviewId: string) => {
+    deleteReviewId = reviewId;
+    deleteOpen = true;
+  };
+
+  const openEditDialog = (reviewData: UpdateReviewData, placeName: string) => {
+    editReviewData = reviewData;
+    editPlaceName = placeName;
+    editOpen = true;
+  };
 
   const toggleExpanded = (id: string) => {
     const next = new Set(expandedReviews);
@@ -193,7 +220,9 @@
           </Button>
         {/each}
         <Select.Root bind:value={sortBy} type="single">
-          <Select.Trigger class="w-32 ml-auto">{selectContent}</Select.Trigger>
+          <Select.Trigger class="w-32 ml-auto cursor-pointer"
+            >{selectContent}</Select.Trigger
+          >
           <Select.Content>
             <Select.Item value="createdAt_desc">Newest</Select.Item>
             <Select.Item value="createdAt_asc">Oldest</Select.Item>
@@ -274,8 +303,8 @@
       </div>
       <div class="py-6 grid grid-cols-1 gap-4 p-2 sm:grid-cols-2">
         {#each allReviews as review}
-          <div class="rounded-lg border p-4">
-            <div class="flex gap-2">
+          <div class="rounded-lg border p-4 flex">
+            <div class="flex gap-2 items-stretch w-full">
               <div
                 class="shrink-0 w-20 h-20 bg-muted rounded-lg flex items-center justify-center"
               >
@@ -288,69 +317,97 @@
                   width="80"
                 />
               </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-start justify-between gap-4">
-                  <div>
-                    <a
-                      href={`/location/${review.place.location.path}/places/${review.place.slug}#review-${review.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <h3 class="text-sm font-semibold text-primary">
-                        {review.place.name}
-                      </h3>
-                    </a>
-                    <p class="text-xs text-muted-foreground">
-                      {review.place.location.name}, {review.place.location
-                        .parent.name}
-                      {review.place.countryCode}
-                    </p>
-                  </div>
-                  {#if profileReviews.data?.pages[0]?.isOwner}
-                    <div class="flex gap-2 shrink-0">
-                      <Button variant="outline" size="sm">Edit</Button>
-                      <Button variant="destructive" size="sm">Delete</Button>
+              <div class="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <a
+                        href={`/location/${review.place.location.path}/places/${review.place.slug}#review-${review.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <h3 class="text-sm font-semibold text-primary">
+                          {review.place.name}
+                        </h3>
+                      </a>
+                      <p class="text-xs text-muted-foreground">
+                        {review.place.location.name}, {review.place.location
+                          .parent.name}
+                        {review.place.countryCode}
+                      </p>
                     </div>
+                    {#if profileReviews.data?.pages[0]?.isOwner}
+                      <div class="flex gap-2 shrink-0">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          class="px-2 py-0.5"
+                          onclick={() =>
+                            openEditDialog(
+                              {
+                                reviewId: review.id,
+                                title: review.title,
+                                content: review.content!,
+                                rating: review.rating,
+                                numDogs: review.numDogs,
+                                dogBreeds: review.dogBreeds,
+                                visitDate: review.visitDate!,
+                                images: review.images,
+                              },
+                              review.place.name,
+                            )}>Edit</Button
+                        >
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          class="px-2 py-0.5"
+                          onclick={() => openDeleteDialog(review.id)}
+                          >Delete</Button
+                        >
+                      </div>
+                    {/if}
+                  </div>
+                  <!-- Rating -->
+                  <div class="flex items-center gap-2 mt-1">
+                    <div class="flex items-center">
+                      {#each Array.from({ length: 5 }, (_, i) => i + 1) as star}
+                        <Star
+                          class={`size-3 ${star <= review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                        />
+                      {/each}
+                    </div>
+                    <span class="text-sm font-medium"
+                      >{review.rating.toFixed(1)}</span
+                    >
+                  </div>
+
+                  <!-- Review Content -->
+                  <h4 class="font-semibold mt-3 text-foreground">
+                    {review.title}
+                  </h4>
+                  <p
+                    class="text-muted-foreground mt-1 text-sm leading-relaxed {expandedReviews.has(
+                      review.id,
+                    )
+                      ? ''
+                      : 'line-clamp-3'}"
+                  >
+                    {review.content}
+                  </p>
+                  {#if review.content && review.content.length > 300}
+                    <button
+                      class="text-xs text-primary mt-1 cursor-pointer hover:underline"
+                      onclick={() => toggleExpanded(review.id)}
+                    >
+                      {expandedReviews.has(review.id)
+                        ? "Show less"
+                        : "Read more"}
+                    </button>
                   {/if}
                 </div>
-                <!-- Rating -->
-                <div class="flex items-center gap-2 mt-1">
-                  <div class="flex items-center">
-                    {#each Array.from({ length: 5 }, (_, i) => i + 1) as star}
-                      <Star
-                        class={`size-3 ${star <= review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
-                      />
-                    {/each}
-                  </div>
-                  <span class="text-sm font-medium"
-                    >{review.rating.toFixed(1)}</span
-                  >
-                </div>
-
-                <!-- Review Content -->
-                <h4 class="font-semibold mt-3 text-foreground">
-                  {review.title}
-                </h4>
-                <p
-                  class="text-muted-foreground mt-1 text-sm leading-relaxed {expandedReviews.has(
-                    review.id,
-                  )
-                    ? ''
-                    : 'line-clamp-3'}"
-                >
-                  {review.content}
-                </p>
-                {#if review.content && review.content.length > 150}
-                  <button
-                    class="text-xs text-primary mt-1 cursor-pointer hover:underline"
-                    onclick={() => toggleExpanded(review.id)}
-                  >
-                    {expandedReviews.has(review.id) ? "Show less" : "Read more"}
-                  </button>
-                {/if}
 
                 <!-- Footer -->
-                <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center justify-between mt-auto pt-3">
                   <div
                     class="flex items-center gap-4 text-sm text-muted-foreground"
                   >
@@ -396,3 +453,16 @@
     {/if}
   {/if}
 </section>
+
+{#if deleteOpen}
+  <DeleteReviewDialog open={deleteOpen} reviewId={deleteReviewId} />
+{/if}
+
+{#if editOpen}
+  <EditReviewDialog
+    open={editOpen}
+    onOpenChange={(open) => (editOpen = open)}
+    reviewData={editReviewData}
+    placeName={editPlaceName}
+  />
+{/if}

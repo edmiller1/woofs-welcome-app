@@ -1,10 +1,16 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
-import { createReviewSchema } from "./schemas";
+import {
+  createReviewSchema,
+  deleteReviewSchema,
+  updateReviewParamsSchema,
+  updateReviewSchema,
+} from "./schemas";
 import { UnauthorizedError } from "../../lib/errors";
 import { ReviewService } from "../../services/review.service";
 import { ImageUploadService } from "../../services/image-upload.service";
+import { createDbWithTransactions } from "../../db";
 
 export const reviewRouter = new Hono();
 
@@ -47,3 +53,68 @@ reviewRouter.get("/dog-breeds", async (c) => {
 
   return c.json(result, 200);
 });
+
+reviewRouter.patch(
+  ":reviewId/update",
+  authMiddleware,
+  zValidator("form", updateReviewSchema),
+  zValidator("param", updateReviewParamsSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const env = c.get("env");
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { db, pool } = createDbWithTransactions(env);
+
+    try {
+      // Services
+      const imageUploadService = new ImageUploadService(db, env);
+      const reviewService = new ReviewService(db, imageUploadService);
+
+      const { images, deletedImages, ...reviewData } = c.req.valid("form");
+      const { reviewId } = c.req.valid("param");
+
+      const result = await reviewService.updateReview(
+        auth.id,
+        reviewId,
+        reviewData,
+        images,
+        deletedImages,
+      );
+
+      return c.json(result, 200);
+    } finally {
+      await pool.end();
+    }
+  },
+);
+
+reviewRouter.delete(
+  "/:reviewId",
+  authMiddleware,
+  zValidator("param", deleteReviewSchema),
+  async (c) => {
+    // Context
+    const auth = c.get("user");
+    const env = c.get("env");
+
+    if (!auth) throw new UnauthorizedError("Unauthorized");
+
+    const { reviewId } = c.req.valid("param");
+    const { db, pool } = createDbWithTransactions(env);
+
+    try {
+      // Services
+      const imageUploadService = new ImageUploadService(db, env);
+      const reviewService = new ReviewService(db, imageUploadService);
+      await reviewService.deleteReview(auth.id, reviewId);
+      return c.body(null, 204);
+    } finally {
+      await pool.end();
+    }
+  },
+);

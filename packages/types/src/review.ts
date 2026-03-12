@@ -90,3 +90,25 @@ export interface CreateReviewInput {
   dogBreeds: string[];
   images: File[];
 }
+
+export interface UpdateReviewInput {
+  title: string | null;
+  content: string | null;
+  rating: number | null;
+  numDogs: number | null;
+  dogBreeds: string[] | null;
+  visitDate: Date | null;
+  newImages: File[] | null;
+  deletedImages: string[] | null;
+}
+
+export interface UpdateReviewData {
+  reviewId: string;
+  title: string;
+  content: string;
+  rating: number;
+  numDogs: number | null;
+  dogBreeds: string[] | null;
+  visitDate: Date;
+  images: ReviewImage[] | null;
+}

@@ -1,7 +1,9 @@
 <script lang="ts">
   import { page } from "$app/state";
   import Navbar from "$lib/components/navbar.svelte";
+  import { Button } from "$lib/components/ui/button";
   import { classNames } from "$lib/utils";
+  import { Cog, Settings } from "@lucide/svelte";
   import type { BAUser, Profile, Tab } from "@woofs/types";
   import type { Snippet } from "svelte";
 
@@ -31,10 +33,10 @@
       name: "Reviews",
       href: `/profile/${userId}/${userName}/reviews`,
     },
-    {
-      name: "Travels",
-      href: `/profile/${userId}/${userName}/travels`,
-    },
+    // {
+    //   name: "Travels",
+    //   href: `/profile/${userId}/${userName}/travels`,
+    // },
   ]);
 
   const currentTab = $derived(
@@ -51,7 +53,9 @@
 <div class="mx-auto max-w-full">
   <Navbar {user} />
   <main class="">
-    <header class="py-3 border-b border-gray-200">
+    <header
+      class="flex items-center justify-between py-3 border-b border-gray-200 pr-3"
+    >
       <nav class="flex overflow-x-auto px-6">
         <ul
           role="list"
@@ -74,6 +78,9 @@
           {/each}
         </ul>
       </nav>
+      <div>
+        <Button variant="outline"><Settings class="h-6 w-6" /></Button>
+      </div>
     </header>
     <div>
       {@render children()}

@@ -26,11 +26,6 @@ export const createReview = async (data: CreateReviewInput) => {
   const response = await protectedProcedure.post<{ reviewId: string }>(
     "/review/create",
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
   );
 
   return response.data;

@@ -59,14 +59,17 @@ class ApiClient {
     const baseHeaders = await this.getHeaders();
     const url = this.buildUrl(path, options.params);
 
+    const isFormData = options.body instanceof FormData;
     const response = await fetch(url, {
       method,
       headers: {
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         ...baseHeaders,
         ...options.headers,
       },
-      body: options.body != null ? JSON.stringify(options.body) : undefined,
+      body: options.body != null
+        ? isFormData ? (options.body as FormData) : JSON.stringify(options.body)
+        : undefined,
     });
 
     if (!response.ok) {

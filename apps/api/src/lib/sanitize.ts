@@ -1,4 +1,10 @@
-import DOMPurify from "isomorphic-dompurify";
+// Regex-based sanitization — compatible with Cloudflare Workers (no DOM dependency)
+
+const TAGS_RE = /<[^>]*>/g;
+const SAFE_TAGS_RE =
+  /<(?!\/?(?:p|br|strong|em|b|i|u|ul|ol|li|span)(?:\s[^>]*)?>)[^>]*>/gi;
+const UNSAFE_ATTR_RE = /\s(?:on\w+|style|class|id)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi;
+const UNSAFE_HREF_RE = /href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]*))/gi;
 
 /**
  * Sanitize plain text (removes ALL HTML)
@@ -11,12 +17,7 @@ import DOMPurify from "isomorphic-dompurify";
  */
 export function sanitizePlainText(input: string | null | undefined): string {
   if (!input) return "";
-
-  // Remove all HTML tags and return plain text
-  return DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [], // No HTML tags allowed
-    KEEP_CONTENT: true, // Keep the text content
-  }).trim();
+  return input.replace(TAGS_RE, "").trim();
 }
 
 /**
@@ -24,8 +25,8 @@ export function sanitizePlainText(input: string | null | undefined): string {
  *
  * Use for: Review content, descriptions with formatting
  *
- * Allows: <b>, <i>, <strong>, <em>, <p>, <br>, <ul>, <li>
- * Removes: <script>, onclick, etc.
+ * Allows: <b>, <i>, <strong>, <em>, <p>, <br>, <ul>, <li>, <span>
+ * Removes: <script>, onclick, style attrs, etc.
  *
  * Example:
  * Input:  "<p>Great place!</p><script>alert('xss')</script>"
@@ -34,24 +35,14 @@ export function sanitizePlainText(input: string | null | undefined): string {
 export function sanitizeRichText(input: string | null | undefined): string {
   if (!input) return "";
 
-  return DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [
-      "p",
-      "br",
-      "strong",
-      "em",
-      "b",
-      "i",
-      "u",
-      "ul",
-      "ol",
-      "li",
-      "a",
-      "span",
-    ],
-    ALLOWED_ATTR: ["href", "title"], // Only for <a> tags
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):)/, // Only http(s) and mailto links
-  }).trim();
+  return input
+    .replace(SAFE_TAGS_RE, "")       // strip disallowed tags
+    .replace(UNSAFE_ATTR_RE, "")     // strip dangerous attributes
+    .replace(UNSAFE_HREF_RE, (match, d, s, u) => {
+      const url = d ?? s ?? u ?? "";
+      return /^(?:https?:|mailto:)/i.test(url) ? match : "";
+    })
+    .trim();
 }
 
 /**
@@ -69,17 +60,13 @@ export function sanitizeRichText(input: string | null | undefined): string {
 export function sanitizeURL(input: string | null | undefined): string {
   if (!input) return "";
 
-  const sanitized = DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [],
-    ALLOWED_ATTR: [],
-  }).trim();
+  const stripped = input.replace(TAGS_RE, "").trim();
 
-  // Only allow http(s) and mailto protocols
-  if (!sanitized.match(/^(https?:\/\/|mailto:)/i)) {
+  if (!stripped.match(/^(https?:\/\/|mailto:)/i)) {
     return "";
   }
 
-  return sanitized;
+  return stripped;
 }
 
 /**
@@ -94,13 +81,8 @@ export function sanitizeURL(input: string | null | undefined): string {
 export function sanitizeEmail(input: string | null | undefined): string {
   if (!input) return "";
 
-  // Remove all HTML and trim
-  const cleaned = DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [],
-    KEEP_CONTENT: true,
-  }).trim();
+  const cleaned = input.replace(TAGS_RE, "").trim();
 
-  // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(cleaned)) {
     return "";

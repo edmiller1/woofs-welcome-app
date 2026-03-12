@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import type { ImageType } from "@woofs/types";
 import { Image } from "../db/schema";
 import { BadRequestError, InternalServerError } from "../lib/errors";
-import type { Db } from "../db";
+import type { AnyDb, Db } from "../db";
 import type { Env } from "../config/env";
 
 interface CloudflareUploadResult {
@@ -40,7 +40,7 @@ export class ImageUploadService {
   private readonly deliveryUrl: string;
 
   constructor(
-    private db: Db,
+    private db: AnyDb,
     env: Env,
   ) {
     this.apiEndpoint = `https://api.cloudflare.com/client/v4/accounts/${env.CF_ACCOUNT_ID}/images/v1`;
