@@ -13,17 +13,33 @@
     isOwner: boolean;
     showCollections: boolean;
     profileName: string;
+    userId: string;
+    userName: string;
   }
 
-  const { collections, isOwner, showCollections, profileName }: Props =
-    $props();
+  const {
+    collections,
+    isOwner,
+    showCollections,
+    profileName,
+    userId,
+    userName,
+  }: Props = $props();
 </script>
 
 <section>
-  <div class="flex items-center gap-2">
-    <h2 class="text-2xl font-bold text-foreground">Collections</h2>
-    <PrivacyTooltip {isOwner} privacyValue={showCollections} />
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <h2 class="text-2xl font-bold text-foreground">Collections</h2>
+      <PrivacyTooltip {isOwner} privacyValue={showCollections} />
+    </div>
+    <a
+      href={`/profile/${userId}/${userName}/collections`}
+      class={cn(buttonVariants({ variant: "outline" }))}
+      >View all
+    </a>
   </div>
+
   {#if !isOwner && !showCollections}
     <!-- Section hidden by user settings -->
     <div class="mt-4">
@@ -41,7 +57,7 @@
           class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-5 text-center"
         >
           {#if images.length === 1}
-            <div class="bg-muted size-16 overflow-hidden rounded-md">
+            <div class="bg-muted size-32 overflow-hidden rounded-md">
               <OptimizedImage
                 imageId={images[0].place.images[0].imageId}
                 alt={images[0].place.name}
@@ -52,7 +68,7 @@
             </div>
           {:else if images.length === 2}
             <div
-              class="bg-muted grid size-16 grid-cols-2 gap-0.5 overflow-hidden rounded-md"
+              class="bg-muted grid size-32 grid-cols-2 gap-0.5 overflow-hidden rounded-md"
             >
               {#each images as item}
                 <OptimizedImage
@@ -66,7 +82,7 @@
             </div>
           {:else if images.length === 3}
             <div
-              class="bg-muted grid size-16 grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden rounded-md"
+              class="bg-muted grid size-32 grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden rounded-md"
             >
               <OptimizedImage
                 imageId={images[0].place.images[0].imageId}
@@ -92,7 +108,7 @@
             </div>
           {:else if images.length >= 4}
             <div
-              class="bg-muted grid size-16 grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden rounded-md"
+              class="bg-muted grid size-32 grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden rounded-md"
             >
               {#each images.slice(0, 4) as item}
                 <OptimizedImage

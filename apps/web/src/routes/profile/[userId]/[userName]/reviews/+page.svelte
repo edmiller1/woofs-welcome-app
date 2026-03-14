@@ -429,7 +429,7 @@
                     </div>
                   </div>
                   <span class="text-sm text-muted-foreground"
-                    >{format(review.createdAt, "LLLL, yyyy")}</span
+                    >{format(review.visitDate!, "LLLL, yyyy")}</span
                   >
                 </div>
               </div>

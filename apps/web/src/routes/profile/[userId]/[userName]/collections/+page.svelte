@@ -70,7 +70,7 @@
         This user has chosen to keep their collections private
       </p>
     </div>
-  {:else if profileCollections.data.collections.length === 0}
+  {:else if profileCollections.data?.collections.length === 0}
     <div
       class="flex flex-col items-center justify-center h-full gap-3 text-center"
     >

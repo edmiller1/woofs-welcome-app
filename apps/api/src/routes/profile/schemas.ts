@@ -19,6 +19,14 @@ export const updateProfileSchema = z.object({
   showCollections: z.string().optional(),
 });
 
+export const updateProfileSettingsSchema = z.object({
+  showAbout: z.string().optional(), // "true" | "false"
+  showDogs: z.string().optional(),
+  showCheckIns: z.string().optional(),
+  showReviews: z.string().optional(),
+  showCollections: z.string().optional(),
+});
+
 export const getProfileReviewsSchema = z.object({
   limit: z.coerce.number().optional().default(12),
   cursor: z.string().optional(),
@@ -34,3 +42,6 @@ export const getProfileReviewStatsSchema = z.object({
 });
 
 export type GetProfileReviewsQuery = z.infer<typeof getProfileReviewsSchema>;
+export type UpdateProfileSettingsInput = z.infer<
+  typeof updateProfileSettingsSchema
+>;

@@ -163,3 +163,11 @@ export interface ProfileReviewStats {
   isPrivate: boolean;
   isOwner: boolean;
 }
+
+export interface UpdateProfileSettingsInput {
+  showAbout?: boolean;
+  showDogs?: boolean;
+  showCheckIns?: boolean;
+  showReviews?: boolean;
+  showCollections?: boolean;
+}

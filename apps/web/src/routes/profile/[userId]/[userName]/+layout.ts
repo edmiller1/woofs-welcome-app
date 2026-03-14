@@ -15,10 +15,13 @@ export const load: Load = async ({ params }) => {
 
   const initialProfile = await api.profile.getProfile(userId);
 
+  const isOwner = userId === user?.id;
+
   return {
     user,
     userName,
     userId,
     initialProfile,
+    isOwner,
   };
 };

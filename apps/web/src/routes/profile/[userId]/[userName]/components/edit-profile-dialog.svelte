@@ -617,10 +617,10 @@
         {/if}
       </div>
 
-      <Separator />
+      <!-- <Separator /> -->
 
       <!-- Privacy Settings -->
-      <div>
+      <!-- <div>
         <h3 class="mb-3 text-sm font-medium">Privacy Settings</h3>
         <p class="mb-4 text-xs text-muted-foreground">
           Control what other people can see on your profile.
@@ -647,7 +647,7 @@
             <Switch id="show-collections" bind:checked={showCollections} />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <Dialog.Footer

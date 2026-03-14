@@ -60,13 +60,14 @@
             averageRating={profile.data.averageRating}
             emailVerified={profile.data.emailVerified}
           />
-          <CheckInCard
+          <!-- Add this back in after initial launch -->
+          <!-- <CheckInCard
             isOwner={profile.data.isOwner}
             name={profile.data.name}
             checkInCount={profile.data.checkInCount}
             showCheckIns={profile.data.userSettings.showCheckIns}
             profileName={profile.data.name}
-          />
+          /> -->
         </div>
       </aside>
       <!-- Right area -->
@@ -91,6 +92,8 @@
           isOwner={profile.data.isOwner}
           showCollections={profile.data.userSettings.showCollections}
           profileName={profile.data.name}
+          {userId}
+          {userName}
         />
         <Separator />
         <ReviewsSection
@@ -98,6 +101,8 @@
           isOwner={profile.data.isOwner}
           showReviews={profile.data.userSettings.showReviews}
           profileName={profile.data.name}
+          {userId}
+          {userName}
         />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { protectedProcedure } from "@woofs/api";
-import { UpdateProfileData } from "@woofs/types";
+import type { UpdateProfileData } from "@woofs/types";
 
 export const updateProfile = async (data: UpdateProfileData) => {
   const formData = new FormData();
@@ -40,10 +40,6 @@ export const updateProfile = async (data: UpdateProfileData) => {
 
   const response = await protectedProcedure.patch<{
     result: { success: boolean };
-  }>(`/profile/update`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  }>(`/profile/update`, formData);
   return response.data.result;
 };

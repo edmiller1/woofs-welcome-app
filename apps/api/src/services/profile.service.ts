@@ -28,7 +28,10 @@ import {
 import { sanitizePlainText } from "../lib/sanitize";
 import { ImageUploadService } from "./image-upload.service";
 import type { Db } from "../db";
-import type { GetProfileReviewsQuery } from "../routes/profile/schemas";
+import type {
+  GetProfileReviewsQuery,
+  UpdateProfileSettingsInput,
+} from "../routes/profile/schemas";
 
 /**
  * Profile Service
@@ -428,6 +431,50 @@ export class ProfileService {
         throw error;
       }
       throw new DatabaseError("Failed to update profile", {
+        originalError: error,
+      });
+    }
+  }
+
+  async updateProfileSettings(
+    userId: string,
+    data: UpdateProfileSettingsInput,
+  ) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, userId),
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const settingsUpdate: Record<string, boolean> = {};
+      if (data.showAbout !== undefined)
+        settingsUpdate.showAbout = data.showAbout === "true";
+      if (data.showDogs !== undefined)
+        settingsUpdate.showDogs = data.showDogs === "true";
+      if (data.showCheckIns !== undefined)
+        settingsUpdate.showCheckIns = data.showCheckIns === "true";
+      if (data.showReviews !== undefined)
+        settingsUpdate.showReviews = data.showReviews === "true";
+      if (data.showCollections !== undefined)
+        settingsUpdate.showCollections = data.showCollections === "true";
+
+      if (Object.keys(settingsUpdate).length > 0) {
+        await this.db
+          .update(UserSettings)
+          .set(settingsUpdate)
+          .where(eq(UserSettings.userId, userId));
+      }
+
+      return { success: true };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Update profile settings error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to update profile settings", {
         originalError: error,
       });
     }

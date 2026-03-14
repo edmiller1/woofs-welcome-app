@@ -7,24 +7,41 @@
   import { cn } from "$lib/utils";
   import { Badge } from "$lib/components/ui/badge";
   import PrivacyTooltip from "./privacy-tooltip.svelte";
+  import { format } from "date-fns";
 
   interface Props {
     reviews: ProfileReview[];
     isOwner: boolean;
     showReviews: boolean;
     profileName: string;
+    userId: string;
+    userName: string;
   }
 
-  const { reviews, isOwner, showReviews, profileName }: Props = $props();
+  const {
+    reviews,
+    isOwner,
+    showReviews,
+    profileName,
+    userId,
+    userName,
+  }: Props = $props();
 
   let showAll = $state<boolean>(false);
   const displayed = $derived(showAll ? reviews : reviews.slice(0, 4));
 </script>
 
 <section>
-  <div class="flex items-center gap-3">
-    <h2 class="text-2xl font-bold text-foreground">Recent reviews</h2>
-    <PrivacyTooltip {isOwner} privacyValue={showReviews} />
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <h2 class="text-2xl font-bold text-foreground">Recent reviews</h2>
+      <PrivacyTooltip {isOwner} privacyValue={showReviews} />
+    </div>
+    <a
+      href={`/profile/${userId}/${userName}/reviews`}
+      class={cn(buttonVariants({ variant: "outline" }))}
+      >View all
+    </a>
   </div>
 
   {#if !isOwner && !showReviews}
@@ -38,11 +55,11 @@
     <div class="mt-6 grid gap-6 md:grid-cols-2">
       {#each displayed as review}
         <div
-          class="flex flex-col gap-3 rounded-xl border border-border bg-card p-5"
+          class="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 justify-between"
         >
           <div class="flex items-center gap-3">
             <OptimizedImage
-              imageId="812ee3d9-064e-4395-fe07-fe1751192600"
+              imageId={review.place.images[0].imageId}
               alt="review image"
               variant="avatar"
               class="w-10 h-10 rounded-full object-cover object-center"
@@ -75,7 +92,9 @@
           <p class="text-sm leading-relaxed text-foreground">
             {review.content}
           </p>
-          <span class="text-xs text-muted-foreground">{review.visitDate}</span>
+          <span class="mt-auto text-xs text-muted-foreground"
+            >{format(review.visitDate, "LLLL, yyyy")}</span
+          >
         </div>
       {/each}
     </div>

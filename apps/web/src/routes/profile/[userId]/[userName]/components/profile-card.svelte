@@ -23,7 +23,9 @@
   }: Props = $props();
 
   const profileImage = $derived(
-    image ? image : buildImageUrl(imageId ?? "", "card"),
+    image
+      ? image.replace(/=s\d+-c$/, "=s256-c")
+      : buildImageUrl(imageId ?? "", "avatar"),
   );
 </script>
 
@@ -31,11 +33,11 @@
   class="flex flex-col items-center rounded-xl border border-border bg-card p-6 shadow-lg"
 >
   <div class="relative mb-4">
-    <div class="h-32 w-32 overflow-hidden rounded-full">
+    <div class="overflow-hidden rounded-full">
       <img
         src={profileImage}
         alt={profileName}
-        class="h-32 w-32 object-cover"
+        class="h-32 w-32 object-cover object-center"
       />
     </div>
     {#if emailVerified}

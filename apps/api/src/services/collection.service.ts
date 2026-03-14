@@ -421,10 +421,18 @@ export class CollectionService {
       );
 
       if (userId && userId === profileId) {
-        return collectionsWithPreviews;
+        return {
+          isPrivate: false,
+          collections: collectionsWithPreviews,
+          isOwner: true,
+        };
       }
 
-      return collectionsWithPreviews.filter((c) => c.isPublic);
+      return {
+        isPrivate: false,
+        collections: collectionsWithPreviews.filter((c) => c.isPublic),
+        isOwner: userId === profileId,
+      };
     } catch (error) {
       if (error instanceof AppError) {
         console.error("Get profile collections error:", error);
