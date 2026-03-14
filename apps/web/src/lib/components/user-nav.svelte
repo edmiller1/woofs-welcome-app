@@ -46,19 +46,9 @@
     </Avatar>
   </DropdownMenuTrigger>
   <DropdownMenuContent align="end" class="mt-2">
-    <a href="/account">
-      <DropdownMenuItem
-        ><CircleUser class="text-foreground" /> Account</DropdownMenuItem
-      >
-    </a>
     <a href={`/profile/${user.id}/${profileLink}`}>
       <DropdownMenuItem
         ><SquareUserRound class="text-foreground" /> Profile</DropdownMenuItem
-      >
-    </a>
-    <a href="/account/settings">
-      <DropdownMenuItem
-        ><Cog class="text-foreground" />Settings</DropdownMenuItem
       >
     </a>
     <DropdownMenuItem onclick={() => auth.signOut()}>

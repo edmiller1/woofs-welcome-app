@@ -55,7 +55,6 @@
 
   const isExplorePageOrAccountPage =
     page.url.pathname.includes("/explore") ||
-    page.url.pathname.includes("/account") ||
     page.url.pathname.includes("/business/dashboard") ||
     page.url.pathname.includes("/profile");
 </script>
