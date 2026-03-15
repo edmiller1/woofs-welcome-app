@@ -12,7 +12,7 @@
   <meta name="description" content="Sign in to your account." />
 </svelte:head>
 
-<div class="grid min-h-svh lg:grid-cols-2">
+<div class="grid min-h-svh xl:grid-cols-2">
   <div class="flex flex-col gap-4 p-6 md:p-10">
     <div class="flex justify-between gap-2">
       <a href="/" class="flex items-center gap-2 font-medium">
@@ -36,7 +36,7 @@
       </div>
     </div>
   </div>
-  <div class="bg-muted relative hidden lg:block">
+  <div class="bg-muted relative hidden xl:block">
     <img
       src={fluffs}
       alt="doggies"

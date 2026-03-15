@@ -67,7 +67,7 @@
   };
 </script>
 
-<Card class="w-lg">
+<Card class="w-full max-w-lg">
   <CardContent>
     <form onsubmit={(e) => handleEmailSignIn(e)} class="flex flex-col gap-6">
       <div class="flex flex-col items-center gap-2 text-center">

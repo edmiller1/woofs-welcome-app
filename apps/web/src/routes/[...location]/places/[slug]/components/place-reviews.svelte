@@ -10,7 +10,7 @@
   import { buildImageUrl } from "@woofs/image-config";
   import { formatDate, getUserInitials } from "$lib/helpers";
   import StarRating from "$lib/components/star-rating.svelte";
-  import type { BAUser, PlaceReview, ReviewImage } from "@woofs/types";
+  import type { BAUser, ReviewImage } from "@woofs/types";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import { Badge } from "$lib/components/ui/badge";
   import * as Pagination from "$lib/components/ui/pagination/index.js";
@@ -18,6 +18,7 @@
   import { page } from "$app/state";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import ReviewImageDialog from "$lib/components/review-image-dialog.svelte";
+  import ReportReviewDialog from "$lib/components/report-review-dialog.svelte";
 
   interface Props {
     placeId: string;
@@ -46,6 +47,7 @@
   let imageDialogOpen = $state<boolean>(false);
   let currentImage = $state<ReviewImage>();
   let showHighlighted = $state(true);
+  let reportOpen = $state(false);
 
   const reviews = createQuery(() => ({
     queryKey: ["place-reviews", placeId, currentPage, limit],
@@ -93,9 +95,14 @@
     <div class="space-y-6 my-6">
       {#if highlightedReview.data && showHighlighted}
         <!-- Highlighted Review -->
-        <div class="bg-primary/10 text-primary flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium">
+        <div
+          class="bg-primary/10 text-primary flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
+        >
           <span>Showing review from profile</span>
-          <button onclick={() => (showHighlighted = false)} class="rounded-full p-1 hover:bg-primary/20 transition-colors">
+          <button
+            onclick={() => (showHighlighted = false)}
+            class="rounded-full p-1 hover:bg-primary/20 transition-colors"
+          >
             <X class="size-4" />
           </button>
         </div>
@@ -121,11 +128,14 @@
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <div>
-                  <h4 class="font-semibold">{highlightedReview.data.user.name}</h4>
+                  <h4 class="font-semibold">
+                    {highlightedReview.data.user.name}
+                  </h4>
                   <div class="mt-1 flex items-center gap-2">
                     <StarRating rating={highlightedReview.data.rating} />
                     <span class="text-muted-foreground text-sm">
-                      {formatDate(highlightedReview.data.visitDate.toString())} &middot; {highlightedReview.data.numDogs}
+                      {formatDate(highlightedReview.data.visitDate.toString())} &middot;
+                      {highlightedReview.data.numDogs}
                       {highlightedReview.data.numDogs === 1 ? "dog" : "dogs"}
                     </span>
                   </div>
@@ -160,7 +170,11 @@
                     </Tooltip.Root>
                     <Tooltip.Root>
                       <Tooltip.Trigger>
-                        <Button variant="outline" class="rounded-full p-1">
+                        <Button
+                          variant="outline"
+                          class="rounded-full p-1"
+                          onclick={() => (reportOpen = true)}
+                        >
                           <Flag
                             class={cn(
                               "size-4",
@@ -179,7 +193,10 @@
                         </p>
                       </Tooltip.Content>
                     </Tooltip.Root>
-                    <!-- Report dialog -->
+                    <ReportReviewDialog
+                      open={reportOpen}
+                      hasReported={highlightedReview.data.hasReported}
+                    />
                   </div>
                 {:else}
                   <div class="flex items-center gap-2">
