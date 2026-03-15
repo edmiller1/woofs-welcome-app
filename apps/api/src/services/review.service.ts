@@ -378,4 +378,49 @@ export class ReviewService {
       });
     }
   }
+
+  async getReview(reviewId: string, userId?: string) {
+    try {
+      const review = await this.db.query.Review.findFirst({
+        where: eq(Review.id, reviewId),
+        with: {
+          images: true,
+          likes: true,
+          replies: true,
+          reports: true,
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              profileImageId: true,
+            },
+          },
+        },
+      });
+
+      if (!review) {
+        throw new NotFoundError("Review not found");
+      }
+
+      return {
+        ...review,
+        isOwner: userId ? review.userId === userId : false,
+        hasLiked: userId
+          ? review.likes.some((like) => like.userId === userId)
+          : false,
+        hasReported: userId
+          ? review.reports.some((report) => report.userId === userId)
+          : false,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Get review error:", error);
+      throw new DatabaseError("Failed to get review", {
+        originalError: error,
+      });
+    }
+  }
 }

@@ -43,5 +43,9 @@ export const deleteReviewSchema = z.object({
   reviewId: z.string(),
 });
 
+export const getReviewSchema = z.object({
+  reviewId: z.string(),
+});
+
 export type CreateReviewInput = z.infer<typeof createReviewSchema>;
 export type UpdateReviewInput = z.infer<typeof updateReviewSchema>;

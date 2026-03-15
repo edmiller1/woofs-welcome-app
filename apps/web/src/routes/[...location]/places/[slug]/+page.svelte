@@ -10,7 +10,7 @@
   import ImageDrawer from "$lib/components/image-drawer.svelte";
   import { Spinner } from "$lib/components/ui/spinner";
   import { createQuery } from "@tanstack/svelte-query";
-  import type { BAUser, PlaceWithDetails } from "@woofs/types";
+  import type { BAUser, PlaceReview, PlaceWithDetails } from "@woofs/types";
   import type { Tab } from "@woofs/types";
   import { classNames } from "$lib/utils";
   import PlaceHours from "./components/place-hours.svelte";
@@ -38,6 +38,7 @@
       slug: string;
       locationPath: string;
       initialPlace: PlaceWithDetails;
+      reviewId: string | null;
     };
   }
 
@@ -48,7 +49,7 @@
   ];
 
   const { data }: Props = $props();
-  const { user, slug, locationPath, initialPlace } = $derived(data);
+  const { user, slug, locationPath, initialPlace, reviewId } = $derived(data);
 
   const place = createQuery(() => ({
     queryKey: ["place", locationPath, slug],
@@ -298,6 +299,7 @@
               reviewCount={place.data.reviewsCount}
               {reviewDrawerOpen}
               {openReviewDrawer}
+              {reviewId}
             />
           </div>
         </div>

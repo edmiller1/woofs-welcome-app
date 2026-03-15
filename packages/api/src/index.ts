@@ -12,7 +12,8 @@ const getBaseUrl = () => {
       ? "http://localhost:9000/api"
       : "https://api.woofswelcome.app/api";
   }
-  return "https://api.woofswelcome.app/api";
+  // SSR path
+  return process.env.API_BASE_URL ?? "https://api.woofswelcome.app/api";
 };
 
 type RequestOptions = {
@@ -67,9 +68,12 @@ class ApiClient {
         ...baseHeaders,
         ...options.headers,
       },
-      body: options.body != null
-        ? isFormData ? (options.body as FormData) : JSON.stringify(options.body)
-        : undefined,
+      body:
+        options.body != null
+          ? isFormData
+            ? (options.body as FormData)
+            : JSON.stringify(options.body)
+          : undefined,
     });
 
     if (!response.ok) {

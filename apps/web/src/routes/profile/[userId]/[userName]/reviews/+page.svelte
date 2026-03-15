@@ -322,7 +322,7 @@
                   <div class="flex items-start justify-between gap-4">
                     <div>
                       <a
-                        href={`/location/${review.place.location.path}/places/${review.place.slug}#review-${review.id}`}
+                        href={`/location/${review.place.location.path}/places/${review.place.slug}?reviewId=${review.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

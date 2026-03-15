@@ -10,6 +10,8 @@ export const load: Load = async ({ params, url }) => {
     .replace(/^\/location\//, "")
     .replace(/\/places\/[^/]+$/, "");
 
+  const reviewId = url.searchParams.get("reviewId");
+
   const initialPlace = await api.place.getPlace(`${locationPath}/${slug}`);
 
   return {
@@ -17,5 +19,6 @@ export const load: Load = async ({ params, url }) => {
     slug,
     locationPath,
     initialPlace,
+    reviewId,
   };
 };

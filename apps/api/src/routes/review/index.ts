@@ -1,9 +1,10 @@
 import { Hono } from "hono";
-import { authMiddleware } from "../../middleware/auth";
+import { authMiddleware, optionalAuthMiddleware } from "../../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import {
   createReviewSchema,
   deleteReviewSchema,
+  getReviewSchema,
   updateReviewParamsSchema,
   updateReviewSchema,
 } from "./schemas";
@@ -116,5 +117,25 @@ reviewRouter.delete(
     } finally {
       await pool.end();
     }
+  },
+);
+
+reviewRouter.get(
+  "/:reviewId",
+  optionalAuthMiddleware,
+  zValidator("param", getReviewSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const reviewService = new ReviewService(c.get("db"), imageUploadService);
+
+    const { reviewId } = c.req.valid("param");
+    const result = await reviewService.getReview(reviewId, auth?.id);
+
+    return c.json(result, 200);
   },
 );

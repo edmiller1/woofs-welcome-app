@@ -67,9 +67,18 @@
               height="40"
             />
             <div>
-              <p class="text-sm font-semibold text-foreground">
-                {review.place.name}
-              </p>
+              <a
+                href={`/location/${review.place.location.path}/places/${review.place.slug}?reviewId=${review.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:underline hover:text-primary"
+              >
+                <p
+                  class="text-sm font-semibold text-foreground hover:text-primary"
+                >
+                  {review.place.name}
+                </p>
+              </a>
               <p class="text-xs text-muted-foreground">
                 {review.place.location.name}, {review.place.location.parent
                   .name}
