@@ -7,6 +7,10 @@
   import { cn } from "$lib/utils";
   import { Flag, LoaderCircle } from "@lucide/svelte";
   import { Label } from "$lib/components/ui/label";
+  import { api } from "$lib/api-helper";
+  import { toast } from "svelte-sonner";
+  import { createMutation, useQueryClient } from "@tanstack/svelte-query";
+  import type { ReportReviewInput } from "@woofs/types";
 
   const reasons = [
     {
@@ -37,10 +41,45 @@
 
   interface Props {
     open: boolean;
-    hasReported: boolean;
+    reviewId: string;
+    placeId: string;
+    currentPage: number;
+    limit: number;
   }
 
-  let { open = $bindable(), hasReported }: Props = $props();
+  let {
+    open = $bindable(),
+    reviewId,
+    placeId,
+    currentPage,
+    limit,
+  }: Props = $props();
+
+  const queryClient = useQueryClient();
+
+  const reportReview = createMutation(() => ({
+    mutationFn: ({
+      reviewId,
+      data,
+    }: {
+      reviewId: string;
+      data: ReportReviewInput;
+    }) => api.review.reportReview(reviewId, data),
+    onSuccess: () => {
+      toast.success("Review reported successfully!");
+      open = false;
+      queryClient.invalidateQueries({
+        queryKey: ["place-reviews", placeId, currentPage, limit],
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        `Failed to report review: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      );
+    },
+  }));
 
   let reason = $state<string>("");
   let details = $state<string>("");
@@ -49,10 +88,17 @@
     reason = "";
     details = "";
   };
+
+  const handleSubmit = () => {
+    reportReview.mutate({
+      reviewId,
+      data: { reason, details },
+    });
+  };
 </script>
 
 <Dialog.Root {open} onOpenChange={(o) => (open = o)}>
-  <Dialog.Content onInteractOutside={resetForm}>
+  <Dialog.Content onInteractOutside={resetForm} onclose={resetForm}>
     <Dialog.Header>
       <Dialog.Title class="flex items-center gap-2"
         ><Flag /> Report Review</Dialog.Title
@@ -71,8 +117,11 @@
       bind:value={details}
     />
     <Dialog.Footer>
-      <Button disabled={!reason}>
-        {#if true}
+      <Button
+        onclick={handleSubmit}
+        disabled={!reason || reportReview.isPending}
+      >
+        {#if reportReview.isPending}
           <LoaderCircle class="mr-2 size-4 animate-spin" /> Submitting...
         {:else}
           Submit Report

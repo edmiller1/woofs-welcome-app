@@ -218,8 +218,11 @@ export class PlaceService {
         images,
         reviewStats: {
           totalReviews,
-          averageRating,
-          reviewBreakdown,
+          averageRating: Number(averageRating.toFixed(1)),
+          reviewBreakdown: reviewBreakdown.map((data) => ({
+            ...data,
+            percentage: Number(((data.count / totalReviews) * 100).toFixed(1)),
+          })),
         },
         breadcrumbs,
         isSaved,

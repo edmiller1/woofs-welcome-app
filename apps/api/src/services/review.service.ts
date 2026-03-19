@@ -4,7 +4,15 @@
  */
 
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
-import { Image, Place, Review, ReviewImage } from "../db/schema";
+import {
+  Image,
+  Place,
+  Review,
+  ReviewImage,
+  ReviewLike,
+  ReviewReport,
+  user,
+} from "../db/schema";
 import {
   AppError,
   ConflictError,
@@ -14,10 +22,14 @@ import {
 import { sanitizePlainText, sanitizeRichText } from "../lib/sanitize";
 import type {
   CreateReviewInput,
+  ReportReviewInput,
   UpdateReviewInput,
 } from "../routes/review/schemas";
 import { ImageUploadService } from "./image-upload.service";
 import type { AnyDb } from "../db";
+import { sendDiscordReportNotification } from "../lib/discord";
+import type { Env } from "../config/env";
+import { buildImageUrl } from "@woofs/image-config";
 
 interface CloudflareUploadResult {
   cfImageId: string;
@@ -29,6 +41,7 @@ interface CloudflareUploadResult {
 export class ReviewService {
   constructor(
     private db: AnyDb,
+    private env: Env,
     private imageUploadService: ImageUploadService,
   ) {}
   /**
@@ -419,6 +432,229 @@ export class ReviewService {
       }
       console.error("Get review error:", error);
       throw new DatabaseError("Failed to get review", {
+        originalError: error,
+      });
+    }
+  }
+
+  async reportReview(
+    userId: string,
+    reviewId: string,
+    reportData: ReportReviewInput,
+  ) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, userId),
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const review = await this.db.query.Review.findFirst({
+        where: eq(Review.id, reviewId),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              createdAt: true,
+            },
+          },
+          place: {
+            columns: {
+              id: true,
+              name: true,
+              countryCode: true,
+            },
+            with: {
+              images: {
+                limit: 1,
+              },
+            },
+          },
+        },
+      });
+
+      if (!review) {
+        throw new NotFoundError("Review not found");
+      }
+
+      if (review.userId === userId) {
+        throw new ConflictError("You cannot report your own review");
+      }
+
+      const existingReport = await this.db.query.ReviewReport.findFirst({
+        where: and(
+          eq(ReviewReport.reviewId, review.id),
+          eq(ReviewReport.userId, userId),
+        ),
+      });
+
+      if (existingReport) {
+        throw new ConflictError("You have already reported this review");
+      }
+
+      const sanitizedReport = {
+        reason: sanitizePlainText(reportData.reason),
+        details: sanitizeRichText(reportData.details || ""),
+      };
+
+      const [newReport] = await this.db
+        .insert(ReviewReport)
+        .values({
+          userId: userId,
+          reviewId: review.id,
+          reason: sanitizedReport.reason,
+          details: sanitizedReport.details,
+          status: "pending",
+          reviewedAt: new Date(),
+          reviewedBy: userId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning({ id: ReviewReport.id });
+
+      if (!newReport) {
+        throw new DatabaseError("Failed to create review report");
+      }
+
+      // send discord notification
+      await sendDiscordReportNotification(this.env, {
+        content: "@here **New Report** ‼️",
+        embeds: [
+          {
+            title: "‼️ New Review Report",
+            description: `A new review report has been submitted by ${userRecord.name}`,
+            color: 0x00ff00,
+            fields: [
+              {
+                name: "Report ID",
+                value: newReport.id,
+                inline: true,
+              },
+              {
+                name: "Report Reason",
+                value: sanitizedReport.reason,
+                inline: true,
+              },
+              {
+                name: "Report Details",
+                value: sanitizedReport.details,
+                inline: true,
+              },
+              {
+                name: "Review ID",
+                value: review.id,
+                inline: true,
+              },
+              {
+                name: "Review Title",
+                value: review.title,
+                inline: true,
+              },
+              {
+                name: "Review Details",
+                value: `${review.user.name} reviewed ${review.place.name} on ${review.createdAt.toDateString()}`,
+                inline: true,
+              },
+              {
+                name: "Place",
+                value: `${review.place.name}, ${review.place.countryCode}`,
+                inline: true,
+              },
+            ],
+          },
+        ],
+        timestamp: new Date().toISOString(),
+        thumbnail: {
+          url: buildImageUrl(review.place.images[0]!.imageId, "thumbnail"),
+        },
+        footer: {
+          text: "Woofs Welcome",
+        },
+      });
+
+      return {
+        success: true,
+        message: "Report submitted successfully",
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Report review error:", error);
+      throw new DatabaseError("Failed to report review", {
+        originalError: error,
+      });
+    }
+  }
+
+  async likeReview(reviewId: string, userId: string) {
+    try {
+      const review = await this.db.query.Review.findFirst({
+        where: eq(Review.id, reviewId),
+      });
+
+      if (!review) {
+        throw new NotFoundError("Review not found");
+      }
+
+      if (review.userId === userId) {
+        throw new ConflictError("You cannot like your own review");
+      }
+
+      const reviewLike = await this.db.query.ReviewLike.findFirst({
+        where: and(
+          eq(ReviewLike.reviewId, review.id),
+          eq(ReviewLike.userId, userId),
+        ),
+      });
+
+      if (reviewLike) {
+        //delete reviewLike
+        // remove like from likes-count
+        const result = await this.db.transaction(async (tx) => {
+          await tx.delete(ReviewLike).where(eq(ReviewLike.id, reviewLike.id));
+          await tx
+            .update(Review)
+            .set({
+              likesCount: sql`${Review.likesCount} - 1`,
+            })
+            .where(eq(Review.id, review.id));
+        });
+
+        return {
+          success: true,
+          action: "unlike",
+        };
+      } else {
+        // insert reviewLike
+        // add like to likes-count
+        await this.db.transaction(async (tx) => {
+          await tx.insert(ReviewLike).values({
+            reviewId: review.id,
+            userId: userId,
+          });
+          await tx
+            .update(Review)
+            .set({
+              likesCount: sql`${Review.likesCount} + 1`,
+            })
+            .where(eq(Review.id, review.id));
+        });
+
+        return {
+          success: true,
+          action: "like",
+        };
+      }
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Like/unlike review error:", error);
+      throw new DatabaseError("Failed to like/unlike review", {
         originalError: error,
       });
     }

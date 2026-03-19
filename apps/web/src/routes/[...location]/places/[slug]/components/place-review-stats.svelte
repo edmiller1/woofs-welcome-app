@@ -39,7 +39,7 @@
       </div>
       &middot;
       <span class="text-muted-foreground text-sm"
-        >Based on {reviewStats.totalReviews} dog owner reviews
+        >Based on {reviewStats.totalReviews} reviews
       </span>
     </div>
   </div>

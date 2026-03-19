@@ -19,6 +19,7 @@
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import ReviewImageDialog from "$lib/components/review-image-dialog.svelte";
   import ReportReviewDialog from "$lib/components/report-review-dialog.svelte";
+  import LikeReviewButton from "./like-review-button.svelte";
 
   interface Props {
     placeId: string;
@@ -48,6 +49,7 @@
   let currentImage = $state<ReviewImage>();
   let showHighlighted = $state(true);
   let reportOpen = $state(false);
+  let reportReviewId = $state<string>("");
 
   const reviews = createQuery(() => ({
     queryKey: ["place-reviews", placeId, currentPage, limit],
@@ -58,11 +60,18 @@
     queryKey: ["place-review", reviewId],
     queryFn: () => api.review.getReview(reviewId!),
     enabled: reviewId !== null,
+    retry: false,
   }));
 
   const filteredReviews = $derived(
     reviews.data?.filter((rev) => rev.id !== reviewId) ?? [],
   );
+
+  const handleOpenReportDialog = (reviewId: string, hasReported: boolean) => {
+    if (hasReported) return;
+    reportReviewId = reviewId;
+    reportOpen = true;
+  };
 
   const handleChangePage = (newPage: number) => {
     currentPage = newPage;
@@ -92,9 +101,17 @@
   {/if}
 
   {#if reviews.isSuccess && reviews.data.length > 0}
+    <ReportReviewDialog
+      bind:open={reportOpen}
+      reviewId={reportReviewId}
+      {placeId}
+      {currentPage}
+      {limit}
+    />
     <div class="space-y-6 my-6">
       {#if highlightedReview.data && showHighlighted}
         <!-- Highlighted Review -->
+        {@const reviewId = highlightedReview.data.id}
         <div
           class="bg-primary/10 text-primary flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
         >
@@ -142,38 +159,24 @@
                 </div>
                 {#if !highlightedReview.data.isOwner}
                   <div class="flex items-center gap-2">
-                    <Tooltip.Root>
-                      <Tooltip.Trigger>
-                        <Button variant="outline" class="rounded-full p-1">
-                          <ThumbsUp
-                            class={cn(
-                              "h-4 w-4",
-                              highlightedReview.data.hasLiked
-                                ? "fill-primary text-primary"
-                                : "text-muted-foreground",
-                            )}
-                          />
-                          {#if highlightedReview.data.likesCount > 0}
-                            <span class="text-xs"
-                              >{highlightedReview.data.likesCount}</span
-                            >
-                          {/if}
-                        </Button>
-                      </Tooltip.Trigger>
-                      <Tooltip.Content>
-                        <p>
-                          {highlightedReview.data.hasLiked
-                            ? "Unlike this review"
-                            : "This review is helpful"}
-                        </p>
-                      </Tooltip.Content>
-                    </Tooltip.Root>
+                    <LikeReviewButton
+                      {reviewId}
+                      hasLiked={highlightedReview.data.hasLiked}
+                      likesCount={highlightedReview.data.likesCount}
+                      {placeId}
+                      {currentPage}
+                      {limit}
+                    />
                     <Tooltip.Root>
                       <Tooltip.Trigger>
                         <Button
                           variant="outline"
                           class="rounded-full p-1"
-                          onclick={() => (reportOpen = true)}
+                          onclick={() =>
+                            handleOpenReportDialog(
+                              highlightedReview.data.id,
+                              highlightedReview.data.hasReported,
+                            )}
                         >
                           <Flag
                             class={cn(
@@ -188,15 +191,11 @@
                       <Tooltip.Content>
                         <p>
                           {highlightedReview.data.hasReported
-                            ? "Update your report"
+                            ? "Already reported"
                             : "Report this review"}
                         </p>
                       </Tooltip.Content>
                     </Tooltip.Root>
-                    <ReportReviewDialog
-                      open={reportOpen}
-                      hasReported={highlightedReview.data.hasReported}
-                    />
                   </div>
                 {:else}
                   <div class="flex items-center gap-2">
@@ -280,33 +279,25 @@
                 </div>
                 {#if review.userId !== user?.id}
                   <div class="flex items-center gap-2">
+                    <LikeReviewButton
+                      {reviewId}
+                      hasLiked={review.hasLiked}
+                      likesCount={review.likesCount}
+                      {placeId}
+                      {currentPage}
+                      {limit}
+                    />
                     <Tooltip.Root>
                       <Tooltip.Trigger>
-                        <Button variant="outline" class="rounded-full p-1">
-                          <ThumbsUp
-                            class={cn(
-                              "h-4 w-4",
-                              review.hasLiked
-                                ? "fill-primary text-primary"
-                                : "text-muted-foreground",
+                        <Button
+                          variant="outline"
+                          class="rounded-full p-1"
+                          onclick={() =>
+                            handleOpenReportDialog(
+                              review.id,
+                              review.hasReported,
                             )}
-                          />
-                          {#if review.likesCount > 0}
-                            <span class="text-xs">{review.likesCount}</span>
-                          {/if}
-                        </Button>
-                      </Tooltip.Trigger>
-                      <Tooltip.Content>
-                        <p>
-                          {review.hasLiked
-                            ? "Unlike this review"
-                            : "This review is helpful"}
-                        </p>
-                      </Tooltip.Content>
-                    </Tooltip.Root>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger>
-                        <Button variant="outline" class="rounded-full p-1">
+                        >
                           <Flag
                             class={cn(
                               "size-4",
@@ -325,7 +316,6 @@
                         </p>
                       </Tooltip.Content>
                     </Tooltip.Root>
-                    <!-- Report dialog -->
                   </div>
                 {:else}
                   <div class="flex items-center gap-2">
@@ -383,7 +373,7 @@
               <Pagination.Item>
                 <Pagination.PrevButton />
               </Pagination.Item>
-              <Pagination.Item>
+              <Pagination.Item class="flex items-center gap-2">
                 {#each pages as page (page.key)}
                   {#if page.type === "ellipsis"}
                     <Pagination.Item>

@@ -5,6 +5,7 @@ import {
   createReviewSchema,
   deleteReviewSchema,
   getReviewSchema,
+  reportReviewSchema,
   updateReviewParamsSchema,
   updateReviewSchema,
 } from "./schemas";
@@ -22,33 +23,42 @@ reviewRouter.post(
   async (c) => {
     //Context
     const auth = c.get("user");
-    const db = c.get("db");
     const env = c.get("env");
 
-    // Services
-    const imageUploadService = new ImageUploadService(db, env);
-    const reviewService = new ReviewService(db, imageUploadService);
+    const { db, pool } = createDbWithTransactions(env);
 
-    if (!auth) {
-      throw new UnauthorizedError("Unauthorized");
+    try {
+      // Services
+      const imageUploadService = new ImageUploadService(db, env);
+      const reviewService = new ReviewService(db, env, imageUploadService);
+
+      if (!auth) {
+        throw new UnauthorizedError("Unauthorized");
+      }
+
+      const { images, ...reviewData } = c.req.valid("form");
+
+      const result = await reviewService.createReview(
+        auth.id,
+        reviewData,
+        images,
+      );
+
+      return c.json(result, 201);
+    } finally {
+      await pool.end();
     }
-
-    const { images, ...reviewData } = c.req.valid("form");
-
-    const result = await reviewService.createReview(
-      auth.id,
-      reviewData,
-      images,
-    );
-
-    return c.json(result, 201);
   },
 );
 
 reviewRouter.get("/dog-breeds", async (c) => {
+  //Context
+  const db = c.get("db");
+  const env = c.get("env");
+
   // Services
-  const imageUploadService = new ImageUploadService(c.get("db"), c.get("env"));
-  const reviewService = new ReviewService(c.get("db"), imageUploadService);
+  const imageUploadService = new ImageUploadService(db, env);
+  const reviewService = new ReviewService(db, env, imageUploadService);
 
   const result = await reviewService.getDogBreeds();
 
@@ -74,7 +84,7 @@ reviewRouter.patch(
     try {
       // Services
       const imageUploadService = new ImageUploadService(db, env);
-      const reviewService = new ReviewService(db, imageUploadService);
+      const reviewService = new ReviewService(db, env, imageUploadService);
 
       const { images, deletedImages, ...reviewData } = c.req.valid("form");
       const { reviewId } = c.req.valid("param");
@@ -111,7 +121,7 @@ reviewRouter.delete(
     try {
       // Services
       const imageUploadService = new ImageUploadService(db, env);
-      const reviewService = new ReviewService(db, imageUploadService);
+      const reviewService = new ReviewService(db, env, imageUploadService);
       await reviewService.deleteReview(auth.id, reviewId);
       return c.body(null, 204);
     } finally {
@@ -131,11 +141,70 @@ reviewRouter.get(
     const env = c.get("env");
 
     const imageUploadService = new ImageUploadService(db, env);
-    const reviewService = new ReviewService(c.get("db"), imageUploadService);
+    const reviewService = new ReviewService(db, env, imageUploadService);
 
     const { reviewId } = c.req.valid("param");
     const result = await reviewService.getReview(reviewId, auth?.id);
 
     return c.json(result, 200);
+  },
+);
+
+reviewRouter.post(
+  "/:reviewId/report",
+  authMiddleware,
+  zValidator("json", reportReviewSchema),
+  zValidator("param", getReviewSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const reviewService = new ReviewService(db, env, imageUploadService);
+
+    const { reviewId } = c.req.valid("param");
+    const data = c.req.valid("json");
+
+    const result = await reviewService.reportReview(auth.id, reviewId, data);
+
+    return c.json(result, 200);
+  },
+);
+
+reviewRouter.post(
+  "/:reviewId/like",
+  authMiddleware,
+  zValidator("param", getReviewSchema),
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const env = c.get("env");
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { db, pool } = createDbWithTransactions(env);
+
+    try {
+      // Services
+      const imageUploadService = new ImageUploadService(db, env);
+      const reviewService = new ReviewService(db, env, imageUploadService);
+
+      const { reviewId } = c.req.valid("param");
+
+      const result = await reviewService.likeReview(reviewId, auth.id);
+
+      return c.json(result, 200);
+    } finally {
+      await pool.end();
+    }
   },
 );

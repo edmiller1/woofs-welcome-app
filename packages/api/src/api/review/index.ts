@@ -3,6 +3,8 @@ import { deleteReview } from "./deleteReview";
 import { getDogBreeds } from "./getDogBreeds";
 import { updateReview } from "./updateReview";
 import { getReview } from "./getReview";
+import { reportReview } from "./reportReview";
+import { likeReview } from "./likeReview";
 
 export const review = {
   createReview,
@@ -10,4 +12,6 @@ export const review = {
   updateReview,
   deleteReview,
   getReview,
+  reportReview,
+  likeReview,
 };

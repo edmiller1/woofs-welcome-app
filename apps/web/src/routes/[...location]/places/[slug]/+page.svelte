@@ -152,7 +152,7 @@
               </h2>
               {#if place.data.rating > 0}
                 <div class="hidden md:flex items-center gap-1 mt-1">
-                  <Star class="size-5 fill-black text-black" />
+                  <Star class="size-4 fill-black text-black" />
                   <span class="text-lg font-semibold mt-0.5"
                     >{Number(place.data.rating).toFixed(1)}</span
                   >

@@ -112,3 +112,8 @@ export interface UpdateReviewData {
   visitDate: Date;
   images: ReviewImage[] | null;
 }
+
+export interface ReportReviewInput {
+  reason: string;
+  details?: string;
+}

@@ -47,5 +47,24 @@ export const getReviewSchema = z.object({
   reviewId: z.string(),
 });
 
+export const reportReviewSchema = z.object({
+  reason: z.enum([
+    "sexuallyExplicit",
+    "hateSpeech",
+    "violence",
+    "falseInformation",
+    "notPersonal",
+    "wrongPlace",
+    "spam",
+    "other",
+  ]),
+  details: z
+    .string()
+    .max(500, "Details must be less than 500 characters")
+    .optional()
+    .default(""),
+});
+
 export type CreateReviewInput = z.infer<typeof createReviewSchema>;
 export type UpdateReviewInput = z.infer<typeof updateReviewSchema>;
+export type ReportReviewInput = z.infer<typeof reportReviewSchema>;
