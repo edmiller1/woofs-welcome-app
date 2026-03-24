@@ -130,33 +130,34 @@
   <Dialog.Trigger>
     {#snippet child({ props })}
       {#if user}
-        <Button variant="outline" {...props} class="hidden md:flex">
-          {#if isSaved}
-            Saved
-          {:else}
-            Save
-          {/if}
+        <Button variant="glass" {...props} class="hidden md:flex">
           <Heart
-            class={`size-3 ${isSaved ? "fill-rose-500 text-rose-500" : "text-primary"}`}
+            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-white"}`}
           />
+          {#if isSaved}
+            <span class="font-headline font-semibold text-sm">Saved</span>
+          {:else}
+            <span class="font-headline font-semibold text-sm">Save</span>
+          {/if}
         </Button>
         <Button variant="outline" {...props} class="md:hidden">
           <Heart
-            class={`size-3 ${isSaved ? "fill-rose-500 text-rose-500" : "text-primary"}`}
+            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
           />
         </Button>
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "outline" }), "hidden md:flex")}
-          >Save
-          <Heart class="size-3" />
+          class={cn(buttonVariants({ variant: "glass" }), "hidden md:flex")}
+          ><Heart class="size-4" /><span
+            class="font-headline font-semibold text-sm">Save</span
+          >
         </a>
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "outline" }), "md:hidden")}
-          >Save
-          <Heart class="size-3" />
+          class={cn(buttonVariants({ variant: "glass" }), "md:hidden")}
+          ><Heart class="size-4" />
+          <span class="font-headline font-semibold text-sm">Save</span>
         </a>
       {/if}
     {/snippet}

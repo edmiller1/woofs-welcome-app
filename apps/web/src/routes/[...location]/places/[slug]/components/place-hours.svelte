@@ -10,50 +10,64 @@
 </script>
 
 {#if hours}
-  <div class="rounded-xl border px-2 py-4 shadow">
-    <h4 class="text-lg font-semibold pl-1">Hours</h4>
-    {#if getCurrentDayStatus(hours)}
-      {@const status = getCurrentDayStatus(hours)}
-      <div class="flex items-center gap-2 pl-2">
+  <div
+    class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 shadow-sm"
+  >
+    <div class="flex justify-between items-center mb-6">
+      <h4 class="text-xl font-headline font-bold">Opening Hours</h4>
+      {#if getCurrentDayStatus(hours)}
+        {@const status = getCurrentDayStatus(hours)}
         {#if status?.includes("Open till")}
-          <span class="relative flex size-2">
+          <div
+            class="flex items-center gap-2 bg-primary/5 px-3 py-1 rounded-full border border-primary/20"
+          >
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
             <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-600 opacity-75"
-            ></span>
-            <span class="relative inline-flex size-2 rounded-full bg-green-500"
-            ></span>
-          </span>
+              class="text-[10px] font-bold font-body text-primary uppercase tracking-wider"
+              >{status}</span
+            >
+          </div>
+        {:else if status?.includes("Opens at")}
+          <div
+            class="flex items-center gap-2 px-3 py-1 rounded-full border bg-amber-50 border-amber-200"
+          >
+            <span class="w-2 h-2 rounded-full bg-amber-500 pulse-dot"></span>
+            <div class="flex flex-col">
+              <span
+                class="text-[10px] font-bold font-body text-amber-700 uppercase tracking-wider leading-tight"
+                >Opening Soon</span
+              >
+              <span
+                class="text-[9px] font-medium font-body text-amber-600/80 leading-tight"
+                >{status}</span
+              >
+            </div>
+          </div>
+        {:else if status === "Closed"}
+          <div
+            class="flex items-center gap-2 px-3 py-1 rounded-full border bg-error/10 border-error/20"
+          >
+            <span class="w-2 h-2 rounded-full bg-error/60"></span>
+            <span
+              class="text-[10px] font-bold font-body uppercase tracking-wider text-error"
+              >{status}</span
+            >
+          </div>
         {/if}
-        <span
-          class="text-sm font-semibold {status?.includes('Open till')
-            ? 'text-green-600'
-            : status?.includes('Closed')
-              ? 'text-red-800'
-              : 'text-orange-600'}"
-        >
-          {status}
-        </span>
-      </div>
-    {/if}
-    <div class="mt-2 space-y-1">
+      {/if}
+    </div>
+    <div class="space-y-1 font-body text-sm">
       {#each orderHoursByDay(hours) as day}
         {@const isToday =
           day.day ===
           new Date().toLocaleDateString("en-AU", { weekday: "long" })}
         <div
-          class="flex items-center justify-between rounded px-4 py-2 {isToday
-            ? 'border-primary/20 bg-primary/10 border'
-            : 'hover:bg-muted'}"
+          class="flex justify-between p-2 rounded-lg {isToday
+            ? 'bg-secondary-container/60 font-bold border border-secondary-container/20'
+            : ''}"
         >
-          <span
-            class="font-medium {isToday ? 'text-primary' : 'text-foreground'}"
-            >{day.day}</span
-          >
-          <span
-            class={isToday
-              ? "text-primary font-medium"
-              : "text-muted-foreground"}>{day.hours}</span
-          >
+          <span class="text-on-surface-variant">{day.day}</span>
+          <span class="text-on-surface font-medium">{day.hours}</span>
         </div>
       {/each}
     </div>

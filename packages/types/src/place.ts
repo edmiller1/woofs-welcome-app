@@ -47,9 +47,11 @@ export interface PlaceReviewStats {
 export interface PlaceWithDetails extends Place {
   breadcrumbs: BreadcrumbItem[];
   location: Location;
+  region: Location;
   images: PlaceImage[];
   reviewStats: PlaceReviewStats;
   parentLocationName?: string | null;
+  memberFavourite: boolean;
 }
 
 export interface NearbyPlace extends Place {

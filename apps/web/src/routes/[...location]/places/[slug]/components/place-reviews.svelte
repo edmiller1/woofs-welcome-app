@@ -16,6 +16,7 @@
   import * as Pagination from "$lib/components/ui/pagination/index.js";
   import { Separator } from "$lib/components/ui/separator";
   import { page } from "$app/state";
+  import { untrack } from "svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import ReviewImageDialog from "$lib/components/review-image-dialog.svelte";
   import ReportReviewDialog from "$lib/components/report-review-dialog.svelte";
@@ -42,6 +43,7 @@
   }: Props = $props();
 
   let initialRating = $state(0);
+  let reviewsContainer = $state<HTMLElement | null | undefined>(null);
 
   let currentPage = $state<number>(1);
   const limit = $state<number>(10);
@@ -73,17 +75,16 @@
     reportOpen = true;
   };
 
-  const handleChangePage = (newPage: number) => {
-    currentPage = newPage;
-  };
-
-  const handleNextPage = () => {
-    currentPage++;
-  };
-
-  const handlePreviousPage = () => {
-    currentPage--;
-  };
+  $effect(() => {
+    if (currentPage > 1) {
+      untrack(() =>
+        reviewsContainer?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        }),
+      );
+    }
+  });
 
   const openImageDialog = (image: ReviewImage) => {
     imageDialogOpen = true;
@@ -91,7 +92,7 @@
   };
 </script>
 
-<Separator />
+<Separator bind:ref={reviewsContainer} />
 
 <ErrorBoundary error={reviews.error}>
   {#if reviews.isLoading}
@@ -130,7 +131,7 @@
                 highlightedReview.data.user?.profileImageId ?? "",
                 "thumbnail",
               )}
-        <div class="rounded-lg border-2 p-6 border-primary shadow-sm">
+        <div class="rounded-lg border p-6 border-primary shadow-sm">
           <div class="mb-4 flex items-start gap-4">
             <Avatar.Root class="size-12">
               <Avatar.Image
@@ -253,7 +254,7 @@
           review.user && review.user.image
             ? review.user.image
             : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
-        <div class="rounded-lg border p-6 shadow-sm">
+        <div class="rounded-lg p-6 bg-[#f7f3f0]">
           <div class="mb-4 flex items-start gap-4">
             <Avatar.Root class="size-12">
               <Avatar.Image
@@ -326,10 +327,7 @@
               </div>
               <div class="mt-2 flex flex-wrap gap-1">
                 {#each review.dogBreeds as breed}
-                  <Badge
-                    variant="secondary"
-                    class="rounded-full px-2 py-1 text-xs"
-                  >
+                  <Badge variant="breed" class="rounded-full px-2 py-1 text-xs">
                     {breed}
                   </Badge>
                 {/each}
@@ -367,7 +365,11 @@
     </div>
     {#if reviewCount > 10}
       <div class="py-8">
-        <Pagination.Root count={reviewCount} perPage={10}>
+        <Pagination.Root
+          count={reviewCount}
+          perPage={10}
+          bind:page={currentPage}
+        >
           {#snippet children({ pages, currentPage })}
             <Pagination.Content>
               <Pagination.Item>
@@ -399,7 +401,7 @@
         </Pagination.Root>
       </div>
     {/if}
-  {:else}
+  {:else if !reviews.isLoading}
     <div class="text-center py-8">
       <p class="text-muted-foreground mb-4">
         Be the first to review {placeName}!

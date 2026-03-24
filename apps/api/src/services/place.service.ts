@@ -9,6 +9,7 @@ import {
   ne,
   sql,
 } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
   Location,
@@ -49,14 +50,18 @@ export class PlaceService {
       const validatedLocationPath = locationPathSchema.parse(locationPath);
       const validatedPlaceSlug = placeSlugSchema.parse(placeSlug);
 
+      const ParentLocation = alias(Location, "parent_location");
+
       // Query place with location join to verify the path
       const [result] = await this.db
         .select({
           place: Place,
           location: Location,
+          region: ParentLocation,
         })
         .from(Place)
         .innerJoin(Location, eq(Place.locationId, Location.id))
+        .leftJoin(ParentLocation, eq(Location.parentId, ParentLocation.id))
         .where(
           and(
             eq(Place.slug, validatedPlaceSlug),
@@ -69,7 +74,7 @@ export class PlaceService {
         throw new NotFoundError("Place not found");
       }
 
-      const { place, location } = result;
+      const { place, location, region } = result;
 
       // Get place images
       const images = await this.db
@@ -212,9 +217,13 @@ export class PlaceService {
           .where(eq(Place.id, place.id));
       }
 
+      const memberFavourite =
+        Number(place.rating) >= 4.5 && place.reviewsCount! >= 10;
+
       return {
         ...place,
         location,
+        region,
         images,
         reviewStats: {
           totalReviews,
@@ -226,6 +235,7 @@ export class PlaceService {
         },
         breadcrumbs,
         isSaved,
+        memberFavourite,
       };
     } catch (error) {
       if (error instanceof AppError) {

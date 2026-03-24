@@ -155,7 +155,7 @@
       {#each types as type}
         <a
           href={type.href}
-          class="hover:bg-secondary hover:text-background flex cursor-pointer items-center gap-2 rounded-md px-3 py-1"
+          class="hover:bg-tertiary hover:text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
         >
           <type.icon class="size-4" />
           <span class=" text-sm font-medium">{type.name}</span>

@@ -44,20 +44,20 @@
     </div>
   </div>
   {#if user}
-    <Button variant="outline" onclick={() => openReviewDrawer(0)}>
+    <Button variant="default" onclick={() => openReviewDrawer(0)}>
       <PenLine class="size-4" /> Write a Review
     </Button>
   {:else}
     <a
       href={`/sign-in?redirect=${page.url.pathname}`}
-      class={cn(buttonVariants({ variant: "outline" }))}
+      class={cn(buttonVariants({ variant: "default" }))}
     >
       <PenLine class="size-4" /> Write a Review
     </a>
   {/if}
 </div>
 
-<div class="border-muted border shadow-xs mb-8 rounded-lg p-6">
+<!-- <div class="border-muted border shadow-xs mb-8 rounded-lg p-6">
   <div class="space-y-3">
     {#each reviewStats.reviewBreakdown as { rating, count, percentage }}
       <div class="flex items-center gap-3">
@@ -77,4 +77,4 @@
       </div>
     {/each}
   </div>
-</div>
+</div> -->

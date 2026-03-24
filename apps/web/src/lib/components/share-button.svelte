@@ -4,12 +4,15 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import { toast } from "svelte-sonner";
 
+  import type { Snippet } from "svelte";
+
   interface Props {
     url: string;
     name: string;
+    trigger?: Snippet;
   }
 
-  const { url, name }: Props = $props();
+  const { url, name, trigger }: Props = $props();
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
@@ -28,12 +31,16 @@
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="ghost" class="hidden md:flex underline">
-      Share <Share class="size-3" />
-    </Button>
-    <Button variant="outline" class="md:hidden">
-      <Share class="size-3" />
-    </Button>
+    {#if trigger}
+      {@render trigger()}
+    {:else}
+      <Button variant="ghost" class="hidden md:flex underline">
+        Share <Share class="size-4" />
+      </Button>
+      <Button variant="outline" class="md:hidden">
+        <Share class="size-4" />
+      </Button>
+    {/if}
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="z-999 mr-20">
     <DropdownMenu.Group>

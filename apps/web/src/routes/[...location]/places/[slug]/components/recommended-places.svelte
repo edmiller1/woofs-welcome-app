@@ -30,11 +30,11 @@
   {/if}
 
   {#if similarPlaces.isSuccess && similarPlaces.data.length > 0}
-    <div class="space-y-6 my-6">
-      <h3 class="text-2xl font-semibold">Other places you might like</h3>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4"
-      >
+    <section class="my-12 md:hidden">
+      <h2 class="font-headline font-bold text-2xl text-primary mb-6">
+        Community reviews
+      </h2>
+      <div class="flex overflow-x-auto gap-4 pb-6 -mx-6 px-6 no-scrollbar">
         {#each similarPlaces.data as place}
           <PlaceCard
             id={place.id}
@@ -53,6 +53,37 @@
           />
         {/each}
       </div>
-    </div>
+    </section>
+  {/if}
+
+  <!-- ===================== END MOBILE LAYOUT ===================== -->
+
+  {#if similarPlaces.isSuccess && similarPlaces.data.length > 0}
+    <section class="pt-16 hidden md:block">
+      <h3
+        class="text-3xl text-primary md:text-foreground font-headline font-bold mb-8"
+      >
+        Similar Places
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+        {#each similarPlaces.data as place}
+          <PlaceCard
+            id={place.id}
+            name={place.name}
+            rating={place.rating.toString()}
+            slug={place.slug}
+            cityName={place.location.name}
+            regionName={place.parentLocationName!}
+            countryCode={place.location.countryCode}
+            types={place.types}
+            isSaved={place.isSaved}
+            imageIds={place.images.map((i) => i.imageId)}
+            {user}
+            locationPath={place.location.path}
+            isVerified={place.isVerified}
+          />
+        {/each}
+      </div>
+    </section>
   {/if}
 </ErrorBoundary>
