@@ -1,14 +1,16 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { Button, buttonVariants } from "$lib/components/ui/button";
+  import type { BAUser } from "@woofs/types";
+  import UserNav from "./user-nav.svelte";
   import {
     Bell,
+    Bookmark,
     Coffee,
     Footprints,
     Hotel,
     Map,
     MapPin,
     Menu,
+    Search,
     ShoppingBag,
     Stethoscope,
     Ticket,
@@ -16,15 +18,14 @@
     Utensils,
     Waves,
   } from "@lucide/svelte";
-  import type { BAUser } from "@woofs/types";
-  import * as Sheet from "$lib/components/ui/sheet/index.js";
-  import NavbarSearch from "./navbar-search.svelte";
-  import UserNav from "./user-nav.svelte";
+  import { page } from "$app/state";
+  import { Button } from "./ui/button";
 
   interface Props {
     user: BAUser | null;
-    currentPlace?: string;
   }
+
+  const { user }: Props = $props();
 
   const types = [
     { name: "Things to Do", href: "/explore?types=Activity", icon: MapPin },
@@ -47,115 +48,76 @@
     { name: "Events", href: "/explore?types=Event", icon: Ticket },
   ];
 
-  let { user, currentPlace }: Props = $props();
-
   const signInUrl = $derived(
     `/sign-in?redirect=${encodeURIComponent(page.url.pathname + page.url.search)}`,
   );
 
   const isExplorePageOrAccountPage =
+    page.url.pathname === "/" ||
     page.url.pathname.includes("/explore") ||
     page.url.pathname.includes("/business/dashboard") ||
     page.url.pathname.includes("/profile");
 </script>
 
-<nav class="bg-background top-0 w-full border-b">
-  <div class="mx-auto flex h-16 max-w-350 items-center justify-between px-2">
+<header
+  class="top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md border-b border-outline-variant/20"
+>
+  <div
+    class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
+  >
     <div class="flex items-center gap-8">
-      <!-- Logo/Brand -->
-      <a href="/" class="flex items-center gap-2">
-        <div
-          class="bg-primary flex h-9 w-9 items-center justify-center rounded-lg"
+      <a class="text-2xl font-headline italic font-bold text-[#154212]" href="/"
+        >Woofs Welcome</a
+      >
+      <nav class="hidden md:flex gap-6 items-center">
+        <a
+          class="font-body font-medium text-stone-600 hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45]"
+          href="/">Explore</a
         >
-          <span class="text-primary-foreground text-lg font-bold">🐕</span>
-        </div>
-        <span class="text-foreground text-xl font-bold">Woofs Welcome</span>
-      </a>
-
-      <!-- Navigation Links -->
-      <div class="hidden items-center gap-1 md:flex">
-        <a href="/explore">
-          <Button variant="ghost" class="font-medium">Explore</Button>
-        </a>
-        <a href="/help">
-          <Button variant="ghost" class="font-medium">Support</Button>
-        </a>
-      </div>
+        <a
+          class="font-body font-medium text-stone-600 hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors"
+          href="/">Community</a
+        >
+      </nav>
     </div>
-
-    <!-- Center Section: Search -->
-    <NavbarSearch />
-
-    <!-- Right Section: Icons & User -->
-    <div class="flex items-center gap-3">
-      <!-- Notification Icon -->
+    <div class="flex items-center gap-4">
+      <div
+        class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2"
+      >
+        <Search class="h-4 w-4" />
+        <input
+          class="bg-transparent w-full border-none focus:ring-0 text-sm font-body outline-none"
+          placeholder="Search locations..."
+          type="text"
+        />
+      </div>
       {#if user}
-        <Button variant="ghost" size="icon" class="relative">
-          <Bell class="h-5 w-5" />
-          <span
-            class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500"
-          ></span>
-        </Button>
-      {/if}
-
-      <!-- User Section -->
-      {#if user}
-        <div class="ml-2 flex items-center gap-3 border-l pl-3">
-          <div class="hidden flex-col items-end md:flex">
-            <span class="text-sm font-semibold">{user.name || "User"}</span>
-            <span class="text-muted-foreground text-xs">{user.email}</span>
-          </div>
-
-          <UserNav {user} />
-        </div>
+        <button
+          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+        >
+          <Bell />
+        </button>
+        <button
+          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+        >
+          <Bookmark />
+        </button>
+        <UserNav {user} />
       {:else}
         <a href={signInUrl}>
           <Button variant="default" class="ml-2">Sign In</Button>
         </a>
       {/if}
-      <!-- Mobile Menu -->
-      {#if !isExplorePageOrAccountPage}
-        <div class="relative z-10 -ml-3 flex items-center lg:hidden">
-          <Sheet.Root>
-            <Sheet.Trigger
-              class={`${buttonVariants({ variant: "ghost" })} ml-5`}
-            >
-              <Menu class="size-4" />
-            </Sheet.Trigger>
-            <Sheet.Content side="right" class="flex flex-col gap-2 p-4">
-              <ul class="mt-5 border-b px-4 py-2">
-                {#if currentPlace}
-                  <li class="-px-4 my-3">
-                    <div class="flex items-center gap-2 rounded-lg capitalize">
-                      <Map />
-                      {currentPlace}
-                    </div>
-                  </li>
-                {/if}
-                {#each types as type}
-                  <li class="my-3 text-sm">
-                    <a
-                      href={type.href}
-                      class="hover:bg-secondary hover:text-background flex items-center gap-2 rounded-lg px-2 py-1"
-                    >
-                      <type.icon class="size-3" />
-                      {type.name}
-                    </a>
-                  </li>
-                {/each}
-              </ul>
-            </Sheet.Content>
-          </Sheet.Root>
-        </div>
-      {/if}
     </div>
   </div>
   {#if !isExplorePageOrAccountPage}
-    <div class="hidden lg:flex lg:space-x-4 lg:py-2">
+    <div
+      class="hidden lg:flex lg:space-x-4 lg:py-2 items-center w-full px-5 py-4 max-w-screen-2xl mx-auto"
+    >
       {#each types as type}
         <a
           href={type.href}
-          class="hover:bg-tertiary hover:text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+          class="hover:bg-secondary hover:text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
         >
           <type.icon class="size-4" />
           <span class=" text-sm font-medium">{type.name}</span>
@@ -163,4 +125,73 @@
       {/each}
     </div>
   {/if}
-</nav>
+</header>
+
+<!-- <header
+  class="fixed top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md dark:bg-stone-900/70 border-none"
+>
+  <div
+    class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
+  >
+    <div class="flex items-center gap-8">
+      <a
+        class="text-2xl font-serif italic font-bold text-[#154212] dark:text-emerald-500"
+        href="/">Woofs Welcome</a
+      >
+      <nav class="hidden md:flex items-center gap-6">
+        <a
+          class="text-stone-600 dark:text-stone-400 hover:text-primary hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium"
+          href="/">Explore</a
+        >
+        <a
+          class="text-stone-600 dark:text-stone-400 hover:text-primary hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium"
+          href="/">Community</a
+        >
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <div
+        class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2"
+      >
+        <Search class="h-4 w-4" />
+        <input
+          class="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium outline-none"
+          placeholder="Search destinations..."
+          type="text"
+        />
+      </div>
+      {#if user}
+        <button
+          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+        >
+          <Bell />
+        </button>
+        <button
+          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+        >
+          <Bookmark />
+        </button>
+        <UserNav {user} />
+      {:else}
+        <a href={signInUrl}>
+          <Button variant="default" class="ml-2">Sign In</Button>
+        </a>
+      {/if}
+    </div>
+  </div>
+  {#if !isExplorePageOrAccountPage}
+    <div
+      class="hidden lg:flex lg:space-x-4 lg:py-2 items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
+    >
+      {#each types as type}
+        <a
+          href={type.href}
+          class="hover:bg-secondary hover:text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+        >
+          <type.icon class="size-4" />
+          <span class=" text-sm font-medium">{type.name}</span>
+        </a>
+      {/each}
+    </div>
+  {/if}
+</header> -->

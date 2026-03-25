@@ -14,6 +14,8 @@
   import { cn } from "$lib/utils";
   import Footer from "$lib/components/footer.svelte";
   import { Badge } from "$lib/components/ui/badge";
+  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
+  import Navbar from "$lib/components/navbar.svelte";
 
   let { data } = $props();
   const user = $derived(data.user);
@@ -26,7 +28,7 @@
 <div class="bg-surface min-h-screen">
   <!-- Navbar -->
   <HomeNavbar {user} />
-  <main class="mt-24 md:mt-12">
+  <main class="pt-24 max-w-screen-2xl mx-auto px-8 md:px-16">
     <!-- Hero Section -->
     <section
       class="relative px-8 lg:px-16 py-12 lg:py-24 max-w-screen-2xl mx-auto"
@@ -606,10 +608,11 @@
         </div>
 
         <div class="flex justify-center">
-          <Button size="lg">Browse More Locations</Button>
+          <Button size="lg">Browse More Places</Button>
         </div>
       </div>
     </section>
   </main>
   <Footer />
+  <MobileBottomNav {user} />
 </div>

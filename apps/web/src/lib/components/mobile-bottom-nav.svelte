@@ -1,17 +1,38 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { Compass, Heart, Users, User, House } from "@lucide/svelte";
+  import { Compass, Heart, User, House } from "@lucide/svelte";
+  import type { BAUser } from "@woofs/types";
 
-  const navItems = [
+  interface Props {
+    user: BAUser | null;
+  }
+
+  const { user }: Props = $props();
+
+  const profileLink = $derived(
+    `/profile/${user?.id}/${user?.name.split(" ").join("-").toLowerCase()}`,
+  );
+
+  const navItems = $derived([
     { label: "Home", href: "/", icon: House },
     { label: "Explore", href: "/explore", icon: Compass },
-    { label: "Favorites", href: "/profile/collections", icon: Heart },
-    { label: "Profile", href: "/profile", icon: User },
-  ];
+    {
+      label: "Favorites",
+      href: user
+        ? `${profileLink}/collections`
+        : `/sign-in?redirect=${page.url.href}`,
+      icon: Heart,
+    },
+    {
+      label: "Profile",
+      href: user ? `${profileLink}` : `/sign-in?redirect=${page.url.href}`,
+      icon: User,
+    },
+  ]);
 </script>
 
 <nav
-  class="fixed bottom-0 w-full z-50 lg:hidden rounded-t-3xl bg-surface shadow-[0_-4px_24px_rgba(28,28,25,0.04)] flex justify-around items-center px-2 pb-6 pt-3"
+  class="fixed bottom-0 w-full z-50 md:hidden rounded-t-3xl bg-surface shadow-[0_-4px_24px_rgba(28,28,25,0.04)] flex justify-around items-center px-2 pb-6 pt-3"
 >
   {#each navItems as item}
     {@const isActive = page.url.pathname.startsWith(item.href)}

@@ -218,9 +218,18 @@ export class ProfileService {
               tiktok: null,
             };
 
+      const defaultSettings = {
+        showReviews: true,
+        showCollections: true,
+        showCheckIns: true,
+        showDogs: true,
+        showAbout: true,
+      };
+
       return {
         ...profile,
         ...about,
+        userSettings: profile.userSettings ?? defaultSettings,
         collections,
         reviews,
         checkIns,

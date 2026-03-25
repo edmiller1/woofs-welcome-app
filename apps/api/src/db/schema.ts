@@ -347,6 +347,7 @@ export const Location = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     slug: text("slug").notNull(),
+    description: text("description"),
 
     // Self-referential parent relationship
     // Example: Auckland's parent = Auckland Region
