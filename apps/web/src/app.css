@@ -63,6 +63,7 @@
   /* Custom Colors */
   --error: oklch(0.506 0.1927 27.7);
   --on-tertiary-fixed-variant: oklch(0.3998 0.0825 81.18);
+  --on-surface: oklch(0.2253 0.0057 106.85);
   --inverse-surface: oklch(0.3095 0.0038 84.58);
   --on-primary-fixed: oklch(0.2185 0.0727 143.19);
   --surface: oklch(0.9833 0.0062 75.41);
@@ -186,6 +187,8 @@
   --color-tertiary-foreground: var(--tertiary-foreground);
   --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
   --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-on-surface: var(--on-surface);
   --color-primary-fixed: var(--primary-fixed);
   --color-on-secondary-fixed: var(--on-secondary-fixed);
   --color-secondary-fixed: var(--secondary-fixed);
