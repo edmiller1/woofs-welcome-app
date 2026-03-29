@@ -4,27 +4,33 @@
 
   interface Props {
     items: BreadcrumbItem[];
+    location: boolean;
   }
 
-  const { items }: Props = $props();
+  const { items, location }: Props = $props();
 </script>
 
 <Breadcrumb.Root>
   <Breadcrumb.List>
     {#each items as item, i (item.path)}
-      <Breadcrumb.Item>
+      <Breadcrumb.Item
+        class={location ? "text-white hover:text-stone-800" : ""}
+      >
         {#if i === items.length - 1}
           {#if item.level !== 0}
-            <Breadcrumb.Page>{item.name}</Breadcrumb.Page>
+            <Breadcrumb.Page class={location ? "text-stone-800" : ""}
+              >{item.name}</Breadcrumb.Page
+            >
           {/if}
         {:else}
-          <Breadcrumb.Link href="/location/{item.path}"
-            >{item.name}</Breadcrumb.Link
+          <Breadcrumb.Link
+            class={location ? "text-white hover:text-stone-800" : ""}
+            href="/location/{item.path}">{item.name}</Breadcrumb.Link
           >
         {/if}
       </Breadcrumb.Item>
       {#if i < items.length - 1}
-        <Breadcrumb.Separator />
+        <Breadcrumb.Separator class={location ? "text-white" : ""} />
       {/if}
     {/each}
   </Breadcrumb.List>

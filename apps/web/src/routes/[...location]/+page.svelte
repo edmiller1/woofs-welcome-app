@@ -4,30 +4,18 @@
   import { api } from "$lib/api-helper";
   import Breadcrumbs from "$lib/components/breadcrumbs.svelte";
   import ErrorBoundary from "$lib/components/error-boundary.svelte";
+  import Footer from "$lib/components/footer.svelte";
+  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Navbar from "$lib/components/navbar.svelte";
+  import LocationMap from "$lib/components/location-map.svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import PlaceCard from "$lib/components/place-card.svelte";
   import { Button } from "$lib/components/ui/button";
-  import { Separator } from "$lib/components/ui/separator";
   import { Spinner } from "$lib/components/ui/spinner";
-  import {
-    ArrowRight,
-    BadgeCheck,
-    Bubbles,
-    Footprints,
-    Heart,
-    Hotel,
-    MapPin,
-    MapPinHouse,
-    PartyPopper,
-    ShoppingBag,
-    Sparkles,
-    Star,
-    UtensilsCrossed,
-  } from "@lucide/svelte";
   import { createQuery } from "@tanstack/svelte-query";
 
   import type { BAUser, PlaceFilter } from "@woofs/types";
+  import { Map as MapIcon, Maximize2 } from "@lucide/svelte";
 
   interface Props {
     data: {
@@ -44,10 +32,6 @@
     queryFn: () => api.location.getLocation(pathname.toString()),
   }));
 
-  const mainPopularPlaces = $derived(
-    location.data?.popularPlaces.slice(0, 2) || [],
-  );
-  const popularPlaces = $derived(location.data?.popularPlaces.slice(2) || []);
   const currentPlaceFilter = $derived(
     (page.url.searchParams.get("placeSort") as PlaceFilter) ?? "popular",
   );
@@ -85,326 +69,309 @@
 
   {#if location.isSuccess}
     <Navbar {user} />
-    <div class="hidden lg:block mx-auto w-full max-w-screen-2xl px-8">
-      <div class="py-2 lg:flex lg:items-center lg:justify-between">
-        <div class="min-w-0 flex-1">
-          <Breadcrumbs items={location.data.breadcrumbs} />
-          <h2
-            class="mt-4 text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight"
-          >
-            {location.data.name}
-          </h2>
+    <main>
+      <!-- Hero Section -->
+      <section
+        class="relative h-180 w-full overflow-hidden mx-auto flex items-end px-8 md:px-16 pb-20"
+      >
+        <div class="absolute inset-0 z-0">
+          <OptimizedImage
+            imageId={location.data.image}
+            alt={location.data.name + " image"}
+            sizes="(max-width: 768px) 100vw, (max-width: 1536px) calc(100vw - 4rem), 1500px"
+            class="w-full object-cover object-center"
+            variant="hero"
+            height="800px"
+          />
           <div
-            class="text-muted-foreground mt-2 flex h-4 flex-wrap items-center space-x-2 text-sm"
+            class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"
+          ></div>
+        </div>
+        <div class="relative z-10 max-w-4xl">
+          <Breadcrumbs items={location.data.breadcrumbs} location={true} />
+          <h1
+            class="font-headline italic text-7xl md:text-9xl text-white leading-none tracking-tighter"
           >
-            <p class="flex items-center">
-              <MapPin class="mr-1 h-4 w-4" />
-              {location.data.stats.totalPlaces} places
-            </p>
-            <Separator orientation="vertical" />
-            <p class="flex items-center">
-              <Footprints class="mr-1 h-4 w-4" />
-              {location.data.stats.totalAdventures} adventures
-            </p>
-            <Separator orientation="vertical" />
-            <p class="flex items-center">
-              <UtensilsCrossed class="mr-1 h-4 w-4" />
-              {location.data.stats.totalEats} eats
-            </p>
-            <Separator orientation="vertical" />
-            <p class="flex items-center">
-              <Hotel class="mr-1 h-4 w-4" />
-              {location.data.stats.totalStays} stays
-            </p>
-            <Separator orientation="vertical" />
-            <p class="flex items-center">
-              <ShoppingBag class="mr-1 h-4 w-4" />
-              {location.data.stats.totalStores} stores
-            </p>
+            {location.data.name}, {location.data.countryCode}
+          </h1>
+        </div>
+      </section>
+      <!-- Stats Bar -->
+      <section class="max-w-7xl mx-auto -mt-12 relative z-50 px-4 md:px-8">
+        <div
+          class="bg-white shadow-[0_4px_24px_rgba(28,28,25,0.06)] rounded-3xl p-8 md:p-10 flex flex-wrap justify-around items-center gap-8 border border-outline-variant/10"
+        >
+          <div class="flex flex-col items-center">
+            <span class="font-headline italic text-4xl text-primary"
+              >{location.data.stats.totalPlaces}</span
+            >
+            <span
+              class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
+              >Places</span
+            >
           </div>
-          <div class="min-width-full relative my-5 flex justify-center">
-            <OptimizedImage
-              imageId={location.data.image}
-              alt={location.data.name + " image"}
-              sizes="(max-width: 768px) 100vw, (max-width: 1536px) calc(100vw - 4rem), 1500px"
-              class="w-full rounded-lg object-cover object-center"
-              variant="hero"
-              height="600px"
-            />
+          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="flex flex-col items-center">
+            <span class="font-headline italic text-4xl text-primary"
+              >{location.data.stats.totalStays}</span
+            >
+            <span
+              class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
+              >Stays</span
+            >
           </div>
-          <section class="mt-20 w-full rounded-lg border p-4">
-            <!-- Header -->
-            <div class="mb-6 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <Star class="size-7 fill-foreground" />
-                <h2 class="text-2xl font-bold">
+          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="flex flex-col items-center">
+            <span class="font-headline italic text-4xl text-primary"
+              >{location.data.stats.totalEats}</span
+            >
+            <span
+              class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
+              >Eats</span
+            >
+          </div>
+          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="flex flex-col items-center">
+            <span class="font-headline italic text-4xl text-primary"
+              >{location.data.stats.totalAdventures}</span
+            >
+            <span
+              class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
+              >Adventures</span
+            >
+          </div>
+        </div>
+      </section>
+      <!-- Description -->
+      {#if location.data.description}
+        <section
+          class="max-w-7xl mx-auto px-8 py-24 grid grid-cols-12 gap-6 items-center"
+        >
+          <div class="col-span-12 lg:col-span-5 space-y-6">
+            <span
+              class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
+              >About
+            </span>
+            <p
+              class="font-body text-lg text-on-surface-variant leading-relaxed"
+            >
+              {location.data.description}
+            </p>
+            <div class="pt-4">
+              <Button size="lg">Explore {location.data.name}</Button>
+            </div>
+          </div>
+          <div class="col-span-12 lg:col-span-6 lg:col-start-7 relative">
+            <!-- Maybe a place image? -->
+            <div
+              class="aspect-4/5 rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
+            >
+              <OptimizedImage imageId={location.data.image} alt="" />
+            </div>
+            <!-- Maybe a review image? here -->
+            <!-- <div
+              class="absolute -bottom-8 -left-8 w-48 h-48 rounded-2xl overflow-hidden border-8 border-surface shadow-xl hidden md:block -rotate-3"
+            >
+              <img
+                alt="Happy dog in Cotswolds"
+                class="w-full h-full object-cover"
+                data-alt="portrait of a happy golden retriever sitting in a field of yellow wildflowers with soft green hills in the background"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCENQZpwP1v4rdCKIvzR9knHqDCs2lH6yfjydlQniSRY1EJUkw5uVXtJrd3wF_mppePnl8AKSbPfzwrNuC1Z9Vgbqm9QBEyT96ZsWHvq_Qm9K9V1QwfWCR7j005Nydp1jT7U-z2wsrH1lQ6v9USIe-Yz5tO5HlB7kdgH5HnazUjYetQTjXPmBxNfP59jZZrbZRqL0rClIlP3qvLwjlgFDDERAZFAkKtW-SrPAPtN-gvDyJB_XpfrNUZFr45ala8RpOZWoCnjXKeWD0f"
+              />
+            </div> -->
+          </div>
+        </section>
+      {/if}
+      <!-- Places Section -->
+      <section class="bg-surface-container-low py-24">
+        <!-- Popular Places -->
+        {#if location.data.popularPlaces.length > 0}
+          <div class="max-w-7xl mx-auto px-8">
+            <div class="flex justify-between items-end mb-12">
+              <div class="space-y-2">
+                <!-- <span
+                class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
+                >Curated Selection</span
+              > -->
+                <h2 class="font-headline text-5xl text-primary">
                   Popular Places in {location.data.name}
                 </h2>
               </div>
               <a
-                href={`/explore?location=${location.data.name.toLowerCase()}&minRating=4`}
-                class="hover:underline"
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                href="/{pathname}/explore">View All</a
               >
-                View all
-              </a>
             </div>
-
-            <!-- Popular Places first 2 -->
-            <div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-              {#each mainPopularPlaces as place}
-                <div class="flex items-center gap-4">
-                  <a
-                    href={`/location/${place.locationPath}/places/${place.slug}`}
-                    aria-label={place.name}
-                  >
-                    <div
-                      class="group cursor-pointer overflow-hidden rounded-lg border"
-                    >
-                      <div class="relative aspect-video overflow-hidden">
-                        <OptimizedImage
-                          imageId={place.imageId}
-                          alt={place.name + " image"}
-                          class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                          variant="card"
-                        />
-                        <!-- Heart Button -->
-                        <div class="absolute right-2 top-2 z-10">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            class="rounded-full bg-white/80 hover:bg-white"
-                          >
-                            <Heart
-                              class={`size-5 ${place.isSaved ? "fill-rose-500 text-rose-500" : ""}`}
-                            />
-                          </Button>
-                        </div>
-                      </div>
-                      <div class="rounded-lg p-4">
-                        <div class="flex items-center gap-2">
-                          <h3 class="line-clamp-1 text-lg font-semibold">
-                            {place.name}
-                          </h3>
-                          {#if place.isVerified}
-                            <BadgeCheck class="fill-primary size-4" />
-                          {/if}
-                        </div>
-                        <div
-                          class="text-muted-foreground mb-2 flex items-center gap-3 text-sm"
-                        >
-                          <span>{place.cityName}, {place.regionName}</span>
-                          <div class="flex items-center gap-1 text-foreground">
-                            <Star
-                              class="text-yellow-500 size-3 fill-yellow-500"
-                            />
-                            <span class="text-foreground"
-                              >{Number(place.rating).toFixed(1)}</span
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {#each location.data.popularPlaces as place}
+                <PlaceCard
+                  id={place.id}
+                  name={place.name}
+                  rating={place.rating}
+                  slug={place.slug}
+                  cityName={place.cityName}
+                  regionName={place.regionName}
+                  countryCode={place.countryCode}
+                  types={place.types}
+                  isSaved={place.isSaved}
+                  imageId={place.imageId}
+                  {user}
+                  locationPath={place.locationPath}
+                  isVerified={place.isVerified}
+                />
               {/each}
             </div>
-            <!-- Popular Places -->
-            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {#each popularPlaces as place}
-                <a
-                  href={`${pathname}/places/${place.slug}`}
-                  aria-label={place.name}
-                >
-                  <div
-                    class="group cursor-pointer overflow-hidden rounded-md border"
-                  >
-                    <div class="relative aspect-video overflow-hidden">
-                      <OptimizedImage
-                        imageId={place.imageId}
-                        alt={place.name + " image"}
-                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                        variant="card"
-                      />
-                      <!-- Heart Button -->
-                      <div class="absolute right-2 top-2 z-10">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          class="rounded-full bg-white/80 hover:bg-white"
-                        >
-                          <Heart
-                            class={`size-5 ${place.isSaved ? "fill-rose-500 text-rose-500" : ""}`}
-                          />
-                        </Button>
-                      </div>
-                    </div>
-                    <div class="p-3">
-                      <div class="flex items-center gap-2">
-                        <h3 class="line-clamp-1 text-lg font-semibold">
-                          {place.name}
-                        </h3>
-                        {#if place.isVerified}
-                          <BadgeCheck class="fill-primary size-4" />
-                        {/if}
-                      </div>
-                      <div
-                        class="text-muted-foreground flex items-center gap-2 text-xs"
-                      >
-                        <span>{place.cityName}, {place.regionName}</span>
-                        <div class="flex items-center gap-1">
-                          <Star class="fill-muted-foreground size-3" />
-                          <span>{place.rating}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
+          </div>
+        {/if}
+        <!-- Stays -->
+        {#if location.data.stays.length > 0}
+          <div class="max-w-7xl mx-auto px-8">
+            <div class="flex justify-between items-end mb-12">
+              <div class="space-y-2">
+                <!-- <span
+                class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
+                >Curated Selection</span
+              > -->
+                <h2 class="font-headline text-5xl text-primary">
+                  Dog-friendly stays in {location.data.name}
+                </h2>
+              </div>
+              <a
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                href="/{pathname}/explore?types=Hotel,Motel,Accomodation,AirBnb"
+                >View All</a
+              >
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {#each location.data.stays as place}
+                <PlaceCard
+                  id={place.id}
+                  name={place.name}
+                  rating={place.rating}
+                  slug={place.slug}
+                  cityName={place.cityName}
+                  regionName={place.regionName}
+                  countryCode={place.countryCode}
+                  types={place.types}
+                  isSaved={place.isSaved}
+                  imageId={place.imageId}
+                  {user}
+                  locationPath={place.locationPath}
+                  isVerified={place.isVerified}
+                />
               {/each}
             </div>
-          </section>
-
-          <!-- Premium Banner -->
-          <!-- <div
-            class="relative my-20 flex h-64 w-full items-center rounded-xl border border-[#bee9a6] bg-[#fafdf8] px-8"
-          >
-            <div
-              class="text-secondary flex w-full items-center justify-between"
+          </div>
+        {/if}
+        <!-- Eats -->
+        {#if location.data.eats.length > 0}
+          <div class="max-w-7xl mx-auto px-8">
+            <div class="flex justify-between items-end mb-12">
+              <div class="space-y-2">
+                <!-- <span
+                class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
+                >Curated Selection</span
+              > -->
+                <h2 class="font-headline text-4xl text-primary">
+                  Places to eat {location.data.name}
+                </h2>
+              </div>
+              <a
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                href="/{pathname}/explore?types=Bar,Restaurant,Café,Winery"
+                >View All</a
+              >
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {#each location.data.eats as place}
+                <PlaceCard
+                  id={place.id}
+                  name={place.name}
+                  rating={place.rating}
+                  slug={place.slug}
+                  cityName={place.cityName}
+                  regionName={place.regionName}
+                  countryCode={place.countryCode}
+                  types={place.types}
+                  isSaved={place.isSaved}
+                  imageId={place.imageId}
+                  {user}
+                  locationPath={place.locationPath}
+                  isVerified={place.isVerified}
+                />
+              {/each}
+            </div>
+          </div>
+        {/if}
+        <!-- Adventures -->
+        {#if location.data.adventures.length > 0}
+          <div class="max-w-7xl mx-auto px-8">
+            <div class="flex justify-between items-end mb-12">
+              <div class="space-y-2">
+                <!-- <span
+                class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
+                >Curated Selection</span
+              > -->
+                <h2 class="font-headline text-5xl text-primary">
+                  Adventures in {location.data.name}
+                </h2>
+              </div>
+              <a
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                href="/{pathname}/explore?types=Park,Dog+Park,Beach,Walk,Hike,Lake,River,Trail,Activity"
+                >View All</a
+              >
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {#each location.data.adventures as place}
+                <PlaceCard
+                  id={place.id}
+                  name={place.name}
+                  rating={place.rating}
+                  slug={place.slug}
+                  cityName={place.cityName}
+                  regionName={place.regionName}
+                  countryCode={place.countryCode}
+                  types={place.types}
+                  isSaved={place.isSaved}
+                  imageId={place.imageId}
+                  {user}
+                  locationPath={place.locationPath}
+                  isVerified={place.isVerified}
+                />
+              {/each}
+            </div>
+          </div>
+        {/if}
+      </section>
+      <!-- Map Component -->
+      <section class="max-w-full mx-auto px-24 py-24">
+        <div
+          class="rounded-lg overflow-hidden relative h-150 border-8 border-surface-container-low"
+        >
+          <div class="absolute bottom-7 right-2 z-50">
+            <Button
+              href="/{pathname}/explore"
+              class="bg-white text-black hover:bg-primary hover:text-white transition-colors duration-150"
+              ><MapIcon />View all</Button
             >
-              <div class="flex items-center gap-5">
-                <div class="shrink-0">
-                  <Sparkles class="size-12" />
-                </div>
-                <div class="flex flex-col gap-2">
-                  <h2 class="text-4xl font-semibold">
-                    Claim your business with <span class="text-primary"
-                      >premium</span
-                    >
-                  </h2>
-                  <p class="text-lg">
-                    Upgrade to <span class="text-primary font-semibold"
-                      >premium</span
-                    > to claim, create, manage events and adverts for your businesses.
-                  </p>
-                </div>
-              </div>
-              <Button variant="secondary" size="lg"
-                >Go Premium <ArrowRight class="h-4 w-4" /></Button
-              >
-            </div>
-          </div> -->
-
-          <!-- Places Filter -->
-          <section class="my-20">
-            <div>
-              <div class="flex items-center justify-between gap-2 border-b">
-                <div class="mb-2 flex items-center justify-between gap-2">
-                  <MapPinHouse />
-                  <h2 class="text-2xl font-bold">
-                    Places in {location.data.name}
-                  </h2>
-                </div>
-                <a
-                  href={`/explore?location=${location.data.name.toLowerCase()}`}
-                  class="hover:underline">View all</a
-                >
-              </div>
-              <div class="mb-2 mt-3 flex items-center gap-2">
-                <Button
-                  variant={currentPlaceFilter === "popular"
-                    ? "default"
-                    : "outline"}
-                  size="sm"
-                  onclick={() => setPlaceFilter("popular")}
-                >
-                  <Star />Popular
-                </Button>
-                <Button
-                  variant={currentPlaceFilter === "new" ? "default" : "outline"}
-                  size="sm"
-                  onclick={() => setPlaceFilter("new")}
-                >
-                  <Bubbles />New
-                </Button>
-                <Button
-                  variant={currentPlaceFilter === "verified"
-                    ? "default"
-                    : "outline"}
-                  size="sm"
-                  onclick={() => setPlaceFilter("verified")}
-                >
-                  <BadgeCheck />Verified
-                </Button>
-                <Button
-                  variant={currentPlaceFilter === "surprise"
-                    ? "default"
-                    : "outline"}
-                  size="sm"
-                  onclick={() => setPlaceFilter("surprise")}
-                >
-                  <PartyPopper /> Surprise
-                </Button>
-              </div>
-            </div>
-            {#if locationPlaces.isLoading}
-              <div class="flex min-h-50 w-full items-center justify-center">
-                <Spinner />
-              </div>
-            {:else if locationPlaces.isSuccess}
-              {#if locationPlaces.data.places && locationPlaces.data.places.length > 0}
-                <div class="my-5 grid grid-cols-4 gap-4">
-                  {#each locationPlaces.data.places as place}
-                    <PlaceCard
-                      id={place.id}
-                      name={place.name}
-                      rating={place.rating}
-                      slug={place.slug}
-                      cityName={place.cityName}
-                      regionName={place.regionName}
-                      countryCode={place.countryCode}
-                      imageId={place.imageId}
-                      {user}
-                      types={place.types}
-                      isSaved={place.isSaved}
-                      locationPath={place.locationPath}
-                      isVerified={place.isVerified}
-                    />
-                  {/each}
-                </div>
-                {#if locationPlaces.data.places.length === 20}
-                  {#if currentPlaceFilter === "popular"}
-                    <a
-                      href={`/explore?location=${location.data.name.toLowerCase()}&minRating=4`}
-                      class="hover:underline"
-                    >
-                      <Button>View More</Button>
-                    </a>
-                  {:else if currentPlaceFilter === "new"}
-                    <a
-                      href={`/explore?location=${location.data.name.toLowerCase()}&isNew=true`}
-                      class="hover:underline"
-                    >
-                      <Button>View More</Button>
-                    </a>
-                  {:else if currentPlaceFilter === "verified"}
-                    <a
-                      href={`/explore?location=${location.data.name.toLowerCase()}&isVerified=true`}
-                      class="hover:underline"
-                    >
-                      <Button>View More</Button>
-                    </a>
-                  {/if}
-                {/if}
-              {:else}
-                <p class="my-10 text-center text-muted-foreground">
-                  No places found in this location
-                </p>
-              {/if}
-            {/if}
-
-            <!-- Events filtering -->
-          </section>
+          </div>
+          <LocationMap
+            places={Array.from(
+              new Map(
+                [
+                  ...location.data.popularPlaces,
+                  ...location.data.stays,
+                  ...location.data.eats,
+                  ...location.data.adventures,
+                ].map((p) => [p.id, p]),
+              ).values(),
+            )}
+          />
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
+    <Footer />
+    <MobileBottomNav {user} />
   {/if}
 </ErrorBoundary>

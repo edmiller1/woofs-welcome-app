@@ -1,4 +1,15 @@
-import { and, asc, count, desc, eq, gte, inArray, sql, sum } from "drizzle-orm";
+import {
+  and,
+  asc,
+  arrayOverlaps,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  sql,
+  sum,
+} from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import { locationPathSchema } from "../routes/location/schemas";
@@ -87,54 +98,194 @@ export class LocationService {
         .innerJoin(Location, eq(Place.locationId, Location.id))
         .where(sql`${Location.path} LIKE ${validatedPath + "%"}`);
 
-      const popularPlaces = await this.db
-        .select({
-          id: Place.id,
-          name: Place.name,
-          slug: Place.slug,
-          types: Place.types,
-          description: Place.description,
-          rating: Place.rating,
-          reviewsCount: Place.reviewsCount,
-          isVerified: Place.isVerified,
-          countryCode: Place.countryCode,
-          imageId: PlaceImage.imageId,
-          cityName: CityLocation.name,
-          regionName: RegionLocation.name,
-          locationPath: CityLocation.path,
-        })
-        .from(Place)
-        .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
-        .leftJoin(RegionLocation, eq(CityLocation.parentId, RegionLocation.id))
-        .leftJoin(
-          PlaceImage,
-          and(eq(PlaceImage.placeId, Place.id), eq(PlaceImage.isPrimary, true)),
-        )
-        .where(
-          and(
-            gte(Place.rating, "4.0"),
-            sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
-          ),
-        )
-        .orderBy(desc(Place.rating))
-        .limit(6);
-
-      // Check which places are in user's collections
-      let savedPlaceIds: Set<string> = new Set();
-      if (userId && popularPlaces.length > 0) {
-        const placeIds = popularPlaces.map((p) => p.id);
-        const savedItems = await this.db
-          .select({ placeId: CollectionItem.placeId })
-          .from(CollectionItem)
-          .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
+      const [popularPlaces, stays, eats, adventures] = await Promise.all([
+        //popular places
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            description: Place.description,
+            rating: Place.rating,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            countryCode: Place.countryCode,
+            imageId: PlaceImage.imageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+            lat: Place.latitude,
+            lng: Place.longitude,
+          })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(PlaceImage.placeId, Place.id),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
           .where(
             and(
-              eq(Collection.userId, userId),
-              inArray(CollectionItem.placeId, placeIds),
+              gte(Place.rating, "4.0"),
+              sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
             ),
-          );
-        savedPlaceIds = new Set(savedItems.map((item) => item.placeId));
-      }
+          )
+          .orderBy(desc(Place.rating))
+          .limit(6),
+        //stays
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            description: Place.description,
+            rating: Place.rating,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            countryCode: Place.countryCode,
+            imageId: PlaceImage.imageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+            lat: Place.latitude,
+            lng: Place.longitude,
+          })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(PlaceImage.placeId, Place.id),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
+          .where(
+            and(
+              arrayOverlaps(Place.types, [
+                "Hotel",
+                "Motel",
+                "Accomodation",
+                "AirBnb",
+              ]),
+              sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
+            ),
+          )
+          .orderBy(desc(Place.rating))
+          .limit(6),
+        //eats
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            description: Place.description,
+            rating: Place.rating,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            countryCode: Place.countryCode,
+            imageId: PlaceImage.imageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+            lat: Place.latitude,
+            lng: Place.longitude,
+          })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(PlaceImage.placeId, Place.id),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
+          .where(
+            and(
+              arrayOverlaps(Place.types, [
+                "Bar",
+                "Restaurant",
+                "Café",
+                "Winery",
+              ]),
+              sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
+            ),
+          )
+          .orderBy(desc(Place.rating))
+          .limit(6),
+        //adventures
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            description: Place.description,
+            rating: Place.rating,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            countryCode: Place.countryCode,
+            imageId: PlaceImage.imageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+            lat: Place.latitude,
+            lng: Place.longitude,
+          })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(PlaceImage.placeId, Place.id),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
+          .where(
+            and(
+              arrayOverlaps(Place.types, [
+                "Park",
+                "Dog Park",
+                "Beach",
+                "Walk",
+                "Hike",
+                "Lake",
+                "River",
+                "Trail",
+                "Activity",
+              ]),
+              sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
+            ),
+          )
+          .orderBy(desc(Place.rating))
+          .limit(6),
+      ]);
+
+      const allPlaces = [...popularPlaces, ...stays];
+      const savedPlaceIds = await this.getSavedPlaceIds(
+        userId,
+        allPlaces.map((p) => p.id),
+      );
 
       return {
         ...location,
@@ -150,6 +301,18 @@ export class LocationService {
           ...place,
           isSaved: savedPlaceIds.has(place.id),
         })),
+        stays: stays.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id),
+        })),
+        eats: eats.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id),
+        })),
+        adventures: adventures.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id),
+        })),
       };
     } catch (error) {
       if (error instanceof AppError) {
@@ -160,6 +323,113 @@ export class LocationService {
         originalError: error,
       });
     }
+  }
+
+  async getExplorePlaces(
+    path: string,
+    filters: { types?: string[]; page?: number },
+    userId?: string,
+  ) {
+    try {
+      const validatedPath = locationPathSchema.parse(path);
+      const pageSize = 20;
+      const page = Math.max(1, filters.page ?? 1);
+      const offset = (page - 1) * pageSize;
+
+      const CityLocation = alias(Location, "city");
+      const RegionLocation = alias(Location, "region");
+
+      const typeFilter =
+        filters.types && filters.types.length > 0
+          ? arrayOverlaps(Place.types, filters.types as (typeof Place.types.enumValues[number])[])
+          : undefined;
+
+      const whereClause = and(
+        typeFilter,
+        sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
+      );
+
+      const [places, totalResult] = await Promise.all([
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            description: Place.description,
+            rating: Place.rating,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            countryCode: Place.countryCode,
+            imageId: PlaceImage.imageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+            lat: Place.latitude,
+            lng: Place.longitude,
+          })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(PlaceImage.placeId, Place.id),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
+          .where(whereClause)
+          .orderBy(desc(Place.rating))
+          .limit(pageSize)
+          .offset(offset),
+        this.db
+          .select({ total: count() })
+          .from(Place)
+          .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .where(whereClause),
+      ]);
+
+      const savedPlaceIds = await this.getSavedPlaceIds(
+        userId,
+        places.map((p) => p.id),
+      );
+
+      return {
+        places: places.map((place) => ({
+          ...place,
+          isSaved: savedPlaceIds.has(place.id),
+        })),
+        total: totalResult[0]?.total ?? 0,
+        page,
+        pageSize,
+      };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to get explore places", {
+        originalError: error,
+      });
+    }
+  }
+
+  private async getSavedPlaceIds(
+    userId: string | undefined,
+    placeIds: string[],
+  ): Promise<Set<string>> {
+    if (!userId || placeIds.length === 0) return new Set();
+    const savedItems = await this.db
+      .select({ placeId: CollectionItem.placeId })
+      .from(CollectionItem)
+      .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
+      .where(
+        and(
+          eq(Collection.userId, userId),
+          inArray(CollectionItem.placeId, placeIds),
+        ),
+      );
+    return new Set(savedItems.map((item) => item.placeId));
   }
 
   async getLocationPlaces(
@@ -191,21 +461,10 @@ export class LocationService {
 
       const places = await getPlacesByPlaceSort(this.db, path, placeFilterType);
 
-      let savedPlaceIds: Set<string> = new Set();
-      if (userId && places.length > 0) {
-        const placeIds = places.map((p) => p.id);
-        const savedItems = await this.db
-          .select({ placeId: CollectionItem.placeId })
-          .from(CollectionItem)
-          .innerJoin(Collection, eq(CollectionItem.collectionId, Collection.id))
-          .where(
-            and(
-              eq(Collection.userId, userId),
-              inArray(CollectionItem.placeId, placeIds),
-            ),
-          );
-        savedPlaceIds = new Set(savedItems.map((item) => item.placeId));
-      }
+      const savedPlaceIds = await this.getSavedPlaceIds(
+        userId,
+        places.map((p) => p.id),
+      );
 
       return {
         places: places.map((place) => ({

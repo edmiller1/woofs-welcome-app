@@ -84,9 +84,9 @@
       <div
         class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2"
       >
-        <Search class="h-4 w-4" />
+        <Search class="h-4 w-4 shrink-0" />
         <input
-          class="bg-transparent w-full border-none focus:ring-0 text-sm font-body outline-none"
+          class="bg-transparent w-96 border-none focus:ring-0 text-sm font-body outline-none"
           placeholder="Search locations..."
           type="text"
         />

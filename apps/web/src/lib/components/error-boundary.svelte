@@ -2,6 +2,7 @@
   import { Button } from "$lib/components/ui/button";
   import { getErrorMessage, isApiError } from "$lib/errors/api-error";
   import { CircleAlert, RefreshCw } from "@lucide/svelte";
+  import { PUBLIC_NODE_ENV } from "$env/static/public";
 
   interface Props {
     error?: Error | unknown;
@@ -23,7 +24,7 @@
     }
   };
 
-  const isDevelopment = import.meta.env.DEV;
+  const isDevelopment = PUBLIC_NODE_ENV === "development";
 </script>
 
 {#if error}

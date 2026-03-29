@@ -150,7 +150,7 @@
           <div class="space-y-3 py-2">
             <div class="m-0 flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <h3 class="truncate font-medium">{name}</h3>
+                <h3 class="truncate font-semibold text-primary">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -166,7 +166,7 @@
             </div>
             <div class="mt-1 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}
-                <Badge class="rounded-full">{type}</Badge>
+                <Badge variant="secondary" class="rounded-full">{type}</Badge>
               {/each}
             </div>
           </div>
@@ -202,7 +202,7 @@
           <div class="space-y-3 py-2 min-w-0">
             <div class="m-0 flex items-center justify-between min-w-0">
               <div class="flex items-center gap-1 overflow-hidden w-5/6">
-                <h3 class="truncate font-medium">{name}</h3>
+                <h3 class="truncate font-semibold text-primary">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -218,7 +218,7 @@
             </div>
             <div class="mt-1 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}
-                <Badge class="rounded-full">{type}</Badge>
+                <Badge variant="secondary" class="rounded-full">{type}</Badge>
               {/each}
             </div>
           </div>

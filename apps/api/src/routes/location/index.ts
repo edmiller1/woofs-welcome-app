@@ -20,6 +20,22 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
 
   const fullPath = c.req.param("path");
 
+  // Check if this is an /explore request
+  if (fullPath.endsWith("/explore")) {
+    const locationPath = fullPath.replace(/\/explore$/, "");
+    const typesParam = c.req.query("types");
+    const types = typesParam ? typesParam.split(",").filter(Boolean) : undefined;
+    const page = Number(c.req.query("page") ?? "1");
+
+    const result = await locationService.getExplorePlaces(
+      locationPath,
+      { types, page },
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  }
+
   // Check if this is a /places request
   if (fullPath.endsWith("/places")) {
     const locationPath = fullPath.replace(/\/places$/, "");

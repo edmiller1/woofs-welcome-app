@@ -34,8 +34,8 @@
   --input: oklch(0.9300 0.0040 85.00);
   --ring: oklch(0.3600 0.0980 142.00);  /* matches primary */
 
-  /* Tertiary as a custom var */
-  --tertiary: oklch(0.7900 0.1500 78.00);
+
+  --tertiary: oklch(0.3463 0.0714 81.69);
   --tertiary-foreground: oklch(0.1500 0.0050 85.00);
 
   --font-sans: Alan Sans, ui-sans-serif, sans-serif, system-ui;
@@ -381,4 +381,15 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.mapbox-svelte-popup .mapboxgl-popup-content {
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  margin: 1rem 0;
+}
+.mapbox-svelte-popup .mapboxgl-popup-tip {
+  display: none;
 }

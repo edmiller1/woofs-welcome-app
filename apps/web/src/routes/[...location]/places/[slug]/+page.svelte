@@ -433,7 +433,7 @@
     <div class="hidden lg:block mx-auto w-full max-w-screen-2xl px-8">
       <div class="py-2 lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1 mt-1.5">
-          <Breadcrumbs items={place.data.breadcrumbs} />
+          <Breadcrumbs items={place.data.breadcrumbs} location={false} />
 
           <!-- image grid -->
           <ImageGrid

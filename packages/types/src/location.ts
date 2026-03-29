@@ -2,6 +2,7 @@ export interface Location {
   id: string;
   name: string;
   slug: string;
+  description: string;
   parentId: string | null;
   type: string;
   countryCode: string;
@@ -32,7 +33,7 @@ export interface LocationsStats {
   totalStores: number;
 }
 
-export interface PopularPlace {
+export interface LocationPlace {
   id: string;
   name: string;
   slug: string;
@@ -47,10 +48,15 @@ export interface PopularPlace {
   cityName: string;
   regionName: string;
   locationPath: string;
+  lat: string | null;
+  lng: string | null;
 }
 
 export interface LocationWithDetails extends Location {
-  popularPlaces: PopularPlace[];
+  popularPlaces: LocationPlace[];
+  stays: LocationPlace[];
+  eats: LocationPlace[];
+  adventures: LocationPlace[];
   breadcrumbs: BreadcrumbItem[];
   stats: LocationsStats;
 }
@@ -58,5 +64,12 @@ export interface LocationWithDetails extends Location {
 export type PlaceFilter = "popular" | "new" | "verified" | "surprise";
 
 export interface LocationPlacesSort {
-  places: PopularPlace[];
+  places: LocationPlace[];
+}
+
+export interface ExploreResult {
+  places: LocationPlace[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
