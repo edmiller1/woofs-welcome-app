@@ -12,35 +12,34 @@
   <meta name="description" content="Sign in to your account." />
 </svelte:head>
 
-<div class="grid min-h-svh xl:grid-cols-2">
-  <div class="flex flex-col gap-4 p-6 md:p-10">
-    <div class="flex justify-between gap-2">
-      <a href="/" class="flex items-center gap-2 font-medium">
-        <div
-          class="bg-primary text-primary-foreground flex size-6 p-1 items-center justify-center rounded-full"
-        >
-          <Dog class="size-4" />
-        </div>
+<main class="flex flex-col lg:flex-row h-full w-full">
+  <!-- Left side -->
+  <div
+    class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-surface-bright relative overflow-y-auto h-full"
+  >
+    <header
+      class="absolute top-0 left-0 right-0 px-8 py-6 flex justify-between items-center bg-transparent"
+    >
+      <div class="text-3xl font-serif italic text-primary font-semibold">
         Woofs Welcome
-      </a>
-      <!-- <a
-        href="/sign-in?business=true"
-        class={buttonVariants({ variant: "link" })}
-      >
-        Create a business account
-      </a> -->
-    </div>
-    <div class="flex flex-1 items-center justify-center">
-      <div class="w-full flex items-center justify-center">
-        <SignInForm {redirectTo} />
       </div>
+    </header>
+    <div class="w-full max-w-110 mt-12">
+      <div class="mb-10 text-left">
+        <h1
+          class="font-headline text-4xl md:text-5xl font-bold text-primary mb-3 leading-tight tracking-tight"
+        >
+          Welcome Back
+        </h1>
+        <p class="text-secondary text-lg font-body leading-relaxed">
+          Sign in or create your account.
+        </p>
+      </div>
+      <!-- Form -->
+      <SignInForm {redirectTo} />
     </div>
   </div>
-  <div class="bg-muted relative hidden xl:block">
-    <img
-      src={fluffs}
-      alt="doggies"
-      class="absolute inset-0 h-full w-full object-cover object-center"
-    />
+  <div class="hidden lg:block lg:w-1/2 h-full relative">
+    <img src={fluffs} alt="dogs" class="w-full h-full object-cover" />
   </div>
-</div>
+</main>
