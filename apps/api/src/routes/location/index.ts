@@ -27,9 +27,23 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
     const types = typesParam ? typesParam.split(",").filter(Boolean) : undefined;
     const page = Number(c.req.query("page") ?? "1");
 
+    const swLat = c.req.query("swLat");
+    const swLng = c.req.query("swLng");
+    const neLat = c.req.query("neLat");
+    const neLng = c.req.query("neLng");
+    const bbox =
+      swLat && swLng && neLat && neLng
+        ? {
+            swLat: Number(swLat),
+            swLng: Number(swLng),
+            neLat: Number(neLat),
+            neLng: Number(neLng),
+          }
+        : undefined;
+
     const result = await locationService.getExplorePlaces(
       locationPath,
-      { types, page },
+      { types, page, bbox },
       auth?.id,
     );
 

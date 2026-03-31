@@ -3,7 +3,7 @@
   import { Button } from "./ui/button";
 </script>
 
-<footer class="bg-surface-container-highest mt-12 py-20">
+<footer class="bg-surface-container-highest mt-12 py-20 mb-10 md:mb-0">
   <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-4 space-y-6">
       <span class="font-headline font-bold text-primary text-3xl"

@@ -10,12 +10,13 @@
   import LocationMap from "$lib/components/location-map.svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import PlaceCard from "$lib/components/place-card.svelte";
-  import { Button } from "$lib/components/ui/button";
+  import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Spinner } from "$lib/components/ui/spinner";
   import { createQuery } from "@tanstack/svelte-query";
 
   import type { BAUser, PlaceFilter } from "@woofs/types";
   import { Map as MapIcon, Maximize2 } from "@lucide/svelte";
+  import { cn } from "$lib/utils";
 
   interface Props {
     data: {
@@ -158,7 +159,13 @@
               {location.data.description}
             </p>
             <div class="pt-4">
-              <Button size="lg">Explore {location.data.name}</Button>
+              <a
+                href="/{pathname}/explore"
+                class={cn(
+                  buttonVariants({ variant: "default" }),
+                  "h-10 rounded-md px-6",
+                )}>Explore {location.data.name}</a
+              >
             </div>
           </div>
           <div class="col-span-12 lg:col-span-6 lg:col-start-7 relative">
@@ -345,7 +352,7 @@
         {/if}
       </section>
       <!-- Map Component -->
-      <section class="max-w-full mx-auto px-24 py-24">
+      <section class="max-w-full mx-auto md:px-24 py-24">
         <div
           class="rounded-lg overflow-hidden relative h-150 border-8 border-surface-container-low"
         >

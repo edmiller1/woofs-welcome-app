@@ -13,7 +13,7 @@
 </script>
 
 <div
-  class="visible z-99 flex overflow-hidden rounded-t-sm sm:w-81.75 sm:flex-col"
+  class="visible z-99 flex overflow-hidden rounded-t-sm w-90 sm:w-81.75 flex-col"
 >
   <div class="relative overflow-hidden" role="img" aria-label="Popup image">
     <div class="flex transition-transform duration-500 ease-out">

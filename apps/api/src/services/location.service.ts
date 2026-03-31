@@ -327,12 +327,15 @@ export class LocationService {
 
   async getExplorePlaces(
     path: string,
-    filters: { types?: string[]; page?: number },
+    filters: {
+      types?: string[];
+      page?: number;
+      bbox?: { swLat: number; swLng: number; neLat: number; neLng: number };
+    },
     userId?: string,
   ) {
     try {
-      const validatedPath = locationPathSchema.parse(path);
-      const pageSize = 20;
+      const pageSize = 50;
       const page = Math.max(1, filters.page ?? 1);
       const offset = (page - 1) * pageSize;
 
@@ -344,10 +347,12 @@ export class LocationService {
           ? arrayOverlaps(Place.types, filters.types as (typeof Place.types.enumValues[number])[])
           : undefined;
 
-      const whereClause = and(
-        typeFilter,
-        sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
-      );
+      const locationFilter = filters.bbox
+        ? sql`${Place.latitude}::numeric BETWEEN ${filters.bbox.swLat} AND ${filters.bbox.neLat}
+            AND ${Place.longitude}::numeric BETWEEN ${filters.bbox.swLng} AND ${filters.bbox.neLng}`
+        : sql`${CityLocation.path} LIKE ${locationPathSchema.parse(path) + "%"}`;
+
+      const whereClause = and(typeFilter, locationFilter);
 
       const [places, totalResult] = await Promise.all([
         this.db
