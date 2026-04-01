@@ -83,7 +83,7 @@
     </div>
     <div class="flex items-center gap-4">
       <div
-        class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2"
+        class="hidden lg:flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
       >
         <Search class="h-4 w-4" />
         <input

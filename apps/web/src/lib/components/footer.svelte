@@ -3,13 +3,13 @@
   import { Button } from "./ui/button";
 </script>
 
-<footer class="bg-surface-container-highest mt-12 py-20 mb-10 md:mb-0">
+<footer class="bg-surface-top mt-12 py-20 mb-10 md:mb-0">
   <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-4 space-y-6">
       <span class="font-headline font-bold text-primary text-3xl"
         >Woofs Welcome</span
       >
-      <p class="font-body text-on-surface-variant leading-relaxed">
+      <p class="font-body text-text-subtle leading-relaxed">
         The premier field guide for modern naturalists and their canine
         companions. Curating the world's most breathtaking dog-friendly
         destinations since 2021.
@@ -44,7 +44,7 @@
       >
         Discover
       </h4>
-      <ul class="space-y-2 text-on-surface-variant text-sm font-medium">
+      <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
           <a class="hover:text-primary transition-colors" href="#"
             >Destinations</a
@@ -68,7 +68,7 @@
       >
         Company
       </h4>
-      <ul class="space-y-2 text-on-surface-variant text-sm font-medium">
+      <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
           <a class="hover:text-primary transition-colors" href="#">Our Story</a>
         </li>
@@ -93,11 +93,11 @@
       >
         Newsletter
       </h4>
-      <p class="font-body text-sm text-on-surface-variant">
+      <p class="font-body text-sm text-text-subtle">
         Join our circle for seasonal guides and curated trails.
       </p>
       <div
-        class="flex bg-surface rounded-xl overflow-hidden p-1 border border-outline-variant/30"
+        class="flex bg-surface rounded-xl overflow-hidden p-1 border border-border-subtle/30"
       >
         <input
           class="outline-none bg-transparent border-none focus:ring-0 text-sm flex-1 px-4"
@@ -112,14 +112,14 @@
     </div>
   </div>
   <div
-    class="max-w-7xl mx-auto px-8 mt-20 pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4"
+    class="max-w-7xl mx-auto px-8 mt-20 pt-8 border-t border-border-subtle/20 flex flex-col md:flex-row justify-between items-center gap-4"
   >
     <span
-      class="text-on-surface-variant/60 text-xs font-label uppercase tracking-widest"
+      class="text-text-subtle/60 text-xs font-label uppercase tracking-widest"
       >© 2026 Woofs Welcome. All Rights Reserved.</span
     >
     <div
-      class="flex gap-8 text-on-surface-variant/60 text-xs font-label uppercase tracking-widest"
+      class="flex gap-8 text-text-subtle/60 text-xs font-label uppercase tracking-widest"
     >
       <a class="hover:text-primary" href="/privacy-policy">Privacy Policy</a>
       <a class="hover:text-primary" href="/terms-of-service">Terms of Service</a

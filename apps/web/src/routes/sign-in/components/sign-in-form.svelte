@@ -84,14 +84,14 @@
 <form onsubmit={(e) => handleEmailSignIn(e)} class="space-y-6">
   <div class="space-y-2">
     <label
-      class="block text-sm font-bold text-on-surface-variant uppercase tracking-widest ml-1"
+      class="block text-sm font-bold text-text-subtle uppercase tracking-widest ml-1"
       for="email"
     >
       Email Address
     </label>
     <div class="relative group">
       <Input
-        class="w-full h-14 px-6 rounded-full bg-surface-container-high border-none focus:ring-2 focus:ring-primary-container transition-all text-on-surface placeholder:text-outline"
+        class="w-full h-14 px-6 rounded-full bg-surface-raised border-none focus:ring-2 focus:ring-primary-container transition-all text-text placeholder:text-border-strong"
         id="email"
         placeholder="explorer@woofswelcome.app"
         type="email"
@@ -117,18 +117,18 @@
 </form>
 
 <div class="flex items-center my-10 gap-4">
-  <div class="h-px flex-1 bg-surface-container-highest"></div>
-  <span class="text-xs font-bold text-outline uppercase tracking-widest"
+  <div class="h-px flex-1 bg-surface-top"></div>
+  <span class="text-xs font-bold text-border-strong uppercase tracking-widest"
     >or continue with</span
   >
-  <div class="h-px flex-1 bg-surface-container-highest"></div>
+  <div class="h-px flex-1 bg-surface-top"></div>
 </div>
 
 <!-- Social Logins -->
 <div class="grid grid-cols-1 gap-4">
   <Button
     variant="outline"
-    class="h-14 bg-surface-container-low hover:bg-surface-container-high font-bold text-base rounded-full"
+    class="h-14 bg-surface-subtle hover:bg-surface-raised font-bold text-base rounded-full"
     onclick={handleGoogleLogin}
     disabled={loading || googleLoading}
   >
@@ -142,7 +142,7 @@
   >
   <Button
     variant="outline"
-    class="h-14 bg-on-surface hover:opacity-90 hover:text-white font-bold text-base text-white hover:bg-on-surface rounded-full"
+    class="h-14 bg-text hover:opacity-90 hover:text-white font-bold text-base text-white hover:bg-text rounded-full"
     onclick={handleAppleLogin}
     disabled={loading || appleLoading}
   >
@@ -157,7 +157,7 @@
 </div>
 
 <p
-  class="mt-10 text-center lg:text-left text-sm text-on-surface-variant font-medium"
+  class="mt-10 text-center lg:text-left text-sm text-text-subtle font-medium"
 >
   Have a business?
   <a
@@ -175,7 +175,7 @@
     href="/privacy-policy">Privacy Policy</a
   >
   <p
-    class="text-[10px] font-bold text-outline-variant uppercase tracking-[0.2em]"
+    class="text-[10px] font-bold text-border-subtle uppercase tracking-[0.2em]"
   >
     © 2026 Woofs Welcome
   </p>

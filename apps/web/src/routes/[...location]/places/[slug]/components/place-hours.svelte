@@ -11,7 +11,7 @@
 
 {#if hours}
   <div
-    class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 shadow-sm"
+    class="bg-surface-container-lowest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
   >
     <div class="flex justify-between items-center mb-6">
       <h4 class="text-xl font-headline font-bold">Opening Hours</h4>
@@ -66,8 +66,8 @@
             ? 'bg-secondary-container/60 font-bold border border-secondary-container/20'
             : ''}"
         >
-          <span class="text-on-surface-variant">{day.day}</span>
-          <span class="text-on-surface font-medium">{day.hours}</span>
+          <span class="text-text-subtle">{day.day}</span>
+          <span class="text-text font-medium">{day.hours}</span>
         </div>
       {/each}
     </div>

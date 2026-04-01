@@ -100,7 +100,7 @@
       <!-- Stats Bar -->
       <section class="max-w-7xl mx-auto -mt-12 relative z-50 px-4 md:px-8">
         <div
-          class="bg-white shadow-[0_4px_24px_rgba(28,28,25,0.06)] rounded-3xl p-8 md:p-10 flex flex-wrap justify-around items-center gap-8 border border-outline-variant/10"
+          class="bg-white shadow-[0_4px_24px_rgba(28,28,25,0.06)] rounded-3xl p-8 md:p-10 flex flex-wrap justify-around items-center gap-8 border border-border-subtle/10"
         >
           <div class="flex flex-col items-center">
             <span class="font-headline italic text-4xl text-primary"
@@ -111,7 +111,7 @@
               >Places</span
             >
           </div>
-          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="w-px h-12 bg-border-subtle/30 hidden md:block"></div>
           <div class="flex flex-col items-center">
             <span class="font-headline italic text-4xl text-primary"
               >{location.data.stats.totalStays}</span
@@ -121,7 +121,7 @@
               >Stays</span
             >
           </div>
-          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="w-px h-12 bg-border-subtle/30 hidden md:block"></div>
           <div class="flex flex-col items-center">
             <span class="font-headline italic text-4xl text-primary"
               >{location.data.stats.totalEats}</span
@@ -131,7 +131,7 @@
               >Eats</span
             >
           </div>
-          <div class="w-px h-12 bg-outline-variant/30 hidden md:block"></div>
+          <div class="w-px h-12 bg-border-subtle/30 hidden md:block"></div>
           <div class="flex flex-col items-center">
             <span class="font-headline italic text-4xl text-primary"
               >{location.data.stats.totalAdventures}</span
@@ -154,7 +154,7 @@
               >About
             </span>
             <p
-              class="font-body text-lg text-on-surface-variant leading-relaxed"
+              class="font-body text-lg text-text-subtle leading-relaxed"
             >
               {location.data.description}
             </p>
@@ -190,7 +190,7 @@
         </section>
       {/if}
       <!-- Places Section -->
-      <section class="bg-surface-container-low py-24">
+      <section class="bg-surface-subtle py-24">
         <!-- Popular Places -->
         {#if location.data.popularPlaces.length > 0}
           <div class="max-w-7xl mx-auto px-8">
@@ -205,7 +205,7 @@
                 </h2>
               </div>
               <a
-                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-dim text-primary transition-colors"
                 href="/{pathname}/explore">View All</a
               >
             </div>
@@ -244,7 +244,7 @@
                 </h2>
               </div>
               <a
-                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-dim text-primary transition-colors"
                 href="/{pathname}/explore?types=Hotel,Motel,Accomodation,AirBnb"
                 >View All</a
               >
@@ -284,7 +284,7 @@
                 </h2>
               </div>
               <a
-                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-dim text-primary transition-colors"
                 href="/{pathname}/explore?types=Bar,Restaurant,Café,Winery"
                 >View All</a
               >
@@ -324,7 +324,7 @@
                 </h2>
               </div>
               <a
-                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-fixed-dim text-primary transition-colors"
+                class="font-label font-bold text-sm hover:border-b-2 hover:border-tertiary-dim text-primary transition-colors"
                 href="/{pathname}/explore?types=Park,Dog+Park,Beach,Walk,Hike,Lake,River,Trail,Activity"
                 >View All</a
               >
@@ -354,7 +354,7 @@
       <!-- Map Component -->
       <section class="max-w-full mx-auto md:px-24 py-24">
         <div
-          class="rounded-lg overflow-hidden relative h-150 border-8 border-surface-container-low"
+          class="rounded-lg overflow-hidden relative h-150 border-8 border-surface-subtle"
         >
           <div class="absolute bottom-7 right-2 z-50">
             <Button

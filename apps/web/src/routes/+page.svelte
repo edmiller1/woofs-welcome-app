@@ -36,7 +36,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-7 z-10">
           <h1
-            class="font-headline text-5xl lg:text-7xl font-bold text-on-surface leading-tight mb-6"
+            class="font-headline text-5xl lg:text-7xl font-bold text-text leading-tight mb-6"
           >
             Explore new Zealand's <br />
             <span class="italic text-primary">dog-friendly places.</span>
@@ -48,12 +48,12 @@
           </p>
           <!-- Global Search Bar -->
           <div
-            class="bg-white p-2 rounded-full shadow-sm flex items-center max-w-2xl border border-outline-variant/20"
+            class="bg-white p-2 rounded-full shadow-sm flex items-center max-w-2xl border border-border-subtle/20"
           >
             <div class="flex flex-1 items-center px-6 gap-3">
               <Compass class="text-primary size-5" />
               <input
-                class="w-full border-none outline-none ring-none rounded-full font-medium py-3 text-on-surface"
+                class="w-full border-none outline-none ring-none rounded-full font-medium py-3 text-text"
                 placeholder="Where are you and your pups headed?"
                 type="text"
               />
@@ -83,7 +83,7 @@
             </p>
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-primary-fixed"></div>
-              <span class="text-sm font-bold text-on-secondary-container"
+              <span class="text-sm font-bold text-secondary-on-container"
                 >Courteney & the fluffs, Canterbury</span
               >
             </div>
@@ -93,7 +93,7 @@
     </section>
 
     <!-- Places Section -->
-    <section class="bg-surface-container-low py-20 px-8 lg:px-16">
+    <section class="bg-surface-subtle py-20 px-8 lg:px-16">
       <div class="max-w-screen-2xl mx-auto">
         <div class="flex justify-between items-end mb-12">
           <div>
@@ -129,7 +129,7 @@
               Places to eat
             </h3>
             <p
-              class="text-stone-500 group-hover:text-on-primary-container text-sm mt-2"
+              class="text-stone-500 group-hover:text-primary-on-container text-sm mt-2"
             >
               1,240+ locations
             </p>
@@ -140,13 +140,13 @@
             <div
               class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors"
             >
-              <Trees class="text-on-primary-fixed-variant" />
+              <Trees class="text-primary-text-muted" />
             </div>
             <h3 class="text-xl font-bold group-hover:text-on-primary">
               Adventures
             </h3>
             <p
-              class="text-stone-500 group-hover:text-on-primary-container text-sm mt-2"
+              class="text-stone-500 group-hover:text-primary-on-container text-sm mt-2"
             >
               3,500+ trails
             </p>
@@ -155,15 +155,15 @@
             class="group bg-white p-8 rounded-xl shadow-sm transition-all duration-300 cursor-pointer"
           >
             <div
-              class="w-14 h-14 rounded-full bg-tertiary-fixed flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors"
+              class="w-14 h-14 rounded-full bg-tertiary-light flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors"
             >
-              <Bed class="text-on-tertiary-fixed-variant" />
+              <Bed class="text-tertiary-text-muted" />
             </div>
             <h3 class="text-xl font-bold group-hover:text-on-primary">
               Accomodation
             </h3>
             <p
-              class="text-stone-500 group-hover:text-on-primary-container text-sm mt-2"
+              class="text-stone-500 group-hover:text-primary-on-container text-sm mt-2"
             >
               850+ stays
             </p>
@@ -172,7 +172,7 @@
             class="group bg-white p-8 rounded-xl shadow-sm transition-all duration-300 cursor-pointer"
           >
             <div
-              class="w-14 h-14 rounded-full bg-outline-variant/30 flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors"
+              class="w-14 h-14 rounded-full bg-border-subtle/30 flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors"
             >
               <Stethoscope class="text-stone-700" />
             </div>
@@ -180,7 +180,7 @@
               Services
             </h3>
             <p
-              class="text-stone-500 group-hover:text-on-primary-container text-sm mt-2"
+              class="text-stone-500 group-hover:text-primary-on-container text-sm mt-2"
             >
               2,100+ businesses
             </p>
@@ -215,16 +215,16 @@
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjLNY_39HkjSsJ4xA0DUQHFcwP2l9JJr6xEktiT_XNxC2RKLcK1dvfJEbj4uGf406FQMn7-CbddX0ntZhitwG2wBwwv5ziV4nY8pLzaY-DJqR2P0pdQCiiqedBXJYGHaI5LwUEKp8GU8rMFnYPHRs5xUT57PBbW3xkyySavdWyzTi_ZWercovBMEtF356t_Lv2qX05dlUM7c2WQeQTnZScqmni6Bg4EyHVTxzRJzNdPrjfT4lGtucGf8mE6N7kthFajblhGjnBnZvt"
           />
           <div
-            class="absolute inset-0 bg-linear-to-t from-on-surface/80 to-transparent"
+            class="absolute inset-0 bg-linear-to-t from-text/80 to-transparent"
           ></div>
           <div class="absolute bottom-0 p-10">
             <!-- <div class="flex gap-2 mb-4">
               <span
-                class="bg-tertiary-fixed-dim text-on-tertiary-fixed font-bold text-xs px-3 py-1 rounded-full"
+                class="bg-tertiary-dim text-on-tertiary-fixed font-bold text-xs px-3 py-1 rounded-full"
                 >MUST VISIT</span
               >
               <span
-                class="bg-primary-fixed text-on-primary-fixed font-bold text-xs px-3 py-1 rounded-full"
+                class="bg-primary-fixed text-primary-text font-bold text-xs px-3 py-1 rounded-full"
                 >BEACHES</span
               >
             </div> -->
@@ -254,7 +254,7 @@
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFIEtilVSLkK0MSPSX6sqkV4jIIptsvaPQIk38RiohVmTuTk_idKwdmHO20mNrMRZpFeOZbqS5PZxhZ8sKeMA7gy0DGRCTDL2IlArsXtuvo8W6P-mzFnZAfP0UmGg5sw-qffN37zu77isVHengExFyJW0Y9gBVGWQTlhLSyrjk2h8SXxTWES1c50rZU6nLXfB7Qgl2lx39k9lbh4BzmUN1M--GMOQzZMPgmd8vIVhq4Smo_VYMIhDhg3TQrg0j3LpOntaxnEtDmLXD"
           />
           <div
-            class="absolute inset-0 bg-linear-to-t from-on-surface/80 to-transparent"
+            class="absolute inset-0 bg-linear-to-t from-text/80 to-transparent"
           ></div>
           <div class="absolute bottom-0 p-8">
             <!-- <div class="flex gap-2 mb-4">
@@ -270,7 +270,7 @@
               Luxury villas that welcome four-legged royalty.
             </p>
             <!-- <a
-              class="text-tertiary-fixed-dim font-bold text-sm underline underline-offset-4"
+              class="text-tertiary-dim font-bold text-sm underline underline-offset-4"
               href="/">Read the Guide</a
             > -->
           </div>
@@ -286,7 +286,7 @@
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCycaOdJDLNNW2AvR7HEXQsSuFs4-t2fqRYPDFT_ixP5VkCw2Lehy_y-PnyKTXzwgQTwKryh7jc9BxqoNv6wQacKOcPn47sUbkye6uaK4_ReEjM_s806UhrdnRILVAO6wSrDf3O9c6hYC-RwVvChNIHbd1vhGKiSCkwDwMajUbhj3RvYVQNMi43Hrmf_r14-WXXbRMnomri-h3Vo3hSFu3hDujwvrwtJOAHeUOEJU4exiais0B3YZVrP_0end_SMRcl9a3A-25MYFYW"
           />
           <div
-            class="absolute inset-0 bg-linear-to-t from-on-surface/80 to-transparent"
+            class="absolute inset-0 bg-linear-to-t from-text/80 to-transparent"
           ></div>
           <div class="absolute bottom-0 p-8">
             <h3 class="font-headline text-2xl text-white font-bold">
@@ -307,7 +307,7 @@
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2R_F8G5Nwr0H8J8UcKRDNViriTFyW6AQoKUHJtg36ObMzgvQS3XTh5ZciQsaKHPAjrr0kcHWcCKZcqFCLQef1YBFeKUZ14QrL-iPseHFRfUh3tBsqv0xF7zoVVXLlf8N9rWbFpjSqhYayWXsnHN4SlaaTwoMk3X4N3ZlahkGny5N96XAIktEADeLtCPfmPUX8vPRLpw4o42ri4lJwQpp8H2P62xA-aqXJwatbZNLO-9NEdh8dwbbRmT3buuG2zH1BSo6nPn-S1fIs"
           />
           <div
-            class="absolute inset-0 bg-linear-to-t from-on-surface/80 to-transparent"
+            class="absolute inset-0 bg-linear-to-t from-text/80 to-transparent"
           ></div>
           <div class="absolute bottom-0 p-8">
             <h3 class="font-headline text-2xl text-white font-bold">
@@ -323,19 +323,19 @@
 
     <!-- Mobile App Promotion Section -->
     <section
-      class="bg-surface-container-low py-24 px-8 lg:px-16 overflow-hidden"
+      class="bg-surface-subtle py-24 px-8 lg:px-16 overflow-hidden"
     >
       <div
         class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
       >
         <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
           <div
-            class="relative w-full max-w-[320px] aspect-[9/19.5] bg-on-surface rounded-[3rem] border-8 border-on-surface mockup-shadow overflow-hidden"
+            class="relative w-full max-w-[320px] aspect-[9/19.5] bg-text rounded-[3rem] border-8 border-text mockup-shadow overflow-hidden"
           >
             <div
-              class="absolute top-0 inset-x-0 h-6 bg-on-surface z-20 flex justify-center"
+              class="absolute top-0 inset-x-0 h-6 bg-text z-20 flex justify-center"
             >
-              <div class="w-24 h-5 bg-on-surface rounded-b-2xl"></div>
+              <div class="w-24 h-5 bg-text rounded-b-2xl"></div>
             </div>
             <div class="w-full h-full bg-white relative overflow-hidden">
               <div
@@ -346,7 +346,7 @@
         </div>
         <div class="order-1 lg:order-2 space-y-8">
           <h2
-            class="font-headline text-4xl lg:text-5xl font-bold text-on-surface leading-tight"
+            class="font-headline text-4xl lg:text-5xl font-bold text-text leading-tight"
           >
             Adventure in your pocket.
           </h2>
@@ -508,7 +508,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           <!-- Card 1 -->
           <div
-            class="bg-white rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary/30 transition-all group editorial-shadow"
+            class="bg-white rounded-2xl overflow-hidden border border-border-subtle/30 hover:border-primary/30 transition-all group editorial-shadow"
           >
             <div class="aspect-16/10 overflow-hidden relative">
               <img
@@ -527,7 +527,7 @@
                 {/each}
                 <span class="text-xs font-bold text-stone-400 ml-1">4.9</span>
               </div>
-              <h3 class="font-headline text-2xl font-bold text-on-surface mb-3">
+              <h3 class="font-headline text-2xl font-bold text-text mb-3">
                 Whistler’s Peak Ascent
               </h3>
               <p
@@ -541,7 +541,7 @@
           </div>
           <!-- Card 2 -->
           <div
-            class="bg-white rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary/30 transition-all group editorial-shadow"
+            class="bg-white rounded-2xl overflow-hidden border border-border-subtle/30 hover:border-primary/30 transition-all group editorial-shadow"
           >
             <div class="aspect-16/10 overflow-hidden relative">
               <img
@@ -560,7 +560,7 @@
                 {/each}
                 <span class="text-xs font-bold text-stone-400 ml-1">4.2</span>
               </div>
-              <h3 class="font-headline text-2xl font-bold text-on-surface mb-3">
+              <h3 class="font-headline text-2xl font-bold text-text mb-3">
                 Azure Cove Inlet
               </h3>
               <p
@@ -574,7 +574,7 @@
           </div>
           <!-- Card 3 -->
           <div
-            class="bg-white rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary/30 transition-all group editorial-shadow"
+            class="bg-white rounded-2xl overflow-hidden border border-border-subtle/30 hover:border-primary/30 transition-all group editorial-shadow"
           >
             <div class="aspect-16/10 overflow-hidden relative">
               <img
@@ -593,7 +593,7 @@
                 {/each}
                 <span class="text-xs font-bold text-stone-400 ml-1">5.0</span>
               </div>
-              <h3 class="font-headline text-2xl font-bold text-on-surface mb-3">
+              <h3 class="font-headline text-2xl font-bold text-text mb-3">
                 Emerald Canopy Walk
               </h3>
               <p

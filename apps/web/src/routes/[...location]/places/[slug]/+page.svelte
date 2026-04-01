@@ -161,7 +161,7 @@
         <div class="flex items-center gap-2">
           <button
             onclick={() => history.back()}
-            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors"
+            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-subtle transition-colors"
           >
             <ArrowLeft class="size-5 text-primary" />
           </button>
@@ -196,7 +196,7 @@
         {#if place.data.memberFavourite}
           <div class="absolute top-20 left-6">
             <span
-              class="bg-tertiary-fixed-dim text-on-tertiary-fixed px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+              class="bg-tertiary-dim text-on-tertiary-fixed px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
             >
               ★ MEMBER FAVORITE
             </span>
@@ -226,7 +226,7 @@
       <main class="px-6 -mt-4 relative z-10 bg-surface rounded-t-3xl pt-8">
         <!-- Rating + Status -->
         <section
-          class="flex items-center justify-between mb-8 bg-surface-container-lowest p-4 rounded-2xl shadow-sm"
+          class="flex items-center justify-between mb-8 bg-surface-subtleest p-4 rounded-2xl shadow-sm"
         >
           <div class="flex items-center gap-2">
             <span class="text-4xl font-bold text-primary font-headline"
@@ -236,7 +236,7 @@
               <div class="flex text-tertiary">
                 {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as _}
                   <Star
-                    class="size-3.5 mr-1 fill-on-tertiary-fixed-variant text-on-tertiary-fixed-variant"
+                    class="size-3.5 mr-1 fill-tertiary-text-muted text-tertiary-text-muted"
                   />
                 {/each}
               </div>
@@ -252,7 +252,7 @@
         <!-- Feature Badges -->
         <section class="flex flex-wrap gap-2 mb-10">
           <span
-            class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
+            class="bg-primary-fixed text-primary-text-muted px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
           >
             <CircleCheck class="size-4" /> Indoor Seating Allowed
           </span>
@@ -268,7 +268,7 @@
           <h2 class="font-headline font-bold text-2xl text-primary mb-4">
             About
           </h2>
-          <p class="text-on-surface-variant leading-relaxed text-sm font-body">
+          <p class="text-text-subtle leading-relaxed text-sm font-body">
             {place.data.description}
           </p>
         </section>
@@ -282,7 +282,7 @@
         <section class="grid grid-cols-2 gap-4 mb-10">
           <!-- Address + Map -->
           <div
-            class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm col-span-2"
+            class="bg-surface-subtleest p-4 rounded-2xl shadow-sm col-span-2"
           >
             {#if place.data.address}
               <div class="flex items-center gap-3 mb-3">
@@ -326,7 +326,7 @@
           {#if place.data.email}
             <a
               href="mailto:{place.data.email}"
-              class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Mail class="text-primary size-5 mb-2" />
               <span
@@ -339,7 +339,7 @@
           {#if place.data.phone}
             <a
               href="tel:{place.data.phone}"
-              class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Phone class="text-primary size-5 mb-2" />
               <span
@@ -354,7 +354,7 @@
               href={place.data.website}
               target="_blank"
               rel="noopener noreferrer"
-              class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Globe class="text-primary size-5 mb-2" />
               <span
@@ -373,25 +373,25 @@
           <ul class="space-y-4">
             <li class="flex gap-3">
               <CircleCheck
-                class="size-5 text-tertiary-fixed-dim shrink-0 mt-0.5 stroke-background fill-tertiary-fixed-dim"
+                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
               />
-              <p class="text-sm text-on-surface-variant font-body">
+              <p class="text-sm text-text-subtle font-body">
                 Leashes required at all times indoors.
               </p>
             </li>
             <li class="flex gap-3">
               <CircleCheck
-                class="size-5 text-tertiary-fixed-dim shrink-0 mt-0.5 stroke-background fill-tertiary-fixed-dim"
+                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
               />
-              <p class="text-sm text-on-surface-variant font-body">
+              <p class="text-sm text-text-subtle font-body">
                 Please keep paws on the floor (no chairs).
               </p>
             </li>
             <li class="flex gap-3">
               <CircleCheck
-                class="size-5 text-tertiary-fixed-dim shrink-0 mt-0.5 stroke-background fill-tertiary-fixed-dim"
+                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
               />
-              <p class="text-sm text-on-surface-variant font-body">
+              <p class="text-sm text-text-subtle font-body">
                 Dogs must be supervised by owners.
               </p>
             </li>
@@ -452,11 +452,11 @@
             <!-- Left Content Column -->
             <div class="lg:col-span-8">
               <div
-                class="bg-surface-container-low rounded-xl p-8 mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
+                class="bg-surface-subtle rounded-xl p-8 mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
               >
                 <div class="flex items-center gap-4">
                   <div
-                    class="bg-tertiary-fixed-dim p-4 rounded-xl flex flex-col items-center justify-center text-on-tertiary-fixed"
+                    class="bg-tertiary-dim p-4 rounded-xl flex flex-col items-center justify-center text-on-tertiary-fixed"
                   >
                     <span class="text-2xl font-bold font-headline"
                       >{Number(place.data.rating).toFixed(1)}</span
@@ -473,14 +473,14 @@
                         <Badge class="rounded-full">{type}</Badge>
                       {/each}
                     </div>
-                    <p class="text-on-surface-variant font-body">
+                    <p class="text-text-subtle font-body">
                       Based on {place.data.reviewsCount} community reviews
                     </p>
                   </div>
                 </div>
                 <div class="flex flex-wrap gap-3">
                   <span
-                    class="px-4 py-2 bg-primary-fixed text-on-primary-fixed rounded-full text-sm font-medium flex items-center gap-2 font-body"
+                    class="px-4 py-2 bg-primary-fixed text-primary-text rounded-full text-sm font-medium flex items-center gap-2 font-body"
                   >
                     <CircleCheck class="size-4" />
                     Indoor Seating Allowed
@@ -498,14 +498,14 @@
               <div class="mb-12">
                 <h3 class="text-3xl font-headline font-bold mb-6">About</h3>
                 <div
-                  class="prose prose-stone max-w-none text-on-surface-variant font-body leading-relaxed space-y-4"
+                  class="prose prose-stone max-w-none text-text-subtle font-body leading-relaxed space-y-4"
                 >
                   <p>{place.data.description}</p>
                 </div>
               </div>
 
               <!-- Community Review Section -->
-              <div class="pt-12 border-t border-outline-variant/30 space-y-12">
+              <div class="pt-12 border-t border-border-subtle/30 space-y-12">
                 <!-- Section Header & Rating Summary -->
                 <div
                   class="flex flex-col md:flex-row md:items-end justify-between gap-6"
@@ -516,7 +516,7 @@
                     </h3>
                     <div class="flex items-center gap-4">
                       <div
-                        class="flex items-center text-on-tertiary-fixed-variant"
+                        class="flex items-center text-tertiary-text-muted"
                       >
                         <span class="text-3xl font-bold font-headline mr-2"
                           >{Number(place.data.rating).toFixed(1)}</span
@@ -524,12 +524,12 @@
                         <div class="flex">
                           {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as star}
                             <Star
-                              class="size-4 fill-on-tertiary-fixed-variant mr-1"
+                              class="size-4 fill-tertiary-text-muted mr-1"
                             />
                           {/each}
                         </div>
                       </div>
-                      <span class="text-on-surface-variant font-body"
+                      <span class="text-text-subtle font-body"
                         >{place.data.reviewsCount} reviews total</span
                       >
                     </div>
@@ -568,7 +568,7 @@
               <PlaceHours hours={place.data.hours} />
               <!-- Contact & Connect Card -->
               <div
-                class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 shadow-sm"
+                class="bg-surface-subtleest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Contact</h4>
                 <div class="space-y-4">
@@ -579,7 +579,7 @@
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Address</p>
-                        <p class="text-xs text-on-surface-variant font-body">
+                        <p class="text-xs text-text-subtle font-body">
                           {place.data.address}
                         </p>
                       </div>
@@ -592,7 +592,7 @@
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Phone</p>
-                        <p class="text-xs text-on-surface-variant font-body">
+                        <p class="text-xs text-text-subtle font-body">
                           {place.data.phone}
                         </p>
                       </div>
@@ -605,7 +605,7 @@
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Email</p>
-                        <p class="text-xs text-on-surface-variant font-body">
+                        <p class="text-xs text-text-subtle font-body">
                           {place.data.email}
                         </p>
                       </div>
@@ -629,11 +629,11 @@
               </div>
               <!-- Location & Amenities Card -->
               <div
-                class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 shadow-sm"
+                class="bg-surface-subtleest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Location</h4>
                 <div
-                  class="w-full h-48 bg-surface-container-high rounded-xl mb-6 relative overflow-hidden"
+                  class="w-full h-48 bg-surface-raised rounded-xl mb-6 relative overflow-hidden"
                 >
                   {#if coordinates() !== null}
                     {@const coords = coordinates()}
@@ -661,7 +661,7 @@
                 class="bg-secondary-container/30 rounded-2xl p-6 border border-secondary-container"
               >
                 <h4
-                  class="text-lg font-headline font-bold text-on-secondary-container mb-4 flex items-center gap-2"
+                  class="text-lg font-headline font-bold text-secondary-on-container mb-4 flex items-center gap-2"
                 >
                   Pawsome Rules
                 </h4>
