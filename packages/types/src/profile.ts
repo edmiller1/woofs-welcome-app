@@ -61,6 +61,7 @@ export interface Dog {
 }
 
 export interface ProfileReview extends Review {
+  images: ReviewImage[];
   place: {
     name: string;
     slug: string;
@@ -130,8 +131,9 @@ export interface UserReview {
     rating: number;
     likesCount: number | null;
     repliesCount: number | null;
+    imagesCount: number;
     createdAt: Date;
-    visitDate: Date | null;
+    visitDate: string;
     dogBreeds: string[];
     numDogs: number;
     images: ReviewImage[];

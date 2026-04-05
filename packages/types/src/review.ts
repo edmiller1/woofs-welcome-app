@@ -8,7 +8,7 @@ export interface Review {
   rating: number;
   title: string;
   content: string;
-  visitDate: Date;
+  visitDate: string;
   numDogs: number;
   dogBreeds: string[];
   timeOfVisit: string;
@@ -109,7 +109,7 @@ export interface UpdateReviewData {
   rating: number;
   numDogs: number | null;
   dogBreeds: string[] | null;
-  visitDate: Date;
+  visitDate: string;
   images: ReviewImage[] | null;
 }
 

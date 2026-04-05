@@ -6,7 +6,7 @@
     AvatarImage,
   } from "$lib/components/ui/avatar";
   import { cn } from "$lib/utils";
-  import { CircleUser, Cog, LogOut, SquareUserRound } from "@lucide/svelte";
+  import { Cog, LogOut, SquareUserRound } from "@lucide/svelte";
   import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,6 +16,7 @@
   import type { BAUser } from "@woofs/types";
   import { getUserInitials } from "$lib/helpers";
   import { buildImageUrl } from "@woofs/image-config";
+  import { settingsOpen } from "$lib/stores/accountSettingsStore";
 
   interface Props {
     user: BAUser;
@@ -51,6 +52,9 @@
         ><SquareUserRound class="text-foreground" /> Profile</DropdownMenuItem
       >
     </a>
+    <DropdownMenuItem onclick={() => settingsOpen.set(true)}>
+      <Cog class="text-foreground" /> Settings
+    </DropdownMenuItem>
     <DropdownMenuItem onclick={() => auth.signOut()}>
       <LogOut class="text-foreground" />Sign out
     </DropdownMenuItem>

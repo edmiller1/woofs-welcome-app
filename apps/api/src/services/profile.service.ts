@@ -8,6 +8,7 @@ import {
   gt,
   inArray,
   lt,
+  sql,
   sum,
 } from "drizzle-orm";
 import {
@@ -111,6 +112,7 @@ export class ProfileService {
             orderBy: (reviews, { desc }) => desc(reviews.createdAt),
             limit: 12,
             with: {
+              images: true,
               place: {
                 columns: {
                   name: true,
@@ -559,6 +561,12 @@ export class ProfileService {
         ),
         orderBy: orderBy,
         limit: limit,
+        extras: {
+          imagesCount:
+            sql<number>`(select count(*) from "review_image" where "review_image"."review_id" = "Review"."id")`.as(
+              "images_count",
+            ),
+        },
         with: {
           place: {
             columns: {

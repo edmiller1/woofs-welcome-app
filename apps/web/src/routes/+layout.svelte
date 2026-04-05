@@ -11,6 +11,8 @@
   import { Spinner } from "$lib/components/ui/spinner";
   import { Toaster } from "$lib/components/ui/sonner";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+  import AccountSettingsDialog from "./profile/[userId]/[userName]/components/account-settings-dialog.svelte";
+  import { settingsOpen } from "$lib/stores/accountSettingsStore";
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -35,8 +37,12 @@
     },
   });
 
-  let { children, user }: { children: Snippet<[]>; user: BAUser | null } =
-    $props();
+  let {
+    children,
+    data,
+  }: { children: Snippet<[]>; data: { user: BAUser | null } } = $props();
+
+  const user = $derived(data.user);
 
   onMount(() => {
     auth.initialize();
@@ -64,4 +70,7 @@
   {/if}
   <!-- <ModeWatcher /> -->
   <Toaster closeButton />
+  {#if user}
+    <AccountSettingsDialog bind:open={$settingsOpen} userId={user?.id} />
+  {/if}
 </QueryClientProvider>

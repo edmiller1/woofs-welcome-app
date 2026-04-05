@@ -32,7 +32,7 @@
 </script>
 
 <nav
-  class="fixed bottom-0 w-full z-50 md:hidden rounded-t-3xl bg-surface shadow-[0_-4px_24px_rgba(28,28,25,0.04)] flex justify-around items-center px-2 pb-6 pt-3"
+  class="fixed bottom-0 w-full z-50 bg-white md:hidden rounded-t-3xl bg-surface shadow-[0_-4px_24px_rgba(28,28,25,0.04)] flex justify-around items-center px-2 pb-6 pt-3"
 >
   {#each navItems as item}
     {@const isActive = page.url.pathname.startsWith(item.href)}

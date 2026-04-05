@@ -22,12 +22,17 @@
 
   interface Props {
     open: boolean;
-    userSettings: ProfileSettings;
+    userId: string;
   }
 
-  let { open = $bindable(), userSettings }: Props = $props();
+  let { open = $bindable(), userId }: Props = $props();
 
   const queryClient = useQueryClient();
+
+  const profile = createQuery(() => ({
+    queryKey: ["profile", userId],
+    queryFn: () => api.profile.getProfile(userId),
+  }));
 
   const notificationPreferences = createQuery(() => ({
     queryKey: ["notificationPreferences"],
@@ -213,11 +218,11 @@
     },
   }));
 
-  let showAbout = $derived(userSettings.showAbout);
-  let showDogs = $derived(userSettings.showDogs);
-  let showCheckIns = $derived(userSettings.showCheckIns);
-  let showReviews = $derived(userSettings.showReviews);
-  let showCollections = $derived(userSettings.showCollections);
+  let showAbout = $derived(profile.data?.userSettings?.showAbout);
+  let showDogs = $derived(profile.data?.userSettings?.showDogs);
+  let showCheckIns = $derived(profile.data?.userSettings?.showCheckIns);
+  let showReviews = $derived(profile.data?.userSettings?.showReviews);
+  let showCollections = $derived(profile.data?.userSettings?.showCollections);
 
   const handleSettingsToggle = (key: string, value: boolean) => {
     updateSettings.mutate({
@@ -227,11 +232,11 @@
 
   $effect(() => {
     if (open) {
-      showAbout = userSettings.showAbout;
-      showDogs = userSettings.showDogs;
-      showCheckIns = userSettings.showCheckIns;
-      showReviews = userSettings.showReviews;
-      showCollections = userSettings.showCollections;
+      showAbout = profile.data?.userSettings?.showAbout;
+      showDogs = profile.data?.userSettings?.showDogs;
+      showCheckIns = profile.data?.userSettings?.showCheckIns;
+      showReviews = profile.data?.userSettings?.showReviews;
+      showCollections = profile.data?.userSettings?.showCollections;
     }
   });
 </script>
