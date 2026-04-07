@@ -205,10 +205,10 @@
       >
         {#if removePlaceFromCollection.isPending}
           <Spinner class="size-5" />
-        {:else if activePlace.isSaved}
-          <Heart class="size-6 fill-rose-500 text-rose-500" />
         {:else}
-          <Heart class="size-6" />
+          <Heart
+            class={`size-6 ${activePlace.isSaved ? "fill-rose-500 text-rose-500" : ""}`}
+          />
         {/if}
       </Button>
     {:else}
