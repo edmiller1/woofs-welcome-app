@@ -10,9 +10,10 @@
   interface Props {
     places: CollectionPlace[];
     selectedPlaceId: string | null;
+    collectionId?: string;
   }
 
-  const { places, selectedPlaceId: selectedId }: Props = $props();
+  const { places, selectedPlaceId: selectedId, collectionId }: Props = $props();
 
   const mapboxAccessToken = PUBLIC_MAPBOX_API_KEY;
 
@@ -40,6 +41,7 @@
       target: container,
       props: {
         activePlace: {
+          id: place.id,
           imageId: place.imageId,
           locationPath: place.locationPath,
           slug: place.slug,
@@ -51,6 +53,7 @@
           countryCode: place.countryCode,
           types: place.types,
         },
+        collectionId,
         closePopup: () => selectedPlaceIdStore.set(null),
       },
     });

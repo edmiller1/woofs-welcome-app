@@ -1,7 +1,12 @@
 <script lang="ts">
   import { api } from "$lib/api-helper";
   import { Spinner } from "$lib/components/ui/spinner";
-  import { createQuery, keepPreviousData } from "@tanstack/svelte-query";
+  import {
+    createMutation,
+    createQuery,
+    keepPreviousData,
+    useQueryClient,
+  } from "@tanstack/svelte-query";
   import type { BAUser, CollectionWithPlaces } from "@woofs/types";
   import {
     collectionPlaces,
@@ -17,6 +22,7 @@
   import { Drawer } from "$lib/components/ui/drawer";
   import { Drawer as DrawerPrimitive } from "vaul-svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import { toast } from "svelte-sonner";
 
   interface Props {
     data: {
@@ -31,6 +37,8 @@
   const { data }: Props = $props();
   const { initialCollectionWithPlaces, userId, userName, id, user } =
     $derived(data);
+
+  const queryClient = useQueryClient();
 
   const LIMIT = 20;
   let searchInput = $state("");
@@ -58,6 +66,25 @@
     initialData:
       page === 1 && !debouncedSearch ? initialCollectionWithPlaces : undefined,
     placeholderData: keepPreviousData,
+  }));
+
+  const removePlaceFromCollection = createMutation(() => ({
+    mutationFn: ({
+      placeId,
+      collectionId,
+    }: {
+      placeId: string;
+      collectionId: string;
+    }) => api.collection.removePlaceFromCollection(placeId, collectionId),
+    onSuccess: () => {
+      toast.success("Place removed from collection!");
+      queryClient.invalidateQueries({
+        queryKey: ["collectionWithPlaces", userId, id, debouncedSearch, page],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to remove place from collection");
+    },
   }));
 
   $effect(() => {
@@ -148,7 +175,9 @@
         >
           {#if collectionWithPlaces.data?.places.length === 0}
             <p class="text-center text-muted-foreground text-sm py-8">
-              {debouncedSearch ? `No places found for "${debouncedSearch}"` : "No places in this collection yet."}
+              {debouncedSearch
+                ? `No places found for "${debouncedSearch}"`
+                : "No places in this collection yet."}
             </p>
           {/if}
           {#each collectionWithPlaces.data?.places as place}
@@ -186,8 +215,19 @@
                         variant="ghost"
                         size="icon"
                         class="rounded-full hover:bg-muted"
+                        onclick={(e) => {
+                          e.stopPropagation();
+                          removePlaceFromCollection.mutate({
+                            placeId: place.id,
+                            collectionId: id,
+                          });
+                        }}
                       >
-                        <Heart class="size-4 fill-rose-500 text-rose-500" />
+                        {#if removePlaceFromCollection.isPending}
+                          <Spinner class="size-4 animate-spin" />
+                        {:else}
+                          <Heart class="size-4 fill-rose-500 text-rose-500" />
+                        {/if}
                       </Button>
                     </div>
                     <div class="flex items-center text-tertiary-fixed-dim">
@@ -242,6 +282,7 @@
         <CollectionMap
           selectedPlaceId={$selectedPlaceId}
           places={$collectionPlaces}
+          collectionId={id}
         />
       </section>
     </main>
@@ -253,6 +294,7 @@
         <CollectionMap
           selectedPlaceId={$selectedPlaceId}
           places={$collectionPlaces}
+          collectionId={id}
         />
       </div>
 
@@ -323,7 +365,9 @@
             >
               {#if collectionWithPlaces.data?.places.length === 0}
                 <p class="text-center text-muted-foreground text-sm py-8">
-                  {debouncedSearch ? `No places found for "${debouncedSearch}"` : "No places in this collection yet."}
+                  {debouncedSearch
+                    ? `No places found for "${debouncedSearch}"`
+                    : "No places in this collection yet."}
                 </p>
               {/if}
               {#each collectionWithPlaces.data?.places as place}

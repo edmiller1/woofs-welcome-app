@@ -5,14 +5,26 @@
     ChevronLeft,
     ChevronRight,
     Heart,
+    Plus,
     Star,
     XIcon,
   } from "@lucide/svelte";
   import OptimizedImage from "./optimized-image.svelte";
   import { Badge } from "./ui/badge";
   import { Button } from "./ui/button";
+  import { Popover } from "./ui/popover";
+  import { Popover as PopoverPrimitive } from "bits-ui";
+  import {
+    createMutation,
+    createQuery,
+    useQueryClient,
+  } from "@tanstack/svelte-query";
+  import { api } from "$lib/api-helper";
+  import { toast } from "svelte-sonner";
+  import { Spinner } from "./ui/spinner";
 
   type Popup = {
+    id: string;
     images?: PlaceImage[];
     imageId?: string;
     locationPath: string;
@@ -28,14 +40,54 @@
 
   interface Props {
     activePlace: Popup;
+    collectionId?: string;
     closePopup: () => void;
   }
 
-  const { activePlace, closePopup }: Props = $props();
+  const { activePlace, collectionId, closePopup }: Props = $props();
+
+  const queryClient = useQueryClient();
 
   let showRightArrow = $state<boolean>(false);
   let showLeftArrow = $state<boolean>(false);
   let currentIndex = $state<number>(0);
+  let collectionPopoverOpen = $state(false);
+
+  // Only fetch place collections when we don't have a specific collectionId
+  const placeCollections = createQuery(() => ({
+    queryKey: ["placeCollections", activePlace.id],
+    queryFn: () => api.collection.getPlaceCollections(activePlace.id),
+    enabled: !collectionId && collectionPopoverOpen,
+  }));
+
+  const removePlaceFromCollection = createMutation(() => ({
+    mutationFn: ({ placeId, colId }: { placeId: string; colId: string }) =>
+      api.collection.removePlaceFromCollection(placeId, colId),
+    onSuccess: () => {
+      toast.success("Place removed from collection!");
+      queryClient.invalidateQueries({ queryKey: ["collectionWithPlaces"] });
+      queryClient.invalidateQueries({
+        queryKey: ["placeCollections", activePlace.id],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to remove place from collection");
+    },
+  }));
+
+  const addPlaceToCollection = createMutation(() => ({
+    mutationFn: ({ placeId, colId }: { placeId: string; colId: string }) =>
+      api.collection.addPlaceToCollection(placeId, colId),
+    onSuccess: () => {
+      toast.success("Place added to collection!");
+      queryClient.invalidateQueries({
+        queryKey: ["placeCollections", activePlace.id],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to add place to collection");
+    },
+  }));
 
   const hasMultipleImages = $derived(
     activePlace.images && activePlace.images.length > 1,
@@ -72,6 +124,14 @@
       currentIndex--;
     }
   };
+
+  function toggleCollection(colId: string, hasPlace: boolean) {
+    if (hasPlace) {
+      removePlaceFromCollection.mutate({ placeId: activePlace.id, colId });
+    } else {
+      addPlaceToCollection.mutate({ placeId: activePlace.id, colId });
+    }
+  }
 </script>
 
 <div
@@ -130,19 +190,105 @@
       ></div>
     </a>
 
-    {#if activePlace.isSaved}
+    <!-- Collection action button -->
+    {#if collectionId}
+      <!-- On a specific collection page: show remove button -->
       <Button
         variant="ghost"
         size="icon"
-        class="absolute right-2 top-2 z-10 flex rounded-full hover:bg-muted"
+        class="absolute right-2 top-2 z-20 flex rounded-full hover:bg-muted"
+        onclick={() =>
+          removePlaceFromCollection.mutate({
+            placeId: activePlace.id,
+            colId: collectionId,
+          })}
       >
-        <Heart class="size-6 fill-rose-500 text-rose-500" />
+        {#if removePlaceFromCollection.isPending}
+          <Spinner class="size-5" />
+        {:else if activePlace.isSaved}
+          <Heart class="size-6 fill-rose-500 text-rose-500" />
+        {:else}
+          <Heart class="size-6" />
+        {/if}
       </Button>
+    {:else}
+      <!-- Generic map context: show collection picker -->
+      <PopoverPrimitive.Root bind:open={collectionPopoverOpen}>
+        <PopoverPrimitive.Trigger>
+          {#snippet child({ props })}
+            <Button
+              {...props}
+              variant="ghost"
+              size="icon"
+              class="absolute right-2 top-2 z-20 flex rounded-full bg-white/80 hover:bg-white"
+            >
+              <Heart
+                class={cn(
+                  "size-6",
+                  activePlace.isSaved
+                    ? "fill-rose-500 text-rose-500"
+                    : "text-gray-600",
+                )}
+              />
+            </Button>
+          {/snippet}
+        </PopoverPrimitive.Trigger>
+        <PopoverPrimitive.Content
+          class="z-200 w-56 rounded-xl border bg-white p-2 shadow-lg"
+          side="bottom"
+          align="end"
+          sideOffset={4}
+        >
+          <p
+            class="px-2 pb-1 pt-0.5 text-xs font-semibold text-muted-foreground"
+          >
+            Save to collection
+          </p>
+          {#if placeCollections.isLoading}
+            <div class="flex items-center justify-center py-4">
+              <Spinner class="size-4" />
+            </div>
+          {:else if placeCollections.data && placeCollections.data.length > 0}
+            <ul class="space-y-0.5">
+              {#each placeCollections.data as col}
+                {@const isPending =
+                  addPlaceToCollection.isPending ||
+                  removePlaceFromCollection.isPending}
+                <li>
+                  <button
+                    class="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-muted transition-colors disabled:opacity-50"
+                    disabled={isPending}
+                    onclick={() => toggleCollection(col.id, col.hasPlace)}
+                  >
+                    <span class="text-base leading-none"
+                      >{col.emoji ?? "📁"}</span
+                    >
+                    <span class="flex-1 truncate text-left font-medium"
+                      >{col.name}</span
+                    >
+                    {#if col.hasPlace}
+                      <Heart
+                        class="size-3.5 shrink-0 fill-rose-500 text-rose-500"
+                      />
+                    {:else}
+                      <Plus class="size-3.5 shrink-0 text-muted-foreground" />
+                    {/if}
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          {:else}
+            <p class="px-2 py-3 text-xs text-muted-foreground">
+              No collections yet.
+            </p>
+          {/if}
+        </PopoverPrimitive.Content>
+      </PopoverPrimitive.Root>
     {/if}
 
     <button
       onclick={closePopup}
-      class="absolute left-2 top-2 z-10 flex cursor-pointer"
+      class="absolute left-2 top-2 z-20 flex cursor-pointer"
     >
       <XIcon
         class="rounded-full bg-white fill-white p-1 opacity-80 hover:opacity-100"
