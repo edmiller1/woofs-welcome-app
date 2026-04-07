@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PlaceWithDetails } from "@woofs/types";
+  import type { PlaceImage } from "@woofs/types";
   import { cn } from "$lib/utils";
   import {
     ChevronLeft,
@@ -9,9 +9,24 @@
     XIcon,
   } from "@lucide/svelte";
   import OptimizedImage from "./optimized-image.svelte";
+  import { Badge } from "./ui/badge";
+
+  type Popup = {
+    images?: PlaceImage[];
+    imageId?: string;
+    locationPath: string;
+    slug: string;
+    isSaved: boolean;
+    name: string;
+    rating: string;
+    cityName: string;
+    regionName: string;
+    countryCode: string;
+    types: string[];
+  };
 
   interface Props {
-    activePlace: PlaceWithDetails;
+    activePlace: Popup;
     closePopup: () => void;
   }
 
@@ -21,8 +36,12 @@
   let showLeftArrow = $state<boolean>(false);
   let currentIndex = $state<number>(0);
 
+  const hasMultipleImages = $derived(
+    activePlace.images && activePlace.images.length > 1,
+  );
+
   const showArrows = () => {
-    if (activePlace.images.length <= 1) return;
+    if (!activePlace.images || activePlace.images.length <= 1) return;
 
     if (currentIndex === 0) {
       showRightArrow = true;
@@ -42,7 +61,7 @@
   };
 
   const nextImage = () => {
-    if (currentIndex < activePlace.images.length - 1) {
+    if (activePlace.images && currentIndex < activePlace.images.length - 1) {
       currentIndex++;
     }
   };
@@ -67,6 +86,7 @@
     onblur={hideArrows}
   >
     {#if activePlace.images && activePlace.images.length > 0}
+      <!-- Multiple images: carousel -->
       <div
         class="flex transition-transform duration-500 ease-out"
         style="transform: translateX(-{currentIndex * 100}%)"
@@ -82,6 +102,16 @@
           />
         {/each}
       </div>
+    {:else if activePlace.imageId}
+      <!-- Single imageId fallback -->
+      <OptimizedImage
+        imageId={activePlace.imageId}
+        alt={activePlace.name}
+        class="h-52 w-full shrink-0 object-cover object-center"
+        width="208"
+        height="208"
+        variant="card"
+      />
     {:else}
       <div class="flex h-52 w-72 items-center justify-center bg-gray-200">
         <span class="text-gray-500">No images available</span>
@@ -89,13 +119,13 @@
     {/if}
 
     <a
-      href={`/location/${activePlace.location.path}/places/${activePlace.slug}`}
+      href={`/location/${activePlace.locationPath}/places/${activePlace.slug}`}
       aria-label="View place details"
       target="_blank"
       class="rounded-t-lg"
     >
       <div
-        class="absolute inset-0 z-10 flex cursor-pointer items-start justify-end p-2"
+        class="absolute inset-0 z-10 flex cursor-pointer items-start justify-end"
       ></div>
     </a>
 
@@ -138,10 +168,10 @@
       </div>
     {/if}
 
-    {#if activePlace.images && activePlace.images.length > 1}
+    {#if hasMultipleImages}
       <div class="absolute bottom-4 left-0 right-0 z-20">
         <div class="flex items-center justify-center gap-2">
-          {#each activePlace.images as _, index}
+          {#each activePlace.images! as _, index}
             <button
               onclick={() => (currentIndex = index)}
               class={cn(
@@ -158,13 +188,34 @@
 
   <div class="rounded-b-xl bg-white px-2 pb-3 pt-2 text-black">
     <div class="flex items-center justify-between">
-      <span class="mt-1 text-[1.01rem] font-bold">
+      <span class="truncate mt-1 text-sm font-bold">
         {activePlace.name}
       </span>
-      <div class="mt-1 flex items-center space-x-1 text-[1.01rem]">
-        <Star class="size-4 fill-yellow-500 text-yellow-500" />
+      <div class="mt-1 flex items-center space-x-1 text-sm">
+        <Star class="size-3 fill-yellow-500 text-yellow-500" />
         <span class="text-black">{Number(activePlace.rating).toFixed(1)}</span>
       </div>
     </div>
+    <span class="text-muted-foreground text-xs mb-1"
+      >{activePlace.cityName}, {activePlace.regionName}
+      {activePlace.countryCode}</span
+    >
+    <div class="flex items-center gap-2">
+      {#each activePlace.types as type}
+        <Badge variant="secondary">{type}</Badge>
+      {/each}
+    </div>
   </div>
 </div>
+
+<style>
+  :global(.custom-popup .mapboxgl-popup-content) {
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  :global(.custom-popup .mapboxgl-popup-tip) {
+    border-top-color: white;
+  }
+</style>

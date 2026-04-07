@@ -373,3 +373,13 @@ body {
 .mapbox-svelte-popup .mapboxgl-popup-tip {
   display: none;
 }
+
+.mapboxgl-popup-content {
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+.mapboxgl-popup-tip {
+    border-top-color: white;
+  }

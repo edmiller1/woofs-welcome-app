@@ -65,7 +65,9 @@
     </div>
   {:else}
     <Tooltip.Provider>
-      {@render children()}
+      <div class="bg-[#fdf9f6]">
+        {@render children()}
+      </div>
     </Tooltip.Provider>
   {/if}
   <!-- <ModeWatcher /> -->

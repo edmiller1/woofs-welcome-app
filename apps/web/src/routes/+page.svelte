@@ -16,6 +16,7 @@
   import { Badge } from "$lib/components/ui/badge";
   import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Navbar from "$lib/components/navbar.svelte";
+  import bonny from "$lib/assets/bonny.jpeg";
 
   let { data } = $props();
   const user = $derived(data.user);
@@ -38,7 +39,7 @@
           <h1
             class="font-headline text-5xl lg:text-7xl font-bold text-text leading-tight mb-6"
           >
-            Explore new Zealand's <br />
+            Explore New Zealand's <br />
             <span class="italic text-primary">dog-friendly places.</span>
           </h1>
           <p class="text-lg text-stone-600 max-w-xl mb-10 leading-relaxed">
@@ -68,9 +69,9 @@
           >
             <img
               alt="main"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover object-center"
               data-alt="A golden retriever dog wearing a bandana looking at mountains"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnZ2PCel_OFmRSW8pgRBglwszyWlEdVPOfmodbCu8GsUCI3t5-HPjau8VkkzVWFweXoPSOuAAB3G3-IoiCb7-xRh5b7RuUuOhivuhXFggj1HB5ESA9avEls5g1xGVwyC9VHJY3V4QncoInpoVuE2Vn6CAeyeJN8ePSgWrJZ4CWDfNmhuI-8epxEjrHcsVrAfabq1j98XibBeqvKz6BBXNR-K-Yq-M8usKG7AKNqXDweJKKHFfjoE3I4clqjYwcnjPyeHN4jeIOBFDQ"
+              src={bonny}
             />
           </div>
           <div
@@ -322,9 +323,7 @@
     </section>
 
     <!-- Mobile App Promotion Section -->
-    <section
-      class="bg-surface-subtle py-24 px-8 lg:px-16 overflow-hidden"
-    >
+    <section class="bg-surface-subtle py-24 px-8 lg:px-16 overflow-hidden">
       <div
         class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
       >
