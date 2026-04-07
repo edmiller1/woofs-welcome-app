@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray } from "drizzle-orm";
 import {
   Collection,
   CollectionItem,
@@ -448,6 +448,9 @@ export class CollectionService {
     collectionId: string,
     profileId: string,
     userId?: string,
+    page: number = 1,
+    limit: number = 20,
+    search?: string,
   ) {
     try {
       const collection = await this.db.query.Collection.findFirst({
@@ -461,36 +464,63 @@ export class CollectionService {
         throw new NotFoundError("Collection not found");
       }
 
-      const places = await this.db
-        .select({
-          id: Place.id,
-          name: Place.name,
-          slug: Place.slug,
-          rating: Place.rating,
-          lat: Place.latitude,
-          lng: Place.longitude,
-          countryCode: Place.countryCode,
-          reviewsCount: Place.reviewsCount,
-          isVerified: Place.isVerified,
-          createdAt: Place.createdAt,
-          imageId: PlaceImage.imageId,
-          types: Place.types,
-          cfImageId: Image.cfImageId,
-          cityName: CityLocation.name,
-          regionName: RegionLocation.name,
-          locationPath: CityLocation.path,
-        })
-        .from(CollectionItem)
-        .leftJoin(Place, eq(CollectionItem.placeId, Place.id))
-        .leftJoin(
-          PlaceImage,
-          and(eq(Place.id, PlaceImage.placeId), eq(PlaceImage.isPrimary, true)),
-        )
-        .leftJoin(Image, eq(PlaceImage.imageId, Image.id))
-        .leftJoin(CityLocation, eq(Place.locationId, CityLocation.id))
-        .leftJoin(RegionLocation, eq(CityLocation.parentId, RegionLocation.id))
-        .where(eq(CollectionItem.collectionId, collection.id))
-        .orderBy(desc(CollectionItem.createdAt));
+      const offset = (page - 1) * limit;
+
+      const searchCondition = search
+        ? ilike(Place.name, `%${search}%`)
+        : undefined;
+
+      const whereCondition = searchCondition
+        ? and(eq(CollectionItem.collectionId, collection.id), searchCondition)
+        : eq(CollectionItem.collectionId, collection.id);
+
+      const [totalResult, places] = await Promise.all([
+        this.db
+          .select({ total: count() })
+          .from(CollectionItem)
+          .leftJoin(Place, eq(CollectionItem.placeId, Place.id))
+          .where(whereCondition),
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            rating: Place.rating,
+            lat: Place.latitude,
+            lng: Place.longitude,
+            countryCode: Place.countryCode,
+            reviewsCount: Place.reviewsCount,
+            isVerified: Place.isVerified,
+            createdAt: Place.createdAt,
+            imageId: PlaceImage.imageId,
+            types: Place.types,
+            cfImageId: Image.cfImageId,
+            cityName: CityLocation.name,
+            regionName: RegionLocation.name,
+            locationPath: CityLocation.path,
+          })
+          .from(CollectionItem)
+          .leftJoin(Place, eq(CollectionItem.placeId, Place.id))
+          .leftJoin(
+            PlaceImage,
+            and(
+              eq(Place.id, PlaceImage.placeId),
+              eq(PlaceImage.isPrimary, true),
+            ),
+          )
+          .leftJoin(Image, eq(PlaceImage.imageId, Image.id))
+          .leftJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+          .leftJoin(
+            RegionLocation,
+            eq(CityLocation.parentId, RegionLocation.id),
+          )
+          .where(whereCondition)
+          .orderBy(desc(CollectionItem.createdAt))
+          .limit(limit)
+          .offset(offset),
+      ]);
+
+      const total = totalResult[0]?.total ?? 0;
 
       // Check which places are in user's collections
       let savedPlaceIds: Set<string> = new Set();
@@ -516,6 +546,12 @@ export class CollectionService {
           ...place,
           isSaved: savedPlaceIds.has(place.id!),
         })),
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
       };
     } catch (error) {
       if (error instanceof AppError) {

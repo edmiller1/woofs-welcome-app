@@ -70,4 +70,10 @@ export interface CollectionPlace {
 export interface CollectionWithPlaces {
   collection: Collection;
   places: CollectionPlace[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }

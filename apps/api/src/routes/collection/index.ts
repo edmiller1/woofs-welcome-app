@@ -9,6 +9,7 @@ import {
   placeIdSchema,
   getProfileCollectionsSchema,
   getCollectionWithPlacesSchema,
+  getCollectionWithPlacesQuerySchema,
 } from "./schemas";
 import { CollectionService } from "../../services/collection.service";
 import { ImageUploadService } from "../../services/image-upload.service";
@@ -208,6 +209,7 @@ collectionRouter.get(
   ":profileId/:id",
   authMiddleware,
   zValidator("param", getCollectionWithPlacesSchema),
+  zValidator("query", getCollectionWithPlacesQuerySchema),
   async (c) => {
     //Context
     const auth = c.get("user");
@@ -219,11 +221,15 @@ collectionRouter.get(
     const collectionService = new CollectionService(db, imageUploadService);
 
     const { profileId, id } = c.req.valid("param");
+    const { page, limit, search } = c.req.valid("query");
 
     const result = await collectionService.getCollectionWithPlaces(
       id,
       profileId,
       auth?.id,
+      page,
+      limit,
+      search,
     );
 
     return c.json(result, 200);

@@ -10,6 +10,7 @@
   } from "@lucide/svelte";
   import OptimizedImage from "./optimized-image.svelte";
   import { Badge } from "./ui/badge";
+  import { Button } from "./ui/button";
 
   type Popup = {
     images?: PlaceImage[];
@@ -130,9 +131,13 @@
     </a>
 
     {#if activePlace.isSaved}
-      <div class="absolute right-2 top-2 z-10 flex">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="absolute right-2 top-2 z-10 flex rounded-full hover:bg-muted"
+      >
         <Heart class="size-6 fill-rose-500 text-rose-500" />
-      </div>
+      </Button>
     {/if}
 
     <button
