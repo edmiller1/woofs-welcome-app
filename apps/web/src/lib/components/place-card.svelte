@@ -130,7 +130,7 @@
               </div>
             </div>
           </Carousel.Root>
-          <!-- Heart Button -->
+          <!-- TODO: Switch to heart-button.svelte -->
           <div class="absolute right-2 top-2 z-10">
             <Button
               variant="ghost"

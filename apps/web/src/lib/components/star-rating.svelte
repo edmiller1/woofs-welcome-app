@@ -14,7 +14,7 @@
 <div class={`flex ${className}`}>
   {#each stars as star}
     <Star
-      class={`size-3 mr-0.5 ${star <= rating ? "fill-foreground" : "text-gray-300"}`}
+      class={`size-3 mr-0.5 ${star <= rating ? "fill-yellow-500 text-yellow-500" : "text-gray-300"}`}
     />
   {/each}
 </div>

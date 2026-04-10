@@ -56,7 +56,11 @@
     page.url.pathname === "/" ||
     page.url.pathname.includes("/explore") ||
     page.url.pathname.includes("/business/dashboard") ||
-    page.url.pathname.includes("/profile");
+    page.url.pathname.includes("/profile") ||
+    page.url.pathname.includes("/community");
+
+  const exploreActive = $derived(page.url.pathname === "/" || page.url.pathname.includes("/explore"));
+  const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
 <header
@@ -71,12 +75,12 @@
       >
       <nav class="hidden md:flex gap-6 items-center">
         <a
-          class="font-body font-medium text-stone-600 hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45]"
+          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive ? 'text-[#154212] border-b-2 border-[#f8bd45]' : 'text-stone-600'}"
           href="/">Explore</a
         >
         <a
-          class="font-body font-medium text-stone-600 hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors"
-          href="/">Community</a
+          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {communityActive ? 'text-[#154212] border-b-2 border-[#f8bd45]' : 'text-stone-600'}"
+          href="/community">Community</a
         >
       </nav>
     </div>

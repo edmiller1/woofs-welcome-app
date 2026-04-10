@@ -56,7 +56,13 @@
     page.url.pathname === "/" ||
     page.url.pathname.includes("/explore") ||
     page.url.pathname.includes("/business/dashboard") ||
-    page.url.pathname.includes("/profile");
+    page.url.pathname.includes("/profile") ||
+    page.url.pathname.includes("/community");
+
+  const exploreActive = $derived(
+    page.url.pathname === "/" || page.url.pathname.includes("/explore"),
+  );
+  const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
 <header
@@ -72,12 +78,16 @@
       >
       <nav class="hidden md:flex items-center gap-6">
         <a
-          class="text-stone-600 dark:text-stone-400 hover:text-primary hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium"
-          href="/">Browse Destinations</a
+          class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {exploreActive
+            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+            : 'text-stone-600 dark:text-stone-400'}"
+          href="/">Explore</a
         >
         <a
-          class="text-stone-600 dark:text-stone-400 hover:text-primary hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium"
-          href="/">Community</a
+          class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {communityActive
+            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+            : 'text-stone-600 dark:text-stone-400'}"
+          href="/community">Community</a
         >
       </nav>
     </div>

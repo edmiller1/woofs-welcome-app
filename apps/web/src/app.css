@@ -16,8 +16,10 @@
   --primary: oklch(0.3600 0.0980 142.00);
   --primary-foreground: oklch(1.0000 0 0);
 
-  /* Secondary: #C19A6B sandy tan */
-  --secondary: oklch(0.6900 0.0720 68.00);
+  --primary-accent: oklch(0.7982 0.0984 139.54);
+
+  /* Secondary: #7f5b30 dark brown */
+  --secondary: oklch(0.4997 0.0757 69.46);
   --secondary-foreground: oklch(1.0000 0 0);
 
   --muted: oklch(0.9500 0.0050 85.00);
@@ -140,6 +142,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-accent: var(--primary-accent);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

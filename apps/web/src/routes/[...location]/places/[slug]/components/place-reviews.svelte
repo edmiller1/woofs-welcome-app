@@ -146,7 +146,7 @@
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <div>
-                  <h4 class="font-semibold">
+                  <h4 class="font-semibold text-lg">
                     {highlightedReview.data.user.name}
                   </h4>
                   <div class="mt-1 flex items-center gap-2">
@@ -209,7 +209,7 @@
                 {#each highlightedReview.data.dogBreeds as breed}
                   <Badge
                     variant="secondary"
-                    class="rounded-full px-2 py-1 text-xs"
+                    class="rounded-full px-2 py-1 text-xs font-semibold"
                   >
                     {breed}
                   </Badge>
@@ -222,21 +222,23 @@
           </p>
           <p class="mb-4 leading-relaxed">{highlightedReview.data.content}</p>
           <!-- Review Image Dialog -->
-          {#each highlightedReview.data.images as image}
-            <button
-              class="appearance-none group relative cursor-pointer overflow-hidden rounded-sm md:rounded-xl"
-              onclick={() => openImageDialog(image)}
-            >
-              <OptimizedImage
-                imageId={image.imageId}
-                alt="review image"
-                variant="thumbnail"
-                class="group-hover:brightness-80 size-24 md:size-32 object-cover object-center transition-all duration-200"
-                width="128"
-                height="128"
-              />
-            </button>
-          {/each}
+          <div class="flex flex-wrap gap-2">
+            {#each highlightedReview.data.images as image}
+              <button
+                class="appearance-none group relative cursor-pointer overflow-hidden rounded-sm md:rounded-xl"
+                onclick={() => openImageDialog(image)}
+              >
+                <OptimizedImage
+                  imageId={image.imageId}
+                  alt="review image"
+                  variant="thumbnail"
+                  class="group-hover:brightness-80 size-20 object-cover object-center transition-all duration-400"
+                  width="80"
+                  height="80"
+                />
+              </button>
+            {/each}
+          </div>
         </div>
         <!-- Review Image Dialog/Drawer -->
         <ReviewImageDialog
@@ -254,7 +256,7 @@
           review.user && review.user.image
             ? review.user.image
             : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
-        <div class="rounded-lg p-6 bg-[#f7f3f0]">
+        <div class="rounded-lg p-6 bg-[#f7f3f0] shadow-xs">
           <div class="mb-4 flex items-start gap-4">
             <Avatar.Root class="size-12">
               <Avatar.Image
@@ -269,10 +271,10 @@
             <div class="flex-1">
               <div class="flex items-center justify-between">
                 <div>
-                  <h4 class="font-semibold">{review.user.name}</h4>
+                  <h4 class="font-semibold text-lg">{review.user.name}</h4>
                   <div class="mt-1 flex items-center gap-2">
                     <StarRating rating={review.rating} />
-                    <span class="text-muted-foreground text-sm">
+                    <span class="text-sm">
                       {formatDate(review.visitDate.toString())} &middot; {review.numDogs}
                       {review.numDogs === 1 ? "dog" : "dogs"}
                     </span>
@@ -327,31 +329,42 @@
               </div>
               <div class="mt-2 flex flex-wrap gap-1">
                 {#each review.dogBreeds as breed}
-                  <Badge variant="breed" class="rounded-full px-2 py-1 text-xs">
+                  <Badge
+                    variant="breed"
+                    class="rounded-full px-2 py-1 text-xs font-medium"
+                  >
                     {breed}
                   </Badge>
                 {/each}
               </div>
             </div>
           </div>
-          <p class="mb-1 font-semibold leading-relaxed">{review.title}</p>
-          <p class="mb-4 leading-relaxed">{review.content}</p>
+          <p
+            class="mb-1 font-semibold leading-tight italic font-headline text-xl"
+          >
+            {review.title}
+          </p>
+          <p class="mb-4 text-sm text-muted-foreground leading-relaxed">
+            {review.content}
+          </p>
           <!-- Review Image Dialog -->
-          {#each review.images as image}
-            <button
-              class="appearance-none group relative cursor-pointer overflow-hidden rounded-sm md:rounded-xl"
-              onclick={() => openImageDialog(image)}
-            >
-              <OptimizedImage
-                imageId={image.imageId}
-                alt="review image"
-                variant="thumbnail"
-                class="group-hover:brightness-80 size-24 md:size-32 object-cover object-center transition-all duration-200"
-                width="128"
-                height="128"
-              />
-            </button>
-          {/each}
+          <div class="flex flex-wrap gap-2">
+            {#each review.images as image}
+              <button
+                class="appearance-none group relative cursor-pointer overflow-hidden rounded-sm md:rounded-2xl"
+                onclick={() => openImageDialog(image)}
+              >
+                <OptimizedImage
+                  imageId={image.imageId}
+                  alt="review image"
+                  variant="thumbnail"
+                  class="group-hover:brightness-80 size-20 object-cover object-center transition-all duration-200"
+                  width="80"
+                  height="80"
+                />
+              </button>
+            {/each}
+          </div>
         </div>
         <!-- Review Image Dialog/Drawer -->
         <ReviewImageDialog
