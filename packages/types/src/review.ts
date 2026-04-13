@@ -117,3 +117,14 @@ export interface ReportReviewInput {
   reason: string;
   details?: string;
 }
+
+export interface CommunityReview {
+  reviews: PlaceReview[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+  };
+}

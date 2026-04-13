@@ -995,6 +995,70 @@ export const CollectionItem = pgTable(
 );
 
 // ============================================================================
+// EVENTS
+// ============================================================================
+
+export const Event = pgTable(
+  "event",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    description: text("description"),
+
+    // Optional link to a listed place
+    placeId: uuid("place_id").references(() => Place.id, {
+      onDelete: "set null",
+    }),
+
+    // Custom address when not linked to a place
+    address: text("address"),
+    latitude: numeric("latitude", { precision: 10, scale: 6 }),
+    longitude: numeric("longitude", { precision: 10, scale: 6 }),
+
+    // Organiser
+    organiserId: text("organiser_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    startsAt: timestamp("starts_at").notNull(),
+    endsAt: timestamp("ends_at"),
+
+    // Max attendees (null = unlimited)
+    maxAttendees: integer("max_attendees"),
+
+    isCancelled: boolean("is_cancelled").default(false).notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    startsAtIdx: index("event_starts_at_idx").on(table.startsAt),
+    organiserIdx: index("event_organiser_idx").on(table.organiserId),
+    placeIdx: index("event_place_idx").on(table.placeId),
+  }),
+);
+
+export const EventAttendee = pgTable(
+  "event_attendee",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => Event.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    // A user can only RSVP once per event
+    eventUserUnique: unique().on(table.eventId, table.userId),
+    eventIdIdx: index("event_attendee_event_id_idx").on(table.eventId),
+    userIdIdx: index("event_attendee_user_id_idx").on(table.userId),
+  }),
+);
+
+// ============================================================================
 // RELATIONS
 // ============================================================================
 export const userRelations = relations(user, ({ many, one }) => ({
@@ -1017,6 +1081,8 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [UserSettings.userId],
   }),
+  organisedEvents: many(Event),
+  eventAttendances: many(EventAttendee),
 }));
 
 export const checkInRelations = relations(CheckIn, ({ many, one }) => ({
@@ -1128,6 +1194,30 @@ export const placeRelations = relations(Place, ({ one, many }) => ({
     references: [Claim.placeId],
   }),
   checkIns: many(CheckIn),
+  events: many(Event),
+}));
+
+export const eventRelations = relations(Event, ({ one, many }) => ({
+  organiser: one(user, {
+    fields: [Event.organiserId],
+    references: [user.id],
+  }),
+  place: one(Place, {
+    fields: [Event.placeId],
+    references: [Place.id],
+  }),
+  attendees: many(EventAttendee),
+}));
+
+export const eventAttendeeRelations = relations(EventAttendee, ({ one }) => ({
+  event: one(Event, {
+    fields: [EventAttendee.eventId],
+    references: [Event.id],
+  }),
+  user: one(user, {
+    fields: [EventAttendee.userId],
+    references: [user.id],
+  }),
 }));
 
 export const imageRelations = relations(Image, ({ one, many }) => ({

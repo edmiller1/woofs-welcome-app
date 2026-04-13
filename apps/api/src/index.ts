@@ -16,6 +16,7 @@ import { placeRouter } from "./routes/place";
 import { collectionRouter } from "./routes/collection";
 import { reviewRouter } from "./routes/review";
 import { profileRouter } from "./routes/profile";
+import { eventRouter } from "./routes/event";
 import { createDb } from "./db";
 import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
@@ -78,6 +79,7 @@ app.route("/api/place", placeRouter);
 app.route("/api/collection", collectionRouter);
 app.route("/api/review", reviewRouter);
 app.route("/api/profile", profileRouter);
+app.route("/api/event", eventRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

@@ -3,11 +3,55 @@ import { optionalAuthMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
-import { nearbyPlacesSchema, placeReviewsSchema } from "./schemas";
+import { nearbyPlacesSchema, placeReviewsSchema, trendingPlacesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { CollectionService } from "../../services/collection.service";
 
 export const placeRouter = new Hono();
+
+placeRouter.get("/community-stats", async (c) => {
+  const db = c.get("db");
+  const env = c.get("env");
+
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(
+    db,
+    imageUploadService,
+    collectionService,
+    env,
+  );
+
+  const result = await placeService.getCommunityStats();
+
+  return c.json(result, 200);
+});
+
+placeRouter.get(
+  "/trending",
+  optionalAuthMiddleware,
+  zValidator("query", trendingPlacesSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+    const placeService = new PlaceService(
+      db,
+      imageUploadService,
+      collectionService,
+      env,
+    );
+
+    const { limit } = c.req.valid("query");
+
+    const result = await placeService.getTrendingPlaces(limit, auth?.id);
+
+    return c.json(result, 200);
+  },
+);
 
 placeRouter.get(
   "/reviews",

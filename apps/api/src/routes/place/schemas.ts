@@ -30,3 +30,7 @@ export const nearbyPlacesSchema = z.object({
   radius: z.coerce.number().min(1).max(1000),
   limit: z.coerce.number().min(1).max(100),
 });
+
+export const trendingPlacesSchema = z.object({
+  limit: z.coerce.number().min(1).max(20).default(6),
+});

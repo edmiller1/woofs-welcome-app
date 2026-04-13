@@ -12,6 +12,8 @@ import {
 import { alias } from "drizzle-orm/pg-core";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
+  CheckIn,
+  CollectionItem,
   Location,
   Place,
   PlaceImage,
@@ -388,6 +390,113 @@ export class PlaceService {
         throw error;
       }
       throw new DatabaseError("Failed to get place types", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getTrendingPlaces(limit: number = 6, userId?: string) {
+    try {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const checkInCounts = await this.db
+        .select({
+          placeId: CheckIn.placeId,
+          checkInCount: count(),
+        })
+        .from(CheckIn)
+        .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`)
+        .groupBy(CheckIn.placeId)
+        .orderBy(desc(count()))
+        .limit(limit);
+
+      if (checkInCounts.length === 0) {
+        return [];
+      }
+
+      const placeIds = checkInCounts.map((r) => r.placeId);
+
+      const places = await this.db.query.Place.findMany({
+        where: inArray(Place.id, placeIds),
+        with: {
+          location: {
+            with: {
+              parent: {
+                columns: { name: true },
+              },
+            },
+          },
+          images: {
+            limit: 1,
+            where: eq(PlaceImage.isPrimary, true),
+          },
+        },
+      });
+
+      const countMap = new Map(
+        checkInCounts.map((r) => [r.placeId, r.checkInCount]),
+      );
+
+      let savedPlaceIds = new Set<string>();
+      if (userId) {
+        savedPlaceIds = await this.collectionService.getSavedPlaceIds(
+          placeIds,
+          userId,
+        );
+      }
+
+      return places
+        .map((place) => ({
+          ...place,
+          checkInCount: countMap.get(place.id) ?? 0,
+          isSaved: savedPlaceIds.has(place.id),
+        }))
+        .sort((a, b) => b.checkInCount - a.checkInCount);
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get trending places error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get trending places", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getCommunityStats() {
+    try {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const [totalReviews, checkInsThisWeek, placesSaved] = await Promise.all([
+        this.db
+          .select({ value: count() })
+          .from(Review)
+          .where(sql`${Review.createdAt} >= ${oneWeekAgo.toISOString()}`),
+        this.db
+          .select({ value: count() })
+          .from(CheckIn)
+          .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`),
+        this.db
+          .select({ value: count() })
+          .from(CollectionItem)
+          .where(
+            sql`${CollectionItem.createdAt} >= ${oneWeekAgo.toISOString()}`,
+          ),
+      ]);
+
+      return {
+        totalReviews: totalReviews[0]?.value ?? 0,
+        checkIns: checkInsThisWeek[0]?.value ?? 0,
+        placesSaved: placesSaved[0]?.value ?? 0,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get community stats error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get community stats", {
         originalError: error,
       });
     }

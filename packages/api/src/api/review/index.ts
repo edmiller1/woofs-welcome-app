@@ -5,6 +5,7 @@ import { updateReview } from "./updateReview";
 import { getReview } from "./getReview";
 import { reportReview } from "./reportReview";
 import { likeReview } from "./likeReview";
+import { getCommunityReviews } from "./getCommunityReviews";
 
 export const review = {
   createReview,
@@ -14,4 +15,5 @@ export const review = {
   getReview,
   reportReview,
   likeReview,
+  getCommunityReviews,
 };

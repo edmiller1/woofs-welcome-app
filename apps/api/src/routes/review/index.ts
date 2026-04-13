@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { authMiddleware, optionalAuthMiddleware } from "../../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import {
+  communityReviewsSchema,
   createReviewSchema,
   deleteReviewSchema,
   getReviewSchema,
@@ -15,6 +16,30 @@ import { ImageUploadService } from "../../services/image-upload.service";
 import { createDbWithTransactions } from "../../db";
 
 export const reviewRouter = new Hono();
+
+reviewRouter.get(
+  "/community",
+  optionalAuthMiddleware,
+  zValidator("query", communityReviewsSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const reviewService = new ReviewService(db, env, imageUploadService);
+
+    const { page, limit } = c.req.valid("query");
+
+    const result = await reviewService.getCommunityReviews(
+      page,
+      limit,
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
 
 reviewRouter.post(
   "/create",

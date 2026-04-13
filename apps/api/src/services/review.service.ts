@@ -3,7 +3,7 @@
  * Handles all review-related business logic
  */
 
-import { and, asc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   Image,
   Place,
@@ -655,6 +655,88 @@ export class ReviewService {
       }
       console.error("Like/unlike review error:", error);
       throw new DatabaseError("Failed to like/unlike review", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getCommunityReviews(page: number, limit: number, userId?: string) {
+    try {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const [reviews, totalResult] = await Promise.all([
+        this.db.query.Review.findMany({
+          where: sql`${Review.createdAt} >= ${oneWeekAgo.toISOString()}`,
+          with: {
+            images: true,
+            likes: true,
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+                profileImageId: true,
+              },
+            },
+            place: {
+              columns: {
+                id: true,
+                name: true,
+                slug: true,
+                types: true,
+              },
+              with: {
+                images: {
+                  limit: 1,
+                },
+                location: {
+                  columns: {
+                    name: true,
+                    path: true,
+                  },
+                  with: {
+                    parent: {
+                      columns: { name: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          orderBy: desc(Review.createdAt),
+          limit,
+          offset: (page - 1) * limit,
+        }),
+        this.db
+          .select({ value: count() })
+          .from(Review)
+          .where(sql`${Review.createdAt} >= ${oneWeekAgo.toISOString()}`),
+      ]);
+
+      const total = totalResult[0]?.value ?? 0;
+
+      return {
+        reviews: reviews.map((review) => ({
+          ...review,
+          hasLiked: userId
+            ? review.likes.some((like) => like.userId === userId)
+            : false,
+        })),
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+          hasNextPage: page * limit < total,
+        },
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.error("Get community reviews error:", error);
+      throw new DatabaseError("Failed to get community reviews", {
         originalError: error,
       });
     }

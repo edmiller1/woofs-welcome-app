@@ -58,3 +58,14 @@ export interface NearbyPlace extends Place {
   location: Location;
   images: PlaceImage[];
 }
+
+export interface TrendingPlace extends Place {
+  checkInCount: number;
+  isSaved: boolean;
+}
+
+export interface CommunityStats {
+  totalReviews: number;
+  checkIns: number;
+  placesSaved: number;
+}

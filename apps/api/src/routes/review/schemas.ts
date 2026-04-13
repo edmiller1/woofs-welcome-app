@@ -65,6 +65,11 @@ export const reportReviewSchema = z.object({
     .default(""),
 });
 
+export const communityReviewsSchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(50).default(10),
+});
+
 export type CreateReviewInput = z.infer<typeof createReviewSchema>;
 export type UpdateReviewInput = z.infer<typeof updateReviewSchema>;
 export type ReportReviewInput = z.infer<typeof reportReviewSchema>;
