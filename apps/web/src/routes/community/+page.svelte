@@ -111,7 +111,9 @@
 
   <!-- Trending Places (most checked-in places) -->
   <section class="mb-24">
-    <div class="flex justify-between items-end mb-12">
+    <div
+      class="flex flex-col md:flex-row md:justify-between md:items-end mb-12"
+    >
       <div>
         <h2 class="font-headline text-5xl text-primary">Trending Places</h2>
         <p class="text-secondary">
