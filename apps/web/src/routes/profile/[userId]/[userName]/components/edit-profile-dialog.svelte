@@ -25,7 +25,7 @@
   import { toast } from "svelte-sonner";
   import type { CityData, Profile, UpdateProfileData } from "@woofs/types";
   import { buildImageUrl } from "@woofs/image-config";
-  import { PUBLIC_MAPBOX_API_KEY } from "$env/static/public";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
   import { create } from "canvas-confetti";
 
   interface Props {
@@ -35,7 +35,7 @@
 
   let { open = $bindable(), profile }: Props = $props();
 
-  const mapboxToken = PUBLIC_MAPBOX_API_KEY;
+  const maptilerKey = PUBLIC_MAPTILER_API_KEY;
 
   const queryClient = useQueryClient();
 
@@ -61,7 +61,7 @@
   let selectedCity = $state<CityData | null>(null);
   let citySearch = $state("");
   let citySuggestions = $state<
-    Array<{ mapbox_id: string; name: string; region: string; country: string }>
+    Array<{ id: string; name: string; region: string; country: string }>
   >([]);
   let cityLoading = $state(false);
   let cityDropdownOpen = $state(false);
@@ -76,16 +76,16 @@
     }
     cityLoading = true;
     try {
-      const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(query)}&types=city&session_token=${sessionToken}&access_token=${mapboxToken}`;
+      const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${maptilerKey}&types=municipality&language=en`;
       const res = await fetch(url);
       const data = await res.json();
       citySuggestions =
-        data.suggestions.map((sugg: any) => ({
-          mapbox_id: sugg.mapbox_id,
-          name: sugg.name,
-          region: sugg.context.region.name,
-          country: sugg.context.country.name,
-        })) ?? [];
+        (data.features ?? []).map((f: any) => ({
+          id: f.id,
+          name: f.text,
+          region: f.context?.find((c: any) => c.id?.startsWith('region'))?.text ?? '',
+          country: f.context?.find((c: any) => c.id?.startsWith('country'))?.text ?? '',
+        }));
       cityDropdownOpen = citySuggestions.length > 0;
     } catch (e) {
       console.error("City search failed:", e);
@@ -96,7 +96,7 @@
   };
 
   const selectCity = async (suggestion: {
-    mapbox_id: string;
+    id: string;
     name: string;
     region: string;
     country: string;

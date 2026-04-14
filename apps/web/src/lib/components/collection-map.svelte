@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, mount, unmount } from "svelte";
-  import { PUBLIC_MAPBOX_API_KEY } from "$env/static/public";
-  import mapboxgl from "mapbox-gl";
-  import "mapbox-gl/dist/mapbox-gl.css";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
+  import maplibregl from "maplibre-gl";
+  import "maplibre-gl/dist/maplibre-gl.css";
   import type { CollectionPlace } from "@woofs/types";
   import MapPopup from "./map-popup.svelte";
   import { selectedPlaceId as selectedPlaceIdStore } from "$lib/stores/collectionStore";
@@ -15,13 +15,13 @@
 
   const { places, selectedPlaceId: selectedId, collectionId }: Props = $props();
 
-  const mapboxAccessToken = PUBLIC_MAPBOX_API_KEY;
+  const maptilerKey = PUBLIC_MAPTILER_API_KEY;
 
   let mapContainer = $state<HTMLDivElement>();
-  let map: mapboxgl.Map | undefined;
+  let map: maplibregl.Map | undefined;
   let mapReady = $state(false);
-  let markers = new Map<string, mapboxgl.Marker>();
-  let activePopup: mapboxgl.Popup | null = null;
+  let markers = new Map<string, maplibregl.Marker>();
+  let activePopup: maplibregl.Popup | null = null;
   let activeSveltePopup: Record<string, any> | null = null;
 
   function openPopup(place: CollectionPlace) {
@@ -58,7 +58,7 @@
       },
     });
 
-    activePopup = new mapboxgl.Popup({
+    activePopup = new maplibregl.Popup({
       closeButton: false,
       closeOnClick: false,
       offset: 12,
@@ -109,16 +109,14 @@
   onMount(() => {
     if (!mapContainer) return;
 
-    mapboxgl.accessToken = mapboxAccessToken;
-
-    map = new mapboxgl.Map({
+    map = new maplibregl.Map({
       container: mapContainer,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: `https://api.maptiler.com/maps/streets/style.json?key=${maptilerKey}`,
       interactive: true,
     });
 
     map.addControl(
-      new mapboxgl.NavigationControl({ showCompass: false }),
+      new maplibregl.NavigationControl({ showCompass: false }),
       "bottom-right",
     );
 
@@ -142,7 +140,7 @@
           speed: 2,
         });
       } else {
-        const bounds = new mapboxgl.LngLatBounds();
+        const bounds = new maplibregl.LngLatBounds();
         validPlaces.forEach((p) => bounds.extend([p.lng!, p.lat!]));
         map!.fitBounds(bounds, { padding: 60 });
       }
@@ -160,7 +158,7 @@
 
         markers.set(
           place.id,
-          new mapboxgl.Marker(markerElement)
+          new maplibregl.Marker(markerElement)
             .setLngLat([place.lng!, place.lat!])
             .addTo(map!),
         );

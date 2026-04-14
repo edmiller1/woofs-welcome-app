@@ -1,3 +1,4 @@
+import type maplibregl from "maplibre-gl";
 import type { Hours, DayOfWeekHours, DayOfWeek } from "@woofs/types";
 
 export const getNameFromSlug = (slug: string) => {
@@ -201,7 +202,7 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 export const boundsToParams = (
-  bounds: mapboxgl.LngLatBounds | null | undefined,
+  bounds: maplibregl.LngLatBounds | null | undefined,
 ) => {
   if (!bounds) return null;
 

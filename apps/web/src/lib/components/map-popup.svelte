@@ -360,13 +360,13 @@
 </div>
 
 <style>
-  :global(.custom-popup .mapboxgl-popup-content) {
+  :global(.custom-popup .maplibregl-popup-content) {
     padding: 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  :global(.custom-popup .mapboxgl-popup-tip) {
+  :global(.custom-popup .maplibregl-popup-tip) {
     border-top-color: white;
   }
 </style>

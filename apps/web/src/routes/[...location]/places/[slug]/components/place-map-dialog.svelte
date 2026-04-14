@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { PlaceWithDetails } from "@woofs/types";
   import { mount, onDestroy, tick, unmount, untrack } from "svelte";
-  import mapboxgl from "mapbox-gl";
-  import "mapbox-gl/dist/mapbox-gl.css";
+  import maplibregl from "maplibre-gl";
+  import { PUBLIC_MAPTILER_API_KEY } from '\$env/static/public';
+  import "maplibre-gl/dist/maplibre-gl.css";
   import MapPopup from "$lib/components/map-popup.svelte";
   import { debounce } from "$lib/helpers";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
@@ -14,8 +15,7 @@
   import moodyDogData from "$lib/lottie/moody-dog.json";
 
   interface Props {
-    accessToken: string;
-    open: boolean;
+      open: boolean;
     onOpenChange: (open: boolean) => void;
     lat: number;
     lng: number;
@@ -29,27 +29,26 @@
     open,
     lat,
     lng,
-    accessToken,
-    zoom = 13,
+      zoom = 13,
     interactive = true,
     place,
     onOpenChange,
   }: Props = $props();
 
   let mapContainer = $state<HTMLDivElement>();
-  let map = $state<mapboxgl.Map | null>(null);
-  let mainMarker = $state<mapboxgl.Marker | null>(null);
-  let mainPopup = $state<mapboxgl.Popup | null>(null);
+  let map = $state<maplibregl.Map | null>(null);
+  let mainMarker = $state<maplibregl.Marker | null>(null);
+  let mainPopup = $state<maplibregl.Popup | null>(null);
   let mainPopupComponent = $state<any>(null);
   let isInitialized = $state<boolean>(false);
   let wasOpen = $state<boolean>(false);
-  let currentBounds = $state<mapboxgl.LngLatBounds | null | undefined>(null);
+  let currentBounds = $state<maplibregl.LngLatBounds | null | undefined>(null);
   let isMapMoving = $state<boolean>(false);
   let isMapZooming = $state<boolean>(false);
   let currentZoom = $derived<number>(zoom);
   let currentCenter = $derived<{ lng: number; lat: number }>({ lng, lat });
 
-  let nearbyMarkers: mapboxgl.Marker[] = [];
+  let nearbyMarkers: maplibregl.Marker[] = [];
   let nearbyPopupComponents: any[] = [];
   let markersCreated = $state<boolean>(false);
 
@@ -184,7 +183,7 @@
 
         nearbyPopupComponents.push(popupComponent);
 
-        const popup = new mapboxgl.Popup({
+        const popup = new maplibregl.Popup({
           offset: [0, -20],
           className: "custom-popup",
           closeButton: false,
@@ -210,7 +209,7 @@
           return;
         }
 
-        const marker = new mapboxgl.Marker(markerElement)
+        const marker = new maplibregl.Marker(markerElement)
           .setLngLat([lng, lat])
           .setPopup(popup)
           .addTo(map!);
@@ -241,10 +240,11 @@
 
     console.log("🎨 Creating map instance...");
 
-    mapboxgl.accessToken = accessToken;
+    maplibregl.accessToken = accessToken;
 
-    map = new mapboxgl.Map({
+    map = new maplibregl.Map({
       container: mapContainer,
+      style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
       center: [lng, lat],
       zoom: zoom,
       interactive: interactive,
@@ -260,7 +260,7 @@
       },
     });
 
-    mainPopup = new mapboxgl.Popup({
+    mainPopup = new maplibregl.Popup({
       offset: [0, -20],
       className: "custom-popup",
       closeButton: false,
@@ -278,7 +278,7 @@
 			</svg>
 		`;
 
-    mainMarker = new mapboxgl.Marker(mainMarkerElement)
+    mainMarker = new maplibregl.Marker(mainMarkerElement)
       .setLngLat([lng, lat])
       .setPopup(mainPopup)
       .addTo(map);
@@ -291,7 +291,7 @@
       }
     });
 
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     map.on("load", () => {
       console.log("✅ Map loaded successfully");
@@ -424,14 +424,14 @@
     object-fit: contain;
   }
 
-  :global(.custom-popup .mapboxgl-popup-content) {
+  :global(.custom-popup .maplibregl-popup-content) {
     padding: 0;
     border-radius: 18px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     overflow: visible;
   }
 
-  :global(.custom-popup .mapboxgl-popup-tip) {
+  :global(.custom-popup .maplibregl-popup-tip) {
     border-top-color: white;
   }
 </style>

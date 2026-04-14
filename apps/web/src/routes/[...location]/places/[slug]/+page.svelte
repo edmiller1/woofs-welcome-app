@@ -17,7 +17,7 @@
   import PlaceDetails from "./components/place-details.svelte";
   import PlaceDescription from "./components/place-description.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-  import { PUBLIC_MAPBOX_API_KEY } from "$env/static/public";
+
   import PlaceMap from "$lib/components/place-map.svelte";
   import PlaceReviewStats from "./components/place-review-stats.svelte";
   import PlaceReviews from "./components/place-reviews.svelte";
@@ -26,7 +26,6 @@
   import {
     Check,
     CircleCheck,
-    Droplet,
     Globe,
     Grip,
     Heart,
@@ -48,8 +47,6 @@
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { ArrowLeft } from "@lucide/svelte";
   import { Badge } from "$lib/components/ui/badge";
-
-  const mapboxToken = PUBLIC_MAPBOX_API_KEY;
 
   interface Props {
     data: {
@@ -249,19 +246,19 @@
           </div>
         </section>
 
-        <!-- Feature Badges -->
-        <section class="flex flex-wrap gap-2 mb-10">
-          <span
-            class="bg-primary-fixed text-primary-text-muted px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
-          >
-            <CircleCheck class="size-4" /> Indoor Seating Allowed
-          </span>
-          <span
-            class="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
-          >
-            <Droplet class="size-4" /> Water Provided
-          </span>
-        </section>
+        <!-- Amenities Badges -->
+        {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
+          <section class="grid grid-cols-4 gap-2 mb-10">
+            {#each place.data.dogAmenities as amenity}
+              <span
+                class="bg-[#bbf0ad] text-primary px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
+              >
+                <CircleCheck class="size-4 shrink-0" />
+                {amenity}
+              </span>
+            {/each}
+          </section>
+        {/if}
 
         <!-- About / The Story -->
         <section class="mb-10">
@@ -307,7 +304,6 @@
               {@const coords = coordinates()}
               <div class="w-full h-64 rounded-xl overflow-hidden">
                 <PlaceMap
-                  accessToken={mapboxToken}
                   lng={coords!.lng}
                   lat={coords!.lat}
                   zoom={14}
@@ -366,37 +362,23 @@
         </section>
 
         <!-- Pawsome Rules -->
-        <section class="mb-10">
-          <h2 class="font-headline font-bold text-2xl text-primary mb-4">
-            Pawsome Rules
-          </h2>
-          <ul class="space-y-4">
-            <li class="flex gap-3">
-              <CircleCheck
-                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
-              />
-              <p class="text-sm text-text-subtle font-body">
-                Leashes required at all times indoors.
-              </p>
-            </li>
-            <li class="flex gap-3">
-              <CircleCheck
-                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
-              />
-              <p class="text-sm text-text-subtle font-body">
-                Please keep paws on the floor (no chairs).
-              </p>
-            </li>
-            <li class="flex gap-3">
-              <CircleCheck
-                class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
-              />
-              <p class="text-sm text-text-subtle font-body">
-                Dogs must be supervised by owners.
-              </p>
-            </li>
-          </ul>
-        </section>
+        {#if place.data.dogRules && place.data.dogRules.length > 0}
+          <section class="mb-10">
+            <h2 class="font-headline font-bold text-2xl text-primary mb-4">
+              Pawsome Rules
+            </h2>
+            <ul class="space-y-4">
+              {#each place.data.dogRules as rule}
+                <li class="flex gap-3">
+                  <CircleCheck
+                    class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
+                  />
+                  <p class="text-sm text-text-subtle font-body">{rule}</p>
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
 
         <!-- Community Reviews -->
         <section class="mb-10">
@@ -448,7 +430,7 @@
             isSaved={place.data.isSaved}
           />
           <ImageDrawer images={place.data.images} bind:imagesOpen />
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
             <!-- Left Content Column -->
             <div class="lg:col-span-8">
               <div
@@ -478,20 +460,18 @@
                     </p>
                   </div>
                 </div>
-                <div class="flex flex-wrap gap-3">
-                  <span
-                    class="px-4 py-2 bg-primary-fixed text-primary-text rounded-full text-sm font-medium flex items-center gap-2 font-body"
-                  >
-                    <CircleCheck class="size-4" />
-                    Indoor Seating Allowed
-                  </span>
-                  <span
-                    class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full text-sm font-medium flex items-center gap-2 font-body"
-                  >
-                    <Droplet class="size-4" />
-                    Water Provided
-                  </span>
-                </div>
+                {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
+                  <div class="grid grid-cols-2 gap-3">
+                    {#each place.data.dogAmenities as amenity}
+                      <span
+                        class="px-4 py-2 bg-[#bbf0ad] text-primary rounded-full text-sm font-medium flex items-center gap-2 font-body"
+                      >
+                        <CircleCheck class="size-4 shrink-0" />
+                        {amenity}
+                      </span>
+                    {/each}
+                  </div>
+                {/if}
               </div>
 
               <!-- About -->
@@ -515,9 +495,7 @@
                       Community Reviews
                     </h3>
                     <div class="flex items-center gap-4">
-                      <div
-                        class="flex items-center text-tertiary-text-muted"
-                      >
+                      <div class="flex items-center text-tertiary-text-muted">
                         <span class="text-3xl font-bold font-headline mr-2"
                           >{Number(place.data.rating).toFixed(1)}</span
                         >
@@ -639,7 +617,6 @@
                     {@const coords = coordinates()}
                     <PlaceMap
                       bind:this={mapComponent}
-                      accessToken={mapboxToken}
                       lng={coords!.lng}
                       lat={coords!.lat}
                       zoom={15}
@@ -657,44 +634,35 @@
               </div>
 
               <!-- Rules & Guidelines Card -->
-              <div
-                class="bg-secondary-container/30 rounded-2xl p-6 border border-secondary-container"
-              >
-                <h4
-                  class="text-lg font-headline font-bold text-secondary-on-container mb-4 flex items-center gap-2"
+              {#if place.data.dogRules && place.data.dogRules.length > 0}
+                <div
+                  class="bg-secondary-container/30 rounded-2xl p-6 border border-secondary-container"
                 >
-                  Pawsome Rules
-                </h4>
-                <ul class="space-y-3 font-body text-sm text-secondary">
-                  <li class="flex gap-2">
-                    <span class="font-bold">•</span>
-                    Leashes required at all times indoors.
-                  </li>
-                  <li class="flex gap-2">
-                    <span class="font-bold">•</span>
-                    Please keep paws on the floor (no chairs).
-                  </li>
-                  <li class="flex gap-2">
-                    <span class="font-bold">•</span>
-                    Dogs must be supervised by owners.
-                  </li>
-                  <li class="flex gap-2">
-                    <span class="font-bold">•</span>
-                    "Accident" cleaning kits available if needed!
-                  </li>
-                </ul>
-              </div>
+                  <h4
+                    class="text-lg font-headline font-bold text-secondary-on-container mb-4 flex items-center gap-2"
+                  >
+                    Pawsome Rules
+                  </h4>
+                  <ul class="space-y-3 font-body text-sm text-secondary">
+                    {#each place.data.dogRules as rule}
+                      <li class="flex gap-2">
+                        <span class="font-bold">•</span>
+                        {rule}
+                      </li>
+                    {/each}
+                  </ul>
+                </div>
+              {/if}
             </div>
           </div>
 
           <!-- Similar Places Section -->
           <RecommendedPlaces placeId={place.data.id} {user} />
-
-          <!-- Footer -->
-          <Footer />
         </div>
       </div>
     </div>
+    <!-- Footer -->
+    <Footer />
     <!-- Review Drawer/Dialog -->
     <ReviewDrawer
       open={reviewDrawerOpen}
@@ -708,7 +676,6 @@
         open={mapOpen}
         lng={coords!.lng}
         lat={coords!.lat}
-        accessToken={mapboxToken}
         place={place.data}
         onOpenChange={(open) => (mapOpen = open)}
       />

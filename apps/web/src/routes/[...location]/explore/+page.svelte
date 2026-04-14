@@ -9,9 +9,9 @@
   import { Spinner } from "$lib/components/ui/spinner";
   import { createQuery } from "@tanstack/svelte-query";
   import { onMount, onDestroy, mount, unmount } from "svelte";
-  import { PUBLIC_MAPBOX_API_KEY } from "$env/static/public";
-  import mapboxgl from "mapbox-gl";
-  import "mapbox-gl/dist/mapbox-gl.css";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
+  import maplibregl from "maplibre-gl";
+  import "maplibre-gl/dist/maplibre-gl.css";
   import type { BAUser, LocationPlace } from "@woofs/types";
   import MapPlaceCard from "$lib/components/map-place-card.svelte";
   import Footer from "$lib/components/footer.svelte";
@@ -93,18 +93,18 @@
   // Map state — separate containers for desktop and mobile
   let desktopMapContainer = $state<HTMLDivElement>();
   let mobileMapContainer = $state<HTMLDivElement>();
-  let desktopMap = $state<mapboxgl.Map>();
-  let mobileMap = $state<mapboxgl.Map>();
-  const desktopMarkers = new Map<string, mapboxgl.Marker>();
-  const mobileMarkers = new Map<string, mapboxgl.Marker>();
+  let desktopMap = $state<maplibregl.Map>();
+  let mobileMap = $state<maplibregl.Map>();
+  const desktopMarkers = new Map<string, maplibregl.Marker>();
+  const mobileMarkers = new Map<string, maplibregl.Marker>();
   let hoveredPlaceId = $state<string | null>(null);
 
   // Track mounted popup components so we can unmount them on cleanup
-  const mountedPopups = new Map<mapboxgl.Popup, ReturnType<typeof mount>>();
+  const mountedPopups = new Map<maplibregl.Popup, ReturnType<typeof mount>>();
 
   function addMarkersToMap(
-    mapInstance: mapboxgl.Map,
-    markersMap: Map<string, mapboxgl.Marker>,
+    mapInstance: maplibregl.Map,
+    markersMap: Map<string, maplibregl.Marker>,
     places: LocationPlace[],
   ) {
     markersMap.forEach((m) => m.remove());
@@ -130,7 +130,7 @@
       });
 
       const popupNode = document.createElement("div");
-      const popup = new mapboxgl.Popup({
+      const popup = new maplibregl.Popup({
         offset: 8,
         closeButton: false,
         maxWidth: "none",
@@ -153,7 +153,7 @@
         }
       });
 
-      const marker = new mapboxgl.Marker(el)
+      const marker = new maplibregl.Marker(el)
         .setLngLat([Number(place.lng), Number(place.lat)])
         .setPopup(popup)
         .addTo(mapInstance);
@@ -170,7 +170,7 @@
           zoom: 13,
         });
       } else {
-        const bounds = new mapboxgl.LngLatBounds();
+        const bounds = new maplibregl.LngLatBounds();
         validPlaces.forEach((p) =>
           bounds.extend([Number(p.lng), Number(p.lat)]),
         );
@@ -256,16 +256,16 @@
     initialCenter?: [number, number],
     initialZoom?: number,
   ) {
-    const m = new mapboxgl.Map({
+    const m = new maplibregl.Map({
       container,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
       interactive: true,
       ...(initialCenter
         ? { center: initialCenter, zoom: initialZoom ?? 12 }
         : { center: [0, 0], zoom: 1 }),
       fadeDuration: 0,
     });
-    m.addControl(new mapboxgl.NavigationControl(), "top-right");
+    m.addControl(new maplibregl.NavigationControl(), "top-right");
     // Show "Search this area" after user pans/zooms
     m.on("moveend", () => {
       if (!suppressMoveEnd) showSearchAreaButton = true;
@@ -293,7 +293,7 @@
   }
 
   onMount(() => {
-    mapboxgl.accessToken = PUBLIC_MAPBOX_API_KEY;
+    
   });
 
   // Init maps once containers are bound and we have place data for initial position
@@ -679,14 +679,14 @@
 
 <style>
   /* Strip Mapbox default popup chrome for our custom card popups */
-  :global(.woofs-map-popup .mapboxgl-popup-content) {
+  :global(.woofs-map-popup .maplibregl-popup-content) {
     padding: 0;
     border-radius: 0.5rem;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
     overflow: hidden;
     margin: 1rem 0;
   }
-  :global(.woofs-map-popup .mapboxgl-popup-tip) {
+  :global(.woofs-map-popup .maplibregl-popup-tip) {
     display: none;
   }
 </style>

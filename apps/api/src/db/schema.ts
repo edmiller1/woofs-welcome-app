@@ -442,10 +442,8 @@ export const Place = pgTable(
     hours: jsonb("hours"),
 
     // Dog-specific info
-    dogPolicy: text("dog_policy"),
-    indoorAllowed: boolean("indoor_allowed").default(false),
-    outdoorAllowed: boolean("outdoor_allowed").default(false),
-    hasDogMenu: boolean("has_dog_menu").default(false),
+    dogRules: text("dog_rules").array(),
+    dogAmenities: text("dog_amenities").array(),
 
     // Metrics and flags
     rating: numeric("rating", { precision: 3, scale: 2 }).default("0"),

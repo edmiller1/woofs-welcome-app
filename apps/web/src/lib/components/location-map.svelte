@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy, mount, unmount } from "svelte";
-  import { PUBLIC_MAPBOX_API_KEY } from "$env/static/public";
-  import mapboxgl from "mapbox-gl";
-  import "mapbox-gl/dist/mapbox-gl.css";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
+  import maplibregl from "maplibre-gl";
+  import "maplibre-gl/dist/maplibre-gl.css";
   import type { LocationPlace } from "@woofs/types";
   import MapPlaceCard from "./map-place-card.svelte";
 
@@ -14,23 +14,23 @@
   const { places, class: className = "" }: Props = $props();
 
   let mapContainer = $state<HTMLDivElement>();
-  let map = $state<mapboxgl.Map>();
-  let activePopup: mapboxgl.Popup | null = null;
+  let map = $state<maplibregl.Map>();
+  let activePopup: maplibregl.Popup | null = null;
   let activeMounted: Record<string, unknown> | null = null;
-  const markers = new Map<string, mapboxgl.Marker>();
+  const markers = new Map<string, maplibregl.Marker>();
 
   onMount(() => {
     if (!mapContainer) return;
 
-    mapboxgl.accessToken = PUBLIC_MAPBOX_API_KEY;
+    
 
-    map = new mapboxgl.Map({
+    map = new maplibregl.Map({
       container: mapContainer,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
       interactive: true,
     });
 
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     map.on("load", () => {
       const validPlaces = places.filter((p) => p.lat !== null && p.lng !== null);
@@ -39,7 +39,7 @@
       if (validPlaces.length === 1) {
         map!.flyTo({ center: [Number(validPlaces[0].lng), Number(validPlaces[0].lat)], zoom: 12 });
       } else {
-        const bounds = new mapboxgl.LngLatBounds();
+        const bounds = new maplibregl.LngLatBounds();
         validPlaces.forEach((p) => bounds.extend([Number(p.lng), Number(p.lat)]));
         map!.fitBounds(bounds, { padding: 60 });
       }
@@ -69,12 +69,12 @@
             },
           });
 
-          activePopup = new mapboxgl.Popup({
+          activePopup = new maplibregl.Popup({
             closeButton: false,
             closeOnClick: false,
             offset: 12,
             maxWidth: "none",
-            className: "mapbox-svelte-popup",
+            className: "maplibre-svelte-popup",
           })
             .setLngLat([Number(place.lng), Number(place.lat)])
             .setDOMContent(container)
@@ -86,7 +86,7 @@
           });
         });
 
-        const marker = new mapboxgl.Marker(el)
+        const marker = new maplibregl.Marker(el)
           .setLngLat([Number(place.lng), Number(place.lat)])
           .addTo(map!);
 

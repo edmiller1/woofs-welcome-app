@@ -17,10 +17,8 @@ export interface Place {
   email: string;
   website: string;
   hours: DayOfWeekHours;
-  dogPolicy: string;
-  indoorAllowed: boolean;
-  outdoorAllowed: boolean;
-  hasDogMenu: boolean;
+  dogRules: string[] | null;
+  dogAmenities: string[] | null;
   rating: number;
   reviewsCount: number;
   isVerified: boolean;

@@ -15,7 +15,7 @@ declare module "$env/static/public" {
   export const PUBLIC_NODE_ENV: string;
   export const PUBLIC_BETTER_AUTH_URL: string;
   export const PUBLIC_GOOGLE_CLIENT_ID: string;
-  export const PUBLIC_MAPBOX_API_KEY: string;
+  export const PUBLIC_MAPTILER_API_KEY: string;
 }
 
 export {};
