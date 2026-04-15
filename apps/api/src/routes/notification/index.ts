@@ -5,6 +5,7 @@ import { NotificationService } from "../../services/notification.service";
 import { zValidator } from "@hono/zod-validator";
 import { userPartialNotificationPreferencesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
+import { not } from "drizzle-orm";
 
 export const notificationRouter = new Hono();
 
@@ -71,6 +72,25 @@ notificationRouter.delete("/user/preferences", authMiddleware, async (c) => {
   }
 
   const result = await notificationService.resetUserPreferences(auth.id);
+
+  return c.json(result, 200);
+});
+
+notificationRouter.get("/user/notifications", authMiddleware, async (c) => {
+  //Context
+  const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const notificationService = new NotificationService(db, imageUploadService);
+
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  const result = await notificationService.getNotifications(auth.id);
 
   return c.json(result, 200);
 });

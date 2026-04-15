@@ -54,6 +54,48 @@ export class CollectionService {
     }
   }
 
+  async getCollectionsOnly(userId: string) {
+    try {
+      const collections = await this.db.query.Collection.findMany({
+        where: eq(Collection.userId, userId),
+        limit: 12,
+        orderBy: desc(Collection.updatedAt),
+        with: {
+          items: {
+            limit: 1,
+            orderBy: asc(CollectionItem.createdAt),
+            with: {
+              place: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+                with: {
+                  images: {
+                    limit: 1,
+                    columns: {
+                      imageId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return collections;
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get collections only error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get collections", {
+        originalError: error,
+      });
+    }
+  }
+
   async createCollection(userId: string, name: string, description?: string) {
     try {
       const sanitizedName = sanitizePlainText(name);

@@ -1,6 +1,10 @@
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import type { UserPartialNotificationPreferencesInput } from "../routes/notification/schemas";
-import { user, type UserNotificationPreferences } from "../db/schema";
+import {
+  Notification,
+  user,
+  type UserNotificationPreferences,
+} from "../db/schema";
 import { eq } from "drizzle-orm";
 import type { ImageUploadService } from "./image-upload.service";
 import type { Db } from "../db";
@@ -166,6 +170,23 @@ export class NotificationService {
         console.error("Reset notification preferences error:", error);
       }
       throw new DatabaseError("Failed to reset notification preferences", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getNotifications(userId: string) {
+    try {
+      const notifications = await this.db.query.Notification.findMany({
+        where: eq(Notification.userId, userId),
+      });
+
+      return notifications;
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get notifications error:", error);
+      }
+      throw new DatabaseError("Failed to get notifications", {
         originalError: error,
       });
     }

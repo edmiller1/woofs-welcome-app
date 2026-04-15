@@ -60,6 +60,10 @@ export const notificationTypeEnum = pgEnum("notification_type", [
   "place_update",
   "reply_to_reply",
   "review_author_reply",
+  "marketing",
+  "newsletter",
+  "nearby_places",
+  "report_status",
 ]);
 
 export const notificationContextEnum = pgEnum("notification_context", [

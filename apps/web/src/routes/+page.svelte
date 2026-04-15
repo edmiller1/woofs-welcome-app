@@ -59,7 +59,9 @@
                 type="text"
               />
             </div>
-            <Button class="px-8 py-3 rounded-full font-bold">Search</Button>
+            <Button size="lg" class="px-10 py-6 rounded-full font-bold"
+              >Search</Button
+            >
           </div>
         </div>
         <!-- Hero Image -->

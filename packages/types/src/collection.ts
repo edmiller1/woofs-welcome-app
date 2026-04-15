@@ -77,3 +77,19 @@ export interface CollectionWithPlaces {
     totalPages: number;
   };
 }
+
+export interface LimitedCollection extends Collection {
+  items: {
+    id: string;
+    createdAt: string;
+    placeId: string;
+    note: string;
+    collectionId: string;
+    place: {
+      name: string;
+      images: {
+        imageId: string;
+      }[];
+    };
+  }[];
+}

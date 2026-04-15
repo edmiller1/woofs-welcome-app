@@ -30,7 +30,26 @@ collectionRouter.get("/collections", authMiddleware, async (c) => {
     throw new UnauthorizedError("Unauthorized");
   }
 
-  const result = await collectionService.getCollections(auth.id);
+  const result = await collectionService.getCollectionsOnly(auth.id);
+
+  return c.json(result, 200);
+});
+
+collectionRouter.get("/collections/limit", authMiddleware, async (c) => {
+  //Context
+  const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  const result = await collectionService.getCollectionsOnly(auth.id);
 
   return c.json(result, 200);
 });

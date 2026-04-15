@@ -17,6 +17,8 @@
   import { getUserInitials } from "$lib/helpers";
   import { buildImageUrl } from "@woofs/image-config";
   import { settingsOpen } from "$lib/stores/accountSettingsStore";
+  import { createQuery } from "@tanstack/svelte-query";
+  import { api } from "$lib/api-helper";
 
   interface Props {
     user: BAUser;

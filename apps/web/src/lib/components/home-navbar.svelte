@@ -20,6 +20,8 @@
   } from "@lucide/svelte";
   import { page } from "$app/state";
   import { Button } from "./ui/button";
+  import NotificationsMenu from "./notifications-menu.svelte";
+  import CollectionsSheet from "./collections-sheet.svelte";
 
   interface Props {
     user: BAUser | null;
@@ -59,9 +61,7 @@
     page.url.pathname.includes("/profile") ||
     page.url.pathname.includes("/community");
 
-  const exploreActive = $derived(
-    page.url.pathname === "/" || page.url.pathname.includes("/explore"),
-  );
+  const exploreActive = $derived(page.url.pathname.includes("/explore"));
   const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
@@ -81,7 +81,7 @@
           class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {exploreActive
             ? 'text-[#154212] border-b-2 border-[#f8bd45]'
             : 'text-stone-600 dark:text-stone-400'}"
-          href="/">Explore</a
+          href="/explore">Explore</a
         >
         <a
           class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {communityActive
@@ -103,16 +103,8 @@
         />
       </div>
       {#if user}
-        <button
-          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
-        >
-          <Bell />
-        </button>
-        <button
-          class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
-        >
-          <Bookmark />
-        </button>
+        <NotificationsMenu />
+        <CollectionsSheet />
         <UserNav {user} />
       {:else}
         <a href={signInUrl}>
