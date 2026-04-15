@@ -1,8 +1,6 @@
 <script lang="ts">
-  import type { PlaceWithDetails } from "@woofs/types";
-  import { mount, onDestroy, tick, unmount, untrack } from "svelte";
-  import maplibregl from "maplibre-gl";
-  import { PUBLIC_MAPTILER_API_KEY } from '\$env/static/public';
+  import type { NearbyPlace, PlaceWithDetails } from "@woofs/types";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
   import "maplibre-gl/dist/maplibre-gl.css";
   import MapPopup from "$lib/components/map-popup.svelte";
   import { debounce } from "$lib/helpers";
@@ -13,14 +11,15 @@
   import ErrorBoundary from "$lib/components/error-boundary.svelte";
   import { DotLottieSvelte } from "@lottiefiles/dotlottie-svelte";
   import moodyDogData from "$lib/lottie/moody-dog.json";
+  import { MapLibre, Marker, Popup, NavigationControl } from "svelte-maplibre-gl";
+  import type maplibregl from "maplibre-gl";
 
   interface Props {
-      open: boolean;
+    open: boolean;
     onOpenChange: (open: boolean) => void;
     lat: number;
     lng: number;
     zoom?: number;
-    markerLabel?: string;
     interactive?: boolean;
     place: PlaceWithDetails;
   }
@@ -29,357 +28,64 @@
     open,
     lat,
     lng,
-      zoom = 13,
+    zoom = 13,
     interactive = true,
     place,
     onOpenChange,
   }: Props = $props();
 
-  let mapContainer = $state<HTMLDivElement>();
-  let map = $state<maplibregl.Map | null>(null);
-  let mainMarker = $state<maplibregl.Marker | null>(null);
-  let mainPopup = $state<maplibregl.Popup | null>(null);
-  let mainPopupComponent = $state<any>(null);
-  let isInitialized = $state<boolean>(false);
-  let wasOpen = $state<boolean>(false);
-  let currentBounds = $state<maplibregl.LngLatBounds | null | undefined>(null);
-  let isMapMoving = $state<boolean>(false);
-  let isMapZooming = $state<boolean>(false);
-  let currentZoom = $derived<number>(zoom);
-  let currentCenter = $derived<{ lng: number; lat: number }>({ lng, lat });
-
-  let nearbyMarkers: maplibregl.Marker[] = [];
-  let nearbyPopupComponents: any[] = [];
-  let markersCreated = $state<boolean>(false);
+  let map: maplibregl.Map | undefined = $state(undefined);
+  let mainPopupOpen = $state(false);
+  let mapCenter = $state<{ lat: number; lng: number }>({ lat, lng });
 
   const nearbyPlaces = createQuery(() => ({
-    queryKey: ["nearbyPlaces", lng, lat],
+    queryKey: ["nearbyPlaces", mapCenter.lng, mapCenter.lat],
     queryFn: () =>
       api.place.getNearbyPlaces({
         placeId: place.id,
-        lat,
-        lng,
+        lat: mapCenter.lat,
+        lng: mapCenter.lng,
         radius: 5,
         limit: 10,
       }),
+    enabled: open,
   }));
 
-  // Watch for dialog closing and cleanup
-  $effect(() => {
-    if (wasOpen && !open && isInitialized) {
-      console.log("🚪 Dialog closed, cleaning up...");
-      // Use setTimeout to ensure dialog animation completes
-      setTimeout(() => {
-        cleanupMap();
-      }, 300);
-    }
-    wasOpen = open;
-  });
-
-  // Initialize map when dialog opens
-  $effect(() => {
-    if (open && mapContainer && !isInitialized) {
-      console.log("🗺️ Initializing map...");
-      // Wait for dialog to be fully rendered
-      setTimeout(() => {
-        initializeMap();
-      }, 100);
-    }
-  });
-
-  // Resize map when dialog opens (for subsequent opens)
-  $effect(() => {
-    if (open && map && isInitialized) {
-      untrack(() => {
-        setTimeout(() => {
-          console.log("📏 Resizing map...");
-          map?.resize();
-        }, 150);
-      });
-    }
-  });
-
-  $effect(() => {
-    if (map && isInitialized) {
-      const handleMove = () => {
-        isMapMoving = true;
-        handleMapSettled();
-      };
-
-      const handleMoveEnd = () => {
-        isMapMoving = false;
-        handleMapSettled.flush(); // Immediately execute if pending
-      };
-
-      map.on("move", handleMove);
-      map.on("moveend", handleMoveEnd);
-
-      return () => {
-        handleMapSettled.cancel();
-        map?.off("move", handleMove);
-        map?.off("moveend", handleMoveEnd);
-      };
-    }
-  });
-
-  $effect(() => {
-    if (nearbyPlaces.isSuccess && map && isInitialized) {
-      console.log(
-        "✅ Updating nearby markers:",
-        nearbyPlaces.data.places.length,
-      );
-
-      untrack(() => {
-        createNearbyMarkers(nearbyPlaces.data.places);
-      });
-    }
-  });
-
-  const handleMapSettled = debounce(() => {
-    console.log("Map has settled");
-
+  const handleMoveEnd = debounce(() => {
     if (map) {
-      const bounds = map.getBounds();
       const center = map.getCenter();
-      const zoom = map.getZoom();
-
-      currentBounds = bounds;
-
-      console.log("Current state:", { bounds, center, zoom });
-
-      // get nearby places
-      nearbyPlaces.refetch();
+      mapCenter = { lat: center.lat, lng: center.lng };
     }
-  }, 1000);
+  }, 800);
 
-  function createNearbyMarkers(places: any[]) {
-    if (!map || !places || places.length === 0) {
-      console.log("⚠️ Cannot create markers - missing map or places");
-      return;
+  $effect(() => {
+    if (open) {
+      // Show main popup shortly after dialog opens
+      const t = setTimeout(() => (mainPopupOpen = true), 600);
+      return () => clearTimeout(t);
+    } else {
+      mainPopupOpen = false;
+      mapCenter = { lat, lng };
     }
-
-    cleanupNearbyMarkers();
-
-    console.log(`📍 Creating ${places.length} markers...`);
-
-    places.forEach((nearbyPlace, index) => {
-      try {
-        const popupNode = document.createElement("div");
-
-        const popupComponent = mount(MapPopup, {
-          target: popupNode,
-          props: {
-            activePlace: nearbyPlace,
-            closePopup: () => {
-              const marker = nearbyMarkers.find(
-                (m) =>
-                  m.getLngLat().lng === parseFloat(nearbyPlace.longitude) &&
-                  m.getLngLat().lat === parseFloat(nearbyPlace.latitude),
-              );
-              marker?.getPopup()?.remove();
-            },
-          },
-        });
-
-        nearbyPopupComponents.push(popupComponent);
-
-        const popup = new maplibregl.Popup({
-          offset: [0, -20],
-          className: "custom-popup",
-          closeButton: false,
-          closeOnClick: true,
-          maxWidth: "none",
-        }).setDOMContent(popupNode);
-
-        const markerElement = document.createElement("div");
-        markerElement.className = "custom-marker";
-        markerElement.style.cursor = "pointer";
-        markerElement.innerHTML = `
-					<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="#3d8463" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
-						<circle cx="12" cy="10" r="3"/>
-					</svg>
-				`;
-
-        const lng = parseFloat(nearbyPlace.longitude);
-        const lat = parseFloat(nearbyPlace.latitude);
-
-        if (isNaN(lng) || isNaN(lat)) {
-          console.error("❌ Invalid coordinates for:", nearbyPlace.name);
-          return;
-        }
-
-        const marker = new maplibregl.Marker(markerElement)
-          .setLngLat([lng, lat])
-          .setPopup(popup)
-          .addTo(map!);
-
-        markerElement.addEventListener("click", (e) => {
-          e.stopPropagation();
-          nearbyMarkers.forEach((m) => m.getPopup()?.remove());
-          mainPopup?.remove();
-          popup.addTo(map!);
-        });
-
-        nearbyMarkers.push(marker);
-      } catch (error) {
-        console.error("❌ Error creating marker:", error);
-      }
-    });
-
-    console.log(`🎯 Total nearby markers created: ${nearbyMarkers.length}`);
-  }
-
-  async function initializeMap() {
-    if (!mapContainer) {
-      console.error("❌ No map container!");
-      return;
-    }
-
-    await tick();
-
-    console.log("🎨 Creating map instance...");
-
-    maplibregl.accessToken = accessToken;
-
-    map = new maplibregl.Map({
-      container: mapContainer,
-      style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
-      center: [lng, lat],
-      zoom: zoom,
-      interactive: interactive,
-    });
-
-    const mainPopupNode = document.createElement("div");
-
-    mainPopupComponent = mount(MapPopup, {
-      target: mainPopupNode,
-      props: {
-        activePlace: place,
-        closePopup: closeMainPopup,
-      },
-    });
-
-    mainPopup = new maplibregl.Popup({
-      offset: [0, -20],
-      className: "custom-popup",
-      closeButton: false,
-      closeOnClick: true,
-      maxWidth: "none",
-    }).setDOMContent(mainPopupNode);
-
-    const mainMarkerElement = document.createElement("div");
-    mainMarkerElement.className = "custom-marker";
-    mainMarkerElement.style.cursor = "pointer";
-    mainMarkerElement.innerHTML = `
-			<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#f2936f" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
-				<circle cx="12" cy="10" r="3"/>
-			</svg>
-		`;
-
-    mainMarker = new maplibregl.Marker(mainMarkerElement)
-      .setLngLat([lng, lat])
-      .setPopup(mainPopup)
-      .addTo(map);
-
-    mainMarkerElement.addEventListener("click", (e) => {
-      e.stopPropagation();
-      nearbyMarkers.forEach((m) => m.getPopup()?.remove());
-      if (mainPopup && map) {
-        mainPopup.addTo(map);
-      }
-    });
-
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
-
-    map.on("load", () => {
-      console.log("✅ Map loaded successfully");
-      isInitialized = true;
-      map?.resize();
-      setTimeout(() => showMainPopup(), 500);
-    });
-  }
-
-  function cleanupNearbyMarkers() {
-    console.log("🧹 Cleaning up nearby markers:", nearbyMarkers.length);
-    nearbyMarkers.forEach((marker) => {
-      marker.getPopup()?.remove();
-      marker.remove();
-    });
-    nearbyMarkers = [];
-
-    nearbyPopupComponents.forEach((component) => {
-      unmount(component);
-    });
-    nearbyPopupComponents = [];
-  }
-
-  function cleanupMap() {
-    console.log("🗑️ Cleaning up entire map...");
-
-    // Clean up main popup
-    if (mainPopupComponent) {
-      unmount(mainPopupComponent);
-      mainPopupComponent = null;
-    }
-    if (mainPopup) {
-      mainPopup.remove();
-      mainPopup = null;
-    }
-    if (mainMarker) {
-      mainMarker.remove();
-      mainMarker = null;
-    }
-
-    // Clean up nearby markers and popups
-    cleanupNearbyMarkers();
-
-    // Remove map
-    if (map) {
-      map.remove();
-      map = null;
-    }
-
-    // Reset state flags
-    isInitialized = false;
-    markersCreated = false;
-
-    console.log("✅ Map cleanup complete");
-  }
-
-  onDestroy(() => {
-    console.log("🗑️ Component destroying...");
-    cleanupMap();
   });
 
-  const flyTo = (options: { center: [number, number]; zoom?: number }) => {
-    if (map) {
-      map.flyTo({ duration: 1000, ...options });
-    }
-  };
+  const mainPlace = $derived({
+    ...place,
+    locationPath: place.location.path,
+    cityName: place.location.name,
+    regionName: place.region.name,
+    rating: String(place.rating),
+  });
 
-  const setMarkerLocation = (newLng: number, newLat: number) => {
-    if (mainMarker) {
-      mainMarker.setLngLat([newLng, newLat]);
-    }
-  };
-
-  const getMapInstance = () => map;
-
-  const showMainPopup = () => {
-    if (mainPopup && map) {
-      mainPopup.addTo(map);
-    }
-  };
-
-  const closeMainPopup = () => {
-    if (mainPopup && map) {
-      mainPopup.remove();
-    }
-  };
-
-  export { flyTo, setMarkerLocation, getMapInstance, showMainPopup };
+  function toPopupPlace(p: NearbyPlace) {
+    return {
+      ...p,
+      locationPath: p.location.path,
+      cityName: p.location.name,
+      regionName: p.location.name,
+      rating: String(p.rating),
+    };
+  }
 </script>
 
 <Dialog.Root bind:open {onOpenChange}>
@@ -392,46 +98,110 @@
         </Dialog.Title>
       </Dialog.Header>
       <ErrorBoundary error={nearbyPlaces.error}>
-        {#if nearbyPlaces.isFetching && !nearbyPlaces.isLoading}
-          <div
-            class="absolute left-1/2 top-16 z-10 h-12.5 w-20 -translate-x-1/2 overflow-hidden rounded-full bg-white shadow-md"
-          >
+        <div class="relative flex-1 flex flex-col">
+          {#if nearbyPlaces.isFetching}
             <div
-              class="lottie-container flex h-full w-full items-center justify-center"
+              class="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-white rounded-full px-4 py-1 shadow-md text-xs font-semibold text-gray-700"
             >
-              <DotLottieSvelte
-                data={JSON.stringify(moodyDogData)}
-                loop
-                autoplay
-              />
+              <div class="lottie-container size-14 overflow-hidden shrink-0">
+                <DotLottieSvelte
+                  data={JSON.stringify(moodyDogData)}
+                  loop
+                  autoplay
+                />
+              </div>
+              <!-- Finding nearby places… -->
             </div>
-          </div>
-        {/if}
-        <div
-          bind:this={mapContainer}
-          class="map-container w-full flex-1 rounded-lg"
-        ></div>
+          {/if}
+
+          {#if open}
+            <MapLibre
+              bind:map
+              style={`https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`}
+              class="w-full h-full rounded-lg"
+              center={[lng, lat]}
+              {zoom}
+              {interactive}
+              onmoveend={handleMoveEnd}
+            >
+              <NavigationControl position="top-right" />
+
+              <!-- Current place marker (highlighted) -->
+              <Marker lnglat={[lng, lat]}>
+                {#snippet content()}
+                  <div
+                    class="cursor-pointer transition-transform hover:scale-110"
+                    style="background:#3d8463;color:white;border-radius:9999px;padding:2px 8px;box-shadow:0 2px 6px rgba(0,0,0,0.2);font-size:0.75rem;font-weight:600;border:1px solid #3d8463;white-space:nowrap;"
+                  >
+                    ★ {Number(place.rating).toFixed(1)}
+                  </div>
+                {/snippet}
+                <Popup
+                  bind:open={mainPopupOpen}
+                  offset={[0, -20]}
+                  closeOnClick={true}
+                  closeButton={false}
+                >
+                  <MapPopup
+                    activePlace={mainPlace}
+                    closePopup={() => (mainPopupOpen = false)}
+                  />
+                </Popup>
+              </Marker>
+
+              <!-- Nearby place markers (green) -->
+              {#if nearbyPlaces.isSuccess}
+                {#each nearbyPlaces.data.places as nearbyPlace (nearbyPlace.id)}
+                  <Marker
+                    lnglat={[
+                      parseFloat(nearbyPlace.longitude),
+                      parseFloat(nearbyPlace.latitude),
+                    ]}
+                  >
+                    {#snippet content()}
+                      <div
+                        class="cursor-pointer transition-transform hover:scale-110"
+                        style="background:white;color:black;border-radius:9999px;padding:2px 8px;box-shadow:0 2px 6px rgba(0,0,0,0.15);font-size:0.75rem;font-weight:600;border:1px solid #e5e7eb;white-space:nowrap;"
+                      >
+                        ★ {Number(nearbyPlace.rating).toFixed(1)}
+                      </div>
+                    {/snippet}
+                    <Popup
+                      offset={[0, -20]}
+                      closeOnClick={true}
+                      closeButton={false}
+                    >
+                      <MapPopup
+                        activePlace={toPopupPlace(nearbyPlace)}
+                        closePopup={() => {}}
+                      />
+                    </Popup>
+                  </Marker>
+                {/each}
+              {/if}
+            </MapLibre>
+          {/if}
+        </div>
       </ErrorBoundary>
     </div>
   </Dialog.Content>
 </Dialog.Root>
 
 <style>
-  /* Make sure the canvas inside scales */
   .lottie-container :global(canvas) {
     width: 100% !important;
     height: 100% !important;
     object-fit: contain;
   }
 
-  :global(.custom-popup .maplibregl-popup-content) {
-    padding: 0;
-    border-radius: 18px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: visible;
+  :global(.maplibregl-popup-content) {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
   }
 
-  :global(.custom-popup .maplibregl-popup-tip) {
-    border-top-color: white;
+  :global(.maplibregl-popup-tip) {
+    display: none !important;
   }
 </style>

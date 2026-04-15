@@ -312,7 +312,7 @@
                 />
               </div>
               <div class="mt-6 flex items-center justify-center">
-                <Button class="w-full">
+                <Button class="w-full" onclick={handleMapOpen}>
                   View Map
                   <Map class="size-4" />
                 </Button>
@@ -626,7 +626,7 @@
                   {/if}
                 </div>
                 <div class="flex items-center justify-center">
-                  <Button class="w-full">
+                  <Button class="w-full" onclick={handleMapOpen}>
                     View Map
                     <Map class="size-4" />
                   </Button>
