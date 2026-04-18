@@ -61,8 +61,8 @@
       {/each}
     </Carousel.Content>
     {#if images.length > 1}
-      <Carousel.Previous class="absolute -left-2" />
-      <Carousel.Next class="absolute -right-2" />
+      <Carousel.Previous class="absolute left-4" />
+      <Carousel.Next class="absolute right-4" />
     {/if}
   </Carousel.Root>
   <Carousel.Root

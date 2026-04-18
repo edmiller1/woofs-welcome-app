@@ -103,7 +103,7 @@
       </div>
       {#if user}
         <NotificationsMenu />
-        <CollectionsSheet />
+        <CollectionsSheet {user} />
         <UserNav {user} />
       {:else}
         <a href={signInUrl}>

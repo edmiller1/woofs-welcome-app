@@ -386,3 +386,36 @@ body {
 .maplibregl-popup-tip {
     border-top-color: white;
   }
+
+    .map-container {
+    height: 350px;
+    width: 100%;
+    border-radius: 0.75rem;
+    z-index: 0;
+    isolation: isolate;
+  }
+
+  .custom-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .custom-marker:hover {
+    transform: scale(1.1);
+  }
+
+  .custom-popup .maplibregl-popup-content {
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .maplibregl-popup-content {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .custom-popup .maplibregl-popup-tip {
+    border-top-color: white;
+  }

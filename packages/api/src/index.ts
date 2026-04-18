@@ -80,7 +80,7 @@ class ApiClient {
       const error = await response
         .json()
         .catch(() => ({ message: response.statusText }));
-      throw Object.assign(new Error(error.message ?? response.statusText), {
+      throw Object.assign(new Error(error.message ?? error.error ?? response.statusText), {
         status: response.status,
         response: { data: error, status: response.status },
       });

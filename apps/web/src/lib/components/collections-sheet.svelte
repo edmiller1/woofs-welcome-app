@@ -5,6 +5,13 @@
   import { createQuery } from "@tanstack/svelte-query";
   import OptimizedImage from "./optimized-image.svelte";
   import { Separator } from "./ui/separator";
+  import type { BAUser } from "@woofs/types";
+
+  interface Props {
+    user: BAUser;
+  }
+
+  const { user }: Props = $props();
 
   const collections = createQuery(() => ({
     queryKey: ["collections-limit"],
@@ -37,7 +44,9 @@
       {#if collections.isLoading}
         {#each Array(4) as _}
           <div class="space-y-3">
-            <div class="h-48 w-full rounded-xl bg-stone-200 animate-pulse"></div>
+            <div
+              class="h-48 w-full rounded-xl bg-stone-200 animate-pulse"
+            ></div>
             <div class="h-5 w-2/3 rounded-md bg-stone-200 animate-pulse"></div>
             <div class="h-4 w-1/4 rounded-md bg-stone-200 animate-pulse"></div>
           </div>
@@ -71,14 +80,15 @@
           </div>
         {/each}
         <div class="pt-4 text-center">
-          <button
+          <a
+            href={`/profile/${user.id}/${user.name.split(" ").join("-").toLowerCase()}/collections`}
             class="w-full bg-primary text-white cursor-pointer py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-container shadow-md transition-all duration-300 group"
           >
             <span>Show more</span>
             <ArrowRight
               class="transition-transform duration-300 group-hover:translate-x-1"
             />
-          </button>
+          </a>
         </div>
       {/if}
     </div>

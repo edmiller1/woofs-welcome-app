@@ -43,7 +43,7 @@
               >
             </div>
           </div>
-        {:else if status === "Closed"}
+        {:else if status?.includes("Closed")}
           <div
             class="flex items-center gap-2 px-3 py-1 rounded-full border bg-error/10 border-error/20"
           >
