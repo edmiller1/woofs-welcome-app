@@ -177,4 +177,4 @@ Private — all rights reserved.
 
 ---
 
-<p align="center">Built with ☕ and 🐕 in New Zealand</p>
+<p align="center">Built with ☕ and ❤️ in New Zealand</p>
