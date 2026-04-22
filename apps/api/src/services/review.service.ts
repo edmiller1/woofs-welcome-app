@@ -646,7 +646,9 @@ export class ReviewService {
 
         return {
           success: true,
-          action: "like",
+          action: "like" as const,
+          reviewAuthorId: review.userId,
+          placeId: review.placeId,
         };
       }
     } catch (error) {

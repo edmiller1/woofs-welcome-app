@@ -64,6 +64,13 @@
       "when": 1776050386458,
       "tag": "0008_steady_martin_li",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1776648353021,
+      "tag": "0009_magenta_paper_doll",
+      "breakpoints": true
     }
   ]
 }

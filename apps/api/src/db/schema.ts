@@ -898,6 +898,8 @@ export const Notification = pgTable(
       onDelete: "cascade",
     }),
 
+    url: text("url"),
+
     data: jsonb("data").$type<Record<string, any>>(),
 
     isRead: boolean("is_read").default(false).notNull(),

@@ -3,7 +3,10 @@ import { authMiddleware } from "../../middleware/auth";
 import { UnauthorizedError } from "../../lib/errors";
 import { NotificationService } from "../../services/notification.service";
 import { zValidator } from "@hono/zod-validator";
-import { userPartialNotificationPreferencesSchema } from "./schemas";
+import {
+  notificationIdSchema,
+  userPartialNotificationPreferencesSchema,
+} from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { not } from "drizzle-orm";
 
@@ -94,3 +97,113 @@ notificationRouter.get("/user/notifications", authMiddleware, async (c) => {
 
   return c.json(result, 200);
 });
+
+notificationRouter.put(
+  "/user/notifications/:notificationId/read",
+  zValidator("param", notificationIdSchema),
+  authMiddleware,
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const notificationService = new NotificationService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { notificationId } = c.req.valid("param");
+
+    const result = await notificationService.markAsRead(
+      notificationId,
+      auth.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+notificationRouter.put(
+  "/user/notifications/:notificationId/unread",
+  zValidator("param", notificationIdSchema),
+  authMiddleware,
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const notificationService = new NotificationService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { notificationId } = c.req.valid("param");
+
+    const result = await notificationService.markAsUnread(
+      notificationId,
+      auth.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+notificationRouter.put(
+  "/user/notifications/read",
+  authMiddleware,
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const notificationService = new NotificationService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const result = await notificationService.markAllAsRead(auth.id);
+
+    return c.json(result, 200);
+  },
+);
+
+notificationRouter.delete(
+  "/user/notifications/:notificationId",
+  zValidator("param", notificationIdSchema),
+  authMiddleware,
+  async (c) => {
+    //Context
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    // Services
+    const imageUploadService = new ImageUploadService(db, env);
+    const notificationService = new NotificationService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { notificationId } = c.req.valid("param");
+
+    const result = await notificationService.markAsUnread(
+      notificationId,
+      auth.id,
+    );
+
+    return c.json(result, 200);
+  },
+);

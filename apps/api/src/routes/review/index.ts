@@ -13,6 +13,7 @@ import {
 import { UnauthorizedError } from "../../lib/errors";
 import { ReviewService } from "../../services/review.service";
 import { ImageUploadService } from "../../services/image-upload.service";
+import { NotificationService } from "../../services/notification.service";
 import { createDbWithTransactions } from "../../db";
 
 export const reviewRouter = new Hono();
@@ -222,10 +223,29 @@ reviewRouter.post(
       // Services
       const imageUploadService = new ImageUploadService(db, env);
       const reviewService = new ReviewService(db, env, imageUploadService);
+      const notificationService = new NotificationService(
+        db,
+        imageUploadService,
+      );
 
       const { reviewId } = c.req.valid("param");
 
       const result = await reviewService.likeReview(reviewId, auth.id);
+
+      if (result.action === "like") {
+        await notificationService.createNotification(
+          result.reviewAuthorId!,
+          {
+            type: "review_like",
+            title: "Someone liked your review",
+            message: `${auth.name ?? "Someone"} liked your review`,
+            url: `/places/${result.placeId}?review=${reviewId}`,
+            relatedReviewId: reviewId,
+            relatedPlaceId: result.placeId,
+          },
+          "reviewLikes",
+        );
+      }
 
       return c.json(result, 200);
     } finally {

@@ -153,9 +153,7 @@
               class="font-label text-xs uppercase tracking-[0.3em] text-secondary font-bold"
               >About
             </span>
-            <p
-              class="font-body text-lg text-text-subtle leading-relaxed"
-            >
+            <p class="font-body text-lg text-text-subtle leading-relaxed">
               {location.data.description}
             </p>
             <div class="pt-4">
@@ -171,9 +169,15 @@
           <div class="col-span-12 lg:col-span-6 lg:col-start-7 relative">
             <!-- Maybe a place image? -->
             <div
-              class="aspect-4/5 rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
+              class="aspect-4/5 w-full rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
             >
-              <OptimizedImage imageId={location.data.image} alt="" />
+              <OptimizedImage
+                imageId={location.data.image}
+                alt=""
+                class="w-full h-full object-cover object-center"
+                variant="large"
+                height="100%"
+              />
             </div>
             <!-- Maybe a review image? here -->
             <!-- <div

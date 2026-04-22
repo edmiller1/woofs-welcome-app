@@ -5,9 +5,9 @@ import {
   user,
   type UserNotificationPreferences,
 } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { ImageUploadService } from "./image-upload.service";
-import type { Db } from "../db";
+import type { AnyDb, Db } from "../db";
 
 const DEFAULT_USER_NOTIFICATION_PREFERENCES = {
   email: {
@@ -47,7 +47,7 @@ type NotificationEventKey =
  */
 export class NotificationService {
   constructor(
-    private db: Db,
+    private db: AnyDb,
     private imageUploadService: ImageUploadService,
   ) {}
   /**
@@ -175,6 +175,67 @@ export class NotificationService {
     }
   }
 
+  /**
+   * Create a notification for a user, respecting their preferences.
+   * Pass `preferenceKey` to gate on the user's email/push settings.
+   * Omit it for system notifications that should always be created (e.g. claim status).
+   */
+  async createNotification(
+    recipientId: string,
+    payload: {
+      type:
+        | "claim_submitted"
+        | "claim_approved"
+        | "claim_rejected"
+        | "review_reply"
+        | "review_like"
+        | "new_review_on_favourite"
+        | "place_update"
+        | "reply_to_reply"
+        | "review_author_reply"
+        | "marketing"
+        | "newsletter"
+        | "nearby_places"
+        | "report_status";
+      title: string;
+      message: string;
+      url?: string;
+      relatedReviewId?: string;
+      relatedPlaceId?: string;
+      relatedClaimId?: string;
+      relatedReplyId?: string;
+      context?: "personal" | "business";
+      data?: Record<string, any>;
+    },
+    preferenceKey?: NotificationEventKey,
+  ) {
+    try {
+      if (preferenceKey) {
+        const { push } = await this.shouldNotify(recipientId, preferenceKey);
+        if (!push) return;
+      }
+
+      await this.db.insert(Notification).values({
+        userId: recipientId,
+        type: payload.type,
+        title: payload.title,
+        message: payload.message,
+        url: payload.url,
+        relatedReviewId: payload.relatedReviewId,
+        relatedPlaceId: payload.relatedPlaceId,
+        relatedClaimId: payload.relatedClaimId,
+        relatedReplyId: payload.relatedReplyId,
+        context: payload.context ?? "personal",
+        data: payload.data,
+      });
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to create notification", {
+        originalError: error,
+      });
+    }
+  }
+
   async getNotifications(userId: string) {
     try {
       const notifications = await this.db.query.Notification.findMany({
@@ -187,6 +248,84 @@ export class NotificationService {
         console.error("Get notifications error:", error);
       }
       throw new DatabaseError("Failed to get notifications", {
+        originalError: error,
+      });
+    }
+  }
+
+  async markAsRead(notificationId: string, userId: string) {
+    try {
+      await this.db
+        .update(Notification)
+        .set({ isRead: true })
+        .where(
+          and(
+            eq(Notification.id, notificationId),
+            eq(Notification.userId, userId),
+          ),
+        );
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Mark notification as read error:", error);
+      }
+      throw new DatabaseError("Failed to mark notification as read", {
+        originalError: error,
+      });
+    }
+  }
+
+  async markAsUnread(notificationId: string, userId: string) {
+    try {
+      await this.db
+        .update(Notification)
+        .set({ isRead: false })
+        .where(
+          and(
+            eq(Notification.id, notificationId),
+            eq(Notification.userId, userId),
+          ),
+        );
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Mark notification as unread error:", error);
+      }
+      throw new DatabaseError("Failed to mark notification as unread", {
+        originalError: error,
+      });
+    }
+  }
+
+  async markAllAsRead(userId: string) {
+    try {
+      await this.db
+        .update(Notification)
+        .set({ isRead: true })
+        .where(eq(Notification.userId, userId));
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Mark notification as read error:", error);
+      }
+      throw new DatabaseError("Failed to mark notification as read", {
+        originalError: error,
+      });
+    }
+  }
+
+  async deleteNotification(notificationId: string, userId: string) {
+    try {
+      await this.db
+        .delete(Notification)
+        .where(
+          and(
+            eq(Notification.id, notificationId),
+            eq(Notification.userId, userId),
+          ),
+        );
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Delete notification error:", error);
+      }
+      throw new DatabaseError("Failed to delete notification", {
         originalError: error,
       });
     }

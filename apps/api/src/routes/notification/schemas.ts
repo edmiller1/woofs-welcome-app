@@ -32,6 +32,10 @@ export const userPartialNotificationPreferencesSchema = z
     message: "At least one channel (email or push) must be provided",
   });
 
+export const notificationIdSchema = z.object({
+  notificationId: z.uuid(),
+});
+
 export type UserPartialNotificationPreferencesInput = z.infer<
   typeof userPartialNotificationPreferencesSchema
 >;
