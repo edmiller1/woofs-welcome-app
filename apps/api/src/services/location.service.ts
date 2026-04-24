@@ -27,6 +27,7 @@ import {
 import type { PlaceFilter } from "@woofs/types";
 import type { Db } from "../db";
 import type { ImageUploadService } from "./image-upload.service";
+import { isMemberFavourite } from "../lib/helpers/place";
 
 const CityLocation = alias(Location, "city");
 const RegionLocation = alias(Location, "region");
@@ -117,6 +118,7 @@ export class LocationService {
             locationPath: CityLocation.path,
             lat: Place.latitude,
             lng: Place.longitude,
+            dogAmenities: Place.dogAmenities,
           })
           .from(Place)
           .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -157,6 +159,7 @@ export class LocationService {
             locationPath: CityLocation.path,
             lat: Place.latitude,
             lng: Place.longitude,
+            dogAmenities: Place.dogAmenities,
           })
           .from(Place)
           .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -202,6 +205,7 @@ export class LocationService {
             locationPath: CityLocation.path,
             lat: Place.latitude,
             lng: Place.longitude,
+            dogAmenities: Place.dogAmenities,
           })
           .from(Place)
           .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -247,6 +251,7 @@ export class LocationService {
             locationPath: CityLocation.path,
             lat: Place.latitude,
             lng: Place.longitude,
+            dogAmenities: Place.dogAmenities,
           })
           .from(Place)
           .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -300,18 +305,34 @@ export class LocationService {
         popularPlaces: popularPlaces.map((place) => ({
           ...place,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         })),
         stays: stays.map((place) => ({
           ...place,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         })),
         eats: eats.map((place) => ({
           ...place,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         })),
         adventures: adventures.map((place) => ({
           ...place,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         })),
       };
     } catch (error) {
@@ -344,7 +365,10 @@ export class LocationService {
 
       const typeFilter =
         filters.types && filters.types.length > 0
-          ? arrayOverlaps(Place.types, filters.types as (typeof Place.types.enumValues[number])[])
+          ? arrayOverlaps(
+              Place.types,
+              filters.types as (typeof Place.types.enumValues)[number][],
+            )
           : undefined;
 
       const locationFilter = filters.bbox

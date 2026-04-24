@@ -50,6 +50,8 @@ export interface LocationPlace {
   locationPath: string;
   lat: string | null;
   lng: string | null;
+  memberFavourite: boolean;
+  dogAmenities: string[];
 }
 
 export interface LocationWithDetails extends Location {

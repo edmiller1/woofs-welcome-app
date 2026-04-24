@@ -50,6 +50,9 @@
             {user}
             locationPath={place.location.path}
             isVerified={place.isVerified}
+            memberFavourite={place.memberFavourite}
+            reviewCount={place.reviewsCount}
+            dogAmenities={place.dogAmenities}
           />
         {/each}
       </div>
@@ -81,6 +84,9 @@
             {user}
             locationPath={place.location.path}
             isVerified={place.isVerified}
+            memberFavourite={place.memberFavourite}
+            reviewCount={place.reviewsCount}
+            dogAmenities={place.dogAmenities}
           />
         {/each}
       </div>

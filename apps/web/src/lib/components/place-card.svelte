@@ -25,6 +25,9 @@
     user: BAUser | null;
     locationPath: string;
     isVerified: boolean;
+    memberFavourite: boolean;
+    reviewCount: number;
+    dogAmenities: string[];
   }
 
   const {
@@ -42,6 +45,9 @@
     user,
     locationPath,
     isVerified,
+    memberFavourite,
+    reviewCount,
+    dogAmenities,
   }: Props = $props();
 
   const images = $derived(imageIds ?? (imageId ? [imageId] : []));
@@ -77,6 +83,22 @@
     carouselApi!.scrollTo(index);
     current = index;
   };
+
+  const PAID_TYPES = new Set([
+    "Café",
+    "Bar",
+    "Restaurant",
+    "Store",
+    "Hotel",
+    "Accommodation",
+    "Motel",
+    "Service",
+  ]);
+
+  const isPaid = $derived(types.some((type) => PAID_TYPES.has(type)));
+  const amenity = $derived(
+    dogAmenities && dogAmenities.length > 0 ? dogAmenities[0] : null,
+  );
 </script>
 
 <a
@@ -130,6 +152,13 @@
               </div>
             </div>
           </Carousel.Root>
+          {#if memberFavourite}
+            <div class="absolute top-2 left-2">
+              <Badge variant="favourite" class="shrink-0 font-semibold"
+                ><Star class="fill-black" /> Member Favourite</Badge
+              >
+            </div>
+          {/if}
           <!-- TODO: Switch to heart-button.svelte -->
           <div class="absolute right-2 top-2 z-10">
             <Button
@@ -158,12 +187,24 @@
               <div class="flex items-center gap-1">
                 <Star class="size-3 fill-yellow-500 text-yellow-500" />
                 <span class="text-sm">{Number(rating).toFixed(1)}</span>
+                <span class="text-muted-foreground">({reviewCount})</span>
               </div>
             </div>
             <div class="text-muted-foreground m-0 text-left text-sm">
               {cityName}, {regionName}
               {countryCode}
+              {#if isPaid}
+                ·
+                <span class="text-black">$$$</span>
+              {/if}
             </div>
+            {#if amenity}
+              <div
+                class="mt-2.5 pl-2.5 border-l-2 border-primary-accent font-body italic text-xs leading-1.5 text-muted-foreground"
+              >
+                {amenity}
+              </div>
+            {/if}
             <div class="mt-1 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}
                 <Badge variant="secondary" class="rounded-full">{type}</Badge>
@@ -181,6 +222,13 @@
               variant="card"
               height="100%"
             />
+            {#if memberFavourite}
+              <div class="absolute top-2 left-2">
+                <Badge variant="favourite" class="shrink-0 font-semibold"
+                  ><Star class="fill-black" /> Member Favourite</Badge
+                >
+              </div>
+            {/if}
             <!-- Heart Button -->
             <div class="absolute right-2 top-2 z-10">
               <Button
@@ -210,13 +258,27 @@
               <div class="flex items-center gap-1 shrink-0">
                 <Star class="size-3 fill-yellow-500 text-yellow-500" />
                 <span class="text-sm">{Number(rating).toFixed(1)}</span>
+                <span class="text-sm text-muted-foreground"
+                  >({reviewCount})</span
+                >
               </div>
             </div>
             <div class="text-muted-foreground m-0 text-left text-sm">
               {cityName}, {regionName}
               {countryCode}
+              {#if isPaid}
+                ·
+                <span class="text-black">$$$</span>
+              {/if}
             </div>
-            <div class="mt-1 flex items-center gap-1">
+            {#if amenity}
+              <div
+                class="mt-2.5 pl-2.5 border-l-2 border-primary-accent font-body italic text-[12.5px] leading-[1.55] text-muted-foreground"
+              >
+                {amenity}
+              </div>
+            {/if}
+            <div class="mt-2 flex items-center gap-1">
               {#each types.sort((a, b) => a.localeCompare(b)) as type}
                 <Badge variant="secondary" class="rounded-full">{type}</Badge>
               {/each}

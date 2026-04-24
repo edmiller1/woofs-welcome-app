@@ -292,9 +292,7 @@
     });
   }
 
-  onMount(() => {
-    
-  });
+  onMount(() => {});
 
   // Init maps once containers are bound and we have place data for initial position
   $effect(() => {
@@ -390,9 +388,7 @@
       <!-- Left: scrollable list -->
       <div class="w-full lg:w-1/2 xl:w-[55%] flex flex-col overflow-hidden">
         <!-- Type filter chips -->
-        <div
-          class="px-6 py-4 border-b border-border-subtle/20 overflow-x-auto"
-        >
+        <div class="px-6 py-4 border-b border-border-subtle/20 overflow-x-auto">
           <div class="flex gap-2 min-w-max">
             {#each ALL_TYPES as type}
               <button
@@ -451,6 +447,9 @@
                       {user}
                       locationPath={place.locationPath}
                       isVerified={place.isVerified}
+                      memberFavourite={place.memberFavourite}
+                      reviewCount={place.reviewsCount}
+                      dogAmenities={place.dogAmenities}
                     />
                   </div>
                 {/each}
@@ -640,6 +639,9 @@
                     {user}
                     locationPath={place.locationPath}
                     isVerified={place.isVerified}
+                    memberFavourite={place.memberFavourite}
+                    reviewCount={place.reviewsCount}
+                    dogAmenities={place.dogAmenities}
                   />
                 </div>
               {/each}

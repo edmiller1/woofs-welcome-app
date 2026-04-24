@@ -197,7 +197,7 @@
       <section class="bg-surface-subtle py-24">
         <!-- Popular Places -->
         {#if location.data.popularPlaces.length > 0}
-          <div class="max-w-7xl mx-auto px-8">
+          <div class="max-w-7xl mx-auto px-8 py-24">
             <div class="flex justify-between items-end mb-12">
               <div class="space-y-2">
                 <!-- <span
@@ -229,6 +229,9 @@
                   {user}
                   locationPath={place.locationPath}
                   isVerified={place.isVerified}
+                  memberFavourite={place.memberFavourite}
+                  reviewCount={place.reviewsCount}
+                  dogAmenities={place.dogAmenities}
                 />
               {/each}
             </div>
@@ -269,6 +272,9 @@
                   {user}
                   locationPath={place.locationPath}
                   isVerified={place.isVerified}
+                  memberFavourite={place.memberFavourite}
+                  reviewCount={place.reviewsCount}
+                  dogAmenities={place.dogAmenities}
                 />
               {/each}
             </div>
@@ -309,6 +315,9 @@
                   {user}
                   locationPath={place.locationPath}
                   isVerified={place.isVerified}
+                  memberFavourite={place.memberFavourite}
+                  reviewCount={place.reviewsCount}
+                  dogAmenities={place.dogAmenities}
                 />
               {/each}
             </div>
@@ -349,6 +358,9 @@
                   {user}
                   locationPath={place.locationPath}
                   isVerified={place.isVerified}
+                  memberFavourite={place.memberFavourite}
+                  reviewCount={place.reviewsCount}
+                  dogAmenities={place.dogAmenities}
                 />
               {/each}
             </div>

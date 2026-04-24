@@ -29,6 +29,7 @@ import {
   calculateDistance,
   getBoundingBox,
   getPlaceDescription,
+  isMemberFavourite,
 } from "../lib/helpers/place";
 import { RecommendationService } from "./recommendation.service";
 import type { Db } from "../db";
@@ -219,8 +220,10 @@ export class PlaceService {
           .where(eq(Place.id, place.id));
       }
 
-      const memberFavourite =
-        Number(place.rating) >= 4.5 && place.reviewsCount! >= 10;
+      const memberFavourite = isMemberFavourite(
+        Number(place.rating),
+        place.reviewsCount || 0,
+      );
 
       return {
         ...place,
@@ -366,6 +369,10 @@ export class PlaceService {
         places: placesWithDistance.map((place) => ({
           ...place,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         })),
         center: { lat, lng },
         radius,
@@ -451,6 +458,10 @@ export class PlaceService {
           ...place,
           checkInCount: countMap.get(place.id) ?? 0,
           isSaved: savedPlaceIds.has(place.id),
+          memberFavourite: isMemberFavourite(
+            Number(place.rating),
+            place.reviewsCount || 0,
+          ),
         }))
         .sort((a, b) => b.checkInCount - a.checkInCount);
     } catch (error) {
@@ -565,6 +576,10 @@ export class PlaceService {
         ...place,
         isSaved: savedPlaceIds.has(place.id),
         parentLocationName,
+        memberFavourite: isMemberFavourite(
+          Number(place.rating),
+          place.reviewsCount || 0,
+        ),
       }));
     } catch (error) {
       if (error instanceof AppError) {

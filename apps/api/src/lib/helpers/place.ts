@@ -52,3 +52,10 @@ export const getPlaceDescription = async (
 
   return response.text;
 };
+
+export const isMemberFavourite = (rating: number, reviewsCount: number) => {
+  if (rating >= 4.5 && reviewsCount >= 100) {
+    return true;
+  }
+  return false;
+};

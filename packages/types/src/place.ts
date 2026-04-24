@@ -18,7 +18,7 @@ export interface Place {
   website: string;
   hours: DayOfWeekHours;
   dogRules: string[] | null;
-  dogAmenities: string[] | null;
+  dogAmenities: string[];
   rating: number;
   reviewsCount: number;
   isVerified: boolean;
@@ -30,6 +30,7 @@ export interface Place {
   claimedAt: Date;
   totalViews: number;
   viewsThisMonth: number;
+  memberFavourite: boolean;
 }
 
 export interface PlaceReviewStats {
@@ -49,7 +50,6 @@ export interface PlaceWithDetails extends Place {
   images: PlaceImage[];
   reviewStats: PlaceReviewStats;
   parentLocationName?: string | null;
-  memberFavourite: boolean;
 }
 
 export interface NearbyPlace extends Place {
