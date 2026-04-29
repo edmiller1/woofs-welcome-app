@@ -27,7 +27,7 @@
       <Bookmark />
     </button></Sheet.Trigger
   >
-  <Sheet.Content side="right">
+  <Sheet.Content side="right" class="bg-white">
     <Sheet.Header class="mb-0">
       <Sheet.Title class="text-2xl font-headline italic text-primary"
         >My Collections</Sheet.Title

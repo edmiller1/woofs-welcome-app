@@ -80,7 +80,7 @@
           class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive
             ? 'text-[#154212] border-b-2 border-[#f8bd45]'
             : 'text-stone-600'}"
-          href="/">Explore</a
+          href="/explore">Explore</a
         >
         <a
           class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {communityActive

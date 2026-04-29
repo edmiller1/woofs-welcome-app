@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.9833 0.0062 75.41);       /* warm off-white */
+  --background: oklch(0.9844 0.0059 59.65)      /* warm off-white */
   --foreground: oklch(0.1500 0.0050 85.00);        /* near-black */
   --card: oklch(0.9920 0.0040 85.00);              /* slightly warm white */
   --card-foreground: oklch(0.1500 0.0050 85.00);
@@ -28,6 +28,8 @@
   /* Accent: #F4B942 golden yellow (tertiary) */
   --accent: oklch(0.7900 0.1500 78.00);
   --accent-foreground: oklch(0.2000 0.0300 85.00);  /* dark text on yellow */
+
+  --text-subtle: oklch(0.3954 0.0203 134.04);
 
   --destructive: oklch(0.506 0.1927 27.7);
   --destructive-foreground: oklch(1.0000 0 0);
