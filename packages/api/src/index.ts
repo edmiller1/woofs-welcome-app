@@ -13,7 +13,7 @@ const getBaseUrl = () => {
       : "https://api.woofswelcome.app/api";
   }
   // SSR path
-  return process.env.API_BASE_URL ?? "https://api.woofswelcome.app/api";
+  return "https://api.woofswelcome.app/api";
 };
 
 type RequestOptions = {
