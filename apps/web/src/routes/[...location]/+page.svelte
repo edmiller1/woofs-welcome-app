@@ -81,7 +81,7 @@
             alt={location.data.name + " image"}
             sizes="(max-width: 768px) 100vw, (max-width: 1536px) calc(100vw - 4rem), 1500px"
             class="w-full object-cover object-center"
-            variant="hero"
+            variant="xlarge"
             height="800px"
           />
           <div

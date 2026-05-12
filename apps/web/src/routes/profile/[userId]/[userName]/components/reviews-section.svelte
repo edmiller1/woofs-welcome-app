@@ -61,7 +61,7 @@
             <OptimizedImage
               imageId={review.place.images[0].imageId}
               alt="review image"
-              variant="avatar"
+              variant="small"
               class="w-10 h-10 rounded-full object-cover object-center"
               width="40"
               height="40"

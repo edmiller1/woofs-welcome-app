@@ -93,7 +93,7 @@
                       class={cn(
                         "absolute inset-x-1 inset-y-0 bottom-1 h-full w-full rounded-lg object-contain transition duration-200",
                       )}
-                      variant="hero"
+                      variant="xlarge"
                       alt={image.caption || ""}
                     />
                   </div>
@@ -105,7 +105,7 @@
               class="h-80 w-full cursor-pointer rounded-lg object-cover object-top-left transition duration-300 group-hover:brightness-90"
               height="400"
               width="400"
-              variant="card"
+              variant="small"
               alt={image.caption || ""}
             />
           </div>

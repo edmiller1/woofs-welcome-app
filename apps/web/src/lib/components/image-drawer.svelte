@@ -51,7 +51,7 @@
                     imageId={image.imageId}
                     alt={image.caption || ""}
                     class="w-full max-h-[75vh] rounded-lg object-contain"
-                    variant="full"
+                    variant="xlarge"
                     responsive={false}
                     width="auto"
                     height="600px"

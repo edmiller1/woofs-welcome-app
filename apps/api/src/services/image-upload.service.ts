@@ -19,10 +19,10 @@ export interface UploadResult {
   filename: string;
   urls: {
     thumbnail: string;
-    card: string;
+    small: string;
     medium: string;
     large: string;
-    full: string;
+    xlarge: string;
   };
 }
 
@@ -353,11 +353,11 @@ export class ImageUploadService {
    */
   private buildImageUrls(cfImageId: string) {
     return {
-      thumbnail: `${this.deliveryUrl}/w_150,h_150,q_80,f_webp,fit_cover/${cfImageId}`,
-      card: `${this.deliveryUrl}/w_400,h_300,q_85,f_webp,fit_cover/${cfImageId}`,
-      medium: `${this.deliveryUrl}/w_800,h_600,q_85,f_webp,fit_scale-down/${cfImageId}`,
-      large: `${this.deliveryUrl}/w_1200,h_900,q_90,f_webp,fit_scale-down/${cfImageId}`,
-      full: `${this.deliveryUrl}/w_2000,h_2000,q_95,f_webp,fit_scale-down/${cfImageId}`,
+      thumbnail: `${this.deliveryUrl}/${cfImageId}/thumbnail`,
+      small: `${this.deliveryUrl}/${cfImageId}/small`,
+      medium: `${this.deliveryUrl}/${cfImageId}/medium`,
+      large: `${this.deliveryUrl}/${cfImageId}/large`,
+      xlarge: `${this.deliveryUrl}/${cfImageId}/xlarge`,
     };
   }
 
@@ -412,7 +412,7 @@ export class ImageUploadService {
    */
   getImageUrl(
     cfImageId: string,
-    variant: "thumbnail" | "card" | "medium" | "large" | "full" = "medium",
+    variant: "thumbnail" | "small" | "medium" | "large" | "xlarge" = "medium",
   ): string {
     const urls = this.buildImageUrls(cfImageId);
     return urls[variant];

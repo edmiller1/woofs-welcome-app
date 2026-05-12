@@ -54,7 +54,7 @@
               class="rounded-lg"
               width="600px"
               height="600px"
-              variant="full"
+              variant="xlarge"
             />
           </div>
         </Carousel.Item>

@@ -198,7 +198,7 @@
                     imageId={place.imageId}
                     alt={place.name}
                     class="w-full h-full object-cover object-center"
-                    variant="card"
+                    variant="small"
                     height="96"
                     width="96"
                   />
@@ -388,7 +388,7 @@
                         imageId={place.imageId}
                         alt={place.name}
                         class="w-full h-full object-cover object-center"
-                        variant="card"
+                        variant="small"
                         height="80"
                         width="80"
                       />

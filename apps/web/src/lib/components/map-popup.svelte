@@ -159,7 +159,7 @@
             class="h-52 w-full shrink-0 object-cover object-center"
             width="208"
             height="208"
-            variant="card"
+            variant="small"
           />
         {/each}
       </div>
@@ -171,7 +171,7 @@
         class="h-52 w-full shrink-0 object-cover object-center"
         width="208"
         height="208"
-        variant="card"
+        variant="small"
       />
     {:else}
       <div class="flex h-52 w-72 items-center justify-center bg-gray-200">

@@ -369,7 +369,7 @@
             <OptimizedImage
               imageId={profile.profileImageId}
               alt={profile.name}
-              variant="avatar"
+              variant="small"
               class="h-20 w-20 rounded-full object-cover"
               responsive={false}
               width="80"

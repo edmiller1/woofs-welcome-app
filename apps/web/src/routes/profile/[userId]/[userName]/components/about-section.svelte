@@ -131,7 +131,7 @@
             imageId={dog.imageId}
             alt={dog.name}
             class="size-20 sm:size-24 md:size-32 rounded-full object-cover object-center"
-            variant="card"
+            variant="small"
             height="128"
             width="128"
           />

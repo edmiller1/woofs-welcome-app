@@ -110,7 +110,7 @@
                 imageId={profile.data.profileImageId!}
                 alt="Profile"
                 class="w-full h-full object-cover object-center"
-                variant="avatar"
+                variant="small"
               />
             {/if}
           </div>
@@ -240,7 +240,7 @@
                       imageId={dog.imageId}
                       alt={dog.name}
                       class="w-full h-full object-cover object-center"
-                      variant="card"
+                      variant="small"
                     />
                   </div>
                   <div>
@@ -417,7 +417,7 @@
                         imageId={collection.items[0].place.images[0].imageId}
                         alt={collection.name}
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        variant="card"
+                        variant="small"
                       />
                       <div
                         class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"

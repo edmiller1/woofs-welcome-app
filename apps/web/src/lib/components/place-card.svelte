@@ -124,7 +124,7 @@
                         imageId={image}
                         alt={name}
                         class="h-full w-full rounded-lg object-cover"
-                        variant="card"
+                        variant="small"
                         height="100%"
                       />
                     </div>
@@ -219,7 +219,7 @@
               imageId={images[0]}
               alt={name}
               class="h-full w-full rounded-lg object-cover"
-              variant="card"
+              variant="small"
               height="100%"
             />
             {#if memberFavourite}

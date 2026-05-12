@@ -23,7 +23,7 @@
         class="h-52 w-full shrink-0 object-cover object-center"
         width="208"
         height="208"
-        variant="card"
+        variant="small"
       />
     </div>
 

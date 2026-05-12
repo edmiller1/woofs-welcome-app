@@ -25,7 +25,7 @@
   const profileImage = $derived(
     image
       ? image.replace(/=s\d+-c$/, "=s256-c")
-      : buildImageUrl(imageId ?? "", "avatar"),
+      : buildImageUrl(imageId ?? "", "small"),
   );
 </script>
 
