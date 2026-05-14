@@ -17,7 +17,7 @@ export const SRCSET_VARIANTS: { variant: ImageVariant; width: number }[] = [
 	{ variant: 'xlarge', width: 1920 },
 ];
 
-export const IMAGE_CDN_URL = 'https://imagedelivery.net/08e981cecb92746f1f2cf59ac9969f40';
+export const IMAGE_CDN_URL = 'https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ';
 
 export function buildImageUrl(imageId: string, variant: ImageVariant = 'medium'): string {
 	return `${IMAGE_CDN_URL}/${imageId}/${variant}`;

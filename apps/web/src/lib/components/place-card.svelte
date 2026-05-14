@@ -119,7 +119,7 @@
               <Carousel.Content>
                 {#each images as image}
                   <Carousel.Item>
-                    <div class="relative aspect-4/3">
+                    <div class="relative aspect-[1.21]">
                       <OptimizedImage
                         imageId={image}
                         alt={name}
@@ -214,13 +214,13 @@
         </div>
       {:else if images.length === 1}
         <div class="group basis-70 md:basis-[320px]">
-          <div class="relative aspect-4/3">
+          <div class="relative aspect-[1.21]">
             <OptimizedImage
               imageId={images[0]}
               alt={name}
               class="h-full w-full rounded-lg object-cover"
               variant="small"
-              height="100%"
+              height="200"
             />
             {#if memberFavourite}
               <div class="absolute top-2 left-2">

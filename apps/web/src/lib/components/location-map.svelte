@@ -28,6 +28,7 @@
       container: mapContainer,
       style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
       interactive: true,
+      attributionControl: { compact: true, customAttribution: "" },
     });
 
     map.addControl(new maplibregl.NavigationControl(), "top-right");
@@ -46,11 +47,17 @@
 
       validPlaces.forEach((place) => {
         const el = document.createElement("div");
-        el.innerHTML = `
-          <div style="background:white;color:black;border-radius:9999px;padding:2px 8px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid #e5e7eb;cursor:pointer;white-space:nowrap;">
-            ★ ${place.rating ? Number(place.rating).toFixed(1) : "N/A"}
-          </div>
-        `;
+        el.style.cssText = "background:white;color:#1a1a1a;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:1.5px solid #e5e7eb;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;font-family:sans-serif;transition:box-shadow 0.15s ease;";
+        el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${place.rating ? Number(place.rating).toFixed(1) : "—"}`;
+
+        el.addEventListener("mouseenter", () => {
+          el.style.zIndex = "10";
+          el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.28)";
+        });
+        el.addEventListener("mouseleave", () => {
+          el.style.zIndex = "";
+          el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.18)";
+        });
 
         el.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -86,7 +93,7 @@
           });
         });
 
-        const marker = new maplibregl.Marker(el)
+        const marker = new maplibregl.Marker({ element: el })
           .setLngLat([Number(place.lng), Number(place.lat)])
           .addTo(map!);
 

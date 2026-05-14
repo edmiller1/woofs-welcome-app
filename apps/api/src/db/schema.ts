@@ -42,6 +42,12 @@ export const placeTypeEnum = pgEnum("place_type", [
   "Accomodation",
 ]);
 
+export const difficultyEnum = pgEnum("difficulty", [
+  "beginner",
+  "intermediate",
+  "advanced",
+]);
+
 export const reportStatusEnum = pgEnum("report_status", [
   "pending",
   "approved",
@@ -448,6 +454,13 @@ export const Place = pgTable(
     // Dog-specific info
     dogRules: text("dog_rules").array(),
     dogAmenities: text("dog_amenities").array(),
+    offLeadAllowed: boolean("off_lead_allowed").default(false),
+    waterAvailable: boolean("water_available").default(false),
+
+    //adventure specific
+    distanceKm: integer("distance_km").default(0),
+    durationMins: integer("duration_mins").default(0),
+    difficulty: difficultyEnum("difficulty").default("beginner"),
 
     // Metrics and flags
     rating: numeric("rating", { precision: 3, scale: 2 }).default("0"),

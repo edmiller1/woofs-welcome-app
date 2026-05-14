@@ -136,6 +136,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@aejkatappaja/phantom-ui':
+        specifier: ^0.10.1
+        version: 0.10.1
       '@lottiefiles/dotlottie-svelte':
         specifier: ^0.8.14
         version: 0.8.14(svelte@5.47.0)
@@ -270,6 +273,10 @@ packages:
 
   '@acemir/cssom@0.9.31':
     resolution: {integrity: sha512-ZnR3GSaH+/vJ0YlHau21FjfLYjMpYVIzTD8M8vIEQvIGxeOXyXdzCI140rrCY862p/C/BbzWsjc1dgnM9mkoTA==}
+
+  '@aejkatappaja/phantom-ui@0.10.1':
+    resolution: {integrity: sha512-g6HIw9OjnFR15D+pfP0CxD/UVOH70fj860tXCL+RwQB0H6WqCKTSY/wpq+abd50w1GQH0QAGZ0PFuxkE+nWQwA==}
+    hasBin: true
 
   '@apm-js-collab/code-transformer@0.8.2':
     resolution: {integrity: sha512-YRjJjNq5KFSjDUoqu5pFUWrrsvGOxl6c3bu+uMFc9HNNptZ2rNU/TI2nLw4jnhQNtka972Ee2m3uqbvDQtPeCA==}
@@ -1495,6 +1502,12 @@ packages:
 
   '@layerstack/utils@2.0.0-next.14':
     resolution: {integrity: sha512-1I2CS0Cwgs53W35qVg1eBdYhB/CiPvL3s0XE61b8jWkTHxgjBF65yYNgXjW74kv7WI7GsJcWMNBufPd0rnu9kA==}
+
+  '@lit-labs/ssr-dom-shim@1.5.1':
+    resolution: {integrity: sha512-Aou5UdlSpr5whQe8AA/bZG0jMj96CoJIWbGfZ91qieWu5AWUMKw8VR/pAkQkJYvBNhmCcWnZlyyk5oze8JIqYA==}
+
+  '@lit/reactive-element@2.1.2':
+    resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
   '@lottiefiles/dotlottie-svelte@0.8.14':
     resolution: {integrity: sha512-ItKvUpOFPDmds0oHJNxH2Vq02c00X62yGO3geMFrjjZ+h92KVO44S6nkgeRwmOONoKN8dJ9TA87/U7IKtOGKmQ==}
@@ -3801,6 +3814,15 @@ packages:
     resolution: {integrity: sha512-utfs7Pr5uJyyvDETitgsaqSyjCb2qNRAtuqUeWIAKztsOYdcACf2KtARYXg2pSvhkt+9NfoaNY7fxjl6nuMjIQ==}
     engines: {node: '>= 12.0.0'}
 
+  lit-element@4.2.2:
+    resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==}
+
+  lit-html@3.3.2:
+    resolution: {integrity: sha512-Qy9hU88zcmaxBXcc10ZpdK7cOLXvXpRoBxERdtqV9QOrfpMZZ6pSYP91LhpPtap3sFMUiL7Tw2RImbe0Al2/kw==}
+
+  lit@3.3.2:
+    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==}
+
   locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
@@ -4834,6 +4856,10 @@ packages:
 snapshots:
 
   '@acemir/cssom@0.9.31': {}
+
+  '@aejkatappaja/phantom-ui@0.10.1':
+    dependencies:
+      lit: 3.3.2
 
   '@apm-js-collab/code-transformer@0.8.2': {}
 
@@ -6087,6 +6113,12 @@ snapshots:
       d3-time: 3.1.0
       d3-time-format: 4.1.0
       lodash-es: 4.17.22
+
+  '@lit-labs/ssr-dom-shim@1.5.1': {}
+
+  '@lit/reactive-element@2.1.2':
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.5.1
 
   '@lottiefiles/dotlottie-svelte@0.8.14(svelte@5.47.0)':
     dependencies:
@@ -7405,8 +7437,7 @@ snapshots:
     dependencies:
       '@types/node': 25.0.9
 
-  '@types/trusted-types@2.0.7':
-    optional: true
+  '@types/trusted-types@2.0.7': {}
 
   '@types/validator@13.15.10':
     optional: true
@@ -8520,6 +8551,22 @@ snapshots:
       lightningcss-linux-x64-musl: 1.30.2
       lightningcss-win32-arm64-msvc: 1.30.2
       lightningcss-win32-x64-msvc: 1.30.2
+
+  lit-element@4.2.2:
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.5.1
+      '@lit/reactive-element': 2.1.2
+      lit-html: 3.3.2
+
+  lit-html@3.3.2:
+    dependencies:
+      '@types/trusted-types': 2.0.7
+
+  lit@3.3.2:
+    dependencies:
+      '@lit/reactive-element': 2.1.2
+      lit-element: 4.2.2
+      lit-html: 3.3.2
 
   locate-character@3.0.0: {}
 
