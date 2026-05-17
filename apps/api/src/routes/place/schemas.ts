@@ -34,3 +34,19 @@ export const nearbyPlacesSchema = z.object({
 export const trendingPlacesSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(6),
 });
+
+export const explorePlacesSchema = z.object({
+  swLat: z.coerce.number().min(-90).max(90),
+  swLng: z.coerce.number().min(-180).max(180),
+  neLat: z.coerce.number().min(-90).max(90),
+  neLng: z.coerce.number().min(-180).max(180),
+  types: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v.split(",") : undefined)),
+  rating: z.coerce.number().min(1).max(5).optional(),
+  distance: z.coerce.number().min(1).max(1000).optional(),
+  minLength: z.coerce.number().min(0).optional(),
+  maxLength: z.coerce.number().min(0).optional(),
+  difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
+});

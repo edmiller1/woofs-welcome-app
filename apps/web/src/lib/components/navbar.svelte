@@ -68,9 +68,7 @@
 <header
   class="top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md border-b border-border-subtle/20"
 >
-  <div
-    class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
-  >
+  <div class="flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a class="text-2xl font-headline italic font-bold text-[#154212]" href="/"
         >Woofs Welcome</a

@@ -67,3 +67,41 @@ export interface CommunityStats {
   checkIns: number;
   placesSaved: number;
 }
+
+export interface ExplorePlacesParams {
+  swLat: number;
+  swLng: number;
+  neLat: number;
+  neLng: number;
+  types?: string[];
+  rating?: number;
+  distance?: number;
+  minLength?: number;
+  maxLength?: number;
+  difficulty?: "beginner" | "intermediate" | "advanced";
+}
+
+export interface ExplorePlaceItem {
+  id: string;
+  name: string;
+  slug: string;
+  types: string[];
+  rating: number;
+  reviewsCount: number;
+  lat: number;
+  lng: number;
+  imageId: string;
+  locationPath: string;
+  cityName: string;
+  regionName: string;
+  countryCode: string;
+  dogAmenities: string[];
+  isSaved: boolean;
+  isVerified: boolean;
+  memberFavourite: boolean;
+}
+
+export interface ExplorePlacesResult {
+  places: ExplorePlaceItem[];
+  total: number;
+}

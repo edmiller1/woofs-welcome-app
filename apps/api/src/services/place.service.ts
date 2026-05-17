@@ -388,6 +388,124 @@ export class PlaceService {
     }
   }
 
+  async explorePlaces(
+    filters: {
+      swLat: number;
+      swLng: number;
+      neLat: number;
+      neLng: number;
+      types?: string[];
+      rating?: number;
+      distance?: number;
+      minLength?: number;
+      maxLength?: number;
+      difficulty?: "beginner" | "intermediate" | "advanced";
+    },
+    userId?: string,
+  ) {
+    try {
+      const conditions = [
+        between(
+          sql`CAST(${Place.latitude} AS DECIMAL)`,
+          filters.swLat.toString(),
+          filters.neLat.toString(),
+        ),
+        between(
+          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          filters.swLng.toString(),
+          filters.neLng.toString(),
+        ),
+      ];
+
+      if (filters.types && filters.types.length > 0) {
+        conditions.push(
+          sql`${Place.types} && ARRAY[${sql.join(filters.types.map((t) => sql`${t}`), sql`, `)}]::place_type[]`,
+        );
+      }
+
+      if (filters.rating) {
+        conditions.push(
+          sql`CAST(${Place.rating} AS DECIMAL) >= ${filters.rating}`,
+        );
+      }
+
+      if (filters.minLength !== undefined) {
+        conditions.push(sql`${Place.distanceKm} >= ${filters.minLength}`);
+      }
+
+      if (filters.maxLength !== undefined) {
+        conditions.push(sql`${Place.distanceKm} <= ${filters.maxLength}`);
+      }
+
+      if (filters.difficulty) {
+        conditions.push(eq(Place.difficulty, filters.difficulty));
+      }
+
+      if (filters.distance !== undefined) {
+        const centerLat = (filters.swLat + filters.neLat) / 2;
+        const centerLng = (filters.swLng + filters.neLng) / 2;
+        // Haversine distance in km
+        conditions.push(
+          sql`(6371 * acos(
+            cos(radians(${centerLat})) *
+            cos(radians(CAST(${Place.latitude} AS DECIMAL))) *
+            cos(radians(CAST(${Place.longitude} AS DECIMAL)) - radians(${centerLng})) +
+            sin(radians(${centerLat})) *
+            sin(radians(CAST(${Place.latitude} AS DECIMAL)))
+          )) <= ${filters.distance}`,
+        );
+      }
+
+      const places = await this.db.query.Place.findMany({
+        where: and(...conditions),
+        with: {
+          location: { with: { parent: true } },
+          images: { limit: 1, where: eq(PlaceImage.isPrimary, true) },
+        },
+        orderBy: desc(Place.rating),
+        limit: 500,
+      });
+
+      let savedPlaceIds = new Set<string>();
+      if (userId) {
+        savedPlaceIds = await this.collectionService.getSavedPlaceIds(
+          places.map((p) => p.id),
+          userId,
+        );
+      }
+
+      const mapped = places.map((place) => ({
+        id: place.id,
+        name: place.name,
+        slug: place.slug,
+        types: place.types,
+        rating: place.rating,
+        reviewsCount: place.reviewsCount,
+        lat: place.latitude ? parseFloat(place.latitude) : null,
+        lng: place.longitude ? parseFloat(place.longitude) : null,
+        imageId: place.images[0]?.imageId ?? null,
+        locationPath: place.location.path,
+        cityName: place.location.name,
+        regionName: place.location.parent?.name ?? "",
+        countryCode: place.location.countryCode,
+        dogAmenities: place.dogAmenities ?? [],
+        isSaved: savedPlaceIds.has(place.id),
+        isVerified: place.isVerified,
+        memberFavourite: isMemberFavourite(
+          Number(place.rating),
+          place.reviewsCount || 0,
+        ),
+      }));
+
+      return { places: mapped, total: mapped.length };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to explore places", {
+        originalError: error,
+      });
+    }
+  }
+
   getTypes() {
     try {
       return placeTypeEnum.enumValues.sort((a, b) => a.localeCompare(b));

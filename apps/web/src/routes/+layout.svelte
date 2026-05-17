@@ -13,6 +13,7 @@
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import AccountSettingsDialog from "./profile/[userId]/[userName]/components/account-settings-dialog.svelte";
   import { settingsOpen } from "$lib/stores/accountSettingsStore";
+  import { userLocation } from "$lib/stores/geolocationStore";
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -49,6 +50,12 @@
     // if (user) {
     //   contextStore.set(user.activeContext);
     // }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => userLocation.set([pos.coords.longitude, pos.coords.latitude]),
+        () => {},
+      );
+    }
   });
 </script>
 

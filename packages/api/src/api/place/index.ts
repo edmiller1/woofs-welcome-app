@@ -4,6 +4,7 @@ import { getPlaceReviews } from "./getPlaceReviews";
 import { getSimilarPlaces } from "./getSimilarPlaces";
 import { getTrendingPlaces } from "./getTrendingPlaces";
 import { getCommunityStats } from "./getCommunityStats";
+import { explorePlaces } from "./explorePlaces";
 
 export const place = {
   getPlace,
@@ -12,4 +13,5 @@ export const place = {
   getSimilarPlaces,
   getTrendingPlaces,
   getCommunityStats,
+  explorePlaces,
 };

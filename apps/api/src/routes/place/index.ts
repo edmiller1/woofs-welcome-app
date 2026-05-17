@@ -3,7 +3,7 @@ import { optionalAuthMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
-import { nearbyPlacesSchema, placeReviewsSchema, trendingPlacesSchema } from "./schemas";
+import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, trendingPlacesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { CollectionService } from "../../services/collection.service";
 
@@ -163,6 +163,36 @@ placeRouter.get("/similar/:placeId", optionalAuthMiddleware, async (c) => {
 
   return c.json(result, 200);
 });
+
+placeRouter.get(
+  "/explore",
+  optionalAuthMiddleware,
+  zValidator("query", explorePlacesSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+    const placeService = new PlaceService(
+      db,
+      imageUploadService,
+      collectionService,
+      env,
+    );
+
+    const { swLat, swLng, neLat, neLng, types, rating, distance, minLength, maxLength, difficulty } =
+      c.req.valid("query");
+
+    const result = await placeService.explorePlaces(
+      { swLat, swLng, neLat, neLng, types, rating, distance, minLength, maxLength, difficulty },
+      auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
 
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   //Context
