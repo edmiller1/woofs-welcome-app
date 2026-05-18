@@ -1,4 +1,5 @@
 <script lang="ts">
+  import TabsList from "./../../lib/components/ui/tabs/tabs-list.svelte";
   import Navbar from "$lib/components/navbar.svelte";
   import { MapLibre, NavigationControl } from "svelte-maplibre-gl";
   import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
@@ -9,6 +10,8 @@
     CupSoda,
     Footprints,
     Hotel,
+    List,
+    MapIcon,
     MapPin,
     Navigation,
     Road,
@@ -54,7 +57,9 @@
   const NZ_ZOOM = 5;
 
   let map = $state<maplibregl.Map | undefined>();
-  let listCollapsed = $state<boolean>(false);
+  let listCollapsed = $state<boolean>(
+    typeof window !== "undefined" && window.innerWidth < 768
+  );
   const placeMarkers = new Map<string, maplibregl.Marker>();
   let activePopup: maplibregl.Popup | null = null;
   let activeMounted: Record<string, unknown> | null = null;
@@ -670,9 +675,217 @@
 <div class="flex flex-col h-screen overflow-hidden">
   <Navbar {user} />
   <div class="flex-1 relative">
-    <!-- Place list -->
+    <!-- Mobile filter bar -->
+    <div class="md:hidden absolute top-2 left-0 right-0 z-50 px-2">
+      <div
+        class="flex items-center gap-2 overflow-x-auto pb-1"
+        style="scrollbar-width:none;-ms-overflow-style:none;"
+      >
+        <!-- Distance -->
+        <Popover.Root bind:open={distanceOpen}>
+          <Popover.Trigger
+            class={cn(
+              "shrink-0 cursor-pointer bg-white border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              appliedDistanceFilter !== null &&
+                "bg-primary text-white border-primary",
+            )}
+          >
+            {appliedDistanceFilter === null
+              ? "Distance"
+              : `Within ${appliedDistanceFilter} km`}
+            <ChevronDown class="size-3 opacity-60" />
+          </Popover.Trigger>
+          <Popover.Content class="w-72 text-xs">
+            <div
+              class="text-sm flex items-center justify-between text-muted-foreground"
+            >
+              <span>Distance from map location:</span>
+              <span>{distanceFilter} km</span>
+            </div>
+            <Separator class="my-5" />
+            <div class="flex items-center gap-2">
+              <span>0 km</span>
+              <Slider
+                type="single"
+                bind:value={distanceFilter}
+                max={100}
+                min={1}
+              />
+              <span>100 km</span>
+            </div>
+            <Separator />
+            <button
+              class="w-full rounded-full mt-3 hover:bg-muted cursor-pointer text-xs flex items-center justify-center py-2 px-3"
+              onclick={() => {
+                appliedDistanceFilter = distanceFilter;
+                distanceOpen = false;
+              }}
+            >
+              Apply
+            </button>
+          </Popover.Content>
+        </Popover.Root>
+        <!-- Rating -->
+        <Select.Root
+          type="single"
+          name="rating-mob"
+          bind:value={ratingFilter}
+          onValueChange={() => syncUrl()}
+        >
+          <Select.Trigger
+            class={cn(
+              "shrink-0 w-auto cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              ratingFilter && "bg-primary text-white border-primary",
+            )}
+          >
+            <div class="flex items-center gap-1">
+              {#if ratingFilter}<Star
+                  class="size-3 fill-yellow-400 text-yellow-400"
+                />{/if}{ratingContent}
+            </div>
+          </Select.Trigger>
+          <Select.Content>
+            {#each ["1", "2", "3", "4", "5"] as r}
+              <Select.Item value={r}
+                >{#each Array(Number(r)) as _}<Star
+                    class="size-3 fill-yellow-400 text-yellow-400 inline"
+                  />{/each}</Select.Item
+              >
+            {/each}
+            {#if ratingFilter}
+              <Select.Separator />
+              <button
+                onclick={() => {
+                  ratingFilter = "";
+                }}
+                class="w-full hover:bg-muted cursor-pointer text-xs py-2 px-3"
+                >Clear</button
+              >
+            {/if}
+          </Select.Content>
+        </Select.Root>
+        <!-- Types -->
+        <Select.Root
+          type="multiple"
+          name="type-mob"
+          bind:value={typeFilters}
+          onValueChange={() => syncUrl()}
+        >
+          <Select.Trigger
+            class={cn(
+              "shrink-0 w-auto cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              typeFilters.length > 0 && "bg-primary text-white border-primary",
+            )}
+          >
+            {typeContent}
+          </Select.Trigger>
+          <Select.Content class="h-64">
+            {#each filterTypes as filter}
+              <Select.Item value={filter.value}>{filter.name}</Select.Item>
+            {/each}
+            {#if typeFilters.length > 0}
+              <Select.Separator />
+              <button
+                onclick={() => {
+                  typeFilters = [];
+                }}
+                class="w-full hover:bg-muted cursor-pointer text-xs py-2 px-3"
+                >Clear</button
+              >
+            {/if}
+          </Select.Content>
+        </Select.Root>
+        {#if typeFilters.includes("Walk") || typeFilters.includes("Hike") || typeFilters.includes("Trail")}
+          <!-- Difficulty -->
+          <Select.Root
+            type="single"
+            name="diff-mob"
+            bind:value={difficultyFilter}
+          >
+            <Select.Trigger
+              class={cn(
+                "shrink-0 w-auto capitalize cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+                difficultyFilter && "bg-primary text-white border-primary",
+              )}
+            >
+              {difficultyContent}
+            </Select.Trigger>
+            <Select.Content>
+              {#each ["beginner", "intermediate", "advanced"] as d}
+                <Select.Item value={d} class="capitalize">{d}</Select.Item>
+              {/each}
+              {#if difficultyFilter}
+                <Select.Separator />
+                <button
+                  onclick={() => {
+                    difficultyFilter = "";
+                  }}
+                  class="w-full hover:bg-muted cursor-pointer text-xs py-2 px-3"
+                  >Clear</button
+                >
+              {/if}
+            </Select.Content>
+          </Select.Root>
+          <!-- Length -->
+          <Popover.Root bind:open={lengthOpen}>
+            <Popover.Trigger
+              class={cn(
+                "shrink-0 cursor-pointer bg-white border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+                appliedLengthFilter !== null &&
+                  "bg-primary text-white border-primary",
+              )}
+            >
+              {appliedLengthFilter === null
+                ? "Length"
+                : `${lengthFilter[0]}-${lengthFilter[1]} km`}
+              <ChevronDown class="size-3 opacity-60" />
+            </Popover.Trigger>
+            <Popover.Content class="w-72 text-xs">
+              <div class="text-sm text-muted-foreground mb-4">
+                {lengthFilter[0]}-{lengthFilter[1]} km
+              </div>
+              <Separator class="my-5" />
+              <div class="flex items-center gap-2">
+                <span>0 km</span>
+                <Slider
+                  type="multiple"
+                  bind:value={lengthFilter}
+                  max={100}
+                  min={0}
+                />
+                <span>100 km</span>
+              </div>
+              <Separator />
+              <button
+                class="w-full rounded-full mt-3 hover:bg-muted cursor-pointer text-xs flex items-center justify-center py-2 px-3"
+                onclick={() => {
+                  appliedLengthFilter = [lengthFilter[0], lengthFilter[1]];
+                  lengthOpen = false;
+                  syncUrl({
+                    minLength: String(lengthFilter[0]),
+                    maxLength: String(lengthFilter[1]),
+                  });
+                }}
+              >
+                Apply
+              </button>
+            </Popover.Content>
+          </Popover.Root>
+        {/if}
+        {#if hasActiveFilters}
+          <button
+            onclick={clearAllFilters}
+            class="shrink-0 cursor-pointer bg-gray-100 rounded-full border border-input px-3 py-1.5 text-sm whitespace-nowrap shadow-sm"
+          >
+            Clear all
+          </button>
+        {/if}
+      </div>
+    </div>
+
+    <!-- Desktop place list -->
     <div
-      class="absolute top-4 left-4 bottom-4 shrink-0 z-50 rounded-lg bg-white overflow-hidden"
+      class="hidden md:block absolute top-4 left-4 bottom-4 shrink-0 z-50 rounded-lg bg-white overflow-hidden"
       style="
         max-height: {listCollapsed ? '72px' : 'calc(100% - 2rem)'};
         max-width: {listCollapsed ? 'calc(25% - 50px)' : '25%'};
@@ -773,9 +986,100 @@
         </div>
       </div>
     </div>
-    <!-- Filter bar -->
+
+    <!-- Mobile bottom sheet — slides up to fill screen below the filter bar -->
     <div
-      class="absolute top-4 right-4 z-50 flex items-center gap-2"
+      class="md:hidden absolute left-0 right-0 bottom-0 z-40"
+      style="
+        top: {listCollapsed ? '100%' : '3.5rem'};
+        transition: top 300ms ease;
+      "
+    >
+      <div class="bg-white shadow-2xl flex flex-col h-full overflow-hidden">
+        <div
+          class="px-4 py-3 shrink-0 border-b flex items-center justify-between"
+        >
+          <span class="font-semibold">Explore places</span>
+          {#if explorePlacesQuery.isSuccess}
+            <span class="text-sm text-muted-foreground">
+              {explorePlacesQuery.data.total}
+              {explorePlacesQuery.data.total === 1 ? "place" : "places"}
+            </span>
+          {/if}
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 py-4 relative">
+          {#if explorePlacesQuery.isFetching && !explorePlacesQuery.isLoading}
+            <div class="absolute top-2 right-2 z-10">
+              <Spinner class="size-4" />
+            </div>
+          {/if}
+          {#if explorePlacesQuery.isLoading}
+            <div class="h-24 flex items-center justify-center"><Spinner /></div>
+          {:else if explorePlacesQuery.isError}
+            <div
+              class="h-24 flex flex-col items-center justify-center text-center px-2"
+            >
+              <p class="text-sm font-semibold">Something went wrong.</p>
+              <p class="text-xs text-muted-foreground mt-1">
+                Try moving the map or adjusting your filters.
+              </p>
+            </div>
+          {:else if explorePlacesQuery.isSuccess && explorePlacesQuery.data.places.length === 0}
+            <div class="h-24 flex flex-col items-center justify-center">
+              <p class="font-semibold">No places found in this area.</p>
+              <p class="text-sm text-muted-foreground">
+                Zoom out or try a new search.
+              </p>
+            </div>
+          {:else if explorePlacesQuery.isSuccess}
+            <div role="list" class="flex flex-col gap-6">
+              {#each explorePlacesQuery.data.places as place (place.id)}
+                <div role="listitem">
+                  <PlaceCard
+                    id={place.id}
+                    name={place.name}
+                    slug={place.slug}
+                    types={place.types}
+                    rating={String(place.rating)}
+                    reviewCount={place.reviewsCount}
+                    cityName={place.cityName}
+                    regionName={place.regionName}
+                    countryCode={place.countryCode}
+                    locationPath={place.locationPath}
+                    imageId={place.imageId}
+                    isSaved={place.isSaved}
+                    isVerified={place.isVerified}
+                    memberFavourite={place.memberFavourite}
+                    dogAmenities={place.dogAmenities}
+                    {user}
+                  />
+                </div>
+              {/each}
+            </div>
+          {/if}
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile floating toggle pill — always visible at bottom -->
+    <div class="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+      <button
+        onclick={() => (listCollapsed = !listCollapsed)}
+        class="flex items-center gap-2 bg-primary text-white rounded-full px-5 py-3 font-semibold shadow-xl cursor-pointer"
+      >
+        {#if listCollapsed}
+          <MapIcon class="size-4" />
+          Map
+        {:else}
+          <List class="size-4" />
+          List
+        {/if}
+      </button>
+    </div>
+
+    <!-- Desktop filter bar -->
+    <div
+      class="hidden md:flex absolute top-4 right-4 z-50 items-center gap-2"
       style="
         left: {listCollapsed ? 'calc(25% - 50px + 2rem)' : 'calc(25% + 2rem)'};
         transition: left 200ms ease {listCollapsed ? '300ms' : '0ms'};
