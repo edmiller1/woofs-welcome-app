@@ -17,17 +17,16 @@
   import {
     Bookmark,
     Dog,
-    Facebook,
     Image,
-    Instagram,
     MapPin,
     MessageCircle,
     Pencil,
     Star,
     ThumbsUp,
     Trash2,
-    Twitter,
   } from "@lucide/svelte";
+  import { HugeiconsIcon } from '@hugeicons/svelte'
+  import { Facebook02Icon, InstagramIcon, NewTwitterIcon, TiktokIcon } from '@hugeicons/core-free-icons'
   import TiktokLogo from "$lib/components/tiktok-logo.svelte";
   import XLogo from "$lib/components/x-logo.svelte";
   import { format, formatDistanceToNow } from "date-fns";
@@ -186,7 +185,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Instagram class="size-5 text-secondary" />
+                  <HugeiconsIcon icon={InstagramIcon} class="size-5 text-secondary" />
                 </a>
               {/if}
               {#if profile.data.facebook}
@@ -195,7 +194,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Facebook class="size-5 text-secondary" />
+                  <HugeiconsIcon icon={Facebook02Icon} class="size-5 text-secondary" />
                 </a>
               {/if}
               {#if profile.data.x}
@@ -204,7 +203,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <XLogo />
+                  <HugeiconsIcon icon={NewTwitterIcon} class="size-5 text-secondary" />
                 </a>
               {/if}
               {#if profile.data.tiktok}
@@ -213,7 +212,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <TiktokLogo />
+                  <HugeiconsIcon icon={TiktokIcon} class="size-5 text-secondary" />
                 </a>
               {/if}
             </div>
@@ -224,6 +223,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
         <!-- Left Column -->
         <div class="lg:col-span-7 space-y-16">
+        {#if profile.data.dogs && profile.data.dogs.length > 0}
           <section>
             <h2
               class="serif-headline text-3xl font-bold italic text-primary mb-8"
@@ -257,6 +257,7 @@
               {/each}
             </div>
           </section>
+          {/if}
 
           <!-- Recent Reviews -->
           <section>

@@ -13,6 +13,7 @@
     Search,
     ShoppingBag,
     Stethoscope,
+    TextAlignJustify,
     Ticket,
     Trees,
     Utensils,
@@ -22,6 +23,7 @@
   import { Button } from "./ui/button";
   import NotificationsMenu from "./notifications-menu.svelte";
   import CollectionsSheet from "./collections-sheet.svelte";
+  import MenuSheet from "./menu-sheet.svelte";
 
   interface Props {
     user: BAUser | null;
@@ -68,12 +70,20 @@
 <header
   class="top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md border-b border-border-subtle/20"
 >
-  <div class="flex justify-between items-center w-full px-8 py-4">
+  <!-- Desktop layout -->
+  <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
-      <a class="text-2xl font-headline italic font-bold text-[#154212]" href="/"
-        >Woofs Welcome</a
+      <a
+        class="hidden lg:block text-2xl font-headline italic font-bold text-[#154212]"
+        href="/"
+        >Woofs Welcome
+      </a>
+      <a
+        href="/"
+        class="lg:hidden text-2xl font-headline italic font-bold text-[#154212]"
+        >WW</a
       >
-      <nav class="hidden md:flex gap-6 items-center">
+      <nav class="flex gap-6 items-center">
         <a
           class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive
             ? 'text-[#154212] border-b-2 border-[#f8bd45]'
@@ -90,11 +100,11 @@
     </div>
     <div class="flex items-center gap-4">
       <div
-        class="hidden lg:flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
+        class="w-full flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
       >
         <Search class="h-4 w-4 shrink-0" />
         <input
-          class="bg-transparent w-96 border-none focus:ring-0 text-sm font-body outline-none"
+          class="bg-transparent w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
           placeholder="Search locations..."
           type="text"
         />
@@ -108,6 +118,35 @@
           <Button variant="default" class="ml-2">Sign In</Button>
         </a>
       {/if}
+    </div>
+  </div>
+
+  <!-- Mobile layout: three equal columns -->
+  <div
+    class="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden w-full px-4 py-3"
+  >
+    <div class="flex items-center">
+      <a href="/" class="text-2xl font-headline italic font-bold text-[#154212]"
+        >WW</a
+      >
+    </div>
+    <div class="flex items-center">
+      <div
+        class="flex items-center bg-surface-raised rounded-full px-3 py-1.5 gap-2 w-full"
+      >
+        <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
+        <input
+          class="bg-transparent w-full border-none focus:ring-0 text-sm font-body outline-none"
+          placeholder="Search..."
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-1">
+      {#if user}
+        <NotificationsMenu />
+      {/if}
+      <MenuSheet {user} />
     </div>
   </div>
   {#if !isExplorePageOrAccountPage}

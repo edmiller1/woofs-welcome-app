@@ -139,6 +139,12 @@ importers:
       '@aejkatappaja/phantom-ui':
         specifier: ^0.10.1
         version: 0.10.1
+      '@hugeicons/core-free-icons':
+        specifier: ^4.1.4
+        version: 4.1.4
+      '@hugeicons/svelte':
+        specifier: ^1.1.2
+        version: 1.1.2(svelte@5.47.0)
       '@lottiefiles/dotlottie-svelte':
         specifier: ^0.8.14
         version: 0.8.14(svelte@5.47.0)
@@ -1319,6 +1325,14 @@ packages:
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.25.0 || ^4.0.0
+
+  '@hugeicons/core-free-icons@4.1.4':
+    resolution: {integrity: sha512-vkMvlnW7Atqh7juhZCadYDvqABWcEeVAkavAK6HJBFbYkLCme5CN51Oc91D5j5ruDja+HQPjMfWkTxxulcwvAQ==}
+
+  '@hugeicons/svelte@1.1.2':
+    resolution: {integrity: sha512-yYmLFE+tq/mJmmjNaGxnaA99+H9yOzZmWJOMxKd9g9EJ8FCTCG8jpTgzVSv5bpuXDjQZFIGJz+Z/syiXhrS0mA==}
+    peerDependencies:
+      svelte: ^5.0.0
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -5949,6 +5963,12 @@ snapshots:
     dependencies:
       hono: 4.11.4
       zod: 4.3.5
+
+  '@hugeicons/core-free-icons@4.1.4': {}
+
+  '@hugeicons/svelte@1.1.2(svelte@5.47.0)':
+    dependencies:
+      svelte: 5.47.0
 
   '@img/colour@1.0.0': {}
 

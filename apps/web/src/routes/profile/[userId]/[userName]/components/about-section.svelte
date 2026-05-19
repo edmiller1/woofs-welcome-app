@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { HugeiconsIcon } from '@hugeicons/svelte';
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { Badge } from "$lib/components/ui/badge";
   import { Button } from "$lib/components/ui/button";
   import { Separator } from "$lib/components/ui/separator";
-  import { Calendar, DogIcon, Instagram, MapPin, Pencil } from "@lucide/svelte";
+  import { Calendar, DogIcon, MapPin, Pencil } from "@lucide/svelte";
+  import { Facebook02Icon, InstagramIcon, NewTwitterIcon, TiktokIcon } from '@hugeicons/core-free-icons'
   import type { CityData, Dog } from "@woofs/types";
   import * as Empty from "$lib/components/ui/empty/index.js";
   import PrivacyTooltip from "./privacy-tooltip.svelte";
@@ -72,25 +74,25 @@
       {/if}
       {#if instagram}
         <div class="flex items-center gap-3 text-sm text-foreground">
-          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <HugeiconsIcon icon={InstagramIcon} class="h-5 w-5 shrink-0 text-muted-foreground" />
           <span>{instagram}</span>
         </div>
       {/if}
       {#if facebook}
         <div class="flex items-center gap-3 text-sm text-foreground">
-          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <HugeiconsIcon icon={Facebook02Icon} class="h-5 w-5 shrink-0 text-muted-foreground" />
           <span>{facebook}</span>
         </div>
       {/if}
       {#if x}
         <div class="flex items-center gap-3 text-sm text-foreground">
-          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <HugeiconsIcon icon={NewTwitterIcon} class="h-5 w-5 shrink-0 text-muted-foreground" />
           <span>{x}</span>
         </div>
       {/if}
       {#if tiktok}
         <div class="flex items-center gap-3 text-sm text-foreground">
-          <Instagram class="h-5 w-5 shrink-0 text-muted-foreground" />
+          <HugeiconsIcon icon={TiktokIcon} class="h-5 w-5 shrink-0 text-muted-foreground" />
           <span>{tiktok}</span>
         </div>
       {/if}

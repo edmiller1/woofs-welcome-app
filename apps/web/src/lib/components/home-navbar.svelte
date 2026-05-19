@@ -22,6 +22,7 @@
   import { Button } from "./ui/button";
   import NotificationsMenu from "./notifications-menu.svelte";
   import CollectionsSheet from "./collections-sheet.svelte";
+  import MenuSheet from "./menu-sheet.svelte";
 
   interface Props {
     user: BAUser | null;
@@ -68,37 +69,42 @@
 <header
   class="fixed top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md dark:bg-stone-900/70 border-none"
 >
-  <div
-    class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
-  >
+  <!-- Desktop layout -->
+  <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a
-        class="text-2xl font-serif italic font-bold text-[#154212] dark:text-emerald-500"
-        href="/">Woofs Welcome</a
+        class="hidden lg:block text-2xl font-headline italic font-bold text-[#154212]"
+        href="/"
+        >Woofs Welcome
+      </a>
+      <a
+        href="/"
+        class="lg:hidden text-2xl font-headline italic font-bold text-[#154212]"
+        >WW</a
       >
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="flex gap-6 items-center">
         <a
-          class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {exploreActive
+          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive
             ? 'text-[#154212] border-b-2 border-[#f8bd45]'
-            : 'text-stone-600 dark:text-stone-400'}"
+            : 'text-stone-600'}"
           href="/explore">Explore</a
         >
         <a
-          class="hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors font-medium {communityActive
+          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {communityActive
             ? 'text-[#154212] border-b-2 border-[#f8bd45]'
-            : 'text-stone-600 dark:text-stone-400'}"
+            : 'text-stone-600'}"
           href="/community">Community</a
         >
       </nav>
     </div>
     <div class="flex items-center gap-4">
       <div
-        class="hidden lg:flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
+        class="w-full flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
       >
-        <Search class="h-4 w-4" />
+        <Search class="h-4 w-4 shrink-0" />
         <input
-          class="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium outline-none"
-          placeholder="Search destinations..."
+          class="bg-transparent w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
+          placeholder="Search locations..."
           type="text"
         />
       </div>
@@ -113,14 +119,43 @@
       {/if}
     </div>
   </div>
+
+  <!-- Mobile layout: three equal columns -->
+  <div
+    class="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden w-full px-4 py-3"
+  >
+    <div class="flex items-center">
+      <a href="/" class="text-2xl font-headline italic font-bold text-[#154212]"
+        >WW</a
+      >
+    </div>
+    <div class="flex items-center">
+      <div
+        class="flex items-center bg-surface-raised rounded-full px-3 py-1.5 gap-2 w-full"
+      >
+        <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
+        <input
+          class="bg-transparent w-full border-none focus:ring-0 text-sm font-body outline-none"
+          placeholder="Search..."
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-1">
+      {#if user}
+        <NotificationsMenu />
+      {/if}
+      <MenuSheet {user} />
+    </div>
+  </div>
   {#if !isExplorePageOrAccountPage}
     <div
-      class="hidden lg:flex lg:space-x-4 lg:py-2 items-center w-full px-8 py-4 max-w-screen-2xl mx-auto"
+      class="hidden lg:flex lg:space-x-4 lg:py-2 items-center w-full px-5 py-4 max-w-screen-2xl mx-auto"
     >
       {#each types as type}
         <a
           href={type.href}
-          class="hover:bg-secondary hover:text-foreground flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+          class="hover:bg-secondary hover:text-white flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
         >
           <type.icon class="size-4" />
           <span class=" text-sm font-medium">{type.name}</span>

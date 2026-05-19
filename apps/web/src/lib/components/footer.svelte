@@ -85,6 +85,11 @@
             >Contact</a
           >
         </li>
+        <li>
+          <a class="hover:text-primary transition-colors" href="/advertise"
+            >Advertise</a
+          >
+        </li>
       </ul>
     </div>
     <div class="md:col-span-4 space-y-4">

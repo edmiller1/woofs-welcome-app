@@ -37,6 +37,8 @@
 	},
 	"dependencies": {
 		"@aejkatappaja/phantom-ui": "^0.10.1",
+		"@hugeicons/core-free-icons": "^4.1.4",
+		"@hugeicons/svelte": "^1.1.2",
 		"@lottiefiles/dotlottie-svelte": "^0.8.14",
 		"@sentry/sveltekit": "^10.34.0",
 		"@tailwindcss/vite": "^4.1.18",

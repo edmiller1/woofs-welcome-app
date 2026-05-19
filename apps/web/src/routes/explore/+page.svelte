@@ -58,7 +58,7 @@
 
   let map = $state<maplibregl.Map | undefined>();
   let listCollapsed = $state<boolean>(
-    typeof window !== "undefined" && window.innerWidth < 768
+    typeof window !== "undefined" && window.innerWidth < 768,
   );
   const placeMarkers = new Map<string, maplibregl.Marker>();
   let activePopup: maplibregl.Popup | null = null;
@@ -887,7 +887,7 @@
     <div
       class="hidden md:block absolute top-4 left-4 bottom-4 shrink-0 z-50 rounded-lg bg-white overflow-hidden"
       style="
-        max-height: {listCollapsed ? '72px' : 'calc(100% - 2rem)'};
+        max-height: {listCollapsed ? '75px' : 'calc(100% - 2rem)'};
         max-width: {listCollapsed ? 'calc(25% - 50px)' : '25%'};
         width: 25%;
         transition:
@@ -997,7 +997,7 @@
     >
       <div class="bg-white shadow-2xl flex flex-col h-full overflow-hidden">
         <div
-          class="px-4 py-3 shrink-0 border-b flex items-center justify-between"
+          class="px-4 pt-4 pb-6 shrink-0 border-b flex items-center justify-between"
         >
           <span class="font-semibold">Explore places</span>
           {#if explorePlacesQuery.isSuccess}

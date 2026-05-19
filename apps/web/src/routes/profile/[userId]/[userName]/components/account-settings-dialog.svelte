@@ -244,9 +244,9 @@
 <Dialog.Root bind:open>
   <Dialog.Content
     showCloseButton={false}
-    class="max-h-[60vh] overflow-y-auto sm:max-w-2xl p-0 m-0"
+    class="max-h-[60vh] bg-white overflow-y-auto sm:max-w-2xl p-0 m-0"
   >
-    <Dialog.Header class="sticky top-0 z-20 bg-background p-4">
+    <Dialog.Header class="sticky top-0 z-50 bg-white p-4">
       <Dialog.Title>Account Settings</Dialog.Title>
       <Dialog.Description>
         {currentTab === "Account"
