@@ -205,19 +205,23 @@ export class PlaceService {
       });
 
       if (!place.description) {
-        const AIdesc = await getPlaceDescription(
-          this.env,
-          place.name,
-          location.path,
-          place.address || "",
-        );
+        try {
+          const AIdesc = await getPlaceDescription(
+            this.env,
+            place.name,
+            place.address || "",
+            location.path,
+          );
 
-        await this.db
-          .update(Place)
-          .set({
-            description: AIdesc,
-          })
-          .where(eq(Place.id, place.id));
+          await this.db
+            .update(Place)
+            .set({
+              description: AIdesc,
+            })
+            .where(eq(Place.id, place.id));
+        } catch (error) {
+          console.error("Error generating place description:", error);
+        }
       }
 
       const memberFavourite = isMemberFavourite(

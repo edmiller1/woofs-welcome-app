@@ -39,7 +39,6 @@
     Star,
   } from "@lucide/svelte";
   import PlaceMapDialog from "./components/place-map-dialog.svelte";
-  import { map } from "zod";
   import { Separator } from "$lib/components/ui/separator";
   import RecommendedPlaces from "./components/recommended-places.svelte";
   import Footer from "$lib/components/footer.svelte";
@@ -248,7 +247,7 @@
 
         <!-- Amenities Badges -->
         {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
-          <section class="grid grid-cols-4 gap-2 mb-10">
+          <section class="{place.data.dogAmenities.length === 1 ? 'flex' : 'grid grid-cols-2'} gap-2 mb-10">
             {#each place.data.dogAmenities as amenity}
               <span
                 class="bg-[#bbf0ad] text-primary px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
@@ -456,12 +455,15 @@
                       {/each}
                     </div>
                     <p class="text-text-subtle font-body">
-                      Based on {place.data.reviewsCount} community reviews
+                      Based on {place.data.reviewsCount} community review{place
+                        .data.reviewsCount === 1
+                        ? ""
+                        : "s"}
                     </p>
                   </div>
                 </div>
                 {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
-                  <div class="grid grid-cols-2 gap-3">
+                  <div class="{place.data.dogAmenities.length === 1 ? 'flex' : 'grid grid-cols-2'} gap-3">
                     {#each place.data.dogAmenities as amenity}
                       <span
                         class="px-4 py-2 bg-[#bbf0ad] text-primary rounded-full text-sm font-medium flex items-center gap-2 font-body"

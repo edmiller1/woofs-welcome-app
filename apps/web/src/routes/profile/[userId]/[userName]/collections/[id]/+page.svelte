@@ -280,7 +280,6 @@
       <!-- Right: Interactive Map -->
       <section class="flex-1 h-full p-4 relative overflow-hidden">
         <CollectionMap
-          selectedPlaceId={$selectedPlaceId}
           places={$collectionPlaces}
           collectionId={id}
         />
@@ -292,7 +291,6 @@
       <!-- Full screen map -->
       <div class="absolute inset-0">
         <CollectionMap
-          selectedPlaceId={$selectedPlaceId}
           places={$collectionPlaces}
           collectionId={id}
         />
