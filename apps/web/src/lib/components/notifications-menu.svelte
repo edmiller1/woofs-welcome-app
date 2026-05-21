@@ -62,6 +62,7 @@
     {#snippet child({ props })}
       <button
         {...props}
+        aria-label="Notifications"
         class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
       >
         <Bell />

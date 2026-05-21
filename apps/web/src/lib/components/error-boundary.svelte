@@ -12,8 +12,16 @@
 
   let { error, reset, children }: Props = $props();
 
+  const isDevelopment = PUBLIC_NODE_ENV === "development";
+
   const errorMessage = $derived(
-    error ? getErrorMessage(error) : "Something went wrong",
+    !error
+      ? "Something went wrong"
+      : isDevelopment
+        ? getErrorMessage(error)
+        : isApiError(error) && error.isClientError
+          ? getErrorMessage(error)
+          : "Something went wrong. Please try again.",
   );
 
   const handleReset = () => {
@@ -23,8 +31,6 @@
       window.location.reload();
     }
   };
-
-  const isDevelopment = PUBLIC_NODE_ENV === "development";
 </script>
 
 {#if error}

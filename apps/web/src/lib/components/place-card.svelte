@@ -9,6 +9,7 @@
   import { toast } from "svelte-sonner";
   import { goto } from "$app/navigation";
   import OptimizedImage from "./optimized-image.svelte";
+  import HeartButton from "./heart-button.svelte";
 
   interface Props {
     id: string;
@@ -104,6 +105,7 @@
 <a
   href={`/location/${locationPath}/places/${slug}`}
   class="m-0 flex w-full p-0"
+  target="_blank"
 >
   <div
     class="m-0 flex h-full w-full cursor-pointer flex-col overflow-hidden p-0"
@@ -159,27 +161,13 @@
               >
             </div>
           {/if}
-          <!-- TODO: Switch to heart-button.svelte -->
           <div class="absolute right-2 top-2 z-10">
-            <Button
-              variant="ghost"
-              size="icon"
-              class="rounded-full bg-white/80 hover:bg-white"
-              onclick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleFavouritePlace(e);
-              }}
-            >
-              <Heart
-                class={`size-6 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
-              />
-            </Button>
+            <HeartButton {isSaved} {user} placeId={id} />
           </div>
           <div class="space-y-3 py-2">
             <div class="m-0 flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <h3 class="truncate font-semibold text-primary">{name}</h3>
+                <h3 class="truncate font-semibold">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -231,20 +219,7 @@
             {/if}
             <!-- Heart Button -->
             <div class="absolute right-2 top-2 z-10">
-              <Button
-                variant="ghost"
-                size="icon"
-                class="rounded-full bg-white/80 hover:bg-white"
-                onclick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleFavouritePlace(e);
-                }}
-              >
-                <Heart
-                  class={`size-6 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
-                />
-              </Button>
+              <HeartButton {isSaved} {user} placeId={id} />
             </div>
           </div>
           <div class="space-y-3 py-2 min-w-0">

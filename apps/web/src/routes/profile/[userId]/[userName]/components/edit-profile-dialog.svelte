@@ -255,11 +255,6 @@
       queryClient.invalidateQueries({ queryKey: ["profile", profile.id] });
       open = false;
     },
-    onError: (error: Error) => {
-      toast.error(
-        `Failed to update profile: ${error.message || "Unknown error"}`,
-      );
-    },
   }));
 
   const handleSubmit = () => {

@@ -82,9 +82,6 @@
         queryKey: ["collectionWithPlaces", userId, id, debouncedSearch, page],
       });
     },
-    onError: () => {
-      toast.error("Failed to remove place from collection");
-    },
   }));
 
   $effect(() => {

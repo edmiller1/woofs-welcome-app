@@ -45,13 +45,6 @@
       toast.success("Preferences updated successfully");
       notificationPreferences.refetch();
     },
-    onError: (error) => {
-      toast.error(
-        `Failed to update preferences: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-    },
   }));
 
   const resetPreferences = createMutation(() => ({
@@ -59,13 +52,6 @@
     onSuccess: () => {
       toast.success("Preferences reset successfully");
       notificationPreferences.refetch();
-    },
-    onError: (error) => {
-      toast.error(
-        `Failed to reset preferences: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
     },
   }));
 

@@ -39,13 +39,6 @@
         }
       }, 1500);
     },
-    onError: (error) => {
-      toast.error(
-        `Failed to update profile: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-    },
   }));
 
   const formSchema = z.object({

@@ -20,19 +20,16 @@
       queries: {
         enabled: browser,
         retry: (failureCount, error) => {
-          // Don't retry on client errors (4xx)
           if (error && typeof error === "object" && "isClientError" in error) {
             return false;
           }
-          // Retry server errors up to 2 times
           return failureCount < 2;
         },
         staleTime: 5 * 60 * 1000,
-        // ✅ ADD GLOBAL ERROR HANDLER
-        throwOnError: false, // Don't throw in render
+        throwOnError: false,
+        onError: handleQueryError,
       },
       mutations: {
-        // ✅ ADD GLOBAL ERROR HANDLER
         onError: handleQueryError,
       },
     },

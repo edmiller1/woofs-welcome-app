@@ -73,25 +73,25 @@
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a
-        class="hidden lg:block text-2xl font-headline italic font-bold text-[#154212]"
+        class="hidden lg:block text-2xl font-headline italic font-bold text-primary-text"
         href="/"
         >Woofs Welcome
       </a>
       <a
         href="/"
-        class="lg:hidden text-2xl font-headline italic font-bold text-[#154212]"
+        class="lg:hidden text-2xl font-headline italic font-bold text-primary-text"
         >WW</a
       >
       <nav class="flex gap-6 items-center">
         <a
-          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive
-            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+          class="font-body font-medium hover:text-primary-text transition-colors {exploreActive
+            ? 'text-primary-text font-semibold'
             : 'text-stone-600'}"
           href="/explore">Explore</a
         >
         <a
-          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {communityActive
-            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+          class="font-body font-medium hover:text-primary-text transition-colors {communityActive
+            ? 'text-primary-text font-semibold'
             : 'text-stone-600'}"
           href="/community">Community</a
         >

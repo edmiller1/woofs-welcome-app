@@ -50,9 +50,6 @@
         queryKey: ["place-collections", placeId],
       });
     },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to save");
-    },
   }));
 
   const removePlaceFromCollection = createMutation(() => ({
@@ -70,27 +67,17 @@
         queryKey: ["place-collections", placeId],
       });
     },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to remove");
-    },
   }));
 
   const createCollection = createMutation(() => ({
     mutationFn: (name: string) => api.collection.createCollection(name),
     onSuccess: async (data) => {
-      // Add the place to the newly created collection
       addPlaceToCollection.mutate({
         placeId,
         collectionId: data.collectionId,
       });
-      // Reset form
       newCollectionName = "";
       showNewCollectionForm = false;
-    },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to create collection",
-      );
     },
   }));
 
@@ -130,39 +117,32 @@
   <Dialog.Trigger>
     {#snippet child({ props })}
       {#if user}
-        <Button variant="glass" {...props} class="hidden md:flex">
+        <Button
+          {...props}
+          variant="ghost"
+          size="icon"
+          aria-label={isSaved ? "Remove from saved places" : "Save to collection"}
+          class="rounded-full bg-white/80 hover:bg-white"
+          onclick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dialogOpen = true;
+          }}
+        >
           <Heart
-            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-white"}`}
-          />
-          {#if isSaved}
-            <span class="font-headline font-semibold text-sm">Saved</span>
-          {:else}
-            <span class="font-headline font-semibold text-sm">Save</span>
-          {/if}
-        </Button>
-        <Button variant="outline" {...props} class="md:hidden">
-          <Heart
-            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
+            class={`size-6 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
           />
         </Button>
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "glass" }), "hidden md:flex")}
-          ><Heart class="size-4" /><span
-            class="font-headline font-semibold text-sm">Save</span
-          >
-        </a>
-        <a
-          href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "glass" }), "md:hidden")}
+          class={cn(buttonVariants({ variant: "ghost" }), "hidden md:flex")}
           ><Heart class="size-4" />
-          <span class="font-headline font-semibold text-sm">Save</span>
         </a>
       {/if}
     {/snippet}
   </Dialog.Trigger>
-  <Dialog.Content class="max-w-md">
+  <Dialog.Content class="max-w-md bg-white">
     <Dialog.Header>
       <Dialog.Title>Save to collection</Dialog.Title>
       <Dialog.Description>
@@ -191,6 +171,7 @@
             <Button
               size="icon"
               variant="ghost"
+              aria-label="Save collection"
               onclick={handleCreateCollection}
               disabled={isPending || newCollectionName.trim().length < 2}
             >
@@ -203,6 +184,7 @@
             <Button
               size="icon"
               variant="ghost"
+              aria-label="Cancel"
               onclick={cancelNewCollection}
               disabled={isPending}
             >
@@ -212,11 +194,11 @@
         {:else}
           <!-- New collection button -->
           <button
-            class="cursor-pointer hover:bg-muted flex w-full items-center gap-3 rounded-lg p-2 transition-colors"
+            class="cursor-pointer hover:bg-muted border border-input flex w-full items-center gap-3 rounded-lg p-2 transition-colors"
             onclick={() => (showNewCollectionForm = true)}
           >
             <div
-              class="bg-muted flex size-16 shrink-0 items-center justify-center rounded-lg"
+              class="bg-muted/20 flex size-16 shrink-0 items-center justify-center rounded-lg"
             >
               <Plus class="text-muted-foreground size-6" />
             </div>
@@ -243,7 +225,7 @@
         {:else}
           {#each placeCollections.data as collection}
             <button
-              class="cursor-pointer hover:bg-muted flex w-full items-center gap-3 rounded-md p-2 transition-colors"
+              class="cursor-pointer hover:bg-muted border border-input flex w-full items-center gap-3 rounded-md p-2 transition-colors"
               onclick={() =>
                 handleToggleCollection(collection.id, collection.hasPlace)}
               disabled={isPending}

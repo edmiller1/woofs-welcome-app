@@ -23,9 +23,6 @@
       confirmCancel();
       queryClient.invalidateQueries({ queryKey: ["profileReviews"] });
     },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete review");
-    },
   }));
 
   const confirmCancel = () => {

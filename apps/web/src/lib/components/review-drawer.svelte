@@ -96,9 +96,6 @@
       resetForm();
       onOpenChange(false);
     },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to submit review");
-    },
   }));
 
   const resetForm = () => {
@@ -423,6 +420,7 @@
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Close"
             onclick={() => onOpenChange(false)}
           >
             <X class="size-5" />

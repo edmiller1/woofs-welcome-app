@@ -120,9 +120,6 @@
       queryClient.invalidateQueries({ queryKey: ["profileReviews"] });
       onOpenChange(false);
     },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to update review");
-    },
   }));
 
   const handleRatingChange = (newRating: number) => {
@@ -436,6 +433,7 @@
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Close"
             onclick={() => onOpenChange(false)}
           >
             <X class="size-5" />

@@ -50,9 +50,6 @@
         queryKey: ["place-collections", placeId],
       });
     },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to save");
-    },
   }));
 
   const removePlaceFromCollection = createMutation(() => ({
@@ -70,27 +67,17 @@
         queryKey: ["place-collections", placeId],
       });
     },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to remove");
-    },
   }));
 
   const createCollection = createMutation(() => ({
     mutationFn: (name: string) => api.collection.createCollection(name),
     onSuccess: async (data) => {
-      // Add the place to the newly created collection
       addPlaceToCollection.mutate({
         placeId,
         collectionId: data.collectionId,
       });
-      // Reset form
       newCollectionName = "";
       showNewCollectionForm = false;
-    },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to create collection",
-      );
     },
   }));
 
@@ -140,7 +127,7 @@
             <span class="font-headline font-semibold text-sm">Save</span>
           {/if}
         </Button>
-        <Button variant="outline" {...props} class="md:hidden">
+        <Button variant="outline" aria-label={isSaved ? "Remove from saved places" : "Save to collection"} {...props} class="md:hidden">
           <Heart
             class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
           />
@@ -162,7 +149,7 @@
       {/if}
     {/snippet}
   </Dialog.Trigger>
-  <Dialog.Content class="max-w-md">
+  <Dialog.Content class="max-w-md bg-white">
     <Dialog.Header>
       <Dialog.Title>Save to collection</Dialog.Title>
       <Dialog.Description>
@@ -191,6 +178,7 @@
             <Button
               size="icon"
               variant="ghost"
+              aria-label="Save collection"
               onclick={handleCreateCollection}
               disabled={isPending || newCollectionName.trim().length < 2}
             >
@@ -203,6 +191,7 @@
             <Button
               size="icon"
               variant="ghost"
+              aria-label="Cancel"
               onclick={cancelNewCollection}
               disabled={isPending}
             >

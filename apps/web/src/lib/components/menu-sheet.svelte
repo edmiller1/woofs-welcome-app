@@ -41,7 +41,7 @@
 <Sheet.Root bind:open={menuOpen}>
   <Sheet.Trigger>
     <div class="flex items-center justify-end">
-      <Button variant="ghost" size="icon">
+      <Button variant="ghost" size="icon" aria-label="Open menu">
         <TextAlignJustify class="size-5 shrink-0" />
       </Button>
     </div>

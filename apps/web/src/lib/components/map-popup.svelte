@@ -70,9 +70,6 @@
         queryKey: ["placeCollections", activePlace.id],
       });
     },
-    onError: () => {
-      toast.error("Failed to remove place from collection");
-    },
   }));
 
   const addPlaceToCollection = createMutation(() => ({
@@ -83,9 +80,6 @@
       queryClient.invalidateQueries({
         queryKey: ["placeCollections", activePlace.id],
       });
-    },
-    onError: () => {
-      toast.error("Failed to add place to collection");
     },
   }));
 
@@ -196,6 +190,7 @@
       <Button
         variant="ghost"
         size="icon"
+        aria-label="Remove from collection"
         class="absolute right-2 top-2 z-20 flex rounded-full hover:bg-muted"
         onclick={() =>
           removePlaceFromCollection.mutate({
@@ -220,6 +215,7 @@
               {...props}
               variant="ghost"
               size="icon"
+              aria-label={activePlace.isSaved ? "Remove from saved places" : "Save to collection"}
               class="absolute right-2 top-2 z-20 flex rounded-full bg-white/80 hover:bg-white"
             >
               <Heart
@@ -288,6 +284,7 @@
 
     <button
       onclick={closePopup}
+      aria-label="Close"
       class="absolute left-2 top-2 z-20 flex cursor-pointer"
     >
       <XIcon

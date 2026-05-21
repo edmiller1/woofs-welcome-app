@@ -72,13 +72,6 @@
         queryKey: ["place-reviews", placeId, currentPage, limit],
       });
     },
-    onError: (error) => {
-      toast.error(
-        `Failed to report review: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-    },
   }));
 
   let reason = $state<string>("");
