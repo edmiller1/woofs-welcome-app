@@ -6,6 +6,7 @@
 import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   Image,
+  Location,
   Place,
   Review,
   ReviewImage,
@@ -107,13 +108,30 @@ export class ReviewService {
           throw new DatabaseError("Failed to create review");
         }
 
-        await tx
+        const [updatedPlace] = await tx
           .update(Place)
           .set({
             reviewsCount: sql`${Place.reviewsCount} + 1`,
             updatedAt: new Date(),
           })
-          .where(eq(Place.id, sanitizedData.placeId));
+          .where(eq(Place.id, sanitizedData.placeId))
+          .returning({ locationId: Place.locationId });
+
+        if (updatedPlace) {
+          await tx
+            .update(Location)
+            .set({
+              totalReviews: sql`${Location.totalReviews} + 1`,
+              averageRating: sql`(
+                SELECT ROUND(AVG(r.rating)::numeric, 2)
+                FROM review r
+                JOIN place p ON r.place_id = p.id
+                WHERE p.location_id = ${updatedPlace.locationId}
+              )`,
+              updatedAt: new Date(),
+            })
+            .where(eq(Location.id, updatedPlace.locationId));
+        }
 
         // Insert images and review_image junction records
         const reviewImages: { imageId: string; displayOrder: number }[] = [];
@@ -322,6 +340,27 @@ export class ReviewService {
           }
         }
 
+        // Recalculate location average rating since the rating may have changed
+        const place = await tx.query.Place.findFirst({
+          where: eq(Place.id, review.placeId),
+          columns: { locationId: true },
+        });
+
+        if (place) {
+          await tx
+            .update(Location)
+            .set({
+              averageRating: sql`COALESCE((
+                SELECT ROUND(AVG(r.rating)::numeric, 2)
+                FROM review r
+                JOIN place p ON r.place_id = p.id
+                WHERE p.location_id = ${place.locationId}
+              ), 0)`,
+              updatedAt: new Date(),
+            })
+            .where(eq(Location.id, place.locationId));
+        }
+
         return {
           reviewId: review.id,
         };
@@ -365,6 +404,12 @@ export class ReviewService {
 
       const cfImageIds = review.images.map((ri) => ri.image.cfImageId);
 
+      // Fetch the place's locationId before deleting so we can update the location counter
+      const place = await this.db.query.Place.findFirst({
+        where: eq(Place.id, review.placeId),
+        columns: { locationId: true },
+      });
+
       await this.db.transaction(async (tx) => {
         // Cascade handles ReviewImage cleanup
         await tx.delete(Review).where(eq(Review.id, reviewId));
@@ -372,6 +417,22 @@ export class ReviewService {
         // Manually clean up Image records
         if (cfImageIds.length > 0) {
           await tx.delete(Image).where(inArray(Image.cfImageId, cfImageIds));
+        }
+
+        if (place) {
+          await tx
+            .update(Location)
+            .set({
+              totalReviews: sql`GREATEST(${Location.totalReviews} - 1, 0)`,
+              averageRating: sql`COALESCE((
+                SELECT ROUND(AVG(r.rating)::numeric, 2)
+                FROM review r
+                JOIN place p ON r.place_id = p.id
+                WHERE p.location_id = ${place.locationId}
+              ), 0)`,
+              updatedAt: new Date(),
+            })
+            .where(eq(Location.id, place.locationId));
         }
       });
 

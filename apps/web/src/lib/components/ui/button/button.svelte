@@ -19,8 +19,7 @@
           "bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 border shadow-xs",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs",
-        ghost:
-          "hover:bg-input hover:text-accent-foreground dark:hover:bg-accent/50",
+        ghost: "hover:bg-stone-200 dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         glass:
           "cursor-pointer flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all group",

@@ -19,10 +19,10 @@
 
   --primary-accent: oklch(0.7800 0.1400 38.00);
 
-  --primary-text: oklch(0.496667 0.140856 45.4765);
+  --primary-tint: oklch(0.496667 0.140856 45.4765);
 
-  /* Secondary: #1A3C34 deep teal */
-  --secondary: oklch(0.92 0.03 120.00);
+  /* Secondary: #43655c green */
+  --secondary: oklch(0.4777 0.0421 176.04);
   --secondary-foreground: oklch(0.25 0.05 120.00);
 
   --muted: oklch(0.95 0.02 120.00);
@@ -101,6 +101,39 @@
   --tertiary-text-muted: oklch(0.4500 0.0400 168.00);
   --tertiary-dim: oklch(0.8500 0.0400 150.00);
   --tertiary-light: oklch(0.9600 0.0040 150.00);
+
+  /* Design-system surface tokens (Pawsport palette) */
+  --surface: oklch(0.98 0.005 150.00);
+  --surface-dim: oklch(0.85 0.008 150.00);
+  --surface-container: oklch(0.93 0.006 150.00);
+  --surface-container-low: oklch(0.955 0.005 150.00);
+  --surface-container-high: oklch(0.91 0.006 150.00);
+  --surface-container-highest: oklch(0.88 0.007 150.00);
+  --surface-container-lowest: oklch(1 0 0);
+
+  /* On-surface tokens */
+  --on-surface: oklch(0.20 0.012 160.00);
+  --on-surface-variant: oklch(0.35 0.035 45.00);
+  --on-primary: oklch(1 0 0);
+  --on-primary-container: oklch(0.34 0.13 38.00);
+  --on-secondary: oklch(1 0 0);
+  --on-secondary-container: oklch(0.42 0.055 176.00);
+  --on-tertiary: oklch(1 0 0);
+  --on-error: oklch(1 0 0);
+
+  /* Fixed/container tokens */
+  --primary-container: oklch(0.65 0.23 45.00);
+  --secondary-container: oklch(0.87 0.04 168.00);
+  --secondary-fixed: oklch(0.84 0.05 168.00);
+  --secondary-fixed-dim: oklch(0.72 0.07 168.00);
+  --error-container: oklch(0.92 0.05 25.00);
+  --on-error-container: oklch(0.40 0.18 25.00);
+
+  /* Outline tokens */
+  --outline: oklch(0.55 0.05 45.00);
+  --outline-variant: oklch(0.82 0.06 45.00);
+  --inverse-surface: oklch(0.27 0.06 168.00);
+  --inverse-on-surface: oklch(0.93 0.005 150.00);
 }
 
 .dark {
@@ -207,7 +240,7 @@
   --color-tertiary: var(--tertiary);
   --color-tertiary-foreground: var(--tertiary-foreground);
   --color-tertiary-dim: var(--tertiary-dim);
-  --color-primary-text: var(--primary-text);
+  --color-primary-tint: var(--primary-tint);
   --color-tertiary-light: var(--tertiary-light);
   --color-text: var(--text);
   --color-tertiary-text-muted: var(--tertiary-text-muted);
@@ -227,6 +260,39 @@
   --color-surface-inverse-text: var(--surface-inverse-text);
   --color-primary-inverse: var(--primary-inverse);
   --color-primary-on-container: var(--primary-on-container);
+
+  /* Surface scale */
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+
+  /* On-surface */
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-on-primary: var(--on-primary);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-on-secondary: var(--on-secondary);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-on-error: var(--on-error);
+
+  /* Fixed / container */
+  --color-primary-container: var(--primary-container);
+  --color-secondary-container: var(--secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+
+  /* Outline */
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
 
   /* Fonts */
   --font-sans: var(--font-sans);
@@ -398,6 +464,35 @@ h1, h2, h3, .font-headline {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.hero-mask {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.adventure-gradient {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.1) 70%,
+    transparent 100%
+  );
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
 }
 
 .maplibre-svelte-popup .maplibregl-popup-content {

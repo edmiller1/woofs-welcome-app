@@ -31,12 +31,16 @@
     {/if}
   </div>
   <div class="flex flex-col gap-0.5 min-w-0">
-    <span class="font-bold text-sm text-primary truncate">{place.name}</span>
-    <span class="text-xs text-muted-foreground truncate">{place.cityName}, {place.regionName || place.countryCode}</span>
+    <span class="font-bold text-sm text-secondary truncate">{place.name}</span>
+    <span class="text-xs text-muted-foreground truncate"
+      >{place.cityName}, {place.regionName || place.countryCode}</span
+    >
     <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
       <div class="flex items-center gap-0.5">
         <Star class="size-3 fill-yellow-400 text-yellow-400" />
-        <span class="font-semibold text-black">{Number(place.rating).toFixed(1)}</span>
+        <span class="font-semibold text-black"
+          >{Number(place.rating).toFixed(1)}</span
+        >
       </div>
       <span>·</span>
       <span>{place.types.join(" · ")}</span>

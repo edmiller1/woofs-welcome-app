@@ -74,25 +74,25 @@
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a
-        class="hidden lg:block text-2xl font-headline italic font-bold text-[#154212]"
+        class="hidden lg:block text-2xl font-headline font-bold text-primary-tint"
         href="/"
         >Woofs Welcome
       </a>
       <a
         href="/"
-        class="lg:hidden text-2xl font-headline italic font-bold text-[#154212]"
+        class="lg:hidden text-2xl font-headline font-bold text-primary-tint"
         >WW</a
       >
       <nav class="flex gap-6 items-center">
         <a
-          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {exploreActive
-            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+          class="font-body font-medium hover:text-primary-tint transition-colors {exploreActive
+            ? 'text-primary-tint font-semibold'
             : 'text-stone-600'}"
           href="/explore">Explore</a
         >
         <a
-          class="font-body font-medium hover:text-[#154212] hover:border-b-2 hover:border-[#f8bd45] transition-colors {communityActive
-            ? 'text-[#154212] border-b-2 border-[#f8bd45]'
+          class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
+            ? 'text-primary-tint font-semibold'
             : 'text-stone-600'}"
           href="/community">Community</a
         >
@@ -156,7 +156,7 @@
       {#each types as type}
         <a
           href={type.href}
-          class="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+          class="hover:bg-secondary hover:text-white flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
         >
           <type.icon class="size-4" />
           <span class=" text-sm font-medium">{type.name}</span>

@@ -12,6 +12,8 @@ export interface Location {
   longitude: number;
   image: string;
   isPopular: boolean;
+  totalReviews: number;
+  averageRating: string;
   metaTitle: string;
   metaDescription: string;
   createdAt: Date;

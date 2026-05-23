@@ -7,11 +7,14 @@
   import MapPlaceCard from "./map-place-card.svelte";
 
   interface Props {
+    lat: number;
+    lng: number;
+    zoom?: number;
     places: LocationPlace[];
     class?: string;
   }
 
-  const { places, class: className = "" }: Props = $props();
+  const { lat, lng, places, class: className = "", zoom }: Props = $props();
 
   let mapContainer = $state<HTMLDivElement>();
   let map = $state<maplibregl.Map>();
@@ -21,8 +24,6 @@
 
   onMount(() => {
     if (!mapContainer) return;
-
-    
 
     map = new maplibregl.Map({
       container: mapContainer,
@@ -34,20 +35,31 @@
     map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     map.on("load", () => {
-      const validPlaces = places.filter((p) => p.lat !== null && p.lng !== null);
-      if (validPlaces.length === 0) return;
+      const validPlaces = places.filter(
+        (p) => p.lat !== null && p.lng !== null,
+      );
+      if (validPlaces.length === 0) {
+        map!.flyTo({ center: [lng, lat], zoom: zoom ?? 10 });
+        return;
+      }
 
       if (validPlaces.length === 1) {
-        map!.flyTo({ center: [Number(validPlaces[0].lng), Number(validPlaces[0].lat)], zoom: 12 });
+        map!.flyTo({
+          center: [Number(validPlaces[0].lng), Number(validPlaces[0].lat)],
+          zoom: 12,
+        });
       } else {
         const bounds = new maplibregl.LngLatBounds();
-        validPlaces.forEach((p) => bounds.extend([Number(p.lng), Number(p.lat)]));
+        validPlaces.forEach((p) =>
+          bounds.extend([Number(p.lng), Number(p.lat)]),
+        );
         map!.fitBounds(bounds, { padding: 60 });
       }
 
       validPlaces.forEach((place) => {
         const el = document.createElement("div");
-        el.style.cssText = "background:white;color:#1a1a1a;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:1.5px solid #e5e7eb;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;font-family:sans-serif;transition:box-shadow 0.15s ease;";
+        el.style.cssText =
+          "background:white;color:#1a1a1a;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:1.5px solid #e5e7eb;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;font-family:sans-serif;transition:box-shadow 0.15s ease;";
         el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#eab308" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${place.rating ? Number(place.rating).toFixed(1) : "—"}`;
 
         el.addEventListener("mouseenter", () => {
@@ -63,7 +75,10 @@
           e.stopPropagation();
           if (activePopup) {
             activePopup.remove();
-            if (activeMounted) { unmount(activeMounted); activeMounted = null; }
+            if (activeMounted) {
+              unmount(activeMounted);
+              activeMounted = null;
+            }
             activePopup = null;
           }
 
@@ -72,7 +87,10 @@
             target: container,
             props: {
               place,
-              onclose: () => { activePopup?.remove(); activePopup = null; },
+              onclose: () => {
+                activePopup?.remove();
+                activePopup = null;
+              },
             },
           });
 
@@ -88,7 +106,10 @@
             .addTo(map!);
 
           activePopup.on("close", () => {
-            if (activeMounted) { unmount(activeMounted); activeMounted = null; }
+            if (activeMounted) {
+              unmount(activeMounted);
+              activeMounted = null;
+            }
             activePopup = null;
           });
         });
@@ -100,7 +121,9 @@
         markers.set(place.id, marker);
       });
 
-      map!.on("click", () => { activePopup?.remove(); });
+      map!.on("click", () => {
+        activePopup?.remove();
+      });
     });
   });
 

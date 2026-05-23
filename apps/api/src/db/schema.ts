@@ -384,6 +384,10 @@ export const Location = pgTable(
     image: text("image"),
     isPopular: boolean("is_popular").default(false),
 
+    // Aggregated review stats (denormalised for fast reads)
+    totalReviews: integer("total_reviews").default(0).notNull(),
+    averageRating: numeric("average_rating", { precision: 3, scale: 2 }).default("0").notNull(),
+
     // SEO
     metaTitle: text("meta_title"),
     metaDescription: text("meta_description"),

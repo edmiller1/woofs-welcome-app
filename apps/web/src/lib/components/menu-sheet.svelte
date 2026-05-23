@@ -47,7 +47,7 @@
     </div>
   </Sheet.Trigger>
   <Sheet.Content class="w-screen bg-white p-4">
-    <h2 class="text-2xl font-headline italic font-bold text-[#154212]">
+    <h2 class="text-2xl font-headline font-bold text-primary-tint">
       Woofs Welcome
     </h2>
     {#if !user}
@@ -73,7 +73,7 @@
           <img
             alt={user.name + " profile image"}
             src={user.image}
-            class="w-16 h-16 rounded-full object-cover border-2 border-secondary-container"
+            class="w-16 h-16 rounded-full object-cover border-2 border-[#ffdbcc]"
           />
         </div>
         <div class="flex flex-col">
@@ -81,7 +81,7 @@
             {user.name}
           </h2>
           <a
-            class="text-label-md font-medium text-primary hover:underline decoration-[#f8bd45] underline-offset-4 transition-colors"
+            class="text-label-md font-medium text-primary hover:underline decoration-primary underline-offset-4 transition-colors"
             href={`/profile/${user.id}/${profileLink}`}>View Profile</a
           >
         </div>
@@ -91,7 +91,7 @@
     <div class="flex-1 flex flex-col space-y-1">
       <!-- Explore -->
       <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {exploreActive &&
+        class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {exploreActive &&
           'bg-secondary-container/30 '}"
         href="/explore"
       >
@@ -108,7 +108,7 @@
       </a>
       <!-- Community -->
       <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {communityActive &&
+        class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {communityActive &&
           'bg-secondary-container/30'}"
         href="/community"
       >
@@ -126,7 +126,7 @@
       {#if user}
         <!-- Collections -->
         <a
-          class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {profileActive &&
+          class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {profileActive &&
             'bg-secondary-container/30'}"
           href={`/profile/${user.id}/${profileLink}/collections`}
         >
@@ -143,7 +143,7 @@
         </a>
         <!-- Account Settings -->
         <button
-          class="cursor-pointer flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group"
+          class="cursor-pointer flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group"
           onclick={openSettings}
         >
           <Cog class="size-5 text-black" />
@@ -154,9 +154,9 @@
 
     <div class="mt-auto flex flex-col items-center gap-6 pb-4">
       <button
-        class="cursor-pointer hover:bg-primary/95 w-full bg-primary text-primary-inverse text-center py-4 rounded-xl font-body font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20"
+        class="cursor-pointer hover:bg-primary/95 w-full bg-primary text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20"
       >
-        <Smartphone class="size-5 text-primary-inverse" />
+        <Smartphone class="size-5 text-white" />
         Continue in App
       </button>
       {#if !user}
@@ -170,8 +170,8 @@
         </a>
       {/if}
       <div class="w-full pt-8 border-t border-surface-variant/30 text-center">
-        <p class="font-display italic text-secondary text-sm">
-          "The world is better explored on four paws."
+        <p class="font-display italic text-primary-tint font-semibold text-sm">
+          "The world is better explored with your furry best friend."
         </p>
       </div>
     </div>

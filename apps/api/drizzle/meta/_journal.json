@@ -78,6 +78,13 @@
       "when": 1778716264654,
       "tag": "0010_stiff_king_bedlam",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1779429199108,
+      "tag": "0011_nosy_nemesis",
+      "breakpoints": true
     }
   ]
 }

@@ -215,7 +215,9 @@
               {...props}
               variant="ghost"
               size="icon"
-              aria-label={activePlace.isSaved ? "Remove from saved places" : "Save to collection"}
+              aria-label={activePlace.isSaved
+                ? "Remove from saved places"
+                : "Save to collection"}
               class="absolute right-2 top-2 z-20 flex rounded-full bg-white/80 hover:bg-white"
             >
               <Heart

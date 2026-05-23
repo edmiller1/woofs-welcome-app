@@ -167,7 +167,7 @@
           <div class="space-y-3 py-2">
             <div class="m-0 flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <h3 class="truncate font-semibold">{name}</h3>
+                <h3 class="truncate font-semibold text-secondary">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -183,12 +183,12 @@
               {countryCode}
               {#if isPaid}
                 ·
-                <span class="text-black">$$$</span>
+                <Badge variant="secondary">$$$</Badge>
               {/if}
             </div>
             {#if amenity}
               <div
-                class="mt-2.5 pl-2.5 border-l-2 border-primary-accent font-body italic text-xs leading-1.5 text-muted-foreground"
+                class="mt-2.5 pl-2.5 border-l-2 border-primary font-body italic text-xs leading-1.5 text-muted-foreground"
               >
                 {amenity}
               </div>
@@ -225,7 +225,7 @@
           <div class="space-y-3 py-2 min-w-0">
             <div class="m-0 flex items-center justify-between min-w-0">
               <div class="flex items-center gap-1 overflow-hidden w-5/6">
-                <h3 class="truncate font-semibold text-primary">{name}</h3>
+                <h3 class="truncate font-semibold text-secondary">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -243,12 +243,12 @@
               {countryCode}
               {#if isPaid}
                 ·
-                <span class="text-black">$$$</span>
+                <Badge variant="secondary">$$$</Badge>
               {/if}
             </div>
             {#if amenity}
               <div
-                class="mt-2.5 pl-2.5 border-l-2 border-primary-accent font-body italic text-[12.5px] leading-[1.55] text-muted-foreground"
+                class="mt-2.5 pl-2.5 border-l-2 border-primary font-body italic text-[12.5px] leading-[1.55] text-muted-foreground"
               >
                 {amenity}
               </div>
