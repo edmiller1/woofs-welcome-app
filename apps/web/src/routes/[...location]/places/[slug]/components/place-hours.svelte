@@ -19,11 +19,12 @@
         {@const status = getCurrentDayStatus(hours)}
         {#if status?.includes("Open till")}
           <div
-            class="flex items-center gap-2 bg-primary/5 px-3 py-1 rounded-full border border-primary/20"
+            class="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full border border-green-200"
           >
-            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <span class="w-2 h-2 rounded-full bg-green-800 animate-pulse"
+            ></span>
             <span
-              class="text-[10px] font-bold font-body text-primary uppercase tracking-wider"
+              class="text-[10px] font-bold font-body text-green-800 uppercase tracking-wider"
               >{status}</span
             >
           </div>

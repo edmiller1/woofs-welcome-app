@@ -3,7 +3,7 @@
   import type { BAUser, PlaceImage } from "@woofs/types";
   import OptimizedImage from "./optimized-image.svelte";
   import Button from "./ui/button/button.svelte";
-  import { Grip, Heart, Share } from "@lucide/svelte";
+  import { Images, Share, Star } from "@lucide/svelte";
   import ShareButton from "./share-button.svelte";
   import { page } from "$app/state";
   import SaveButton from "./save-button.svelte";
@@ -50,13 +50,17 @@
       <div
         class="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"
       ></div>
-      <div class="absolute bottom-6 left-6 text-white">
+      <div class="absolute top-6 left-6">
         {#if memberFavourite}
           <span
-            class="bg-tertiary text-[#271900] px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block font-body"
-            >MEMBER FAVORITE</span
+            class="flex items-center gap-1 bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-bold mb-2 font-body"
+            ><Star
+              class="size-3 fill-on-primary-container text-on-primary-container"
+            />MEMBER FAVOURITE</span
           >
         {/if}
+      </div>
+      <div class="absolute bottom-6 left-6 text-white">
         <div class="flex items-center gap-3 mt-4 mb-2">
           <ShareButton url={page.url.href} name={placeName}>
             {#snippet trigger()}
@@ -68,10 +72,10 @@
           </ShareButton>
           <SaveButton {user} {placeId} {isSaved} />
         </div>
-        <h1 class="text-4xl md:text-6xl font-headline font-bold">
+        <!-- <h1 class="text-4xl md:text-6xl font-headline font-bold">
           {placeName}
         </h1>
-        <p class="font-body text-lg opacity-90">{placeCity}, {placeRegion}</p>
+        <p class="font-body text-lg opacity-90">{placeCity}, {placeRegion}</p> -->
       </div>
     {/if}
   </div>
@@ -110,7 +114,7 @@
           class="rounded-lg bg-white/90 px-4 py-2 font-medium text-black shadow-lg backdrop-blur-sm hover:bg-white"
           onclick={openImageDrawer}
         >
-          <Grip class="size-4" />
+          <Images class="size-4" />
           View all photos
         </Button>
       </div>

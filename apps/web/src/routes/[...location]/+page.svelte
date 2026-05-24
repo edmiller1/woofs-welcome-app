@@ -11,7 +11,7 @@
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import PlaceCard from "$lib/components/place-card.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-  import { Spinner } from "$lib/components/ui/spinner";
+  import { Skeleton } from "$lib/components/ui/skeleton";
   import { createQuery } from "@tanstack/svelte-query";
   import type { BAUser, PlaceFilter } from "@woofs/types";
   import {
@@ -135,421 +135,58 @@
 </script>
 
 <ErrorBoundary error={location.error}>
+  {#if location.isLoading}
+    <Navbar {user} />
+    <!-- Hero skeleton -->
+    <div class="relative h-screen w-full min-h-200 overflow-hidden">
+      <Skeleton class="absolute inset-0 w-full h-full rounded-none" />
+      <div class="relative max-w-7xl mx-auto px-8 flex flex-col justify-end h-full pb-24 gap-6">
+        <Skeleton class="h-24 w-2/3" />
+        <Skeleton class="h-16 w-1/2" />
+        <div class="flex gap-4">
+          <Skeleton class="h-14 w-48 rounded-lg" />
+          <Skeleton class="h-14 w-48 rounded-lg" />
+        </div>
+      </div>
+    </div>
+    <!-- Community moments skeleton -->
+    <section class="py-24 bg-surface-container-low">
+      <div class="max-w-7xl mx-auto px-8">
+        <Skeleton class="h-12 w-64 mb-4" />
+        <Skeleton class="h-5 w-96 mb-16" />
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {#each Array(3) as _}
+            <Skeleton class="aspect-3/4 rounded-xl" />
+          {/each}
+        </div>
+      </div>
+    </section>
+    <!-- Popular picks skeleton -->
+    <section class="py-32 max-w-7xl mx-auto px-8">
+      <Skeleton class="h-12 w-48 mx-auto mb-4" />
+      <Skeleton class="h-1 w-24 mx-auto mb-20" />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {#each Array(3) as _}
+          <div class="space-y-4">
+            <Skeleton class="aspect-video rounded-xl" />
+            <Skeleton class="h-6 w-3/4" />
+            <Skeleton class="h-4 w-full" />
+            <Skeleton class="h-4 w-5/6" />
+          </div>
+        {/each}
+      </div>
+    </section>
+    <!-- Map skeleton -->
+    <section class="py-32 bg-surface-container">
+      <div class="max-w-7xl mx-auto px-8">
+        <Skeleton class="h-12 w-56 mb-16" />
+        <Skeleton class="rounded-3xl h-150 w-full" />
+      </div>
+    </section>
+  {/if}
+
   {#if location.isSuccess}
     <Navbar {user} />
-    <!-- <main class="bg-surface min-h-screen">
-      <section class="relative h-screen min-h-180 w-full overflow-hidden">
-        <div class="absolute inset-0 z-0">
-          <OptimizedImage
-            imageId={location.data.image}
-            alt={location.data.name + " landscape"}
-            sizes="100vw"
-            class="w-full h-full object-cover object-center"
-            variant="xlarge"
-            height="100%"
-          />
-          <div class="absolute inset-0 adventure-gradient"></div>
-        </div>
-
-        <div class="absolute top-24 left-8 md:left-16 z-20">
-          <Breadcrumbs items={location.data.breadcrumbs} location={true} />
-        </div>
-
-        <div class="absolute bottom-16 left-8 md:left-16 z-20 max-w-3xl">
-          <h1
-            class="font-headline font-extrabold text-white text-6xl md:text-8xl leading-none tracking-tight drop-shadow-lg"
-          >
-            {location.data.name}
-          </h1>
-          {#if location.data.countryCode}
-            <p
-              class="font-label text-white/70 text-sm uppercase tracking-widest mt-3 font-semibold"
-            >
-              {location.data.countryCode}
-            </p>
-          {/if}
-        </div>
-
-
-        <div
-          class="absolute bottom-16 right-8 md:right-16 z-20 hidden md:flex flex-col gap-3"
-        >
-          <div
-            class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-4 flex flex-col items-center min-w-24"
-          >
-            <span class="font-headline font-bold text-white text-3xl"
-              >{location.data.stats.totalPlaces}</span
-            >
-            <span
-              class="font-label text-white/70 text-xs uppercase tracking-widest font-semibold mt-1"
-              >Places</span
-            >
-          </div>
-          <div
-            class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-4 flex flex-col items-center min-w-24"
-          >
-            <span class="font-headline font-bold text-white text-3xl"
-              >{location.data.stats.totalStays}</span
-            >
-            <span
-              class="font-label text-white/70 text-xs uppercase tracking-widest font-semibold mt-1"
-              >Stays</span
-            >
-          </div>
-          <div
-            class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-4 flex flex-col items-center min-w-24"
-          >
-            <span class="font-headline font-bold text-white text-3xl"
-              >{location.data.stats.totalEats}</span
-            >
-            <span
-              class="font-label text-white/70 text-xs uppercase tracking-widest font-semibold mt-1"
-              >Eats</span
-            >
-          </div>
-          <div
-            class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-4 flex flex-col items-center min-w-24"
-          >
-            <span class="font-headline font-bold text-white text-3xl"
-              >{location.data.stats.totalAdventures}</span
-            >
-            <span
-              class="font-label text-white/70 text-xs uppercase tracking-widest font-semibold mt-1"
-              >Adventures</span
-            >
-          </div>
-        </div>
-      </section>
-
-
-      <section
-        class="md:hidden bg-surface-container-low border-b border-outline/10 px-5 py-4"
-      >
-        <div class="grid grid-cols-4 gap-2 text-center">
-          <div>
-            <p class="font-headline font-bold text-on-surface text-2xl">
-              {location.data.stats.totalPlaces}
-            </p>
-            <p
-              class="font-label text-on-surface-variant text-xs uppercase tracking-widest font-semibold"
-            >
-              Places
-            </p>
-          </div>
-          <div>
-            <p class="font-headline font-bold text-on-surface text-2xl">
-              {location.data.stats.totalStays}
-            </p>
-            <p
-              class="font-label text-on-surface-variant text-xs uppercase tracking-widest font-semibold"
-            >
-              Stays
-            </p>
-          </div>
-          <div>
-            <p class="font-headline font-bold text-on-surface text-2xl">
-              {location.data.stats.totalEats}
-            </p>
-            <p
-              class="font-label text-on-surface-variant text-xs uppercase tracking-widest font-semibold"
-            >
-              Eats
-            </p>
-          </div>
-          <div>
-            <p class="font-headline font-bold text-on-surface text-2xl">
-              {location.data.stats.totalAdventures}
-            </p>
-            <p
-              class="font-label text-on-surface-variant text-xs uppercase tracking-widest font-semibold"
-            >
-              Adventures
-            </p>
-          </div>
-        </div>
-      </section>
-
-
-      {#if location.data.description}
-        <section class="max-w-7xl mx-auto px-5 md:px-12 py-20">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div class="space-y-6">
-              <span
-                class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                >About</span
-              >
-              <p
-                class="font-body text-lg text-on-surface-variant leading-relaxed"
-              >
-                {location.data.description}
-              </p>
-              <a
-                href={`/explore?lat=${location.data.latitude}&lng=${location.data.longitude}&zoom=12`}
-                class={cn(
-                  buttonVariants({ variant: "default" }),
-                  "rounded-full px-8 h-11",
-                )}
-              >
-                Explore {location.data.name}
-              </a>
-            </div>
-            <div
-              class="aspect-4/5 rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
-            >
-              <OptimizedImage
-                imageId={location.data.image}
-                alt={location.data.name}
-                class="w-full h-full object-cover object-center"
-                variant="large"
-                height="100%"
-              />
-            </div>
-          </div>
-        </section>
-      {/if}
-
-
-      {#if location.data.popularPlaces.length > 0}
-        <section class="bg-surface-container-low py-20">
-          <div class="max-w-7xl mx-auto px-5 md:px-12">
-            <div class="flex justify-between items-end mb-12">
-              <div class="space-y-2">
-                <span
-                  class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                  >Explore</span
-                >
-                <h2
-                  class="font-headline font-bold text-3xl md:text-4xl text-on-surface"
-                >
-                  Popular in {location.data.name}
-                </h2>
-              </div>
-              <a
-                class="font-label font-semibold text-sm text-primary hover:underline transition-colors"
-                href="/{pathname}/explore">View All</a
-              >
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {#each location.data.popularPlaces as place}
-                <PlaceCard
-                  id={place.id}
-                  name={place.name}
-                  rating={place.rating}
-                  slug={place.slug}
-                  cityName={place.cityName}
-                  regionName={place.regionName}
-                  countryCode={place.countryCode}
-                  types={place.types}
-                  isSaved={place.isSaved}
-                  imageId={place.imageId}
-                  {user}
-                  locationPath={place.locationPath}
-                  isVerified={place.isVerified}
-                  memberFavourite={place.memberFavourite}
-                  reviewCount={place.reviewsCount}
-                  dogAmenities={place.dogAmenities}
-                />
-              {/each}
-            </div>
-          </div>
-        </section>
-      {/if}
-
-
-      <section class="py-20">
-        <div class="max-w-7xl mx-auto px-5 md:px-12">
-          <div class="flex justify-between items-end mb-12">
-            <div class="space-y-2">
-              <span
-                class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                >Sleep</span
-              >
-              <h2
-                class="font-headline font-bold text-3xl md:text-4xl text-on-surface"
-              >
-                Dog-friendly stays in {location.data.name}
-              </h2>
-            </div>
-            <a
-              class="font-label font-semibold text-sm text-primary hover:underline transition-colors"
-              href="/{pathname}/explore?types=Hotel,Motel,Accomodation,AirBnb"
-              >View All</a
-            >
-          </div>
-          {#if location.data.stays.length > 0}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {#each location.data.stays as place}
-                <PlaceCard
-                  id={place.id}
-                  name={place.name}
-                  rating={place.rating}
-                  slug={place.slug}
-                  cityName={place.cityName}
-                  regionName={place.regionName}
-                  countryCode={place.countryCode}
-                  types={place.types}
-                  isSaved={place.isSaved}
-                  imageId={place.imageId}
-                  {user}
-                  locationPath={place.locationPath}
-                  isVerified={place.isVerified}
-                  memberFavourite={place.memberFavourite}
-                  reviewCount={place.reviewsCount}
-                  dogAmenities={place.dogAmenities}
-                />
-              {/each}
-            </div>
-          {:else}
-            <p class="font-body text-on-surface-variant text-sm">
-              No stays listed yet for {location.data.name}.
-            </p>
-          {/if}
-        </div>
-      </section>
-
-
-      <section class="bg-surface-container-low py-20">
-        <div class="max-w-7xl mx-auto px-5 md:px-12">
-          <div class="flex justify-between items-end mb-12">
-            <div class="space-y-2">
-              <span
-                class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                >Eat & Drink</span
-              >
-              <h2
-                class="font-headline font-bold text-3xl md:text-4xl text-on-surface"
-              >
-                Places to eat in {location.data.name}
-              </h2>
-            </div>
-            <a
-              class="font-label font-semibold text-sm text-primary hover:underline transition-colors"
-              href="/{pathname}/explore?types=Bar,Restaurant,Café,Winery"
-              >View All</a
-            >
-          </div>
-          {#if location.data.eats.length > 0}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {#each location.data.eats as place}
-                <PlaceCard
-                  id={place.id}
-                  name={place.name}
-                  rating={place.rating}
-                  slug={place.slug}
-                  cityName={place.cityName}
-                  regionName={place.regionName}
-                  countryCode={place.countryCode}
-                  types={place.types}
-                  isSaved={place.isSaved}
-                  imageId={place.imageId}
-                  {user}
-                  locationPath={place.locationPath}
-                  isVerified={place.isVerified}
-                  memberFavourite={place.memberFavourite}
-                  reviewCount={place.reviewsCount}
-                  dogAmenities={place.dogAmenities}
-                />
-              {/each}
-            </div>
-          {:else}
-            <p class="font-body text-on-surface-variant text-sm">
-              No eats listed yet for {location.data.name}.
-            </p>
-          {/if}
-        </div>
-      </section>
-
-
-      {#if location.data.adventures.length > 0}
-        <section class="py-20">
-          <div class="max-w-7xl mx-auto px-5 md:px-12">
-            <div class="flex justify-between items-end mb-12">
-              <div class="space-y-2">
-                <span
-                  class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                  >Adventure</span
-                >
-                <h2
-                  class="font-headline font-bold text-3xl md:text-4xl text-on-surface"
-                >
-                  Adventures in {location.data.name}
-                </h2>
-              </div>
-              <a
-                class="font-label font-semibold text-sm text-primary hover:underline transition-colors"
-                href="/{pathname}/explore?types=Park,Dog+Park,Beach,Walk,Hike,Lake,River,Trail,Activity"
-                >View All</a
-              >
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {#each location.data.adventures as place}
-                <PlaceCard
-                  id={place.id}
-                  name={place.name}
-                  rating={place.rating}
-                  slug={place.slug}
-                  cityName={place.cityName}
-                  regionName={place.regionName}
-                  countryCode={place.countryCode}
-                  types={place.types}
-                  isSaved={place.isSaved}
-                  imageId={place.imageId}
-                  {user}
-                  locationPath={place.locationPath}
-                  isVerified={place.isVerified}
-                  memberFavourite={place.memberFavourite}
-                  reviewCount={place.reviewsCount}
-                  dogAmenities={place.dogAmenities}
-                />
-              {/each}
-            </div>
-          </div>
-        </section>
-      {/if}
-
-
-      <section class="bg-surface-container-low py-20 px-5 md:px-12">
-        <div class="max-w-7xl mx-auto">
-          <div class="flex justify-between items-end mb-12">
-            <div class="space-y-2">
-              <span
-                class="font-label text-xs uppercase tracking-widest text-secondary font-bold"
-                >Navigate</span
-              >
-              <h2
-                class="font-headline font-bold text-3xl md:text-4xl text-on-surface"
-              >
-                Explore the map
-              </h2>
-            </div>
-            <Button
-              href="/{pathname}/explore"
-              variant="default"
-              class="rounded-full px-6"
-            >
-              <MapIcon class="size-4 mr-2" />
-              View all
-            </Button>
-          </div>
-          <div
-            class="rounded-3xl overflow-hidden relative h-150 border border-outline/10 shadow-lg"
-          >
-            <LocationMap
-              places={Array.from(
-                new Map(
-                  [
-                    ...location.data.popularPlaces,
-                    ...location.data.stays,
-                    ...location.data.eats,
-                    ...location.data.adventures,
-                  ].map((p) => [p.id, p]),
-                ).values(),
-              )}
-            />
-          </div>
-        </div>
-      </section>
-    </main> -->
     <main>
       <section
         class="relative h-screen w-full min-h-200 overflow-hidden flex items-center"

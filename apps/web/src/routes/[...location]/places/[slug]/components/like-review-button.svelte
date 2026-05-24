@@ -54,7 +54,9 @@
         <ThumbsUp
           class={cn(
             "h-4 w-4",
-            hasLiked ? "fill-primary text-primary" : "text-muted-foreground",
+            hasLiked
+              ? "fill-secondary text-secondary"
+              : "text-muted-foreground",
           )}
         />
         {#if likesCount > 0}

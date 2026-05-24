@@ -127,7 +127,14 @@
             <span class="font-headline font-semibold text-sm">Save</span>
           {/if}
         </Button>
-        <Button variant="outline" aria-label={isSaved ? "Remove from saved places" : "Save to collection"} {...props} class="md:hidden">
+        <Button
+          variant="outline"
+          aria-label={isSaved
+            ? "Remove from saved places"
+            : "Save to collection"}
+          {...props}
+          class="md:hidden rounded-full"
+        >
           <Heart
             class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
           />

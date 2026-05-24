@@ -3,7 +3,7 @@
   import favicon from "$lib/assets/favicon.svg";
   import { ModeWatcher } from "mode-watcher";
   import { browser } from "$app/environment";
-  import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query";
+  import { QueryClient, QueryClientProvider, QueryCache } from "@tanstack/svelte-query";
   import { handleQueryError } from "$lib/hooks/use-query-error";
   import { onMount, type Snippet } from "svelte";
   import type { BAUser } from "@woofs/types";
@@ -16,6 +16,9 @@
   import { userLocation } from "$lib/stores/geolocationStore";
 
   const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: handleQueryError,
+    }),
     defaultOptions: {
       queries: {
         enabled: browser,
@@ -27,7 +30,6 @@
         },
         staleTime: 5 * 60 * 1000,
         throwOnError: false,
-        onError: handleQueryError,
       },
       mutations: {
         onError: handleQueryError,
@@ -69,7 +71,7 @@
     </div>
   {:else}
     <Tooltip.Provider>
-      <div class="bg-[#fdf9f6]">
+      <div>
         {@render children()}
       </div>
     </Tooltip.Provider>

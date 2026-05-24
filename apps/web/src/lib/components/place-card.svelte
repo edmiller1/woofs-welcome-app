@@ -183,7 +183,7 @@
               {countryCode}
               {#if isPaid}
                 ·
-                <Badge variant="secondary">$$$</Badge>
+                <Badge variant="secondary">$$</Badge>
               {/if}
             </div>
             {#if amenity}
@@ -243,7 +243,7 @@
               {countryCode}
               {#if isPaid}
                 ·
-                <Badge variant="secondary">$$$</Badge>
+                <Badge variant="secondary">$$</Badge>
               {/if}
             </div>
             {#if amenity}

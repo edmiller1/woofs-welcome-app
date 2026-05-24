@@ -8,7 +8,7 @@
   import SaveButton from "$lib/components/save-button.svelte";
   import ShareButton from "$lib/components/share-button.svelte";
   import ImageDrawer from "$lib/components/image-drawer.svelte";
-  import { Spinner } from "$lib/components/ui/spinner";
+  import { Skeleton } from "$lib/components/ui/skeleton";
   import { createQuery } from "@tanstack/svelte-query";
   import type { BAUser, PlaceReview, PlaceWithDetails } from "@woofs/types";
   import type { Tab } from "@woofs/types";
@@ -29,12 +29,14 @@
     Globe,
     Grip,
     Heart,
+    Images,
     Mail,
     Map,
     MapPin,
     Maximize2,
     Phone,
     Share,
+    ShieldAlert,
     SquarePen,
     Star,
   } from "@lucide/svelte";
@@ -126,8 +128,39 @@
 
 <ErrorBoundary error={place.error}>
   {#if place.isLoading}
-    <div class="flex min-h-screen items-center justify-center">
-      <Spinner />
+    <div class="lg:hidden pb-32">
+      <Skeleton class="w-full h-99.25" />
+      <div class="px-6 pt-8 space-y-4">
+        <Skeleton class="h-10 w-3/4" />
+        <Skeleton class="h-4 w-1/2" />
+        <Skeleton class="h-4 w-full mt-6" />
+        <Skeleton class="h-4 w-full" />
+        <Skeleton class="h-4 w-5/6" />
+      </div>
+    </div>
+    <div class="hidden lg:block mx-auto w-full max-w-screen-2xl px-8">
+      <Skeleton class="h-6 w-64 mt-4 mb-6" />
+      <div class="grid grid-cols-2 gap-2 mb-8">
+        <Skeleton class="aspect-[1.4] rounded-xl" />
+        <div class="grid grid-cols-2 gap-2">
+          {#each Array(4) as _}
+            <Skeleton class="aspect-square rounded-xl" />
+          {/each}
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-12">
+        <div class="col-span-8 space-y-4">
+          <Skeleton class="h-16 w-2/3" />
+          <Skeleton class="h-4 w-1/2" />
+          <Skeleton class="h-4 w-full mt-8" />
+          <Skeleton class="h-4 w-full" />
+          <Skeleton class="h-4 w-5/6" />
+        </div>
+        <div class="col-span-4 space-y-4">
+          <Skeleton class="h-48 rounded-2xl" />
+          <Skeleton class="h-64 rounded-2xl" />
+        </div>
+      </div>
     </div>
   {/if}
 
@@ -149,32 +182,8 @@
     </div>
 
     <!-- ===================== MOBILE LAYOUT ===================== -->
+    <Navbar {user} />
     <div class="lg:hidden pb-32">
-      <!-- Mobile Top Nav -->
-      <nav
-        class="fixed top-0 w-full z-50 bg-[#fcf9f5]/70 backdrop-blur-md flex items-center justify-between px-6 h-16"
-      >
-        <div class="flex items-center gap-2">
-          <button
-            onclick={() => history.back()}
-            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-subtle transition-colors"
-          >
-            <ArrowLeft class="size-5 text-primary" />
-          </button>
-          <span class="text-2xl font-bold font-serif italic text-primary"
-            >{place.data.name}</span
-          >
-        </div>
-        <div class="flex gap-2">
-          <ShareButton url={page.url.href} name={place.data.name} />
-          <SaveButton
-            {user}
-            placeId={place.data.id}
-            isSaved={place.data.isSaved}
-          />
-        </div>
-      </nav>
-
       <!-- Hero Image -->
       <header class="relative w-full h-99.25 mt-0 overflow-hidden">
         {#if place.data.images[0]}
@@ -192,81 +201,84 @@
         {#if place.data.memberFavourite}
           <div class="absolute top-20 left-6">
             <span
-              class="bg-tertiary-dim text-on-tertiary-fixed px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+              class="bg-tertiary-dim text-secondary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
             >
-              ★ MEMBER FAVORITE
+              <Star class="size-3 text-secondary fill-secondary" /> MEMBER FAVORITE
             </span>
           </div>
         {/if}
-        <div class="absolute top-20 right-6">
+        <ImageDrawer images={place.data.images} bind:imagesOpen />
+        <div class="absolute top-5 right-5">
           <button
-            class="bg-white text-primary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+            onclick={openImageDrawer}
+            aria-label="View all images"
+            class="bg-white text-secondary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
           >
-            <Grip class="size-4" />
+            <Images class="size-4" />
             View all photos
           </button>
         </div>
-        <div class="absolute bottom-6 left-6 right-6">
-          <h1
-            class="text-white font-headline font-bold text-4xl leading-tight drop-shadow-md"
-          >
-            {place.data.name}
-          </h1>
-          <p class="text-white/90 font-body">
-            {place.data.location.name}, {place.data.region.name}
-          </p>
+        <div class="absolute bottom-10 left-5">
+          <div class="flex gap-2">
+            <ShareButton url={page.url.href} name={place.data.name} />
+            <SaveButton
+              {user}
+              placeId={place.data.id}
+              isSaved={place.data.isSaved}
+            />
+          </div>
         </div>
       </header>
 
       <!-- Main Content -->
-      <main class="px-6 -mt-4 relative z-10 bg-surface rounded-t-3xl pt-8">
-        <!-- Rating + Status -->
-        <section
-          class="flex items-center justify-between mb-8 bg-surface-subtleest p-4 rounded-2xl shadow-sm"
-        >
-          <div class="flex items-center gap-2">
-            <span class="text-4xl font-bold text-primary font-headline"
-              >{Number(place.data.rating).toFixed(1)}</span
-            >
-            <div class="flex flex-col gap-2">
-              <div class="flex text-tertiary">
-                {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as _}
-                  <Star
-                    class="size-3.5 mr-1 fill-tertiary-text-muted text-tertiary-text-muted"
-                  />
-                {/each}
-              </div>
-              <div class="flex items-center gap-2">
-                {#each place.data.types as type}
-                  <Badge class="rounded-full">{type}</Badge>
-                {/each}
+      <main class="px-6 -mt-4 relative z-10 bg-surface pt-8">
+        <section class="px-margin-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 class="font-semibold text-4xl text-on-surface">
+                {place.data.name}
+              </h2>
+              <div class="flex items-center gap-2 mt-1 text-sm">
+                <span class="flex items-center">
+                  <MapPin class="size-4 text-secondary" />
+                  <span class="text-secondary"
+                    >{place.data.location.name}, {place.data.region.name}</span
+                  >
+                </span>
+                <span>•</span>
+                <Star class="size-4 text-secondary fill-secondary" />
+                <span class="font-bold text-secondary"
+                  >{Number(place.data.rating).toFixed(1)}</span
+                >
+                <span class="opacity-70"
+                  >({place.data.reviewsCount} reviews)</span
+                >
+                <span>•</span>
+                <span
+                  class="text-secondary px-2 py-0.5 bg-secondary/10 rounded-lg"
+                  >$$</span
+                >
               </div>
             </div>
           </div>
         </section>
-
-        <!-- Amenities Badges -->
-        {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
-          <section class="{place.data.dogAmenities.length === 1 ? 'flex' : 'grid grid-cols-2'} gap-2 mb-10">
-            {#each place.data.dogAmenities as amenity}
-              <span
-                class="bg-[#bbf0ad] text-primary px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2"
-              >
-                <CircleCheck class="size-4 shrink-0" />
-                {amenity}
-              </span>
-            {/each}
-          </section>
-        {/if}
-
-        <!-- About / The Story -->
-        <section class="mb-10">
-          <h2 class="font-headline font-bold text-2xl text-primary mb-4">
-            About
-          </h2>
+        <!-- About -->
+        <section class="mt-10">
+          <h2 class="font-headline font-bold text-2xl mb-4">About</h2>
           <p class="text-text-subtle leading-relaxed text-sm font-body">
             {place.data.description}
           </p>
+          <div class="my-6 space-y-3">
+            <h4 class="text-xl font-semibold text-secondary">Amenities</h4>
+            <div class="flex flex-wrap gap-2">
+              {#each place.data.dogAmenities as amenity}
+                <li class="flex items-center gap-2 mb-2 text-sm font-medium">
+                  <CircleCheck class="size-4 text-primary-tint hrink-0" />
+                  {amenity}
+                </li>
+              {/each}
+            </div>
+          </div>
         </section>
 
         <!-- Opening Hours -->
@@ -277,19 +289,17 @@
         <!-- Contact & Location Bento -->
         <section class="grid grid-cols-2 gap-4 mb-10">
           <!-- Address + Map -->
-          <div
-            class="bg-surface-subtleest p-4 rounded-2xl shadow-sm col-span-2"
-          >
+          <div class="bg-white p-4 rounded-2xl shadow-sm col-span-2">
             {#if place.data.address}
               <div class="flex items-center gap-3 mb-3">
                 <div
                   class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"
                 >
-                  <MapPin class="text-primary size-5" />
+                  <MapPin class="text-primary-tint size-5" />
                 </div>
                 <div>
                   <p
-                    class="text-[10px] font-bold uppercase text-primary tracking-widest"
+                    class="text-[10px] font-bold uppercase text-primary-tint tracking-widest"
                   >
                     Address
                   </p>
@@ -311,7 +321,11 @@
                 />
               </div>
               <div class="mt-6 flex items-center justify-center">
-                <Button class="w-full" onclick={handleMapOpen}>
+                <Button
+                  variant="secondary"
+                  class="w-full text-white"
+                  onclick={handleMapOpen}
+                >
                   View Map
                   <Map class="size-4" />
                 </Button>
@@ -321,9 +335,9 @@
           {#if place.data.email}
             <a
               href="mailto:{place.data.email}"
-              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Mail class="text-primary size-5 mb-2" />
+              <Mail class="text-secondary size-5 mb-2" />
               <span
                 class="text-[10px] font-bold uppercase text-secondary tracking-widest"
                 >Email</span
@@ -334,9 +348,9 @@
           {#if place.data.phone}
             <a
               href="tel:{place.data.phone}"
-              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Phone class="text-primary size-5 mb-2" />
+              <Phone class="text-secondary size-5 mb-2" />
               <span
                 class="text-[10px] font-bold uppercase text-secondary tracking-widest"
                 >Phone</span
@@ -349,9 +363,9 @@
               href={place.data.website}
               target="_blank"
               rel="noopener noreferrer"
-              class="bg-surface-subtleest p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Globe class="text-primary size-5 mb-2" />
+              <Globe class="text-secondary size-5 mb-2" />
               <span
                 class="text-[10px] font-bold uppercase text-secondary tracking-widest"
                 >Website</span
@@ -360,34 +374,33 @@
           {/if}
         </section>
 
-        <!-- Pawsome Rules -->
+        <!-- Rules & Guidelines Card -->
         {#if place.data.dogRules && place.data.dogRules.length > 0}
-          <section class="mb-10">
-            <h2 class="font-headline font-bold text-2xl text-primary mb-4">
-              Pawsome Rules
-            </h2>
-            <ul class="space-y-4">
+          <div
+            class="mb-10 bg-primary-tint/10 rounded-3xl border-2 border-dashed border-primary-tint p-4"
+          >
+            <div class="flex items-center gap-2 mb-2 text-primary-tint">
+              <ShieldAlert />
+              <h3 class="font-semibold text-xl">Rules</h3>
+            </div>
+            <ul class="space-y-3 font-body text-sm text-primary-tint">
               {#each place.data.dogRules as rule}
-                <li class="flex gap-3">
-                  <CircleCheck
-                    class="size-5 text-tertiary-dim shrink-0 mt-0.5 stroke-background fill-tertiary-dim"
-                  />
-                  <p class="text-sm text-text-subtle font-body">{rule}</p>
+                <li class="flex gap-2">
+                  <span class="font-bold">•</span>
+                  {rule}
                 </li>
               {/each}
             </ul>
-          </section>
+          </div>
         {/if}
 
         <!-- Community Reviews -->
         <section class="mb-10">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="font-headline font-bold text-2xl text-primary">
-              Community reviews
-            </h2>
+            <h2 class="font-headline font-bold text-2xl">Community reviews</h2>
             <button
               onclick={() => openReviewDrawer(0)}
-              class="text-primary text-xs font-bold underline"
+              class="text-primary-tint decoration-primary-tint text-xs font-bold underline"
               >Write Review</button
             >
           </div>
@@ -406,11 +419,10 @@
         <RecommendedPlaces placeId={place.data.id} {user} />
       </main>
 
-      <MobileBottomNav {user} />
+      <!-- <MobileBottomNav {user} /> -->
     </div>
     <!-- ===================== END MOBILE LAYOUT ===================== -->
 
-    <Navbar {user} />
     <div class="hidden lg:block mx-auto w-full max-w-screen-2xl px-8">
       <div class="py-2 lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1 mt-1.5">
@@ -429,61 +441,60 @@
             isSaved={place.data.isSaved}
           />
           <ImageDrawer images={place.data.images} bind:imagesOpen />
+
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
             <!-- Left Content Column -->
             <div class="lg:col-span-8">
-              <div
-                class="bg-surface-subtle rounded-xl p-8 mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
-              >
-                <div class="flex items-center gap-4">
-                  <div
-                    class="bg-tertiary-dim p-4 rounded-xl flex flex-col items-center justify-center text-on-tertiary-fixed"
+              <h1 class="text-4xl md:text-6xl font-headline font-bold mb-4">
+                {place.data.name}
+              </h1>
+              <div class="flex items-center gap-2 text-secondary mb-4">
+                <span class="flex items-center">
+                  <MapPin class="size-4 text-secondary" />
+                  <span class="ml-1"
+                    >{place.data.location.name}, {place.data.region.name}</span
                   >
-                    <span class="text-2xl font-bold font-headline"
-                      >{Number(place.data.rating).toFixed(1)}</span
-                    >
-                    <div class="flex">
-                      {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as star}
-                        <Star class="size-3.5 fill-foreground" />
-                      {/each}
-                    </div>
-                  </div>
-                  <div>
-                    <div class="flex items-center gap-2">
-                      {#each place.data.types as type}
-                        <Badge class="rounded-full">{type}</Badge>
-                      {/each}
-                    </div>
-                    <p class="text-text-subtle font-body">
-                      Based on {place.data.reviewsCount} community review{place
-                        .data.reviewsCount === 1
-                        ? ""
-                        : "s"}
-                    </p>
-                  </div>
-                </div>
-                {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
-                  <div class="{place.data.dogAmenities.length === 1 ? 'flex' : 'grid grid-cols-2'} gap-3">
-                    {#each place.data.dogAmenities as amenity}
-                      <span
-                        class="px-4 py-2 bg-[#bbf0ad] text-primary rounded-full text-sm font-medium flex items-center gap-2 font-body"
-                      >
-                        <CircleCheck class="size-4 shrink-0" />
-                        {amenity}
-                      </span>
-                    {/each}
-                  </div>
-                {/if}
+                </span>
+                <span>•</span>
+                <span class="flex items-center">
+                  <Star class="size-4 text-secondary fill-secondary mr-1" />
+                  <span class="font-bold"
+                    >{Number(place.data.rating).toFixed(1)}</span
+                  >
+                  <span class="ml-1 opacity-70"
+                    >({place.data.reviewsCount} reviews)</span
+                  >
+                </span>
+                <span>•</span>
+                <span
+                  class="font-label-md px-2 py-0.5 bg-secondary/10 rounded-lg"
+                  >$$</span
+                >
+              </div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                {#each place.data.types as type}
+                  <Badge variant="secondary" class="py-1.5">{type}</Badge>
+                {/each}
               </div>
 
               <!-- About -->
               <div class="mb-12">
-                <h3 class="text-3xl font-headline font-bold mb-6">About</h3>
+                <h3 class="text-3xl font-headline font-bold mb-3">About</h3>
                 <div
-                  class="prose prose-stone max-w-none text-text-subtle font-body leading-relaxed space-y-4"
+                  class="max-w-none text-text-subtle font-body leading-relaxed space-y-4"
                 >
                   <p>{place.data.description}</p>
                 </div>
+                <ul class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-sm">
+                  {#each place.data.dogAmenities as amenity}
+                    <li
+                      class="flex items-center gap-2 mb-2 text-base font-medium"
+                    >
+                      <CircleCheck class="size-5 text-primary-tint hrink-0" />
+                      {amenity}
+                    </li>
+                  {/each}
+                </ul>
               </div>
 
               <!-- Community Review Section -->
@@ -497,32 +508,32 @@
                       Community Reviews
                     </h3>
                     <div class="flex items-center gap-4">
-                      <div class="flex items-center text-tertiary-text-muted">
+                      <div class="flex items-center text-primary-tint">
                         <span class="text-3xl font-bold font-headline mr-2"
                           >{Number(place.data.rating).toFixed(1)}</span
                         >
                         <div class="flex">
                           {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as star}
-                            <Star
-                              class="size-4 fill-tertiary-text-muted mr-1"
-                            />
+                            <Star class="size-4 fill-primary-tint mr-1" />
                           {/each}
                         </div>
                       </div>
-                      <span class="text-text-subtle font-body"
+                      <span class="text-primary-tint font-body"
                         >{place.data.reviewsCount} reviews total</span
                       >
                     </div>
                   </div>
                   {#if user}
-                    <Button onclick={() => openReviewDrawer(0)}
-                      ><SquarePen />Write a Review</Button
+                    <Button
+                      variant="link"
+                      class="text-primary-tint decoration-primary-tint"
+                      onclick={() => openReviewDrawer(0)}>Write a Review</Button
                     >
                   {:else}
                     <a
                       href={`/sign-in?redirect=${page.url.pathname}`}
-                      class={cn(buttonVariants({ variant: "default" }))}
-                      ><SquarePen />Write a Review</a
+                      class={cn(buttonVariants({ variant: "link" }))}
+                      >Write a Review</a
                     >
                   {/if}
                 </div>
@@ -548,14 +559,14 @@
               <PlaceHours hours={place.data.hours} />
               <!-- Contact & Connect Card -->
               <div
-                class="bg-surface-subtleest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+                class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Contact</h4>
                 <div class="space-y-4">
                   {#if place.data.address}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary/10 p-2 rounded-lg">
-                        <MapPin class="text-primary" />
+                      <div class="bg-primary-tint/20 p-2 rounded-lg">
+                        <MapPin class="text-primary-tint" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Address</p>
@@ -567,8 +578,8 @@
                   {/if}
                   {#if place.data.phone}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary/10 p-2 rounded-lg">
-                        <Phone class="text-primary" />
+                      <div class="bg-primary-tint/20 p-2 rounded-lg">
+                        <Phone class="text-primary-tint" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Phone</p>
@@ -580,8 +591,8 @@
                   {/if}
                   {#if place.data.email}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary/10 p-2 rounded-lg">
-                        <Mail class="text-primary" />
+                      <div class="bg-primary-tint/20 p-2 rounded-lg">
+                        <Mail class="text-primary-tint" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Email</p>
@@ -593,13 +604,13 @@
                   {/if}
                   {#if place.data.website}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary/10 p-2 rounded-lg">
-                        <Globe class="text-primary" />
+                      <div class="bg-primary-tint/20 p-2 rounded-lg">
+                        <Globe class="text-primary-tint" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Website</p>
                         <a
-                          class="text-xs text-primary font-body hover:underline"
+                          class="text-xs text-primary-tint font-body hover:underline"
                           href={place.data.website}>{place.data.website}</a
                         >
                       </div>
@@ -609,7 +620,7 @@
               </div>
               <!-- Location & Amenities Card -->
               <div
-                class="bg-surface-subtleest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+                class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Location</h4>
                 <div
@@ -628,7 +639,11 @@
                   {/if}
                 </div>
                 <div class="flex items-center justify-center">
-                  <Button class="w-full" onclick={handleMapOpen}>
+                  <Button
+                    variant="secondary"
+                    class="w-full text-white"
+                    onclick={handleMapOpen}
+                  >
                     View Map
                     <Map class="size-4" />
                   </Button>
@@ -638,14 +653,13 @@
               <!-- Rules & Guidelines Card -->
               {#if place.data.dogRules && place.data.dogRules.length > 0}
                 <div
-                  class="bg-secondary-container/30 rounded-2xl p-6 border border-secondary-container"
+                  class="bg-primary-tint/10 rounded-3xl border-2 border-dashed border-primary-tint p-4"
                 >
-                  <h4
-                    class="text-lg font-headline font-bold text-secondary-on-container mb-4 flex items-center gap-2"
-                  >
-                    Pawsome Rules
-                  </h4>
-                  <ul class="space-y-3 font-body text-sm text-secondary">
+                  <div class="flex items-center gap-2 mb-2 text-primary-tint">
+                    <ShieldAlert />
+                    <h3 class="font-semibold text-xl">Rules</h3>
+                  </div>
+                  <ul class="space-y-3 font-body text-sm text-primary-tint">
                     {#each place.data.dogRules as rule}
                       <li class="flex gap-2">
                         <span class="font-bold">•</span>

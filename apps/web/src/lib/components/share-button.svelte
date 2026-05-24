@@ -34,10 +34,10 @@
     {#if trigger}
       {@render trigger()}
     {:else}
-      <Button variant="ghost" class="hidden md:flex underline">
+      <Button variant="glass" class="hidden md:flex">
         Share <Share class="size-4" />
       </Button>
-      <Button variant="outline" class="md:hidden">
+      <Button variant="outline" class="md:hidden rounded-full">
         <Share class="size-4" />
       </Button>
     {/if}

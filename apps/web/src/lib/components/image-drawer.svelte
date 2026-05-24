@@ -32,7 +32,7 @@
   <Drawer.Portal>
     <Drawer.Overlay class="fixed inset-0 bg-black/40" />
     <Drawer.Content
-      class="fixed bottom-0 left-0 right-0 z-99 mt-24 flex h-[96%] flex-col rounded-t-[10px] bg-zinc-100"
+      class="fixed bottom-0 left-0 right-0 z-99 mt-24 flex h-full lg:h-[96%] flex-col rounded-t-[10px] bg-zinc-100"
     >
       <div class="flex min-h-screen flex-col rounded-t-[10px] bg-white">
         <div class="shrink-0 p-4">
