@@ -10,9 +10,10 @@
   interface Props {
     places: CollectionPlace[];
     collectionId?: string;
+    hoveredPlaceId?: string | null;
   }
 
-  const { places, collectionId }: Props = $props();
+  const { places, collectionId, hoveredPlaceId = null }: Props = $props();
 
   let mapContainer = $state<HTMLDivElement>();
   let map = $state<maplibregl.Map | undefined>(undefined);
@@ -242,6 +243,24 @@
     syncMarkers(map);
   });
 
+  // React to external hover
+  $effect(() => {
+    if (!map) return;
+    if (hoveredPlaceId) {
+      const place = validPlaces.find((p) => p.id === hoveredPlaceId);
+      if (!place) return;
+      if (activeMarkerId && activeMarkerId !== hoveredPlaceId) unhighlightMarker(activeMarkerId);
+      activeMarkerId = hoveredPlaceId;
+      highlightMarker(hoveredPlaceId);
+      openPopup([place.lng!, place.lat!], toPopupPlace(place));
+    } else {
+      if (activeMarkerId) unhighlightMarker(activeMarkerId);
+      activeMarkerId = null;
+      activePopup?.remove();
+      activePopup = null;
+    }
+  });
+
   // Init map when container is bound
   $effect(() => {
     if (!mapContainer || map) return;
@@ -273,12 +292,16 @@
 <div bind:this={mapContainer} class="h-full xl:rounded-lg w-full"></div>
 
 <style>
+  :global(.woofs-map-popup) {
+    background: transparent;
+    padding: 0;
+  }
   :global(.woofs-map-popup .maplibregl-popup-content) {
     padding: 0;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
     overflow: hidden;
-    margin: 1rem 0;
+    background: white;
   }
   :global(.woofs-map-popup .maplibregl-popup-tip) {
     display: none;

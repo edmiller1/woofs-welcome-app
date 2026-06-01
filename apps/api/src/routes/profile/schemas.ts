@@ -41,6 +41,13 @@ export const getProfileReviewStatsSchema = z.object({
   profileId: z.string(),
 });
 
+export const getProfilePhotosSchema = z.object({
+  limit: z.coerce.number().optional().default(24),
+  cursor: z.string().optional(),
+});
+
+export type GetProfilePhotosQuery = z.infer<typeof getProfilePhotosSchema>;
+
 export type GetProfileReviewsQuery = z.infer<typeof getProfileReviewsSchema>;
 export type UpdateProfileSettingsInput = z.infer<
   typeof updateProfileSettingsSchema

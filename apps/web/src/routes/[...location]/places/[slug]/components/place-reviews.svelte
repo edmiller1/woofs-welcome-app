@@ -88,6 +88,19 @@
     }
   });
 
+  $effect(() => {
+    if (highlightedReview.data && showHighlighted) {
+      untrack(() => {
+        setTimeout(() => {
+          reviewsContainer?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 100);
+      });
+    }
+  });
+
   const openImageDialog = (image: ReviewImage) => {
     imageDialogOpen = true;
     currentImage = image;
@@ -133,12 +146,12 @@
           <!-- Highlighted Review -->
           {@const reviewId = highlightedReview.data.id}
           <div
-            class=" text-primary flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
+            class="text-primary-tint flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
           >
             <span>Showing review from profile</span>
             <button
               onclick={() => (showHighlighted = false)}
-              class="rounded-full p-1 hover:bg-primary/20 transition-colors"
+              class="rounded-full cursor-pointer p-1 hover:bg-primary/20 transition-colors"
             >
               <X class="size-4" />
             </button>
@@ -150,7 +163,9 @@
                   highlightedReview.data.user?.profileImageId ?? "",
                   "thumbnail",
                 )}
-          <div class="rounded-lg border p-6 border-primary shadow-sm">
+          <div
+            class="rounded-lg bg-white border p-6 border-secondary shadow-sm"
+          >
             <div class="mb-4 flex items-start gap-4">
               <Avatar.Root class="size-12">
                 <Avatar.Image

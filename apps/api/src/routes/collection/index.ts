@@ -10,6 +10,7 @@ import {
   getProfileCollectionsSchema,
   getCollectionWithPlacesSchema,
   getCollectionWithPlacesQuerySchema,
+  deleteCollectionSchema,
 } from "./schemas";
 import { CollectionService } from "../../services/collection.service";
 import { ImageUploadService } from "../../services/image-upload.service";
@@ -224,6 +225,30 @@ collectionRouter.get(
   },
 );
 
+collectionRouter.delete(
+  "/delete/:collectionId",
+  authMiddleware,
+  zValidator("param", deleteCollectionSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { collectionId } = c.req.valid("param");
+
+    const result = await collectionService.deleteCollection(collectionId, auth.id);
+
+    return c.json(result, 200);
+  },
+);
+
 collectionRouter.get(
   ":profileId/:id",
   authMiddleware,
@@ -240,7 +265,7 @@ collectionRouter.get(
     const collectionService = new CollectionService(db, imageUploadService);
 
     const { profileId, id } = c.req.valid("param");
-    const { page, limit, search } = c.req.valid("query");
+    const { page, limit, search, sortBy } = c.req.valid("query");
 
     const result = await collectionService.getCollectionWithPlaces(
       id,
@@ -249,6 +274,7 @@ collectionRouter.get(
       page,
       limit,
       search,
+      sortBy,
     );
 
     return c.json(result, 200);

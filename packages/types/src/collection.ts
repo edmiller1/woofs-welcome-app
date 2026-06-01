@@ -44,6 +44,7 @@ export interface UserCollection {
     description: string;
     isPublic: boolean;
     previewImages: string[];
+    lastUpdated: Date;
   }[];
   isOwner: boolean;
 }

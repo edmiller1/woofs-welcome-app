@@ -3,6 +3,7 @@ import { updateProfile } from "./updateProfile";
 import { getProfileReviews } from "./getProfileReviews";
 import { getProfileReviewStats } from "./getProfilereviewStats";
 import { updateProfileSettings } from "./updateProfileSettings";
+import { getProfilePhotos } from "./getProfilePhotos";
 
 export const profile = {
   getProfile,
@@ -10,4 +11,5 @@ export const profile = {
   getProfileReviews,
   getProfileReviewStats,
   updateProfileSettings,
+  getProfilePhotos,
 };

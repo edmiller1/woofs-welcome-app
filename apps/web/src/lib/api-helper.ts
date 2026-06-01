@@ -6,10 +6,17 @@ import {
 import { api } from "@woofs/api/api";
 import { authClient } from "./auth/auth-client";
 
-setTokenGetter(async () => {
+let sessionPromise: Promise<string | null> | null = null;
+
+setTokenGetter(() => {
   if (typeof window === "undefined") return null;
-  const { data } = await authClient.getSession();
-  return data?.session?.token ?? null;
+  if (!sessionPromise) {
+    sessionPromise = authClient.getSession().then(({ data }) => {
+      sessionPromise = null;
+      return data?.session?.token ?? null;
+    });
+  }
+  return sessionPromise;
 });
 
 export { protectedProcedure, publicProcedure, api };

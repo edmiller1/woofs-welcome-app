@@ -173,3 +173,18 @@ export interface UpdateProfileSettingsInput {
   showReviews?: boolean;
   showCollections?: boolean;
 }
+
+export interface ProfilePhoto {
+  id: string;
+  cfImageId: string;
+  displayOrder: number;
+  reviewId: string;
+  createdAt: Date;
+}
+
+export interface ProfilePhotos {
+  photos: ProfilePhoto[];
+  isPrivate: boolean;
+  isOwner: boolean;
+  nextCursor: string | null;
+}

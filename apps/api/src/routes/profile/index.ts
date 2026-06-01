@@ -3,6 +3,7 @@ import { authMiddleware, optionalAuthMiddleware } from "../../middleware/auth";
 import { ProfileService } from "../../services/profile.service";
 import { zValidator } from "@hono/zod-validator";
 import {
+  getProfilePhotosSchema,
   getProfileReviewsSchema,
   getProfileReviewStatsSchema,
   updateProfileSchema,
@@ -122,6 +123,28 @@ profileRouter.get(
       profileId,
       auth?.id,
     );
+
+    return c.json(result, 200);
+  },
+);
+
+profileRouter.get(
+  "/:profileId/photos",
+  optionalAuthMiddleware,
+  zValidator("param", z.object({ profileId: z.string() })),
+  zValidator("query", getProfilePhotosSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const profileService = new ProfileService(db, imageUploadService);
+
+    const { profileId } = c.req.valid("param");
+    const query = c.req.valid("query");
+
+    const result = await profileService.getProfilePhotos(profileId, query, auth?.id);
 
     return c.json(result, 200);
   },

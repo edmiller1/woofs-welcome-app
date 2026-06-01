@@ -4,7 +4,7 @@ import type { CollectionWithPlaces } from "@woofs/types";
 export const getCollectionWithPlaces = async (
   profileId: string,
   collectionId: string,
-  params?: { page?: number; limit?: number; search?: string },
+  params?: { page?: number; limit?: number; search?: string; sortBy?: string },
 ) => {
   const response = await protectedProcedure.get<CollectionWithPlaces>(
     `/collection/${profileId}/${collectionId}`,

@@ -13,7 +13,14 @@ export const load: Load = async ({ params }) => {
 
   const user = await getUser();
 
-  const initialProfile = await api.profile.getProfile(userId);
+  const [initialProfile, initialProfileReviews, initialProfileReviewStats, initialProfileCollections, initialProfilePhotos] =
+    await Promise.all([
+      api.profile.getProfile(userId),
+      api.profile.getProfileReviews(userId, 12, "createdAt_desc"),
+      api.profile.getProfileReviewStats(userId),
+      api.collection.getProfileCollections(userId),
+      api.profile.getProfilePhotos(userId),
+    ]);
 
   const isOwner = userId === user?.id;
 
@@ -22,6 +29,10 @@ export const load: Load = async ({ params }) => {
     userName,
     userId,
     initialProfile,
+    initialProfileReviews,
+    initialProfileReviewStats,
+    initialProfileCollections,
+    initialProfilePhotos,
     isOwner,
   };
 };

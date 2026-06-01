@@ -219,6 +219,7 @@ export const UserSettings = pgTable(
     showAbout: boolean("show_about").default(true),
     showCheckIns: boolean("show_check_ins").default(true),
     showDogs: boolean("show_dogs").default(true),
+    showPhotos: boolean("show_photos").default(true),
     createdAt: timestamp("created_at").$defaultFn(
       () => /* @__PURE__ */ new Date(),
     ),
@@ -386,7 +387,9 @@ export const Location = pgTable(
 
     // Aggregated review stats (denormalised for fast reads)
     totalReviews: integer("total_reviews").default(0).notNull(),
-    averageRating: numeric("average_rating", { precision: 3, scale: 2 }).default("0").notNull(),
+    averageRating: numeric("average_rating", { precision: 3, scale: 2 })
+      .default("0")
+      .notNull(),
 
     // SEO
     metaTitle: text("meta_title"),

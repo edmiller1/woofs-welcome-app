@@ -17,8 +17,7 @@
   import { getUserInitials } from "$lib/helpers";
   import { buildImageUrl } from "@woofs/image-config";
   import { settingsOpen } from "$lib/stores/accountSettingsStore";
-  import { createQuery } from "@tanstack/svelte-query";
-  import { api } from "$lib/api-helper";
+  import { preloadData } from "$app/navigation";
 
   interface Props {
     user: BAUser;
@@ -37,7 +36,10 @@
 </script>
 
 <DropdownMenu>
-  <DropdownMenuTrigger class={cn("cursor-pointer", className)}>
+  <DropdownMenuTrigger
+    class={cn("cursor-pointer", className)}
+    onmouseenter={() => preloadData(`/profile/${user.id}/${profileLink}`)}
+  >
     <Avatar class="ml-auto">
       <AvatarImage
         src={userImage}
@@ -49,7 +51,10 @@
     </Avatar>
   </DropdownMenuTrigger>
   <DropdownMenuContent align="end" class="mt-2">
-    <a href={`/profile/${user.id}/${profileLink}`}>
+    <a
+      href={`/profile/${user.id}/${profileLink}`}
+      data-sveltekit-preload-data="hover"
+    >
       <DropdownMenuItem
         ><SquareUserRound class="text-foreground" /> Profile</DropdownMenuItem
       >

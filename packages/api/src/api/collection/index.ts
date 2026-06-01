@@ -6,6 +6,7 @@ import { getPlaceCollections } from "./getPlaceCollections";
 import { getProfileCollections } from "./getProfileCollections";
 import { getCollectionWithPlaces } from "./getCollectionWithPlaces";
 import { getCollectionsOnly } from "./getCollectionsOnly";
+import { deleteCollection } from "./deleteCollection";
 
 export const collection = {
   createCollection,
@@ -16,4 +17,5 @@ export const collection = {
   getProfileCollections,
   getCollectionWithPlaces,
   getCollectionsOnly,
+  deleteCollection,
 };

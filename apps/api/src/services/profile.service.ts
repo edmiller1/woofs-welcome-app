@@ -15,8 +15,10 @@ import {
   CheckIn,
   Collection,
   Dog,
+  Image,
   PlaceImage,
   Review,
+  ReviewImage,
   user,
   UserSettings,
 } from "../db/schema";
@@ -30,6 +32,7 @@ import { sanitizePlainText } from "../lib/sanitize";
 import { ImageUploadService } from "./image-upload.service";
 import type { Db } from "../db";
 import type {
+  GetProfilePhotosQuery,
   GetProfileReviewsQuery,
   UpdateProfileSettingsInput,
 } from "../routes/profile/schemas";
@@ -672,6 +675,69 @@ export class ProfileService {
         throw error;
       }
       throw new DatabaseError("Failed to get profile review stats", {
+        originalError: error,
+      });
+    }
+  }
+
+  async getProfilePhotos(
+    profileId: string,
+    query: GetProfilePhotosQuery,
+    userId?: string,
+  ) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, profileId),
+        with: { userSettings: true },
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      const isOwner = userId === profileId;
+
+      if (!isOwner && !userRecord.userSettings?.showReviews) {
+        return { isPrivate: true, photos: [], isOwner: false, nextCursor: null };
+      }
+
+      const { limit, cursor } = query;
+
+      const photos = await this.db
+        .select({
+          id: ReviewImage.id,
+          cfImageId: Image.cfImageId,
+          displayOrder: ReviewImage.displayOrder,
+          reviewId: ReviewImage.reviewId,
+          createdAt: ReviewImage.createdAt,
+        })
+        .from(ReviewImage)
+        .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
+        .innerJoin(Image, eq(ReviewImage.imageId, Image.id))
+        .where(
+          and(
+            eq(Review.userId, profileId),
+            cursor ? lt(ReviewImage.createdAt, new Date(cursor)) : undefined,
+          ),
+        )
+        .orderBy(desc(ReviewImage.createdAt))
+        .limit(limit);
+
+      return {
+        photos,
+        isPrivate: false,
+        isOwner,
+        nextCursor:
+          photos.length === limit
+            ? photos[photos.length - 1]?.createdAt.toISOString()
+            : null,
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Get profile photos error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to get profile photos", {
         originalError: error,
       });
     }

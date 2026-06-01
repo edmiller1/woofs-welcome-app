@@ -30,6 +30,10 @@ export const getProfileCollectionsSchema = z.object({
   userId: z.string(),
 });
 
+export const deleteCollectionSchema = z.object({
+  collectionId: z.string(),
+});
+
 export const getCollectionWithPlacesSchema = z.object({
   profileId: z.string(),
   id: z.string(),
@@ -39,4 +43,5 @@ export const getCollectionWithPlacesQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
   search: z.string().optional(),
+  sortBy: z.enum(["createdAt_desc", "name_asc", "name_desc", "rating_desc", "rating_asc", "city_asc", "city_desc"]).optional().default("createdAt_desc"),
 });

@@ -1,53 +1,40 @@
 <script lang="ts">
   import { api } from "$lib/api-helper";
-  import { Button } from "$lib/components/ui/button";
-  import { Spinner } from "$lib/components/ui/spinner";
-  import {
-    ChevronDown,
-    Dog,
-    Image,
-    ImageIcon,
-    MessageCircle,
-    Pencil,
-    Star,
-    ThumbsUp,
-    Trash2,
-    UserStar,
-  } from "@lucide/svelte";
   import { createQuery, createInfiniteQuery } from "@tanstack/svelte-query";
   import type {
     Profile,
     ProfileReviewStats,
     UpdateReviewData,
+    UserReview,
   } from "@woofs/types";
-  import * as Select from "$lib/components/ui/select/index.js";
-  import { Separator } from "$lib/components/ui/separator";
-  import { format, formatDistanceToNow } from "date-fns";
+  import { formatDistanceToNow } from "date-fns";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import DeleteReviewDialog from "$lib/components/delete-review-dialog.svelte";
   import EditReviewDialog from "$lib/components/edit-review-dialog.svelte";
   import Footer from "$lib/components/footer.svelte";
+  import StarRating from "$lib/components/star-rating.svelte";
+  import { Badge } from "$lib/components/ui/badge";
+  import { Skeleton } from "$lib/components/ui/skeleton";
+  import { Dog, Lock, Star, ThumbsUp } from "@lucide/svelte";
 
   interface Props {
     data: {
       userId: string;
       userName: string;
       initialProfileReviewStats: ProfileReviewStats;
+      initialProfileReviews: UserReview;
       initialProfile: Profile;
     };
   }
 
   const { data }: Props = $props();
-  const { userId, userName, initialProfileReviewStats, initialProfile } =
+  const { userId, userName, initialProfileReviewStats, initialProfileReviews, initialProfile } =
     $derived(data);
 
   const profile = $derived(initialProfile);
 
   let selectedRating = $state<number | undefined>(undefined);
   let sortBy = $state<string>("createdAt_desc");
-  let cursor = $state<string | null | undefined>(undefined);
-  let isSticky = $state<boolean>(false);
-  let expandedReviews = $state(new Set<string>());
   let sentinel = $state<HTMLDivElement>();
   let deleteOpen = $state<boolean>(false);
   let deleteReviewId = $state<string>("");
@@ -82,6 +69,9 @@
       ),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialData: selectedRating === undefined && sortBy === "createdAt_desc"
+      ? { pages: [initialProfileReviews], pageParams: [undefined] }
+      : undefined,
   }));
 
   $effect(() => {
@@ -89,9 +79,15 @@
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        isSticky = !entry.isIntersecting;
+        if (
+          entry.isIntersecting &&
+          profileReviews.hasNextPage &&
+          !profileReviews.isFetchingNextPage
+        ) {
+          profileReviews.fetchNextPage();
+        }
       },
-      { threshold: 0 },
+      { threshold: 0.1 },
     );
 
     observer.observe(sentinel);
@@ -108,16 +104,6 @@
     editReviewData = reviewData;
     editPlaceName = placeName;
     editOpen = true;
-  };
-
-  const toggleExpanded = (id: string) => {
-    const next = new Set(expandedReviews);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    expandedReviews = next;
   };
 
   const getSelectContent = () => {
@@ -140,260 +126,167 @@
     profileReviews.data?.pages.flatMap((page) => page.reviews) ?? [],
   );
   const isOwner = $derived(profileReviews.data?.pages[0]?.isOwner ?? false);
+  const isPrivate = $derived(profileReviews.data?.pages[0]?.isPrivate ?? false);
 </script>
 
-{#if profileReviews.isLoading || profileReviewStats.isLoading}
-  <div class="flex justify-center items-center min-h-screen">
-    <Spinner size="lg" />
-  </div>
-{:else if profileReviews.isError || profileReviewStats.isError}
-  <div class="text-center text-red-500">
-    Failed to load reviews. Please try again later.
-  </div>
-{:else}
-  <div bind:this={sentinel}></div>
-  <section class="pt-16 pb-20 max-w-5xl mx-auto px-8">
-    <header class="mb-12">
-      <h1
-        class="text-4xl md:text-5xl font-bold italic text-primary leading-tight"
-      >
-        All Reviews
-      </h1>
-      <span class="font-bold text-secondary"
-        >({profile.reviewCount} total reviews)</span
-      >
-    </header>
-    <div
-      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12"
-    >
-      <div class="flex flex-wrap gap-2">
-        {#each [undefined, 5, 4, 3, 2, 1] as rating}
-          <Button
-            variant="outline"
-            class="px-3 py-1.5 rounded-full cursor-pointer text-sm font-medium border transition-colors
-        {selectedRating === rating
-              ? 'bg-primary text-white border-primary'
-              : 'bg-white border-gray-200 text-gray-600 hover:bg-muted hover:text-gray-600'}"
-            onclick={() => (selectedRating = rating)}
-          >
-            {#if rating}
-              <div class="flex items-center gap-1">
-                <Star class="size-3 fill-foreground" />
-                {rating}
-              </div>
-            {:else}
-              All
-            {/if}
-          </Button>
-        {/each}
-      </div>
-      <Select.Root bind:value={sortBy} type="single">
-        <Select.Trigger
-          class="w-40 ml-auto  flex items-center cursor-pointer text-primary bg-white hover:bg-muted"
-          ><span
-            class="text-xs text-gray-500 font-bold uppercase tracking-wider text-outline"
-            >Sort By</span
-          ><span
-            class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 p-0 cursor-pointer"
-            >{selectContent}</span
-          ></Select.Trigger
-        >
-        <Select.Content>
-          <Select.Item value="createdAt_desc" class="hover:bg-muted"
-            >Newest</Select.Item
-          >
-          <Select.Item value="createdAt_asc">Oldest</Select.Item>
-          <Select.Item value="rating_desc">Highest Rated</Select.Item>
-          <Select.Item value="likes_desc" class="hover:bg-muted"
-            >Most Liked</Select.Item
-          >
-        </Select.Content>
-      </Select.Root>
-    </div>
-    <!-- Review list -->
-    <div class="space-y-8">
-      {#if allReviews.length === 0 && !profileReviews.isFetching}
+<div class="min-h-100">
+  {#if profileReviews.isLoading || profileReviews.isFetching}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {#each Array(6) as _}
         <div
-          class="flex flex-col items-center justify-center py-16 gap-3 text-center"
+          class="bg-white p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
         >
-          <Star class="size-12 text-muted-foreground" />
-          {#if selectedRating !== undefined}
-            <p class="font-medium">No {selectedRating} star reviews</p>
-            <p class="text-sm text-muted-foreground">
-              Try a different rating filter
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onclick={() => (selectedRating = undefined)}
-            >
-              Clear filter
-            </Button>
-          {:else}
-            <p class="font-medium">No reviews yet</p>
-            <p class="text-sm text-muted-foreground">
-              {profileReviews.data?.pages[0]?.isOwner
-                ? "You haven't reviewed any places yet"
-                : "This user hasn't reviewed any places yet"}
-            </p>
-          {/if}
-        </div>
-      {:else}
-        <div class="relative">
-          {#if profileReviews.isFetching}
-            <div
-              class="absolute top-24 inset-0 bg-white/50 z-10 flex items-center justify-center"
-            >
-              <Spinner />
-            </div>
-          {/if}
-        </div>
-      {/if}
-      {#each allReviews as review}
-        <article
-          class="bg-white p-6 rounded-2xl flex flex-col sm:flex-row gap-6 shadow-[0_4px_24px_rgba(28,28,25,0.04)]"
-        >
-          <OptimizedImage
-            imageId={review.place.images[0].imageId}
-            alt={review.place.name}
-            class="w-full sm:w-32 h-32 object-cover object-center rounded-xl shrink-0"
-            variant="thumbnail"
-            width="128"
-            height="128"
-          />
-          <div class="flex-1">
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <a
-                  href={`/location/${review.place.location.path}/places/${review.place.slug}?reviewId=${review.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:underline"
-                >
-                  <h3 class="text-xl font-bold text-primary">
-                    {review.place.name}
-                  </h3>
-                </a>
-                <p class="text-sm text-muted-foreground font-body">
-                  {review.place.location.name}, {review.place.location.parent
-                    .name}
-                  {review.place.countryCode} • {formatDistanceToNow(
-                    review.visitDate,
-                  )} ago
-                </p>
-              </div>
-              <div class="flex">
-                {#each Array(5) as _, i}
-                  <Star
-                    class={`size-3 ${
-                      i < review.rating
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  />
-                {/each}
-              </div>
-            </div>
-            <h4
-              class="serif-headline text-base font-bold italic text-primary mb-2"
-            >
-              {review.title}
-            </h4>
-            <p class="text-on-surface/80 leading-relaxed text-sm">
-              {review.content}
-            </p>
-            <div
-              class="flex items-center gap-4 mt-3 text-xs text-muted-foreground"
-            >
-              {#if review.numDogs && review.numDogs > 0}
-                <span class="flex items-center gap-1">
-                  <Dog class="size-3.5" />
-                  {review.numDogs}
-                  {review.numDogs === 1 ? "dog" : "dogs"}
-                </span>
-              {/if}
-              {#if review.imagesCount > 0}
-                <span class="flex items-center gap-1">
-                  <Image class="size-3.5" />
-                  {review.imagesCount}
-                  {review.imagesCount === 1 ? "image" : "images"}
-                </span>
-              {/if}
-              {#if review.likesCount && review.likesCount > 0}
-                <span class="flex items-center gap-1">
-                  <ThumbsUp class="size-3.5" />
-                  {review.likesCount}
-                  {review.likesCount === 1 ? "like" : "likes"}
-                </span>
-              {/if}
-              {#if review.repliesCount && review.repliesCount > 0}
-                <span class="flex items-center gap-1">
-                  <MessageCircle class="size-3.5" />
-                  {review.repliesCount}
-                  {review.repliesCount === 1 ? "reply" : "replies"}
-                </span>
-              {/if}
-              {#if isOwner}
-                <div class="ml-auto flex items-center gap-4">
-                  <button
-                    class="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-                    onclick={() =>
-                      openEditDialog(
-                        {
-                          reviewId: review.id,
-                          title: review.title,
-                          content: review.content!,
-                          rating: review.rating,
-                          dogBreeds: review.dogBreeds,
-                          numDogs: review.numDogs,
-                          visitDate: review.visitDate,
-                          images: review.images ?? [],
-                        },
-                        review.place.name,
-                      )}
-                  >
-                    <Pencil class="size-3.5" />
-                    Edit
-                  </button>
-                  <button
-                    class="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
-                    onclick={() => openDeleteDialog(review.id)}
-                  >
-                    <Trash2 class="size-3.5" />
-                    Delete
-                  </button>
-                </div>
-              {/if}
+          <div class="flex items-start justify-between w-full">
+            <div class="flex flex-col gap-2 flex-1">
+              <Skeleton class="h-5 w-3/4" />
+              <Skeleton class="h-4 w-1/3" />
+              <Skeleton class="h-3 w-1/2" />
             </div>
           </div>
-        </article>
+          <Skeleton class="h-4 w-2/3" />
+          <Skeleton class="h-10 w-full" />
+          <Skeleton class="h-6 w-1/4 rounded-full" />
+        </div>
       {/each}
     </div>
-    {#if profileReviews.hasNextPage}
-      <div class="mt-16 flex justify-center">
-        <Button
-          variant="default"
-          onclick={() => profileReviews.fetchNextPage()}
-          disabled={profileReviews.isFetchingNextPage}
+  {:else if isPrivate}
+    <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+      <Lock class="size-12 text-muted-foreground" />
+      <p class="font-medium">Reviews are private</p>
+      <p class="text-sm text-muted-foreground">This user hasn't made their reviews public</p>
+    </div>
+  {:else if profileReviews.isSuccess && allReviews.length === 0}
+    <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+      <Star class="size-12 text-muted-foreground" />
+      <p class="font-medium">No reviews yet</p>
+      <p class="text-sm text-muted-foreground">Reviews will appear here once written</p>
+    </div>
+  {:else if profileReviews.isSuccess}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {#each allReviews as review}
+        <div
+          class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-secondary/10 flex flex-col gap-3"
         >
-          Load More Reports
-          <ChevronDown class="size-4" />
-        </Button>
+          <div>
+            <div class="flex flex-col gap-3 flex-1">
+              <div class="flex items-start justify-between w-full">
+                <div>
+                  <a
+                    href={`/location/${review.place.location.path}/places/${review.place.slug}?reviewId=${review.id}`}
+                    class="hover:underline"
+                  >
+                    <h3 class="text-on-surface text-[18px]">
+                      {review.place.name}
+                    </h3>
+                  </a>
+                  <div class="flex gap-1 text-[#FFB800]">
+                    <StarRating rating={review.rating} />
+                  </div>
+                  <span class="text-xs text-primary-tint block mt-1"
+                    >{review.place.location.name}, {review.place.location.parent
+                      .name} • {formatDistanceToNow(review.visitDate)} ago
+                  </span>
+                </div>
+                {#if isOwner}
+                  <div class="flex items-center gap-2 mt-1">
+                    <button
+                      class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                      onclick={() =>
+                        openEditDialog(
+                          {
+                            reviewId: review.id,
+                            title: review.title,
+                            content: review.content!,
+                            rating: review.rating,
+                            dogBreeds: review.dogBreeds,
+                            numDogs: review.numDogs,
+                            visitDate: review.visitDate,
+                            images: review.images ?? [],
+                          },
+                          review.place.name,
+                        )}>Edit</button
+                    >
+                    <button
+                      class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                      onclick={() => openDeleteDialog(review.id)}>Delete</button
+                    >
+                  </div>
+                {/if}
+              </div>
+              <p class="text-sm font-semibold">{review.title}</p>
+              <p class="text-xs line-clamp-2">
+                {review.content}
+              </p>
+              <div
+                class="flex items-center text-xs gap-2 text-muted-foreground"
+              >
+                {#if review.numDogs && review.numDogs > 0}
+                  <span class="flex items-center gap-1">
+                    <Dog class="size-3.5" />
+                    {review.numDogs}
+                    {review.numDogs === 1 ? "dog" : "dogs"}
+                  </span>
+                {/if}
+                •
+                {#if review.likesCount && review.likesCount > 0}
+                  <span class="flex items-center gap-1">
+                    <ThumbsUp class="size-3.5" />
+                    {review.likesCount}
+                    {review.likesCount === 1 ? "like" : "likes"}
+                  </span>
+                {/if}
+              </div>
+              <div class="mt-auto flex items-center gap-2">
+                {#each review.dogBreeds.slice(0, 2) as breed}
+                  <Badge variant="breed" class="rounded-full text-xs">
+                    {breed}
+                  </Badge>
+                {/each}
+                {#if review.dogBreeds.length > 2}
+                  <Badge variant="secondary" class="rounded-full text-xs">
+                    +{review.dogBreeds.length - 2}
+                  </Badge>
+                {/if}
+              </div>
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
+    {#if profileReviews.isFetchingNextPage}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {#each Array(3) as _}
+          <div
+            class="bg-white p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
+          >
+            <div class="flex items-start justify-between w-full">
+              <div class="flex flex-col gap-2 flex-1">
+                <Skeleton class="h-5 w-3/4" />
+                <Skeleton class="h-4 w-1/3" />
+                <Skeleton class="h-3 w-1/2" />
+              </div>
+            </div>
+            <Skeleton class="h-4 w-2/3" />
+            <Skeleton class="h-10 w-full" />
+            <Skeleton class="h-6 w-1/4 rounded-full" />
+          </div>
+        {/each}
       </div>
     {/if}
-  </section>
-  <Footer />
 
-  {#if deleteOpen}
-    <DeleteReviewDialog open={deleteOpen} reviewId={deleteReviewId} />
-  {/if}
+    <div bind:this={sentinel} class="h-1"></div>
 
-  {#if editOpen}
-    <EditReviewDialog
-      open={editOpen}
-      onOpenChange={(open) => (editOpen = open)}
-      reviewData={editReviewData}
-      placeName={editPlaceName}
-    />
+    {#if deleteOpen}
+      <DeleteReviewDialog open={deleteOpen} reviewId={deleteReviewId} />
+    {/if}
+
+    {#if editOpen}
+      <EditReviewDialog
+        open={editOpen}
+        onOpenChange={(open) => (editOpen = open)}
+        reviewData={editReviewData}
+        placeName={editPlaceName}
+      />
+    {/if}
   {/if}
-{/if}
+</div>

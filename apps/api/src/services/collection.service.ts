@@ -409,6 +409,40 @@ export class CollectionService {
     }
   }
 
+  async deleteCollection(collectionId: string, userId: string) {
+    try {
+      const [collection] = await this.db
+        .select({ id: Collection.id })
+        .from(Collection)
+        .where(
+          and(eq(Collection.id, collectionId), eq(Collection.userId, userId)),
+        )
+        .limit(1);
+
+      if (!collection) {
+        throw new NotFoundError("Collection not found");
+      }
+
+      await this.db
+        .delete(CollectionItem)
+        .where(eq(CollectionItem.collectionId, collectionId));
+
+      await this.db
+        .delete(Collection)
+        .where(eq(Collection.id, collectionId));
+
+      return { isSuccess: true };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Delete collection error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to delete collection", {
+        originalError: error,
+      });
+    }
+  }
+
   async getProfileCollections(profileId: string, userId?: string) {
     try {
       const userRecord = await this.db.query.user.findFirst({
@@ -458,6 +492,7 @@ export class CollectionService {
             description: c.description,
             isPublic: c.isPublic,
             previewImages: previewImages.map((p) => p.imageId),
+            lastUpdated: c.updatedAt,
           };
         }),
       );
@@ -493,6 +528,7 @@ export class CollectionService {
     page: number = 1,
     limit: number = 20,
     search?: string,
+    sortBy: string = "createdAt_desc",
   ) {
     try {
       const collection = await this.db.query.Collection.findFirst({
@@ -557,7 +593,15 @@ export class CollectionService {
             eq(CityLocation.parentId, RegionLocation.id),
           )
           .where(whereCondition)
-          .orderBy(desc(CollectionItem.createdAt))
+          .orderBy(
+            sortBy === "name_asc" ? asc(Place.name) :
+            sortBy === "name_desc" ? desc(Place.name) :
+            sortBy === "rating_desc" ? desc(Place.rating) :
+            sortBy === "rating_asc" ? asc(Place.rating) :
+            sortBy === "city_asc" ? asc(CityLocation.name) :
+            sortBy === "city_desc" ? desc(CityLocation.name) :
+            desc(CollectionItem.createdAt)
+          )
           .limit(limit)
           .offset(offset),
       ]);
