@@ -171,7 +171,7 @@ export class ProfileService {
         throw new NotFoundError("Profile not found");
       }
 
-      const [reviewStats, collectionStats, checkInStats] = await Promise.all([
+      const [reviewStats, collectionStats, checkInStats, photoStats] = await Promise.all([
         this.db
           .select({
             reviewCount: count(),
@@ -187,6 +187,11 @@ export class ProfileService {
           .select({ checkInCount: count() })
           .from(CheckIn)
           .where(eq(CheckIn.userId, profileId)),
+        this.db
+          .select({ photoCount: count() })
+          .from(ReviewImage)
+          .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
+          .where(eq(Review.userId, profileId)),
       ]);
 
       const isOwner = userId === profileId;
@@ -244,6 +249,7 @@ export class ProfileService {
         collectionCount: collectionStats[0]?.collectionCount ?? 0,
         checkInCount: checkInStats[0]?.checkInCount ?? 0,
         averageRating: Number(reviewStats[0]?.averageRating) || 0,
+        photoCount: photoStats[0]?.photoCount ?? 0,
       };
     } catch (error) {
       if (error instanceof AppError) {

@@ -187,6 +187,8 @@
           <Skeleton class="h-10 w-72 rounded-lg" />
           <Skeleton class="h-16 w-full max-w-xl rounded-lg" />
           <Skeleton class="h-11 w-40 rounded-full mt-3" />
+        {:else if collectionWithPlaces.isError}
+          <p class="text-muted-foreground">Failed to load collection. Please try refreshing the page.</p>
         {:else}
           <!-- Breadcrumbs -->
           <div class="flex items-center gap-3">
@@ -308,6 +310,11 @@
                 </div>
               </div>
             {/each}
+          {:else if collectionWithPlaces.isError}
+            <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+              <p class="font-medium text-on-surface">Failed to load places</p>
+              <p class="text-sm text-muted-foreground">Something went wrong. Please try refreshing the page.</p>
+            </div>
           {:else if (collectionWithPlaces.data?.places ?? []).length === 0}
             <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
               <BookMarked class="size-10 text-muted-foreground opacity-40" />
@@ -511,6 +518,11 @@
                   </div>
                 </div>
               {/each}
+            {:else if collectionWithPlaces.isError}
+              <div class="flex flex-col items-center justify-center py-12 gap-3 text-center">
+                <p class="font-medium text-sm text-on-surface">Failed to load places</p>
+                <p class="text-xs text-muted-foreground">Something went wrong. Please try refreshing the page.</p>
+              </div>
             {:else if (collectionWithPlaces.data?.places ?? []).length === 0}
               <div class="flex flex-col items-center justify-center py-12 gap-3 text-center">
                 <BookMarked class="size-10 text-muted-foreground opacity-40" />

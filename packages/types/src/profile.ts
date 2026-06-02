@@ -20,6 +20,7 @@ export interface Profile {
   reviewCount: number;
   collectionCount: number;
   averageRating: number;
+  photoCount: number;
   checkInCount: number;
   currentCity: CityData | null;
   x: string | null;

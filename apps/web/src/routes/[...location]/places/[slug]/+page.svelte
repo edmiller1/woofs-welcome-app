@@ -10,9 +10,9 @@
   import ImageDrawer from "$lib/components/image-drawer.svelte";
   import { Skeleton } from "$lib/components/ui/skeleton";
   import { createQuery } from "@tanstack/svelte-query";
-  import type { BAUser, PlaceReview, PlaceWithDetails } from "@woofs/types";
+  import type { BAUser, PlaceWithDetails } from "@woofs/types";
   import type { Tab } from "@woofs/types";
-  import { classNames, cn } from "$lib/utils";
+  import { cn } from "$lib/utils";
   import PlaceHours from "./components/place-hours.svelte";
   import PlaceDetails from "./components/place-details.svelte";
   import PlaceDescription from "./components/place-description.svelte";
@@ -27,7 +27,6 @@
     Check,
     CircleCheck,
     Globe,
-    Grip,
     Heart,
     Images,
     Mail,
@@ -611,7 +610,8 @@
                         <p class="font-bold text-sm font-body">Website</p>
                         <a
                           class="text-xs text-primary-tint font-body hover:underline"
-                          href={place.data.website}>{place.data.website}</a
+                          href={place.data.website}
+                          target="_blank">{place.data.website}</a
                         >
                       </div>
                     </div>

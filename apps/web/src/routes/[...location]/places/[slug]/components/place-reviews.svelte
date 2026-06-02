@@ -360,7 +360,7 @@
                       </span>
                     </div>
                   </div>
-                  {#if review.userId !== user?.id}
+                  {#if !review.isOwner}
                     <div class="flex items-center gap-2">
                       <LikeReviewButton
                         {reviewId}

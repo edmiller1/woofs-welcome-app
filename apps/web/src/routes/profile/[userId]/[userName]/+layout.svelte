@@ -99,6 +99,15 @@
                 >Collection{profile.data.collectionCount === 1 ? "" : "s"}</span
               >
             </div>
+            <div class="text-center md:text-left">
+              <span class="block text-primary-tint"
+                >{profile.data.photoCount}</span
+              >
+              <span
+                class="text-on-surface-variant text-sm uppercase tracking-widest"
+                >Photo{profile.data.photoCount === 1 ? "" : "s"}</span
+              >
+            </div>
           </div>
         </div>
       </div>
