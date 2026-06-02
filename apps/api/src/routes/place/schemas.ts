@@ -35,6 +35,10 @@ export const trendingPlacesSchema = z.object({
   limit: z.coerce.number().min(1).max(20).default(6),
 });
 
+export const searchPlacesSchema = z.object({
+  q: z.string().min(1).max(100),
+});
+
 export const explorePlacesSchema = z.object({
   swLat: z.coerce.number().min(-90).max(90),
   swLng: z.coerce.number().min(-180).max(180),

@@ -3,11 +3,28 @@ import { optionalAuthMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
-import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, trendingPlacesSchema } from "./schemas";
+import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, searchPlacesSchema, trendingPlacesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { CollectionService } from "../../services/collection.service";
 
 export const placeRouter = new Hono();
+
+placeRouter.get(
+  "/search",
+  zValidator("query", searchPlacesSchema),
+  async (c) => {
+    const db = c.get("db");
+    const env = c.get("env");
+    const { q } = c.req.valid("query");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+    const placeService = new PlaceService(db, imageUploadService, collectionService, env);
+
+    const result = await placeService.search(q);
+    return c.json(result, 200);
+  },
+);
 
 placeRouter.get("/community-stats", async (c) => {
   const db = c.get("db");

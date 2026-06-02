@@ -5,8 +5,10 @@ import {
   count,
   desc,
   eq,
+  ilike,
   inArray,
   ne,
+  or,
   sql,
 } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -711,6 +713,70 @@ export class PlaceService {
       throw new DatabaseError("Failed to get similar places", {
         originalError: error,
       });
+    }
+  }
+
+  async search(q: string) {
+    try {
+      const term = `%${q}%`;
+
+      const [places, locations] = await Promise.all([
+        this.db
+          .select({
+            id: Place.id,
+            name: Place.name,
+            slug: Place.slug,
+            types: Place.types,
+            rating: Place.rating,
+            locationPath: Location.path,
+            locationName: Location.name,
+            imageId: sql<string | null>`(
+              select i."cf_image_id" from "place_image" pi
+              inner join "image" i on pi."image_id" = i.id
+              where pi."place_id" = ${Place.id} and pi."is_primary" = true
+              limit 1
+            )`,
+          })
+          .from(Place)
+          .innerJoin(Location, eq(Place.locationId, Location.id))
+          .where(ilike(Place.name, term))
+          .orderBy(desc(Place.rating))
+          .limit(5),
+
+        this.db
+          .select({
+            id: Location.id,
+            name: Location.name,
+            path: Location.path,
+            type: Location.type,
+            latitude: Location.latitude,
+            longitude: Location.longitude,
+            image: Location.image,
+          })
+          .from(Location)
+          .where(
+            and(
+              ilike(Location.name, term),
+              or(
+                sql`${Location.level} = 3`,
+                sql`${Location.level} = 2`,
+              ),
+            ),
+          )
+          .orderBy(desc(Location.isPopular), asc(Location.level))
+          .limit(4),
+      ]);
+
+      return {
+        places: places.map((p) => ({ ...p, resultType: "place" as const })),
+        locations: locations.map((l) => ({
+          ...l,
+          resultType: "location" as const,
+        })),
+      };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to search", { originalError: error });
     }
   }
 }

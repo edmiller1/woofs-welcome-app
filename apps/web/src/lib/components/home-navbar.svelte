@@ -10,7 +10,6 @@
     Map,
     MapPin,
     Menu,
-    Search,
     ShoppingBag,
     Stethoscope,
     Ticket,
@@ -23,6 +22,7 @@
   import NotificationsMenu from "./notifications-menu.svelte";
   import CollectionsSheet from "./collections-sheet.svelte";
   import MenuSheet from "./menu-sheet.svelte";
+  import NavbarSearch from "./navbar-search.svelte";
 
   interface Props {
     user: BAUser | null;
@@ -98,16 +98,7 @@
       </nav>
     </div>
     <div class="flex items-center gap-4">
-      <div
-        class="w-full flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2"
-      >
-        <Search class="h-4 w-4 shrink-0" />
-        <input
-          class="bg-transparent w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
-          placeholder="Search locations..."
-          type="text"
-        />
-      </div>
+      <NavbarSearch />
       {#if user}
         <NotificationsMenu />
         <CollectionsSheet {user} />
@@ -130,16 +121,7 @@
       >
     </div>
     <div class="flex items-center">
-      <div
-        class="flex items-center bg-surface-raised rounded-full px-3 py-1.5 gap-2 w-full"
-      >
-        <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
-        <input
-          class="bg-transparent w-full border-none focus:ring-0 text-sm font-body outline-none"
-          placeholder="Search..."
-          type="text"
-        />
-      </div>
+      <NavbarSearch />
     </div>
     <div class="flex items-center justify-end gap-1">
       {#if user}

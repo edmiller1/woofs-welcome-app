@@ -43,13 +43,13 @@
         <div class="flex flex-col sm:flex-row gap-2 pt-6">
           <a
             href="/explore"
-            class="px-16 py-3 bg-primary-container text-on-primary-container font-headline font-bold text-base rounded-full shadow-lg active:scale-95 transition-transform duration-200 cursor-pointer"
+            class="px-16 py-3 text-center bg-primary-container text-on-primary-container font-headline font-bold text-base rounded-full shadow-lg active:scale-95 transition-transform duration-200 cursor-pointer"
           >
             Start Exploring
           </a>
           <a
             href="/community"
-            class="px-16 py-3 border-2 border-secondary text-secondary font-headline font-bold text-base rounded-full hover:bg-secondary/10 transition-colors cursor-pointer"
+            class="px-16 py-3 text-center border-2 border-secondary text-secondary font-headline font-bold text-base rounded-full hover:bg-secondary/10 transition-colors cursor-pointer"
           >
             Community
           </a>
