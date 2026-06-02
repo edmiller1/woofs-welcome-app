@@ -118,6 +118,8 @@
     onSuccess: () => {
       toast.success("Review updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["profileReviews"] });
+      queryClient.invalidateQueries({ queryKey: ["profileReviewStats"] });
+      queryClient.invalidateQueries({ queryKey: ["place-reviews"] });
       onOpenChange(false);
     },
   }));
@@ -377,6 +379,7 @@
 
 {#snippet submitButton()}
   <Button
+    variant="secondary"
     class="w-full"
     disabled={!hasChanges || updateReview.isPending}
     onclick={handleSubmit}

@@ -21,7 +21,10 @@
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import ReviewImageDialog from "$lib/components/review-image-dialog.svelte";
   import ReportReviewDialog from "$lib/components/report-review-dialog.svelte";
+  import DeleteReviewDialog from "$lib/components/delete-review-dialog.svelte";
+  import EditReviewDialog from "$lib/components/edit-review-dialog.svelte";
   import LikeReviewButton from "./like-review-button.svelte";
+  import type { UpdateReviewData } from "@woofs/types";
   import "@aejkatappaja/phantom-ui";
 
   interface Props {
@@ -54,6 +57,29 @@
   let showHighlighted = $state(true);
   let reportOpen = $state(false);
   let reportReviewId = $state<string>("");
+  let deleteOpen = $state(false);
+  let deleteReviewId = $state<string>("");
+  let editOpen = $state(false);
+  let editReviewData = $state<UpdateReviewData>({
+    reviewId: "",
+    title: "",
+    content: "",
+    rating: 0,
+    dogBreeds: [],
+    numDogs: 0,
+    visitDate: new Date().toString(),
+    images: [],
+  });
+
+  const openDeleteDialog = (id: string) => {
+    deleteReviewId = id;
+    deleteOpen = true;
+  };
+
+  const openEditDialog = (review: UpdateReviewData) => {
+    editReviewData = review;
+    editOpen = true;
+  };
 
   const reviews = createQuery(() => ({
     queryKey: ["place-reviews", placeId, currentPage, limit],
@@ -146,7 +172,7 @@
           <!-- Highlighted Review -->
           {@const reviewId = highlightedReview.data.id}
           <div
-            class="text-primary-tint flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
+            class="text-primary-tint bg-primary-tint/10 flex items-center justify-between rounded-md px-4 py-2 text-sm font-medium"
           >
             <span>Showing review from profile</span>
             <button
@@ -236,8 +262,26 @@
                     </div>
                   {:else}
                     <div class="flex items-center gap-2">
-                      <!-- edit review dialog -->
-                      <!-- Delete review dialog -->
+                      <button
+                        class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                        onclick={() =>
+                          openEditDialog({
+                            reviewId: highlightedReview.data.id,
+                            title: highlightedReview.data.title,
+                            content: highlightedReview.data.content,
+                            rating: highlightedReview.data.rating,
+                            dogBreeds: highlightedReview.data.dogBreeds,
+                            numDogs: highlightedReview.data.numDogs,
+                            visitDate: highlightedReview.data.visitDate,
+                            images: highlightedReview.data.images ?? [],
+                          })}>Edit</button
+                      >
+                      <button
+                        class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                        onclick={() =>
+                          openDeleteDialog(highlightedReview.data.id)}
+                        >Delete</button
+                      >
                     </div>
                   {/if}
                 </div>
@@ -358,8 +402,25 @@
                     </div>
                   {:else}
                     <div class="flex items-center gap-2">
-                      <!-- edit review dialog -->
-                      <!-- Delete review dialog -->
+                      <button
+                        class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                        onclick={() =>
+                          openEditDialog({
+                            reviewId: review.id,
+                            title: review.title,
+                            content: review.content,
+                            rating: review.rating,
+                            dogBreeds: review.dogBreeds,
+                            numDogs: review.numDogs,
+                            visitDate: review.visitDate,
+                            images: review.images ?? [],
+                          })}>Edit</button
+                      >
+                      <button
+                        class="text-xs cursor-pointer font-semibold text-primary-tint hover:underline"
+                        onclick={() => openDeleteDialog(review.id)}
+                        >Delete</button
+                      >
                     </div>
                   {/if}
                 </div>
@@ -471,3 +532,11 @@
     {/if}
   </ErrorBoundary>
 </phantom-ui>
+
+<DeleteReviewDialog bind:open={deleteOpen} reviewId={deleteReviewId} />
+<EditReviewDialog
+  open={editOpen}
+  onOpenChange={(o) => (editOpen = o)}
+  reviewData={editReviewData}
+  {placeName}
+/>

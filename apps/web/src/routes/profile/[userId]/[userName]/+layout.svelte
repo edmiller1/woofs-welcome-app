@@ -29,16 +29,18 @@
   }));
 
   const profileImage = $derived(
-    profile && profile.data?.image
+    profile.data?.image
       ? profile.data.image.replace(/=s\d+-c$/, "=s400-c")
-      : buildImageUrl(profile.data.profileImageId ?? "", "thumbnail"),
+      : buildImageUrl(profile.data?.profileImageId ?? "", "thumbnail"),
+  );
+
+  const profileSlug = $derived(
+    profile.data?.name.split(" ").join("-").toLowerCase() ?? "",
   );
 
   const reviewsActive = $derived(
     page.url.pathname.includes("/reviews") ||
-      page.url.pathname.endsWith(
-        `/${profile.data.name.split(" ").join("-").toLowerCase()}`,
-      ),
+      page.url.pathname.endsWith(`/${profileSlug}`),
   );
   const collectionsActive = $derived(
     page.url.pathname.includes("/collections"),
@@ -58,7 +60,7 @@
         >
           <img
             src={profileImage}
-            alt={user?.name + " profile"}
+            alt={(profile.data?.name ?? "User") + " profile"}
             class="w-full h-full object-cover"
           />
         </div>
@@ -107,7 +109,7 @@
       class="flex overflow-x-auto gap-10 border-b border-outline-variant/30 mb-10 pb-2"
     >
       <a
-        href={`/profile/${userId}/${profile.data.name.split(" ").join("-").toLowerCase()}/reviews`}
+        href={`/profile/${userId}/${profileSlug}/reviews`}
         data-sveltekit-preload-data="hover"
         class="hover:text-primary-tint pb-4 px-2 whitespace-nowrap transition-all {reviewsActive
           ? 'border-b-2 border-primary-tint text-primary-tint font-bold'
@@ -115,7 +117,7 @@
         id="tab-reviews">Reviews</a
       >
       <a
-        href={`/profile/${userId}/${profile.data.name.split(" ").join("-").toLowerCase()}/collections`}
+        href={`/profile/${userId}/${profileSlug}/collections`}
         data-sveltekit-preload-data="hover"
         class="hover:text-primary-tint pb-4 px-2 whitespace-nowrap transition-all {collectionsActive
           ? 'border-b-2 border-primary-tint text-primary-tint font-bold'
@@ -123,7 +125,7 @@
         id="tab-collections">Collections</a
       >
       <a
-        href={`/profile/${userId}/${profile.data.name.split(" ").join("-").toLowerCase()}/photos`}
+        href={`/profile/${userId}/${profileSlug}/photos`}
         data-sveltekit-preload-data="hover"
         class="hover:text-primary-tint pb-4 px-2 whitespace-nowrap transition-all {photosActive
           ? 'border-b-2 border-primary-tint text-primary-tint font-bold'

@@ -22,6 +22,8 @@
       toast.success("Review deleted!");
       confirmCancel();
       queryClient.invalidateQueries({ queryKey: ["profileReviews"] });
+      queryClient.invalidateQueries({ queryKey: ["profileReviewStats"] });
+      queryClient.invalidateQueries({ queryKey: ["place-reviews"] });
     },
   }));
 
