@@ -57,6 +57,24 @@ export interface NearbyPlace extends Place {
   images: PlaceImage[];
 }
 
+export interface PopularPlace {
+  id: string;
+  name: string;
+  slug: string;
+  types: string[];
+  rating: string;
+  reviewsCount: number;
+  isVerified: boolean;
+  countryCode: string;
+  dogAmenities: string[];
+  imageId: string | null;
+  cityName: string;
+  regionName: string | null;
+  locationPath: string;
+  isSaved: boolean;
+  memberFavourite: boolean;
+}
+
 export interface TrendingPlace extends Place {
   checkInCount: number;
   isSaved: boolean;

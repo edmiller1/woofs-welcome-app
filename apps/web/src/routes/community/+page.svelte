@@ -25,7 +25,12 @@
 
   const communityStats = createQuery(() => ({
     queryKey: ["communityStats"],
-    queryFn: () => api.place.getCommunityStats(),
+    queryFn: () =>
+      api.place.getCommunityStats().catch(() => ({
+        totalReviews: 0,
+        checkIns: 0,
+        placesSaved: 0,
+      })),
   }));
 
   let currentPage = $state(1);
@@ -40,7 +45,7 @@
 
   const upcomingEvents = createQuery(() => ({
     queryKey: ["upcomingEvents", { limit: 10 }],
-    queryFn: () => api.event.getUpcomingEvents({ limit: 10 }),
+    queryFn: () => api.event.getUpcomingEvents({ limit: 10 }).catch(() => []),
     staleTime: Infinity,
     placeholderData: keepPreviousData,
   }));

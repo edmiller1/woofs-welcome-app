@@ -3,10 +3,19 @@
   import Footer from "$lib/components/footer.svelte";
   import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import hero from "$lib/assets/hero.jpg";
-  import { ArrowRight } from "@lucide/svelte";
+  import { ArrowRight, MapPin } from "@lucide/svelte";
+  import type { FeaturedLocation, PopularPlace } from "@woofs/types";
+  import OptimizedImage from "$lib/components/optimized-image.svelte";
+  import PlaceCard from "$lib/components/place-card.svelte";
 
   let { data } = $props();
   const user = $derived(data.user);
+  const featuredLocations = $derived(
+    (data.featuredLocations ?? []) as FeaturedLocation[],
+  );
+  const popularPlaces = $derived((data.popularPlaces ?? []) as PopularPlace[]);
+  const row1 = $derived(featuredLocations.slice(0, 2));
+  const row2 = $derived(featuredLocations.slice(2, 4));
 </script>
 
 <div class="bg-surface min-h-screen text-on-surface">
@@ -67,260 +76,181 @@
             Featured Destinations
           </h2>
           <p class="font-body text-base text-on-surface-variant">
-            Hand-picked wild spots for your next weekend escape.
+            Dog-friendly locations for your next adventure or relaxing day out.
           </p>
         </div>
         <button
           class="text-primary font-label text-sm font-semibold flex items-center gap-1 hover:underline transition-all cursor-pointer"
         >
-          View all spots <ArrowRight class="size-4" />
+          View more <ArrowRight class="size-4" />
         </button>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <!-- Row 1: wide left, narrow right -->
-        <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 h-96">
-          <div
-            class="group relative rounded-3xl cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all border border-outline/10"
-          >
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="A breathtaking view of a winding trail through the Swiss Alps with snow-capped peaks."
-              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80"
-            />
-            <div
-              class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"
-            ></div>
-            <div class="absolute bottom-0 left-0 p-6 text-white">
-              <div class="flex gap-2 mb-2">
-                <span
-                  class="bg-secondary-container/90 text-on-secondary-container px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide"
-                  >Moderate</span
+      {#if featuredLocations.length > 0}
+        <div class="flex flex-col gap-2">
+          <!-- Row 1: wide left, narrow right -->
+          <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 h-96">
+            {#each row1 as loc, i}
+              <a
+                href={`/location/${loc.path}`}
+                class="group relative rounded-3xl h-full cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all border border-outline/10"
+              >
+                {#if loc.image}
+                  <OptimizedImage
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    alt={loc.name}
+                    imageId={loc.image}
+                    height="100%"
+                  />
+                {:else}
+                  <div
+                    class="w-full h-full bg-muted flex items-center justify-center"
+                  >
+                    <MapPin class="size-12 text-muted-foreground/30" />
+                  </div>
+                {/if}
+                <div
+                  class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"
+                ></div>
+                <div
+                  class="absolute bottom-0 left-0 {i === 0
+                    ? 'p-6'
+                    : 'p-5'} text-white"
                 >
-                <span
-                  class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide"
-                  >8.2 miles</span
-                >
-              </div>
-              <h3 class="font-headline text-2xl font-bold">
-                Silver Peak Ridge
-              </h3>
-              <p class="font-body text-sm opacity-90">Snoqualmie Region, WA</p>
-            </div>
+                  <span
+                    class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide mb-2 inline-block capitalize"
+                  >
+                    {loc.type}
+                  </span>
+                  <h3
+                    class="font-headline {i === 0
+                      ? 'text-2xl'
+                      : 'text-xl'} font-bold"
+                  >
+                    {loc.name}
+                  </h3>
+                  <p class="font-body text-sm opacity-80">
+                    {loc.placeCount} places · {Number(
+                      loc.averageRating,
+                    ).toFixed(1)} avg rating
+                  </p>
+                </div>
+              </a>
+            {/each}
           </div>
 
-          <div
-            class="group relative rounded-3xl cursor-pointer overflow-hidden shadow-lg border border-outline/10"
-          >
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="A lush forest path lined with giant ferns and towering redwoods."
-              src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80"
-            />
-            <div
-              class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"
-            ></div>
-            <div class="absolute bottom-0 left-0 p-5 text-white">
-              <span
-                class="bg-primary-container/90 text-on-primary-container px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide mb-2 inline-block"
-                >Easy</span
+          <!-- Row 2: narrow left, wide right -->
+          <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-2 h-96">
+            {#each row2 as loc, i}
+              <a
+                href={`/location/${loc.path}`}
+                class="group relative rounded-3xl h-full overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all border border-outline/10"
               >
-              <h4 class="font-headline text-xl font-bold">Fern Canyon Loop</h4>
-            </div>
+                {#if loc.image}
+                  <OptimizedImage
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    alt={loc.name}
+                    imageId={loc.image}
+                    height="100%"
+                  />
+                {:else}
+                  <div
+                    class="w-full h-full bg-muted flex items-center justify-center"
+                  >
+                    <MapPin class="size-12 text-muted-foreground/30" />
+                  </div>
+                {/if}
+                <div
+                  class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"
+                ></div>
+                <div
+                  class="absolute bottom-0 left-0 {i === 1
+                    ? 'p-6'
+                    : 'p-5'} text-white"
+                >
+                  <span
+                    class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide mb-2 inline-block capitalize"
+                  >
+                    {loc.type}
+                  </span>
+                  <h3
+                    class="font-headline {i === 1
+                      ? 'text-2xl'
+                      : 'text-xl'} font-bold"
+                  >
+                    {loc.name}
+                  </h3>
+                  <p class="font-body text-sm opacity-80">
+                    {loc.placeCount} places · {Number(
+                      loc.averageRating,
+                    ).toFixed(1)} avg rating
+                  </p>
+                </div>
+              </a>
+            {/each}
           </div>
         </div>
-
-        <!-- Row 2: narrow left, wide right -->
-        <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-2 h-96">
-          <div
-            class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg border border-outline/10"
-          >
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="A serene alpine lake with crystal clear turquoise water."
-              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80"
-            />
-            <div
-              class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent"
-            ></div>
-            <div class="absolute bottom-0 left-0 p-5 text-white">
-              <span
-                class="bg-destructive/90 text-white px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide mb-2 inline-block"
-                >Hard</span
-              >
-              <h4 class="font-headline text-xl font-bold">Azure Lake Trail</h4>
-            </div>
-          </div>
-
-          <div
-            class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all border border-outline/10"
-          >
-            <img
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              alt="A dramatic coastal trail with crashing waves and rugged cliffs."
-              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80"
-            />
-            <div
-              class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"
-            ></div>
-            <div class="absolute bottom-0 left-0 p-6 text-white">
-              <div class="flex gap-2 mb-2">
-                <span
-                  class="bg-destructive/90 text-white px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide"
-                  >Hard</span
-                >
-                <span
-                  class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-label text-xs font-bold tracking-wide"
-                  >11.6 miles</span
-                >
-              </div>
-              <h3 class="font-headline text-2xl font-bold">
-                Coastal Cliffs Loop
-              </h3>
-              <p class="font-body text-sm opacity-90">Big Sur, CA</p>
-            </div>
-          </div>
+      {:else}
+        <div
+          class="h-48 flex items-center justify-center text-muted-foreground"
+        >
+          No featured destinations yet.
         </div>
-      </div>
+      {/if}
     </section>
 
-    <!-- Community Reviews -->
+    <!-- Popular Places -->
     <section class="bg-surface-container-low py-16 px-5 md:px-12">
       <div class="max-w-7xl mx-auto space-y-10">
-        <div class="text-center space-y-1">
-          <h2
-            class="font-headline text-[32px] leading-10 font-bold text-on-surface"
+        <div class="flex justify-between items-end">
+          <div class="space-y-1">
+            <h2
+              class="font-headline text-[32px] leading-10 font-bold text-on-surface"
+            >
+              Popular Places
+            </h2>
+            <p class="font-body text-base text-on-surface-variant">
+              Our most loved dog-friendly spots.
+            </p>
+          </div>
+          <a
+            href="/explore"
+            class="text-primary font-label text-sm font-semibold flex items-center gap-1 hover:underline transition-all"
           >
-            Recent Activity
-          </h2>
-          <p class="font-body text-base text-on-surface-variant">
-            The latest reviews from our community.
-          </p>
+            View all <ArrowRight class="size-4" />
+          </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Review 1 -->
-          <div
-            class="bg-surface p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-outline/5 space-y-3"
-          >
-            <div class="flex items-center gap-3">
-              <img
-                class="w-12 h-12 rounded-full object-cover"
-                alt="Mark Thompson"
-                src="https://i.pravatar.cc/150?img=11"
+        {#if popularPlaces.length > 0}
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            {#each popularPlaces as place}
+              <PlaceCard
+                id={place.id}
+                name={place.name}
+                slug={place.slug}
+                types={place.types}
+                rating={place.rating}
+                reviewCount={place.reviewsCount}
+                isVerified={place.isVerified}
+                countryCode={place.countryCode}
+                dogAmenities={place.dogAmenities}
+                imageId={place.imageId ?? undefined}
+                cityName={place.cityName}
+                regionName={place.regionName ?? ""}
+                locationPath={place.locationPath}
+                isSaved={place.isSaved}
+                memberFavourite={place.memberFavourite}
+                {user}
               />
-              <div>
-                <p class="font-label text-sm font-semibold text-on-surface">
-                  Mark Thompson
-                </p>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4, 5] as _}
-                    <span
-                      class="material-symbols-outlined"
-                      style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
-                      >star</span
-                    >
-                  {/each}
-                </div>
-              </div>
-            </div>
-            <p class="font-body text-base text-on-surface-variant italic">
-              "Found the best off-leash area through the map filters. Bella had
-              the time of her life at Silver Peak Ridge!"
-            </p>
-            <div
-              class="pt-2 border-t border-outline/10 text-xs text-secondary font-label font-bold flex items-center gap-1"
-            >
-              <span class="material-symbols-outlined" style="font-size:14px"
-                >location_on</span
-              > Silver Peak Ridge
-            </div>
+            {/each}
           </div>
-
-          <!-- Review 2 -->
+        {:else}
           <div
-            class="bg-surface p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-outline/5 space-y-3"
+            class="h-48 flex items-center justify-center text-on-surface-variant"
           >
-            <div class="flex items-center gap-3">
-              <img
-                class="w-12 h-12 rounded-full object-cover"
-                alt="Sarah Jenkins"
-                src="https://i.pravatar.cc/150?img=5"
-              />
-              <div>
-                <p class="font-label text-sm font-semibold text-on-surface">
-                  Sarah Jenkins
-                </p>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4] as _}
-                    <span
-                      class="material-symbols-outlined"
-                      style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
-                      >star</span
-                    >
-                  {/each}
-                  <span class="material-symbols-outlined" style="font-size:16px"
-                    >star</span
-                  >
-                </div>
-              </div>
-            </div>
-            <p class="font-body text-base text-on-surface-variant italic">
-              "The trail difficulty ratings are spot on. Helped me choose the
-              right path for my senior pup."
-            </p>
-            <div
-              class="pt-2 border-t border-outline/10 text-xs text-secondary font-label font-bold flex items-center gap-1"
-            >
-              <span class="material-symbols-outlined" style="font-size:14px"
-                >location_on</span
-              > Fern Canyon Loop
-            </div>
+            No popular places yet.
           </div>
-
-          <!-- Review 3 -->
-          <div
-            class="bg-surface p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-outline/5 space-y-3"
-          >
-            <div class="flex items-center gap-3">
-              <img
-                class="w-12 h-12 rounded-full object-cover"
-                alt="Alex Rivera"
-                src="https://i.pravatar.cc/150?img=15"
-              />
-              <div>
-                <p class="font-label text-sm font-semibold text-on-surface">
-                  Alex Rivera
-                </p>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4] as _}
-                    <span
-                      class="material-symbols-outlined"
-                      style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
-                      >star</span
-                    >
-                  {/each}
-                  <span
-                    class="material-symbols-outlined"
-                    style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24"
-                    >star_half</span
-                  >
-                </div>
-              </div>
-            </div>
-            <p class="font-body text-base text-on-surface-variant italic">
-              "Woofs Welcome has changed how we hike. The community reviews are
-              incredibly helpful!"
-            </p>
-            <div
-              class="pt-2 border-t border-outline/10 text-xs text-secondary font-label font-bold flex items-center gap-1"
-            >
-              <span class="material-symbols-outlined" style="font-size:14px"
-                >location_on</span
-              > Azure Lake Trail
-            </div>
-          </div>
-        </div>
+        {/if}
       </div>
     </section>
 
@@ -340,8 +270,7 @@
             Adventure in your pocket.
           </h2>
           <p class="font-body text-lg leading-7 opacity-80">
-            Download the Woofs Welcome app for offline maps, real-time weather
-            alerts, and a digital passport for your dog's achievements.
+            Download the Woofs Welcome app for on the go adventures.
           </p>
           <div class="flex flex-wrap gap-6 pt-3">
             <button

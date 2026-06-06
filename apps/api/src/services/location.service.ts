@@ -511,4 +511,53 @@ export class LocationService {
       });
     }
   }
+
+  async getFeaturedLocations(limit: number = 8) {
+    try {
+      const placeCountSq = this.db
+        .select({
+          locationId: Place.locationId,
+          placeCount: count().as("place_count"),
+        })
+        .from(Place)
+        .groupBy(Place.locationId)
+        .as("place_counts");
+
+      const locations = await this.db
+        .select({
+          id: Location.id,
+          name: Location.name,
+          path: Location.path,
+          type: Location.type,
+          level: Location.level,
+          image: Location.image,
+          isPopular: Location.isPopular,
+          totalReviews: Location.totalReviews,
+          averageRating: Location.averageRating,
+          placeCount: sql<number>`coalesce(${placeCountSq.placeCount}, 0)`,
+        })
+        .from(Location)
+        .leftJoin(placeCountSq, eq(Location.id, placeCountSq.locationId))
+        .where(
+          and(
+            sql`${Location.level} in (2, 3)`,
+            sql`coalesce(${placeCountSq.placeCount}, 0) > 0`,
+          ),
+        )
+        .orderBy(
+          desc(Location.isPopular),
+          desc(
+            sql`coalesce(${placeCountSq.placeCount}, 0) * cast(${Location.averageRating} as decimal)`,
+          ),
+        )
+        .limit(limit);
+
+      return locations;
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to get featured locations", {
+        originalError: error,
+      });
+    }
+  }
 }

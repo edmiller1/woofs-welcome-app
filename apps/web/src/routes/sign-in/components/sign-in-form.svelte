@@ -156,87 +156,25 @@
   >
 </div>
 
-<p
-  class="mt-10 text-center lg:text-left text-sm text-text-subtle font-medium"
->
+<!-- <p class="mt-10 text-center lg:text-left text-sm text-text-subtle font-medium">
   Have a business?
   <a
     class="text-primary font-bold hover:underline underline-offset-4"
     href="/business">Create a business account</a
   >
-</p>
-<div class="mt-12 flex flex-wrap gap-x-6 gap-y-2 opacity-60">
+</p> -->
+<div class="mt-12 flex flex-wrap gap-x-6 gap-y-2">
   <a
-    class="text-[10px] font-bold text-secondary hover:text-primary uppercase tracking-widest transition-colors"
+    class="text-[10px] font-bold text-secondary opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
     href="/terms-of-service">Terms of Service</a
   >
   <a
-    class="text-[10px] font-bold text-secondary hover:text-primary uppercase tracking-widest transition-colors"
+    class="text-[10px] font-bold text-secondary opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
     href="/privacy-policy">Privacy Policy</a
   >
   <p
-    class="text-[10px] font-bold text-border-subtle uppercase tracking-[0.2em]"
+    class="text-[10px] font-bold text-secondary uppercase opacity-60 tracking-[0.2em]"
   >
     © 2026 Woofs Welcome
   </p>
 </div>
-
-<!-- <Card class="w-full max-w-lg">
-  <CardContent>
-    <form onsubmit={(e) => handleEmailSignIn(e)} class="flex flex-col gap-6">
-      <div class="flex flex-col items-center gap-2 text-center">
-        <h1 class="text-2xl font-bold">Sign in to your account</h1>
-        <p class="text-muted-foreground text-balance text-sm">
-          Enter your email below to sign in to your account
-        </p>
-      </div>
-      <div class="grid gap-6">
-        <div class="grid gap-2">
-          <Label for="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="name@example.com"
-            bind:value={email}
-            required
-          />
-        </div>
-        <Button
-          type="submit"
-          class="w-full"
-          disabled={loading || googleLoading}
-        >
-          {#if loading}
-            <LoaderCircle class="size-3 animate-spin" stroke-width={3} />
-            Signing in...
-          {:else}
-            Sign in
-          {/if}
-        </Button>
-      </div>
-    </form>
-    <div class="space-y-4">
-      <div
-        class="after:border-border relative mt-3 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
-      >
-        <span class="bg-card text-muted-foreground relative z-10 px-2">
-          Or continue with
-        </span>
-      </div>
-      <Button
-        variant="outline"
-        class="w-full"
-        onclick={handleGoogleLogin}
-        disabled={loading || googleLoading}
-      >
-        {#if googleLoading}
-          <LoaderCircle class="size-3 animate-spin" stroke-width={3} />
-          Connecting to Google...
-        {:else}
-          <GoogleLogo />
-          Sign in with Google
-        {/if}
-      </Button>
-    </div>
-  </CardContent>
-</Card> -->

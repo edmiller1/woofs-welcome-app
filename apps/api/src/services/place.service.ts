@@ -526,6 +526,53 @@ export class PlaceService {
     }
   }
 
+  async getPopularPlaces(limit: number = 4) {
+    try {
+      const CityLocation = alias(Location, "city");
+      const RegionLocation = alias(Location, "region");
+
+      const places = await this.db
+        .select({
+          id: Place.id,
+          name: Place.name,
+          slug: Place.slug,
+          types: Place.types,
+          rating: Place.rating,
+          reviewsCount: Place.reviewsCount,
+          isVerified: Place.isVerified,
+          countryCode: Place.countryCode,
+          dogAmenities: Place.dogAmenities,
+          imageId: PlaceImage.imageId,
+          cityName: CityLocation.name,
+          regionName: RegionLocation.name,
+          locationPath: CityLocation.path,
+        })
+        .from(Place)
+        .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
+        .leftJoin(RegionLocation, eq(CityLocation.parentId, RegionLocation.id))
+        .leftJoin(
+          PlaceImage,
+          and(eq(PlaceImage.placeId, Place.id), eq(PlaceImage.isPrimary, true)),
+        )
+        .where(sql`${Place.reviewsCount} > 0`)
+        .orderBy(
+          desc(sql`cast(${Place.rating} as decimal) * ${Place.reviewsCount}`),
+        )
+        .limit(limit);
+
+      return places.map((p) => ({
+        ...p,
+        isSaved: false,
+        memberFavourite: isMemberFavourite(Number(p.rating), p.reviewsCount || 0),
+      }));
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to get popular places", {
+        originalError: error,
+      });
+    }
+  }
+
   async getTrendingPlaces(limit: number = 6, userId?: string) {
     try {
       const oneWeekAgo = new Date();

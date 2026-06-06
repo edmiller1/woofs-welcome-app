@@ -211,6 +211,18 @@ placeRouter.get(
   },
 );
 
+placeRouter.get("/popular", async (c) => {
+  const db = c.get("db");
+  const env = c.get("env");
+
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(db, imageUploadService, collectionService, env);
+
+  const result = await placeService.getPopularPlaces(4);
+  return c.json(result, 200);
+});
+
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   //Context
   const auth = c.get("user");

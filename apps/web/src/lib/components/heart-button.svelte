@@ -117,12 +117,12 @@
   <Dialog.Trigger>
     {#snippet child({ props })}
       {#if user}
-        <Button
+        <button
           {...props}
-          variant="ghost"
-          size="icon"
-          aria-label={isSaved ? "Remove from saved places" : "Save to collection"}
-          class="rounded-full bg-white/80 hover:bg-white"
+          aria-label={isSaved
+            ? "Remove from saved places"
+            : "Save to collection"}
+          class="rounded-full bg-white cursor-pointer text-black hover:bg-white/90 p-2"
           onclick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -130,13 +130,13 @@
           }}
         >
           <Heart
-            class={`size-6 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
+            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : ""}`}
           />
-        </Button>
+        </button>
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "ghost" }), "hidden md:flex")}
+          class="hidden bg-white rounded-full hover:bg-white/90 p-2 md:flex"
           ><Heart class="size-4" />
         </a>
       {/if}

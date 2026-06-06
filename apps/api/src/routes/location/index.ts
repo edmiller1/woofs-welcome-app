@@ -5,6 +5,15 @@ import { ImageUploadService } from "../../services/image-upload.service";
 
 export const locationRouter = new Hono();
 
+locationRouter.get("/featured", async (c) => {
+  const db = c.get("db");
+  const env = c.get("env");
+  const imageUploadService = new ImageUploadService(db, env);
+  const locationService = new LocationService(db, imageUploadService);
+  const result = await locationService.getFeaturedLocations(8);
+  return c.json(result, 200);
+});
+
 // Location route: /location/:path (catch-all)
 // Example: /location/new-zealand/canterbury/christchurch
 // Example: /location/new-zealand/canterbury/christchurch/places?placeSort=popular

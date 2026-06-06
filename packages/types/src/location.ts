@@ -1,3 +1,16 @@
+export interface FeaturedLocation {
+  id: string;
+  name: string;
+  path: string;
+  type: string;
+  level: number;
+  image: string | null;
+  isPopular: boolean | null;
+  totalReviews: number;
+  averageRating: string;
+  placeCount: number;
+}
+
 export interface Location {
   id: string;
   name: string;
