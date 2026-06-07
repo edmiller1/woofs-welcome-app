@@ -73,7 +73,7 @@
         </li>
         <li>
           <a class="hover:text-primary transition-colors" href="#"
-            >Place Types</a
+            >Place types</a
           >
         </li>
       </ul>

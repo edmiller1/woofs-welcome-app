@@ -76,8 +76,10 @@ export interface PopularPlace {
 }
 
 export interface TrendingPlace extends Place {
+  location: Location;
   checkInCount: number;
   isSaved: boolean;
+  imageId: string | null;
 }
 
 export interface CommunityStats {

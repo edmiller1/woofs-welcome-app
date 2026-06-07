@@ -1,9 +1,11 @@
 import { getUser } from "$lib/auth/guard";
-import type { Load } from "@sveltejs/kit";
+import { redirect, type Load } from "@sveltejs/kit";
 import { api } from "$lib/api-helper";
 import { QueryClient, dehydrate } from "@tanstack/svelte-query";
 
 export const load: Load = async () => {
+  redirect(302, "/");
+
   const user = await getUser();
 
   const queryClient = new QueryClient();
@@ -22,9 +24,10 @@ export const load: Load = async () => {
           placesSaved: 0,
         })),
     }),
-    queryClient.prefetchQuery({
-      queryKey: ["communityReviews", { page: 1, limit: 10 }],
-      queryFn: () => api.review.getCommunityReviews({ page: 1, limit: 10 }).catch(() => ({ reviews: [], total: 0, page: 1, pageSize: 10 })),
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ["communityReviews"],
+      queryFn: () => api.review.getCommunityReviews({ page: 1, limit: 10 }),
+      initialPageParam: 1,
     }),
     queryClient.prefetchQuery({
       queryKey: ["upcomingEvents", { limit: 10 }],

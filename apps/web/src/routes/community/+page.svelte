@@ -3,16 +3,18 @@
   import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Footer from "$lib/components/footer.svelte";
   import HomeNavbar from "$lib/components/home-navbar.svelte";
-  import { ArrowRight, Star } from "@lucide/svelte";
-  import community from "$lib/assets/community.jpg";
+  import { Flag, Map, Star, ThumbsUp } from "@lucide/svelte";
+  import bonny from "$lib/assets/bonny.jpeg";
   import { api } from "$lib/api-helper";
-  import { createQuery, keepPreviousData } from "@tanstack/svelte-query";
-  import "@aejkatappaja/phantom-ui";
+  import { createQuery, createInfiniteQuery } from "@tanstack/svelte-query";
+  import { Button } from "$lib/components/ui/button";
+  import OptimizedImage from "$lib/components/optimized-image.svelte";
+  import { buildImageUrl } from "@woofs/image-config";
+  import { formatRelative } from "date-fns";
+  import { Skeleton } from "$lib/components/ui/skeleton";
 
   interface Props {
-    data: {
-      user: BAUser | null;
-    };
+    data: { user: BAUser | null };
   }
 
   const { data }: Props = $props();
@@ -33,434 +35,282 @@
       })),
   }));
 
-  let currentPage = $state(1);
-
-  const communityReviews = createQuery(() => ({
-    queryKey: ["communityReviews", { page: currentPage, limit: 10 }],
-    queryFn: () =>
-      api.review.getCommunityReviews({ page: currentPage, limit: 10 }),
+  const communityReviews = createInfiniteQuery(() => ({
+    queryKey: ["communityReviews"],
+    queryFn: ({ pageParam = 1 }) =>
+      api.review.getCommunityReviews({ page: pageParam as number, limit: 10 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasNextPage
+        ? lastPage.pagination.page + 1
+        : undefined,
     staleTime: Infinity,
-    placeholderData: keepPreviousData,
   }));
 
-  const upcomingEvents = createQuery(() => ({
-    queryKey: ["upcomingEvents", { limit: 10 }],
-    queryFn: () => api.event.getUpcomingEvents({ limit: 10 }).catch(() => []),
-    staleTime: Infinity,
-    placeholderData: keepPreviousData,
-  }));
+  const allReviews = $derived(
+    communityReviews.data?.pages.flatMap((p) => p.reviews) ?? [],
+  );
+
+  // IntersectionObserver sentinel
+  let sentinel = $state<HTMLDivElement | null>(null);
+
+  $effect(() => {
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          communityReviews.hasNextPage &&
+          !communityReviews.isFetchingNextPage
+        ) {
+          communityReviews.fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  });
 </script>
 
-<phantom-ui
-  loading={trendingPlaces.isLoading ||
-    communityStats.isLoading ||
-    communityReviews.isLoading ||
-    upcomingEvents.isLoading}
->
-  <div class="bg-surface text-on-surface overflow-x-hidden">
-    <HomeNavbar {user} />
+<div class="bg-surface text-on-surface overflow-x-hidden">
+  <HomeNavbar {user} />
 
-    <!-- Hero -->
-    <header
-      class="relative w-full h-153.5 flex items-center overflow-hidden pt-18"
-    >
-      <div class="absolute inset-0 z-0">
-        <img
-          alt="A diverse group of happy dogs and their owners playing in a lush green park during golden hour."
-          class="w-full h-full object-cover hero-mask"
-          src={community}
-        />
+  <!-- Hero -->
+  <header class="relative w-full h-80 flex items-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img
+        src={bonny}
+        alt="dog running in water"
+        class="w-full h-full object-cover hero-mask opacity-60"
+      />
+    </div>
+    <div class="relative z-10 max-w-400 mx-auto px-5 md:px-12 w-full">
+      <div class="max-w-2xl">
+        <h1 class="text-6xl font-bold text-background mb-1 leading-tight">
+          Community
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-400 mx-auto px-5 md:px-12 -mt-16 relative z-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:h-[calc(100vh-4rem)] lg:overflow-hidden items-start">
+      <!-- Left Sidebar: Stats -->
+      <aside class="lg:col-span-3 block space-y-6 pt-16 self-start lg:sticky lg:top-0">
         <div
-          class="absolute inset-0 bg-linear-to-t from-on-surface/50 to-transparent"
-        ></div>
-      </div>
-      <div class="relative z-10 max-w-7xl mx-auto px-5 md:px-12 w-full">
-        <div class="max-w-2xl">
-          <h1
-            class="font-headline text-5xl md:text-[48px] md:leading-14 font-extrabold text-white mb-3"
-          >
-            Community
-          </h1>
-          <p class="font-body text-lg leading-7 text-white mb-6">
-            Join the largest community of four-legged explorers and their
-            humans. Share experiences, find nearby events, and discover the
-            world together.
-          </p>
-          <!-- <div class="flex flex-wrap gap-3">
-          <a
-            href="/explore"
-            class="bg-primary-container text-on-primary-container px-8 py-3 rounded-full font-label font-semibold hover:opacity-90 transition-opacity shadow-lg cursor-pointer"
-          >
-            Join the Pack
-          </a>
-          <button
-            class="bg-surface/80 backdrop-blur border border-outline/20 text-on-surface px-8 py-3 rounded-full font-label font-semibold hover:bg-surface transition-colors cursor-pointer"
-          >
-            Watch Film
-          </button>
-        </div> -->
-        </div>
-      </div>
-    </header>
-
-    <!-- Stats Bar -->
-    <section class="bg-primary-container py-10">
-      <div class="max-w-7xl mx-auto px-5 md:px-12">
-        <div
-          class="flex flex-col md:flex-row justify-around items-center gap-8 text-center"
+          class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
         >
-          <div>
-            <span
-              class="font-headline text-[32px] leading-10 font-bold text-on-primary-container block"
-              >{communityStats.data?.checkIns ?? "0"}</span
-            >
-            <span
-              class="font-label text-sm font-semibold text-on-primary-container/70 uppercase tracking-widest"
-              >Check-ins</span
-            >
-          </div>
-          <div
-            class="h-12 w-px bg-on-primary-container/20 hidden md:block"
-          ></div>
-          <div>
-            <span
-              class="font-headline text-[32px] leading-10 font-bold text-on-primary-container block"
-              >{communityStats.data?.placesSaved ?? "0"}</span
-            >
-            <span
-              class="font-label text-sm font-semibold text-on-primary-container/70 uppercase tracking-widest"
-              >Places Saved</span
-            >
-          </div>
-          <div
-            class="h-12 w-px bg-on-primary-container/20 hidden md:block"
-          ></div>
-          <div>
-            <span
-              class="font-headline text-[32px] leading-10 font-bold text-on-primary-container block"
-              >{communityStats.data?.totalReviews ?? "0"}</span
-            >
-            <span
-              class="font-label text-sm font-semibold text-on-primary-container/70 uppercase tracking-widest"
-              >Reviews</span
-            >
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Events & Meetups -->
-    <section class="py-16 max-w-7xl mx-auto px-5 md:px-12">
-      <div class="flex justify-between items-end mb-10">
-        <div>
-          <span
-            class="text-primary font-label text-xs font-bold uppercase tracking-widest mb-1 block"
-            >Local Activity</span
-          >
-          <h2
-            class="font-headline text-[32px] leading-10 font-bold text-on-surface"
-          >
-            Happening this Week
-          </h2>
-        </div>
-        <button
-          class="text-primary font-label text-sm font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-        >
-          View all events <ArrowRight class="size-4" />
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Event Card 1 -->
-        <div
-          class="group bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/10 hover:shadow-md transition-all"
-        >
-          <div class="relative h-48 rounded-2xl overflow-hidden mb-6">
-            <img
-              alt="Dogs running along a sandy shoreline at sunset."
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=600&q=80"
-            />
-            <div
-              class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-3 py-1 rounded-full font-label text-xs font-bold text-on-surface"
-            >
-              OCT 24
+          {#if communityStats.isLoading}
+            <div class="space-y-6">
+              {#each [1, 2, 3] as _}
+                <div class="flex items-center justify-between">
+                  <Skeleton class="h-4 w-24" />
+                  <Skeleton class="h-4 w-10" />
+                </div>
+              {/each}
             </div>
-          </div>
-          <h3 class="font-headline text-2xl font-bold text-on-surface mb-1">
-            Golden Hour Beach Run
-          </h3>
-          <div
-            class="flex items-center gap-1 text-on-surface-variant font-label text-sm font-semibold mb-6"
-          >
-            <span class="material-symbols-outlined" style="font-size:16px"
-              >location_on</span
-            >
-            Sunset Cove, Malibu
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="flex -space-x-2">
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-200"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-300"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-primary-container text-on-primary-container text-[10px] flex items-center justify-center font-bold"
-              >
-                +18
+          {:else if communityStats.isSuccess}
+            <div class="space-y-6">
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Check-ins</span>
+                <span class="font-bold text-primary"
+                  >{communityStats.data.checkIns}</span
+                >
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Places saved</span>
+                <span class="font-bold text-primary"
+                  >{communityStats.data.placesSaved}</span
+                >
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Reviews</span>
+                <span class="font-bold text-primary"
+                  >{communityStats.data.totalReviews}</span
+                >
               </div>
             </div>
-            <button
-              class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-label text-sm font-semibold cursor-pointer hover:opacity-90 transition-opacity"
-              >RSVP</button
-            >
-          </div>
+          {/if}
         </div>
+      </aside>
 
-        <!-- Event Card 2 -->
-        <div
-          class="group bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/10 hover:shadow-md transition-all"
-        >
-          <div class="relative h-48 rounded-2xl overflow-hidden mb-6">
-            <img
-              alt="Dogs being led on a winding trail through a lush rainforest."
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80"
-            />
-            <div
-              class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-3 py-1 rounded-full font-label text-xs font-bold text-on-surface"
-            >
-              OCT 26
-            </div>
-          </div>
-          <h3 class="font-headline text-2xl font-bold text-on-surface mb-1">
-            Mossy Trail Social Hike
-          </h3>
-          <div
-            class="flex items-center gap-1 text-on-surface-variant font-label text-sm font-semibold mb-6"
-          >
-            <span class="material-symbols-outlined" style="font-size:16px"
-              >location_on</span
-            >
-            Pine Ridge Trailhead
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="flex -space-x-2">
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-400"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-500"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-primary-container text-on-primary-container text-[10px] flex items-center justify-center font-bold"
-              >
-                +12
+      <!-- Main Feed -->
+      <div class="feed-scroll lg:col-span-5 lg:h-full lg:overflow-y-auto pb-16 space-y-6 pt-16">
+        {#if communityReviews.isLoading}
+          {#each [1, 2, 3] as _}
+            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+              <div class="p-6 flex items-center gap-3">
+                <Skeleton class="size-12 rounded-full shrink-0" />
+                <div class="flex-1 space-y-2">
+                  <Skeleton class="h-4 w-32" />
+                  <Skeleton class="h-3 w-48" />
+                  <Skeleton class="h-3 w-20" />
+                </div>
+              </div>
+              <Skeleton class="w-full aspect-video" />
+              <div class="p-6 space-y-3">
+                <Skeleton class="h-4 w-full" />
+                <Skeleton class="h-4 w-4/5" />
+                <Skeleton class="h-4 w-3/5" />
               </div>
             </div>
-            <button
-              class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-label text-sm font-semibold cursor-pointer hover:opacity-90 transition-opacity"
-              >RSVP</button
-            >
-          </div>
-        </div>
+          {/each}
+        {/if}
 
-        <!-- Event Card 3 -->
-        <div
-          class="group bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/10 hover:shadow-md transition-all"
-        >
-          <div class="relative h-48 rounded-2xl overflow-hidden mb-6">
-            <img
-              alt="Modern urban dog park at sunset with city dogs interacting."
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80"
-            />
-            <div
-              class="absolute top-3 right-3 bg-surface/90 backdrop-blur px-3 py-1 rounded-full font-label text-xs font-bold text-on-surface"
-            >
-              OCT 27
-            </div>
-          </div>
-          <h3 class="font-headline text-2xl font-bold text-on-surface mb-1">
-            Urban Paws Mixer
-          </h3>
-          <div
-            class="flex items-center gap-1 text-on-surface-variant font-label text-sm font-semibold mb-6"
-          >
-            <span class="material-symbols-outlined" style="font-size:16px"
-              >location_on</span
-            >
-            Skyline Bark Park
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="flex -space-x-2">
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-100"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-slate-600"
-              ></div>
-              <div
-                class="w-8 h-8 rounded-full border-2 border-surface bg-primary-container text-on-primary-container text-[10px] flex items-center justify-center font-bold"
-              >
-                +25
-              </div>
-            </div>
-            <button
-              class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-label text-sm font-semibold cursor-pointer hover:opacity-90 transition-opacity"
-              >RSVP</button
-            >
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Community Reviews -->
-    <section class="py-16 bg-surface-container-low">
-      <div class="max-w-7xl mx-auto px-5 md:px-12">
-        <div class="mb-10">
-          <span
-            class="text-secondary font-label text-xs font-bold uppercase tracking-widest mb-1 block"
-            >Field Reports</span
-          >
-          <h2
-            class="font-headline text-[32px] leading-10 font-bold text-on-surface"
-          >
-            Latest from the Field
-          </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Review 1 -->
-          <div
-            class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/5 hover:-translate-y-1 transition-transform"
-          >
-            <div class="flex items-center gap-3 mb-6">
+        {#each allReviews as review}
+          {@const reviewUserImage =
+            review.user && review.user.image
+              ? review.user.image.replace(/=s\d+-c$/, "=s400-c")
+              : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
+          <article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+            <div class="p-6 flex items-center gap-3">
               <img
-                alt="Sarah Miller"
-                class="w-10 h-10 rounded-full object-cover"
-                src="https://i.pravatar.cc/150?img=5"
+                alt={review.user.name}
+                class="size-12 rounded-full object-cover border-2 border-primary-container shrink-0"
+                src={reviewUserImage}
               />
-              <div class="flex-1">
-                <h4 class="font-label text-sm font-semibold text-on-surface">
-                  Sarah Miller
-                </h4>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4, 5] as _}
-                    <Star class="size-3 fill-primary-tint text-primary-tint" />
+              <div class="flex flex-col gap-1 min-w-0">
+                <div class="flex items-center gap-1 flex-wrap">
+                  <h4 class="font-label-md text-on-surface">{review.user.name}</h4>
+                  <span class="text-on-surface-variant/40">·</span>
+                  <p class="text-[12px] text-on-surface-variant truncate">
+                    {formatRelative(new Date(review.createdAt), new Date())} · {review.place.name}
+                  </p>
+                </div>
+                <div class="flex text-primary">
+                  {#each Array(review.rating) as _}
+                    <Star class="size-3.5 fill-primary" />
                   {/each}
                 </div>
               </div>
             </div>
-            <p
-              class="text-on-surface-variant font-body text-base mb-6 line-clamp-3"
-            >
-              "Absolute hidden gem! The trail was perfectly marked and the water
-              station at the midpoint was a lifesaver for Cooper."
-            </p>
-            <div class="relative h-40 rounded-2xl overflow-hidden group">
-              <img
-                alt="Bluebell Reserve"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80"
-              />
-              <div
-                class="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded font-label text-xs text-white"
-              >
-                Bluebell Reserve
+            {#if review.images.length > 0 || review.place.images.length > 0}
+              <div class="relative aspect-video">
+                <OptimizedImage
+                  alt={review.place.name}
+                  class="w-full h-full object-cover"
+                  height="100%"
+                  imageId={review.images.length > 0
+                    ? review.images[0].imageId
+                    : review.place.images[0].imageId}
+                />
+              </div>
+            {/if}
+            <div class="p-6">
+              <p class="mb-2 font-semibold text-on-surface">{review.title}</p>
+              <p class="text-on-surface-variant text-sm mb-6">{review.content}</p>
+              <div class="flex items-center gap-2 border-t border-outline/10 pt-4">
+                <Button variant="outline" class="rounded-full p-1">
+                  <ThumbsUp class="h-4 w-4 text-muted-foreground" />
+                  <span class="text-xs">{review.likesCount}</span>
+                </Button>
+                <Button variant="outline" class="rounded-full p-1">
+                  <Flag class="h-4 w-4 text-muted-foreground" />
+                </Button>
               </div>
             </div>
-          </div>
+          </article>
+        {/each}
 
-          <!-- Review 2 -->
-          <div
-            class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/5 hover:-translate-y-1 transition-transform"
-          >
-            <div class="flex items-center gap-3 mb-6">
-              <img
-                alt="Marcus Chen"
-                class="w-10 h-10 rounded-full object-cover"
-                src="https://i.pravatar.cc/150?img=11"
-              />
-              <div class="flex-1">
-                <h4 class="font-label text-sm font-semibold text-on-surface">
-                  Marcus Chen
-                </h4>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4] as _}
-                    <Star class="size-3 fill-primary-tint text-primary-tint" />
-                  {/each}
-                  <Star class="size-3 text-primary-tint" />
+        <!-- Infinite scroll sentinel -->
+        <div bind:this={sentinel} class="h-4">
+          {#if communityReviews.isFetchingNextPage}
+            <div class="space-y-6 pt-2">
+              {#each [1, 2] as _}
+                <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+                  <div class="p-6 flex items-center gap-3">
+                    <Skeleton class="size-12 rounded-full shrink-0" />
+                    <div class="flex-1 space-y-2">
+                      <Skeleton class="h-4 w-32" />
+                      <Skeleton class="h-3 w-48" />
+                    </div>
+                  </div>
+                  <Skeleton class="w-full aspect-video" />
+                  <div class="p-6 space-y-3">
+                    <Skeleton class="h-4 w-full" />
+                    <Skeleton class="h-4 w-3/5" />
+                  </div>
                 </div>
-              </div>
+              {/each}
             </div>
-            <p
-              class="text-on-surface-variant font-body text-base mb-6 line-clamp-3"
-            >
-              "Great elevation for a workout, but quite busy on weekends. The
-              panoramic view of the city at the peak makes it all worth it."
-            </p>
-            <div class="relative h-40 rounded-2xl overflow-hidden group">
-              <img
-                alt="Summit Ridge"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80"
-              />
-              <div
-                class="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded font-label text-xs text-white"
-              >
-                Summit Ridge
-              </div>
-            </div>
-          </div>
-
-          <!-- Review 3 -->
-          <div
-            class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline/5 hover:-translate-y-1 transition-transform"
-          >
-            <div class="flex items-center gap-3 mb-6">
-              <img
-                alt="Elena Rossi"
-                class="w-10 h-10 rounded-full object-cover"
-                src="https://i.pravatar.cc/150?img=9"
-              />
-              <div class="flex-1">
-                <h4 class="font-label text-sm font-semibold text-on-surface">
-                  Elena Rossi
-                </h4>
-                <div class="flex text-primary-container">
-                  {#each [1, 2, 3, 4, 5] as _}
-                    <Star class="size-3 fill-primary-tint text-primary-tint" />
-                  {/each}
-                </div>
-              </div>
-            </div>
-            <p
-              class="text-on-surface-variant font-body text-base mb-6 line-clamp-3"
-            >
-              "Perfect for senior dogs. Very flat, paved paths and plenty of
-              benches to stop and take in the lake views."
-            </p>
-            <div class="relative h-40 rounded-2xl overflow-hidden group">
-              <img
-                alt="Silver Lake Loop"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80"
-              />
-              <div
-                class="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md px-3 py-1 rounded font-label text-xs text-white"
-              >
-                Silver Lake Loop
-              </div>
-            </div>
-          </div>
+          {/if}
         </div>
       </div>
-    </section>
 
-    <Footer />
-    <MobileBottomNav {user} />
-  </div>
-</phantom-ui>
+      <!-- Right Sidebar: Trending -->
+      <aside class="lg:col-span-4 space-y-6 pt-16 self-start lg:sticky lg:top-0">
+        <div
+          class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
+        >
+          <h3 class="font-semibold text-base text-on-surface mb-md">
+            Trending Places
+          </h3>
+          <div class="space-y-6 mt-6">
+            {#if trendingPlaces.isLoading}
+              {#each [1, 2, 3, 4, 5] as _}
+                <div class="flex items-center gap-3">
+                  <Skeleton class="size-14 rounded-lg shrink-0" />
+                  <div class="flex-1 space-y-2">
+                    <Skeleton class="h-3.5 w-36" />
+                    <Skeleton class="h-3 w-24" />
+                    <Skeleton class="h-3 w-16" />
+                  </div>
+                </div>
+              {/each}
+            {:else if trendingPlaces.isSuccess}
+              {#each trendingPlaces.data as place}
+                <a
+                  class="group block"
+                  href={`/location/${place.location.path}/places/${place.slug}`}
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="size-14 rounded-lg overflow-hidden bg-surface-container shrink-0"
+                    >
+                      {#if place.imageId}
+                        <OptimizedImage
+                          alt={place.name}
+                          class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                          imageId={place.imageId}
+                          height="100%"
+                          variant="thumbnail"
+                        />
+                      {/if}
+                    </div>
+                    <div>
+                      <h5
+                        class="truncate text-sm text-on-surface group-hover:text-primary w-40 transition-colors"
+                      >
+                        {place.name}
+                      </h5>
+                      <p class="text-[12px] text-on-surface-variant">
+                        {place.location.name}, {place.countryCode}
+                      </p>
+                      <p class="text-[10px] text-primary font-bold">
+                        {place.checkInCount} check-ins
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              {/each}
+            {/if}
+          </div>
+          <Button class="mt-6 w-full"><Map />Explore More</Button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <Footer />
+  <MobileBottomNav {user} />
+</div>
+
+<style>
+  .feed-scroll {
+    scrollbar-width: none; /* Firefox */
+  }
+  .feed-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+</style>

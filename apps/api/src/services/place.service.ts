@@ -578,25 +578,42 @@ export class PlaceService {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-      const checkInCounts = await this.db
-        .select({
-          placeId: CheckIn.placeId,
-          checkInCount: count(),
-        })
-        .from(CheckIn)
-        .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`)
-        .groupBy(CheckIn.placeId)
-        .orderBy(desc(count()))
-        .limit(limit);
+      const [checkInCounts, reviewCounts] = await Promise.all([
+        this.db
+          .select({ placeId: CheckIn.placeId, checkInCount: count() })
+          .from(CheckIn)
+          .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`)
+          .groupBy(CheckIn.placeId),
+        this.db
+          .select({ placeId: Review.placeId, reviewCount: count() })
+          .from(Review)
+          .where(sql`${Review.createdAt} >= ${oneWeekAgo.toISOString()}`)
+          .groupBy(Review.placeId),
+      ]);
 
-      if (checkInCounts.length === 0) {
+      const checkInMap = new Map(checkInCounts.map((r) => [r.placeId, r.checkInCount]));
+      const reviewMap = new Map(reviewCounts.map((r) => [r.placeId, r.reviewCount]));
+
+      const allPlaceIds = [...new Set([
+        ...checkInCounts.map((r) => r.placeId),
+        ...reviewCounts.map((r) => r.placeId),
+      ])];
+
+      if (allPlaceIds.length === 0) {
         return [];
       }
 
-      const placeIds = checkInCounts.map((r) => r.placeId);
+      const scoredIds = allPlaceIds
+        .map((id) => ({
+          id,
+          score: (checkInMap.get(id) ?? 0) + (reviewMap.get(id) ?? 0),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map((r) => r.id);
 
       const places = await this.db.query.Place.findMany({
-        where: inArray(Place.id, placeIds),
+        where: inArray(Place.id, scoredIds),
         with: {
           location: {
             with: {
@@ -612,14 +629,10 @@ export class PlaceService {
         },
       });
 
-      const countMap = new Map(
-        checkInCounts.map((r) => [r.placeId, r.checkInCount]),
-      );
-
       let savedPlaceIds = new Set<string>();
       if (userId) {
         savedPlaceIds = await this.collectionService.getSavedPlaceIds(
-          placeIds,
+          scoredIds,
           userId,
         );
       }
@@ -627,14 +640,20 @@ export class PlaceService {
       return places
         .map((place) => ({
           ...place,
-          checkInCount: countMap.get(place.id) ?? 0,
+          imageId: place.images[0]?.imageId ?? null,
+          images: undefined,
+          checkInCount: checkInMap.get(place.id) ?? 0,
           isSaved: savedPlaceIds.has(place.id),
           memberFavourite: isMemberFavourite(
             Number(place.rating),
             place.reviewsCount || 0,
           ),
         }))
-        .sort((a, b) => b.checkInCount - a.checkInCount);
+        .sort((a, b) => {
+          const scoreA = (checkInMap.get(a.id) ?? 0) + (reviewMap.get(a.id) ?? 0);
+          const scoreB = (checkInMap.get(b.id) ?? 0) + (reviewMap.get(b.id) ?? 0);
+          return scoreB - scoreA;
+        });
     } catch (error) {
       if (error instanceof AppError) {
         console.error("Get trending places error:", error);

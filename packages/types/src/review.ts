@@ -1,4 +1,4 @@
-import type { ReviewImage } from "./image";
+import type { PlaceImage, ReviewImage } from "./image";
 
 export interface Review {
   id: string;
@@ -78,6 +78,20 @@ export interface PlaceReview extends Review {
   isOwner: boolean;
   hasLiked: boolean;
   hasReported: boolean;
+  place: {
+    id: string;
+    images: PlaceImage[];
+    location: {
+      name: string;
+      parent: {
+        name: string;
+      };
+      path: string;
+    };
+    name: string;
+    slug: string;
+    types: string[];
+  };
 }
 
 export interface CreateReviewInput {
