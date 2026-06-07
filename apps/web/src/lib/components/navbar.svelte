@@ -90,12 +90,12 @@
             : 'text-stone-600'}"
           href="/explore">Explore</a
         >
-        <a
+        <!-- <a
           class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
             ? 'text-primary-tint font-semibold'
             : 'text-stone-600'}"
           href="/community">Community</a
-        >
+        > -->
       </nav>
     </div>
     <div class="flex items-center gap-4">
