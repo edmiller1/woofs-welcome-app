@@ -16,6 +16,7 @@ import { locationPathSchema } from "../routes/location/schemas";
 import {
   Collection,
   CollectionItem,
+  Image,
   Location,
   Place,
   PlaceImage,
@@ -59,6 +60,16 @@ export class LocationService {
 
       if (!location) {
         throw new NotFoundError("Location not found");
+      }
+
+      // Resolve cfImageId for the location's hero image
+      let cfImageId: string | null = null;
+      if (location.image) {
+        const imageRow = await this.db.query.Image.findFirst({
+          where: eq(Image.id, location.image),
+          columns: { cfImageId: true },
+        });
+        cfImageId = imageRow?.cfImageId ?? null;
       }
 
       // Build breadcrumbs from path segments
@@ -294,6 +305,7 @@ export class LocationService {
 
       return {
         ...location,
+        image: cfImageId,
         breadcrumbs,
         stats: stats[0] || {
           totalPlaces: 0,

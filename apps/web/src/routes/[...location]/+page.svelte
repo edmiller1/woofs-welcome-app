@@ -140,7 +140,9 @@
     <!-- Hero skeleton -->
     <div class="relative h-screen w-full min-h-200 overflow-hidden">
       <Skeleton class="absolute inset-0 w-full h-full rounded-none" />
-      <div class="relative max-w-7xl mx-auto px-8 flex flex-col justify-end h-full pb-24 gap-6">
+      <div
+        class="relative max-w-7xl mx-auto px-8 flex flex-col justify-end h-full pb-24 gap-6"
+      >
         <Skeleton class="h-24 w-2/3" />
         <Skeleton class="h-16 w-1/2" />
         <div class="flex gap-4">
@@ -189,23 +191,40 @@
     <Navbar {user} />
     <main>
       <section
-        class="relative h-screen w-full min-h-200 overflow-hidden flex items-center"
+        class="relative w-full min-h-200 overflow-hidden flex items-center {location
+          .data.image
+          ? 'h-screen'
+          : 'py-24'}"
       >
-        <OptimizedImage
-          imageId={location.data.image}
-          alt={location.data.name + " landscape"}
-          sizes="100vw"
-          class="absolute inset-0w-full h-full object-cover object-center"
-          variant="xlarge"
-          height="100%"
-        />
-        <div class="absolute inset-0 adventure-gradient"></div>
+        {#if location.data.image}
+          <OptimizedImage
+            imageId={location.data.image}
+            alt={location.data.name + " landscape"}
+            sizes="100vw"
+            class="absolute inset-0 w-full h-full object-cover object-center"
+            variant="xlarge"
+            height="100%"
+          />
+          <div class="absolute inset-0 adventure-gradient"></div>
+        {/if}
         <div
-          class="relative w-full max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end pb-24"
+          class="relative w-full max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-end {location
+            .data.image
+            ? 'pb-24'
+            : ''}"
         >
           <div class="lg:col-span-8">
+            <div class="mb-6">
+              <Breadcrumbs
+                items={location.data.breadcrumbs}
+                location={!!location.data.image}
+              />
+            </div>
             <h1
-              class="text-white font-serif text-4xl md:text-8xl lg:text-[100px] mb-8"
+              class="font-serif text-4xl md:text-8xl lg:text-[100px] mb-8 {location
+                .data.image
+                ? 'text-white'
+                : 'text-on-surface'}"
             >
               Dog-Friendly places in {location.data.name}
             </h1>
@@ -215,10 +234,17 @@
                 class="bg-primary-container px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:brightness-110 transition-all shadow-2xl uppercase"
                 >Start Exploring</a
               >
-              <button
-                class="cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:bg-white/20 transition-all uppercase"
-                >View Gallery</button
-              >
+              {#if location.data.image}
+                <button
+                  class="cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:bg-white/20 transition-all uppercase"
+                  >View Gallery</button
+                >
+              {:else}
+                <button
+                  class="cursor-pointer border border-secondary px-10 py-5 rounded-lg text-secondary font-bold text-sm tracking-widest hover:bg-secondary/10 transition-all uppercase"
+                  >View Gallery</button
+                >
+              {/if}
             </div>
           </div>
           <!-- Floating Stats Sidebar -->

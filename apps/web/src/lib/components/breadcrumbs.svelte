@@ -11,30 +11,28 @@
 </script>
 
 <Breadcrumb.Root>
-  <Breadcrumb.List>
+  <Breadcrumb.List class="uppercase text-base">
     {#each items as item, i (item.path)}
-      <Breadcrumb.Item
-        class={location
-          ? "text-white hover:text-stone-800"
-          : "hover:text-stone-800"}
-      >
+      <Breadcrumb.Item>
         {#if i === items.length - 1}
           {#if item.level !== 0}
             <Breadcrumb.Page
               class={location
-                ? "text-stone-800"
-                : "text-stone-800 font-semibold"}>{item.name}</Breadcrumb.Page
+                ? "text-white font-bold"
+                : "text-on-surface font-bold"}>{item.name}</Breadcrumb.Page
             >
           {/if}
         {:else}
           <Breadcrumb.Link
-            class={location ? "text-white hover:text-stone-800" : ""}
+            class={location
+              ? "text-white/80 hover:text-white"
+              : "text-on-surface-variant hover:text-on-surface"}
             href="/location/{item.path}">{item.name}</Breadcrumb.Link
           >
         {/if}
       </Breadcrumb.Item>
       {#if i < items.length - 1}
-        <Breadcrumb.Separator class={location ? "text-white" : ""} />
+        <Breadcrumb.Separator class={location ? "text-white/60" : ""} />
       {/if}
     {/each}
   </Breadcrumb.List>
