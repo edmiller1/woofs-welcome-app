@@ -327,6 +327,7 @@
             images={highlightedReview.data.images}
             image={currentImage}
             reviewUserName={highlightedReview.data.user.name}
+            dogs={highlightedReview.data.dogs}
           />
         {/if}
         {#each filteredReviews as review}
@@ -468,6 +469,7 @@
             images={review.images}
             image={currentImage}
             reviewUserName={review.user.name}
+            dogs={review.dogs}
           />
         {/each}
       </div>

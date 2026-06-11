@@ -15,6 +15,25 @@ import z, { optional } from "zod";
 
 export const profileRouter = new Hono();
 
+profileRouter.get("/dogs", authMiddleware, async (c) => {
+  //Context
+  const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const profileService = new ProfileService(db, imageUploadService);
+
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  const result = await profileService.getProfileDogs(auth.id);
+
+  return c.json(result, 200);
+});
+
 profileRouter.get("/:profileId", optionalAuthMiddleware, async (c) => {
   //Context
   const auth = c.get("user");
@@ -84,25 +103,6 @@ profileRouter.patch(
   },
 );
 
-profileRouter.get("/dogs", authMiddleware, async (c) => {
-  //Context
-  const auth = c.get("user");
-  const db = c.get("db");
-  const env = c.get("env");
-
-  // Services
-  const imageUploadService = new ImageUploadService(db, env);
-  const profileService = new ProfileService(db, imageUploadService);
-
-  if (!auth) {
-    throw new UnauthorizedError("Unauthorized");
-  }
-
-  const result = await profileService.getProfileDogs(auth.id);
-
-  return c.json(result, 200);
-});
-
 profileRouter.get(
   "/:profileId/reviews/stats",
   optionalAuthMiddleware,
@@ -144,7 +144,11 @@ profileRouter.get(
     const { profileId } = c.req.valid("param");
     const query = c.req.valid("query");
 
-    const result = await profileService.getProfilePhotos(profileId, query, auth?.id);
+    const result = await profileService.getProfilePhotos(
+      profileId,
+      query,
+      auth?.id,
+    );
 
     return c.json(result, 200);
   },

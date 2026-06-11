@@ -7,6 +7,11 @@ export const createReviewSchema = z.object({
   rating: z.coerce.number(),
   numDogs: z.coerce.number(),
   dogBreeds: z.array(z.string()).or(z.string().transform((s) => [s])),
+  dogIds: z
+    .array(z.string())
+    .or(z.string().transform((s) => [s]))
+    .optional()
+    .default([]),
   visitDate: z.coerce.date(),
   images: z
     .array(z.instanceof(File))
@@ -20,6 +25,11 @@ export const updateReviewSchema = z.object({
   rating: z.coerce.number().optional(),
   numDogs: z.coerce.number().optional(),
   dogBreeds: z
+    .array(z.string())
+    .or(z.string().transform((s) => [s]))
+    .optional()
+    .default([]),
+  dogIds: z
     .array(z.string())
     .or(z.string().transform((s) => [s]))
     .optional()

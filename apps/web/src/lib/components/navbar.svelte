@@ -49,7 +49,7 @@
       href: "/explore?types=Hike%2CTrail%2CWalk",
       icon: Footprints,
     },
-    { name: "Events", href: "/explore?types=Event", icon: Ticket },
+    // { name: "Events", href: "/explore?types=Event", icon: Ticket },
   ];
 
   const signInUrl = $derived(

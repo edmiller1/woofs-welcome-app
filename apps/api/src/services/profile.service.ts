@@ -49,6 +49,7 @@ export class ProfileService {
 
   async getProfile(profileId: string, userId?: string) {
     try {
+      console.log("Get profile", profileId, userId);
       const profile = await this.db.query.user.findFirst({
         where: eq(user.id, profileId),
         columns: {
@@ -168,31 +169,32 @@ export class ProfileService {
       });
 
       if (!profile) {
-        throw new NotFoundError("Profile not found");
+        throw new NotFoundError("Profile");
       }
 
-      const [reviewStats, collectionStats, checkInStats, photoStats] = await Promise.all([
-        this.db
-          .select({
-            reviewCount: count(),
-            averageRating: avg(Review.rating),
-          })
-          .from(Review)
-          .where(eq(Review.userId, profileId)),
-        this.db
-          .select({ collectionCount: count() })
-          .from(Collection)
-          .where(eq(Collection.userId, profileId)),
-        this.db
-          .select({ checkInCount: count() })
-          .from(CheckIn)
-          .where(eq(CheckIn.userId, profileId)),
-        this.db
-          .select({ photoCount: count() })
-          .from(ReviewImage)
-          .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
-          .where(eq(Review.userId, profileId)),
-      ]);
+      const [reviewStats, collectionStats, checkInStats, photoStats] =
+        await Promise.all([
+          this.db
+            .select({
+              reviewCount: count(),
+              averageRating: avg(Review.rating),
+            })
+            .from(Review)
+            .where(eq(Review.userId, profileId)),
+          this.db
+            .select({ collectionCount: count() })
+            .from(Collection)
+            .where(eq(Collection.userId, profileId)),
+          this.db
+            .select({ checkInCount: count() })
+            .from(CheckIn)
+            .where(eq(CheckIn.userId, profileId)),
+          this.db
+            .select({ photoCount: count() })
+            .from(ReviewImage)
+            .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
+            .where(eq(Review.userId, profileId)),
+        ]);
 
       const isOwner = userId === profileId;
       const settings = profile.userSettings;
@@ -502,9 +504,18 @@ export class ProfileService {
 
   async getProfileDogs(userId: string) {
     try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, userId),
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
       const dogs = await this.db.query.Dog.findMany({
-        where: eq(Dog.ownerId, userId),
+        where: eq(Dog.ownerId, userRecord.id),
         columns: {
+          id: true,
           name: true,
           breed: true,
           imageId: true,
@@ -704,7 +715,12 @@ export class ProfileService {
       const isOwner = userId === profileId;
 
       if (!isOwner && !userRecord.userSettings?.showReviews) {
-        return { isPrivate: true, photos: [], isOwner: false, nextCursor: null };
+        return {
+          isPrivate: true,
+          photos: [],
+          isOwner: false,
+          nextCursor: null,
+        };
       }
 
       const { limit, cursor } = query;

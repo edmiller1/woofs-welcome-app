@@ -75,6 +75,7 @@ export interface PlaceReview extends Review {
   likes: ReviewLike[];
   replies: ReviewReply[];
   reports: ReviewReport[];
+  dogs: { dog: { id: string; name: string; breed: string } }[];
   isOwner: boolean;
   hasLiked: boolean;
   hasReported: boolean;
@@ -102,6 +103,7 @@ export interface CreateReviewInput {
   visitDate: Date;
   numDogs: number;
   dogBreeds: string[];
+  dogIds: string[];
   images: File[];
 }
 
@@ -111,6 +113,7 @@ export interface UpdateReviewInput {
   rating: number | null;
   numDogs: number | null;
   dogBreeds: string[] | null;
+  dogIds: string[] | null;
   visitDate: Date | null;
   newImages: File[] | null;
   deletedImages: string[] | null;

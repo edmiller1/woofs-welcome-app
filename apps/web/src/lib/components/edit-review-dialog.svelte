@@ -14,10 +14,11 @@
     createQuery,
     useQueryClient,
   } from "@tanstack/svelte-query";
-  import type { UpdateReviewData, UpdateReviewInput } from "@woofs/types";
+  import type { Dog, UpdateReviewData, UpdateReviewInput } from "@woofs/types";
   import { toast } from "svelte-sonner";
   import { Button } from "./ui/button";
-  import { CalendarIcon, LoaderCircle, X } from "@lucide/svelte";
+  import { CalendarIcon, LoaderCircle, PawPrint, X } from "@lucide/svelte";
+  import OptimizedImage from "./optimized-image.svelte";
   import StarRatingInput from "./star-rating-input.svelte";
   import { Label } from "./ui/label";
   import { Input } from "./ui/input";
@@ -48,6 +49,11 @@
     queryFn: api.review.getDogBreeds,
   }));
 
+  const profileDogs = createQuery<Dog[]>(() => ({
+    queryKey: ["profileDogs"],
+    queryFn: api.profile.getProfileDogs,
+  }));
+
   const toCalendarDate = (date: Date | string): CalendarDate => {
     const d = new Date(date);
     return new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate());
@@ -62,15 +68,23 @@
       reviewData.visitDate ? toCalendarDate(reviewData.visitDate) : undefined,
     ),
   );
-  let numDogs = $state(untrack(() => reviewData.numDogs ?? 1));
   let dogBreeds = $state(untrack(() => reviewData.dogBreeds ?? []));
+  let selectedDogIds = $state<string[]>([]);
   let images = $state(untrack(() => reviewData.images));
   let deletedImages = $state<string[]>([]);
   let newImages = $state<File[]>([]);
 
+  const numDogs = $derived(Math.max(selectedDogIds.length, 1));
+
   // UI state
   let search = $state<string>("");
   let breedInput = $state<string>("");
+
+  function toggleDog(id: string) {
+    selectedDogIds = selectedDogIds.includes(id)
+      ? selectedDogIds.filter((d) => d !== id)
+      : [...selectedDogIds, id];
+  }
 
   // Filter breeds based on search
   const filteredBreeds = $derived.by(() => {
@@ -92,9 +106,8 @@
       rating !== reviewData.rating ||
       content !== reviewData.content ||
       currentDate !== originalDate ||
-      numDogs !== reviewData.numDogs ||
-      JSON.stringify(dogBreeds) !==
-        JSON.stringify(reviewData.dogBreeds ?? []) ||
+      selectedDogIds.length > 0 ||
+      JSON.stringify(dogBreeds) !== JSON.stringify(reviewData.dogBreeds ?? []) ||
       newImages.length > 0 ||
       deletedImages.length > 0
     );
@@ -108,6 +121,7 @@
         rating,
         numDogs,
         dogBreeds,
+        dogIds: selectedDogIds,
         visitDate: visitDate?.toDate(getLocalTimeZone())!,
         newImages,
         deletedImages,
@@ -142,8 +156,8 @@
     visitDate = reviewData.visitDate
       ? toCalendarDate(reviewData.visitDate)
       : undefined;
-    numDogs = reviewData.numDogs ?? 0;
     dogBreeds = reviewData.dogBreeds ?? [];
+    selectedDogIds = [];
     images = reviewData.images;
     deletedImages = [];
     newImages = [];
@@ -247,35 +261,64 @@
         </Popover.Root>
       </div>
 
-      <!-- Number of Dogs -->
+      <!-- Which dogs did you bring? -->
       <div class="space-y-2">
-        <Label for="numDogs">How many dogs did you bring?</Label>
-        <div class="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onclick={() => numDogs > 1 && (numDogs -= 1)}
-            disabled={numDogs <= 1}
-          >
-            -
-          </Button>
-          <span class="w-8 text-center font-medium">{numDogs}</span>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onclick={() => numDogs < 10 && (numDogs += 1)}
-            disabled={numDogs >= 10}
-          >
-            +
-          </Button>
-        </div>
+        <Label>Which dogs did you bring?</Label>
+        {#if profileDogs.isLoading}
+          <div class="flex items-center gap-2 text-sm text-muted-foreground py-2">
+            <LoaderCircle class="size-4 animate-spin" />
+            Loading your dogs...
+          </div>
+        {:else if profileDogs.isSuccess && profileDogs.data.length > 0}
+          <div class="flex flex-wrap gap-2">
+            {#each profileDogs.data as dog}
+              {@const selected = selectedDogIds.includes(dog.id)}
+              <button
+                type="button"
+                onclick={() => toggleDog(dog.id)}
+                class="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition-all cursor-pointer {selected
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-background text-foreground border-border hover:border-primary/50'}"
+              >
+                {#if dog.imageId}
+                  <OptimizedImage
+                    imageId={dog.imageId}
+                    alt={dog.name}
+                    variant="thumbnail"
+                    class="size-5 rounded-full object-cover"
+                    responsive={false}
+                    width="20"
+                    height="20"
+                  />
+                {:else}
+                  <PawPrint class="size-4 {selected ? 'text-white' : 'text-muted-foreground'}" />
+                {/if}
+                {dog.name}
+                {#if dog.breed}
+                  <span class="opacity-60 text-xs">· {dog.breed}</span>
+                {/if}
+              </button>
+            {/each}
+          </div>
+          {#if selectedDogIds.length > 0}
+            <p class="text-xs text-muted-foreground">
+              {selectedDogIds.length} dog{selectedDogIds.length !== 1 ? "s" : ""} selected
+            </p>
+          {/if}
+        {:else}
+          <div class="rounded-lg border border-dashed p-4 text-center">
+            <PawPrint class="size-8 mx-auto mb-2 text-muted-foreground" />
+            <p class="text-sm text-muted-foreground mb-2">No dogs on your profile yet.</p>
+            <a href="/profile" class="text-sm text-primary font-medium hover:underline" target="_blank">
+              Add your dogs to your profile →
+            </a>
+          </div>
+        {/if}
       </div>
 
-      <!-- Dog Breeds -->
+      <!-- Additional breeds -->
       <div class="space-y-2">
-        <Label>Dog Breeds</Label>
+        <Label>Additional dog breeds <span class="text-xs text-muted-foreground font-normal">(optional)</span></Label>
         <div class="flex flex-col gap-2">
           <Select.Root type="multiple" bind:value={dogBreeds}>
             <Select.Trigger
@@ -291,9 +334,7 @@
                         onclick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          dogBreeds = dogBreeds.filter(
-                            (name) => name !== breedName,
-                          );
+                          dogBreeds = dogBreeds.filter((name) => name !== breedName);
                         }}
                         class="cursor-pointer z-50 ml-1 rounded-full"
                       >
@@ -302,9 +343,7 @@
                     </Badge>
                   {/each}
                 {:else}
-                  <span class="text-muted-foreground flex-1 text-sm"
-                    >e.g., Golden Retriever</span
-                  >
+                  <span class="text-muted-foreground flex-1 text-sm">e.g., Golden Retriever</span>
                 {/if}
               </div>
             </Select.Trigger>
@@ -316,47 +355,32 @@
               />
               <Select.Group>
                 <Select.Label>
-                  Dog Breeds ({filteredBreeds.length} available) -
-                  {dogBreeds.length}/6 selected
+                  Dog Breeds ({filteredBreeds.length} available) — {dogBreeds.length}/6 selected
                 </Select.Label>
                 {#if breeds.isLoading}
                   <div class="flex items-center justify-center p-4">
-                    <LoaderCircle
-                      class="size-5 animate-spin text-muted-foreground"
-                    />
-                    <span class="ml-2 text-sm text-muted-foreground"
-                      >Loading breeds...</span
-                    >
+                    <LoaderCircle class="size-5 animate-spin text-muted-foreground" />
+                    <span class="ml-2 text-sm text-muted-foreground">Loading breeds...</span>
                   </div>
                 {:else if breeds.isError}
-                  <div class="p-4 text-sm text-destructive">
-                    Failed to load breeds
-                  </div>
+                  <div class="p-4 text-sm text-destructive">Failed to load breeds</div>
                 {:else if filteredBreeds.length > 0}
                   {#each filteredBreeds as breed}
                     <Select.Item
                       value={breed}
                       label={breed}
-                      disabled={dogBreeds.length >= 6 &&
-                        !dogBreeds.includes(breed)}
+                      disabled={dogBreeds.length >= 6 && !dogBreeds.includes(breed)}
                       class="cursor-pointer"
                     >
                       {breed}
                     </Select.Item>
                   {/each}
                 {:else}
-                  <div class="p-4 text-sm text-muted-foreground">
-                    No breeds found
-                  </div>
+                  <div class="p-4 text-sm text-muted-foreground">No breeds found</div>
                 {/if}
               </Select.Group>
             </Select.Content>
           </Select.Root>
-          <p class="text-sm text-gray-500">
-            Selected: {dogBreeds.length} breed{dogBreeds.length !== 1
-              ? "s"
-              : ""}
-          </p>
         </div>
       </div>
 

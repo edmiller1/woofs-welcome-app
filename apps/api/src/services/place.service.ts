@@ -16,11 +16,13 @@ import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
   CheckIn,
   CollectionItem,
+  Dog,
   Location,
   Place,
   PlaceImage,
   placeTypeEnum,
   Review,
+  ReviewDog,
 } from "../db/schema";
 import { Google } from "../lib/google";
 import { ImageUploadService } from "./image-upload.service";
@@ -273,6 +275,13 @@ export class PlaceService {
           likes: true,
           replies: true,
           reports: true,
+          dogs: {
+            with: {
+              dog: {
+                columns: { id: true, name: true, breed: true },
+              },
+            },
+          },
           user: {
             columns: {
               id: true,

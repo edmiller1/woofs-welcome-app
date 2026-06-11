@@ -17,6 +17,7 @@ export const updateReview = async (
 
   // Arrays
   data.dogBreeds?.forEach((breed) => formData.append("dogBreeds", breed));
+  data.dogIds?.forEach((id) => formData.append("dogIds", id));
   data.deletedImages?.forEach((id) => formData.append("deletedImages", id));
 
   // Files

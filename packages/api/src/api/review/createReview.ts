@@ -10,6 +10,7 @@ export const createReview = async (data: CreateReviewInput) => {
     visitDate,
     numDogs,
     dogBreeds,
+    dogIds,
     images,
   } = data;
 
@@ -21,6 +22,7 @@ export const createReview = async (data: CreateReviewInput) => {
   formData.append("visitDate", visitDate.toISOString());
   formData.append("numDogs", numDogs.toString());
   dogBreeds.forEach((breed) => formData.append("dogBreeds", breed));
+  dogIds?.forEach((id) => formData.append("dogIds", id));
   images?.forEach((image) => formData.append("images", image));
 
   const response = await protectedProcedure.post<{ reviewId: string }>(

@@ -5,10 +5,12 @@
 
 import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
+  Dog,
   Image,
   Location,
   Place,
   Review,
+  ReviewDog,
   ReviewImage,
   ReviewLike,
   ReviewReport,
@@ -177,6 +179,19 @@ export class ReviewService {
           );
         }
 
+        // Insert ReviewDog junction records (only for dogs owned by this user)
+        if (sanitizedData.dogIds && sanitizedData.dogIds.length > 0) {
+          const ownedDogs = await tx
+            .select({ id: Dog.id })
+            .from(Dog)
+            .where(and(eq(Dog.ownerId, userId), inArray(Dog.id, sanitizedData.dogIds)));
+          if (ownedDogs.length > 0) {
+            await tx.insert(ReviewDog).values(
+              ownedDogs.map((d) => ({ reviewId: newReview.id, dogId: d.id })),
+            );
+          }
+        }
+
         return {
           reviewId: newReview.id,
           imageCount: reviewImages.length,
@@ -337,6 +352,20 @@ export class ReviewService {
             if (!deleted) {
               throw new DatabaseError("Failed to delete image from database");
             }
+          }
+        }
+
+        // Sync ReviewDog rows: delete all then re-insert validated ones
+        await tx.delete(ReviewDog).where(eq(ReviewDog.reviewId, review.id));
+        if (data.dogIds && data.dogIds.length > 0) {
+          const ownedDogs = await tx
+            .select({ id: Dog.id })
+            .from(Dog)
+            .where(and(eq(Dog.ownerId, userId), inArray(Dog.id, data.dogIds)));
+          if (ownedDogs.length > 0) {
+            await tx.insert(ReviewDog).values(
+              ownedDogs.map((d) => ({ reviewId: review.id, dogId: d.id })),
+            );
           }
         }
 

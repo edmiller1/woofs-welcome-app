@@ -3,6 +3,8 @@
   import { api } from "$lib/api-helper";
   import Footer from "$lib/components/footer.svelte";
   import Navbar from "$lib/components/navbar.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import EditProfileDialog from "./components/edit-profile-dialog.svelte";
   import { createQuery } from "@tanstack/svelte-query";
   import { buildImageUrl } from "@woofs/image-config";
   import type { BAUser, Profile } from "@woofs/types";
@@ -46,6 +48,8 @@
     page.url.pathname.includes("/collections"),
   );
   const photosActive = $derived(page.url.pathname.includes("/photos"));
+
+  let editOpen = $state(false);
 </script>
 
 <Navbar {user} />
@@ -62,14 +66,23 @@
             src={profileImage}
             alt={(profile.data?.name ?? "User") + " profile"}
             class="w-full h-full object-cover"
+            referrerpolicy="no-referrer"
           />
         </div>
         <div class="flex-1 text-center md:text-left">
-          <div class="flex flex-col md:flex-row mb-2">
+          <div class="flex flex-col md:flex-row mb-2 gap-10 items-center">
             <h1 class="text-3xl md:text-[40px] font-semibold">
               {profile.data.name}
             </h1>
+            {#if profile.data.isOwner}
+              <Button
+                variant="outline"
+                class="mt-2"
+                onclick={() => (editOpen = true)}>Edit Profile</Button
+              >
+            {/if}
           </div>
+          <p class="mb-2">{profile.data.currentCity}</p>
           <!-- Stats Grid -->
           <div class="flex flex-wrap justify-center md:justify-start gap-10">
             <div class="text-center md:text-left">
@@ -145,4 +158,8 @@
     {@render children()}
   </main>
   <Footer />
+{/if}
+
+{#if profile.data?.isOwner}
+  <EditProfileDialog bind:open={editOpen} profile={profile.data} />
 {/if}

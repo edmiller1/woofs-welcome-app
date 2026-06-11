@@ -275,7 +275,7 @@
 
             <Separator />
 
-            <div class="flex items-center justify-between">
+            <!-- <div class="flex items-center justify-between">
               <div>
                 <Label for="show-dogs">Show Dogs</Label>
                 <p class="text-muted-foreground text-xs">
@@ -291,9 +291,9 @@
               />
             </div>
 
-            <Separator />
+            <Separator /> -->
 
-            <div class="flex items-center justify-between">
+            <!-- <div class="flex items-center justify-between">
               <div>
                 <Label for="show-checkins">Show Check-ins</Label>
                 <p class="text-muted-foreground text-xs">
@@ -309,7 +309,7 @@
               />
             </div>
 
-            <Separator />
+            <Separator /> -->
 
             <div class="flex items-center justify-between">
               <div>

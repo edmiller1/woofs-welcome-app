@@ -79,13 +79,14 @@
       const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${maptilerKey}&types=municipality&language=en`;
       const res = await fetch(url);
       const data = await res.json();
-      citySuggestions =
-        (data.features ?? []).map((f: any) => ({
-          id: f.id,
-          name: f.text,
-          region: f.context?.find((c: any) => c.id?.startsWith('region'))?.text ?? '',
-          country: f.context?.find((c: any) => c.id?.startsWith('country'))?.text ?? '',
-        }));
+      citySuggestions = (data.features ?? []).map((f: any) => ({
+        id: f.id,
+        name: f.text,
+        region:
+          f.context?.find((c: any) => c.id?.startsWith("region"))?.text ?? "",
+        country:
+          f.context?.find((c: any) => c.id?.startsWith("country"))?.text ?? "",
+      }));
       cityDropdownOpen = citySuggestions.length > 0;
     } catch (e) {
       console.error("City search failed:", e);
@@ -465,7 +466,7 @@
       <Separator />
 
       <!-- Social Links -->
-      <div>
+      <!-- <div>
         <h3 class="mb-3 text-sm font-medium">Social Links</h3>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="space-y-2">
@@ -495,7 +496,7 @@
         </div>
       </div>
 
-      <Separator />
+      <Separator /> -->
 
       <!-- Dogs -->
       <div>

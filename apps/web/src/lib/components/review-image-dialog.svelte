@@ -2,9 +2,10 @@
   import { Drawer } from "vaul-svelte";
   import * as Dialog from "$lib/components/ui/dialog";
   import * as Carousel from "$lib/components/ui/carousel/index.js";
-  import type { ReviewImage } from "@woofs/types";
+  import type { ReviewImage } from "@woofs/types"; // used in Props interface
   import OptimizedImage from "./optimized-image.svelte";
   import type { CarouselAPI } from "./ui/carousel/context";
+  import { PawPrint, UserRound } from "@lucide/svelte";
 
   interface Props {
     image: ReviewImage | undefined;
@@ -12,9 +13,10 @@
     open: boolean;
     onOpenChange: (open: boolean) => void;
     reviewUserName: string;
+    dogs?: { dog: { id: string; name: string; breed: string } }[];
   }
 
-  let { image, images, open, onOpenChange, reviewUserName }: Props = $props();
+  let { image, images, open, onOpenChange, reviewUserName, dogs = [] }: Props = $props();
 
   let isDesktop = $state<boolean>(false);
   let api = $state<CarouselAPI>();
@@ -95,6 +97,23 @@
       {/each}
     </Carousel.Content>
   </Carousel.Root>
+
+  <!-- Reviewer + dogs info -->
+  <div class="flex items-center gap-4 px-2 pb-4 text-sm">
+    <div class="flex items-center gap-1.5 text-muted-foreground">
+      <UserRound class="size-4 shrink-0" />
+      <span class="font-medium text-foreground">{reviewUserName}</span>
+    </div>
+    {#if dogs.length > 0}
+      <span class="text-muted-foreground">·</span>
+      <div class="flex items-center gap-1.5 text-muted-foreground">
+        <PawPrint class="size-4 shrink-0" />
+        <span>
+          {dogs.map((d) => d.dog.name + (d.dog.breed ? ` · ${d.dog.breed}` : "")).join(", ")}
+        </span>
+      </div>
+    {/if}
+  </div>
 {/snippet}
 
 {#if isDesktop}
