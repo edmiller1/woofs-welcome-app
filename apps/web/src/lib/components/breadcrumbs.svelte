@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
   import type { BreadcrumbItem } from "@woofs/types";
 
@@ -8,10 +9,12 @@
   }
 
   const { items, location }: Props = $props();
+
+  const isPlacePage = page.url.pathname.includes("/places");
 </script>
 
 <Breadcrumb.Root>
-  <Breadcrumb.List class="uppercase text-base">
+  <Breadcrumb.List class={!isPlacePage ? "uppercase text-base" : "text-sm"}>
     {#each items as item, i (item.path)}
       <Breadcrumb.Item>
         {#if i === items.length - 1}

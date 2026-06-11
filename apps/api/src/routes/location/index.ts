@@ -59,6 +59,29 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
     return c.json(result, 200);
   }
 
+  // Check if this is a /children request
+  if (fullPath.endsWith("/children")) {
+    const locationPath = fullPath.replace(/\/children$/, "");
+    const result = await locationService.getChildLocations(locationPath);
+    return c.json(result, 200);
+  }
+
+  // Check if this is a /nearby request
+  if (fullPath.endsWith("/nearby")) {
+    const locationPath = fullPath.replace(/\/nearby$/, "");
+    const result = await locationService.getNearbyLocations(locationPath);
+    return c.json(result, 200);
+  }
+
+  // Check if this is a /photos request
+  if (fullPath.endsWith("/photos")) {
+    const locationPath = fullPath.replace(/\/photos$/, "");
+    const page = Number(c.req.query("page") ?? "1");
+    const limit = Number(c.req.query("limit") ?? "12");
+    const result = await locationService.getLocationPhotos(locationPath, page, limit);
+    return c.json(result, 200);
+  }
+
   // Check if this is a /places request
   if (fullPath.endsWith("/places")) {
     const locationPath = fullPath.replace(/\/places$/, "");

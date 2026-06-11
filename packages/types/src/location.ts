@@ -78,6 +78,32 @@ export interface LocationWithDetails extends Location {
   stats: LocationsStats;
 }
 
+export interface ChildLocation {
+  id: string;
+  name: string;
+  slug: string;
+  path: string;
+  type: string;
+  image: string | null;
+  placeCount: number;
+}
+
+export interface LocationPhoto {
+  cfImageId: string;
+  placeName: string;
+  placeSlug: string;
+  locationPath: string;
+  reviewerName: string | null;
+  dogs: { name: string; breed: string }[];
+}
+
+export interface LocationPhotosResult {
+  photos: LocationPhoto[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export type PlaceFilter = "popular" | "new" | "verified" | "surprise";
 
 export interface LocationPlacesSort {

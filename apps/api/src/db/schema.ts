@@ -708,6 +708,24 @@ export const ReviewImage = pgTable(
   }),
 );
 
+export const ReviewDog = pgTable(
+  "review_dog",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    reviewId: uuid("review_id")
+      .notNull()
+      .references(() => Review.id, { onDelete: "cascade" }),
+    dogId: uuid("dog_id")
+      .notNull()
+      .references(() => Dog.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    reviewDogUnique: unique().on(table.reviewId, table.dogId),
+    reviewIdx: index("review_dog_review_idx").on(table.reviewId),
+    dogIdx: index("review_dog_dog_idx").on(table.dogId),
+  }),
+);
+
 export const ReviewReply = pgTable(
   "review_reply",
   {
@@ -1146,6 +1164,7 @@ export const dogRelations = relations(Dog, ({ many, one }) => ({
     references: [Image.id],
   }),
   checkIns: many(CheckInDog),
+  reviews: many(ReviewDog),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -1302,6 +1321,18 @@ export const reviewRelations = relations(Review, ({ one, many }) => ({
   likes: many(ReviewLike),
   reports: many(ReviewReport),
   replies: many(ReviewReply),
+  dogs: many(ReviewDog),
+}));
+
+export const reviewDogRelations = relations(ReviewDog, ({ one }) => ({
+  review: one(Review, {
+    fields: [ReviewDog.reviewId],
+    references: [Review.id],
+  }),
+  dog: one(Dog, {
+    fields: [ReviewDog.dogId],
+    references: [Dog.id],
+  }),
 }));
 
 export const reviewImageRelations = relations(ReviewImage, ({ one }) => ({

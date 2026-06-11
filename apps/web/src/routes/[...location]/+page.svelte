@@ -61,21 +61,15 @@
     })),
   );
 
-  const setPlaceFilter = (filter: PlaceFilter) => {
-    const params = new URLSearchParams(page.url.searchParams);
-    params.set("placeSort", filter);
-    goto(`?${params.toString()}`, {
-      keepFocus: true,
-      noScroll: true,
-      replaceState: true, // don't add to browser history (might change later)
-    });
-  };
+  const locationArticle = $derived(
+    ["island"].includes(location.data?.type ?? "") ? "the " : "",
+  );
 
   const zoom = $derived(
     location.data?.type === "country"
       ? 6
       : location.data?.type === "region"
-        ? 9
+        ? 8
         : location.data?.type === "city"
           ? 12
           : 8,
@@ -105,33 +99,30 @@
     carouselEl?.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
   }
 
-  const locationCards = [
-    {
-      name: "Canterbury",
-      places: "120+ Places",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuANHPqqfOy56DNfgPJz6GZC79hFh5PpE3ZPK4p2LwiNP-iKZTakyrEi8_WHxwwuBykaqwH6TEk5lx3hSY47WDQdsEddRjScA5PGuNOTzsg5XOcuFMEdD8GkHcXDII0MzSFRCFtJuH8w2uw0z_npL450GnNKd3b4RUYV9N_G-u_6bpNjU0C-fUTbzqZfJdWz74cBArCfia2wdn5KN_cF-R9Ehde4OkPzKoatOvcbZXBEUpajzrGsB10nD_p0L3s8bO6RZ7fHSxpm8sZ-",
-    },
-    {
-      name: "Auckland",
-      places: "180+ Places",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuANHPqqfOy56DNfgPJz6GZC79hFh5PpE3ZPK4p2LwiNP-iKZTakyrEi8_WHxwwuBykaqwH6TEk5lx3hSY47WDQdsEddRjScA5PGuNOTzsg5XOcuFMEdD8GkHcXDII0MzSFRCFtJuH8w2uw0z_npL450GnNKd3b4RUYV9N_G-u_6bpNjU0C-fUTbzqZfJdWz74cBArCfia2wdn5KN_cF-R9Ehde4OkPzKoatOvcbZXBEUpajzrGsB10nD_p0L3s8bO6RZ7fHSxpm8sZ-",
-    },
-    {
-      name: "Wellington",
-      places: "140+ Places",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDqRUlXPoY0Y801bdbLkGD7QZ9Kwk2Y7YjT8badxUUhWG1gwzf9s8J9emsYKkQFj0WCsNegRqq7ZD6AxJvKn_Fw7ve8I6szD3vuY4cPw1VyxaG6EGmwhWshcs-mRJz3JaSWbmzSJCwGODGjtE0J7wFIauDDiO6jQ25P6ZMqmSZaEoTOR1oBSgzaOfwicdcxYtNo-oPe82tt6OLb2MVJ-ec6RWIDK_FYl2IhGU459A3OEcwPWPpZuXuu0kTfjWqcg0u1D-W2MWZQzHcM",
-    },
-    {
-      name: "Queenstown",
-      places: "210+ Places",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDqRUlXPoY0Y801bdbLkGD7QZ9Kwk2Y7YjT8badxUUhWG1gwzf9s8J9emsYKkQFj0WCsNegRqq7ZD6AxJvKn_Fw7ve8I6szD3vuY4cPw1VyxaG6EGmwhWshcs-mRJz3JaSWbmzSJCwGODGjtE0J7wFIauDDiO6jQ25P6ZMqmSZaEoTOR1oBSgzaOfwicdcxYtNo-oPe82tt6OLb2MVJ-ec6RWIDK_FYl2IhGU459A3OEcwPWPpZuXuu0kTfjWqcg0u1D-W2MWZQzHcM",
-    },
-    {
-      name: "Fiordland",
-      places: "90+ Places",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuABLnDjAVjUcpliclE2UCswRDzrHJiQLP-I2TOmS5mHfHoZTNuwJdzCa945qXIITTuwJZ9FEOmuD0OtWBBDtET4Psoeiom0LbpzIn3z09neC8jFcx6JmaVm_JPq4_8h0-t7Vv1pgPg-sP8f2k7_yn9H7aWj3j6TIxxGsP9MABTvj756LJwxfBSHPdQJvEaPDcQnw8FOf1_CoxLUIj5Tf-G_VVUSUzqg8gkth6mbD9rrYviY36-O-jtQ86PxQhkuUD-85vs9AGaumhbo",
-    },
-  ];
+  const isCity = $derived(location.data?.type === "city");
+
+  const childLocations = $derived(
+    createQuery(() => ({
+      queryKey: ["childLocations", pathname],
+      queryFn: () => api.location.getChildLocations(pathname.toString()),
+      enabled: !isCity,
+    })),
+  );
+
+  const nearbyLocations = $derived(
+    createQuery(() => ({
+      queryKey: ["nearbyLocations", pathname],
+      queryFn: () => api.location.getNearbyLocations(pathname.toString()),
+      enabled: isCity,
+    })),
+  );
+
+  const communityPhotos = $derived(
+    createQuery(() => ({
+      queryKey: ["locationPhotos", pathname, 1],
+      queryFn: () => api.location.getLocationPhotos(pathname.toString(), 1, 3),
+    })),
+  );
 </script>
 
 <ErrorBoundary error={location.error}>
@@ -204,6 +195,8 @@
             class="absolute inset-0 w-full h-full object-cover object-center"
             variant="xlarge"
             height="100%"
+            loading="eager"
+            fetchpriority="high"
           />
           <div class="absolute inset-0 adventure-gradient"></div>
         {/if}
@@ -226,7 +219,7 @@
                 ? 'text-white'
                 : 'text-on-surface'}"
             >
-              Dog-Friendly places in {location.data.name}
+              Dog-Friendly places in {locationArticle}{location.data.name}
             </h1>
             <div class="flex gap-6">
               <a
@@ -234,16 +227,20 @@
                 class="bg-primary-container px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:brightness-110 transition-all shadow-2xl uppercase"
                 >Start Exploring</a
               >
-              {#if location.data.image}
-                <button
-                  class="cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:bg-white/20 transition-all uppercase"
-                  >View Gallery</button
-                >
-              {:else}
-                <button
-                  class="cursor-pointer border border-secondary px-10 py-5 rounded-lg text-secondary font-bold text-sm tracking-widest hover:bg-secondary/10 transition-all uppercase"
-                  >View Gallery</button
-                >
+              {#if communityPhotos.isSuccess && communityPhotos.data.total > 0}
+                {#if location.data.image}
+                  <a
+                    href="/location/{pathname}/photos"
+                    class="cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:bg-white/20 transition-all uppercase"
+                    >View Gallery</a
+                  >
+                {:else}
+                  <a
+                    href="/location/{pathname}/photos"
+                    class="cursor-pointer border border-secondary px-10 py-5 rounded-lg text-secondary font-bold text-sm tracking-widest hover:bg-secondary/10 transition-all uppercase"
+                    >View Gallery</a
+                  >
+                {/if}
               {/if}
             </div>
           </div>
@@ -323,228 +320,114 @@
       </section>
 
       <!-- Images section -->
-      <section class="py-24 bg-surface-container-low">
-        <div class="max-w-7xl mx-auto px-8">
-          <div class="flex items-end justify-between mb-16">
-            <div>
-              <h2 class="font-serif text-5xl text-on-surface mb-4">
-                Community Moments
-              </h2>
-              <p class="text-on-surface-variant text-lg max-w-lg">
-                Captured moments from our community's most memorable journeys.
-              </p>
-            </div>
-            <button
-              aria-label="View all photos from the community"
-              class="cursor-pointer text-primary-tint font-bold text-sm tracking-widest flex items-center gap-3 group uppercase"
-            >
-              View All Photos <ArrowRight
-                class="size-4 transition-transform group-hover:translate-x-1"
-              />
-            </button>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div
-              class="group relative aspect-3/4 overflow-hidden rounded-xl cursor-pointer shadow-lg"
-            >
-              <img
-                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                alt="Hobbiton Hideaway"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqRUlXPoY0Y801bdbLkGD7QZ9Kwk2Y7YjT8badxUUhWG1gwzf9s8J9emsYKkQFj0WCsNegRqq7ZD6AxJvKn_Fw7ve8I6szD3vuY4cPw1VyxaG6EGmwhWshcs-mRJz3JaSWbmzSJCwGODGjtE0J7wFIauDDiO6jQ25P6ZMqmSZaEoTOR1oBSgzaOfwicdcxYtNo-oPe82tt6OLb2MVJ-ec6RWIDK_FYl2IhGU459A3OEcwPWPpZuXuu0kTfjWqcg0u1D-W2MWZQzHcM"
-              />
-              <div
-                class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8"
-              >
-                <span class="text-white font-serif text-2xl mb-1"
-                  >Hobbiton Hideaway</span
-                >
-                <span class="text-white/70 text-xs tracking-widest uppercase"
-                  >Matamata</span
-                >
+      {#if communityPhotos.isSuccess && communityPhotos.data.total > 0}
+        <section class="py-24 bg-surface-container-low">
+          <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-end justify-between mb-16">
+              <div>
+                <h2 class="font-serif text-5xl text-on-surface mb-4">
+                  Community Moments
+                </h2>
+                <p class="text-on-surface-variant text-lg max-w-lg">
+                  Captured moments from our community's most memorable visits.
+                </p>
               </div>
-            </div>
-            <div
-              class="group relative aspect-3/4 overflow-hidden rounded-xl cursor-pointer shadow-lg"
-            >
-              <img
-                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                alt="Piha Beach Run"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEX16tRsywGw41Qr7qwGIdt18OKRgnt80-wSR8tF8ckwJ5yTm8XkPTiIbzpjXF8Lis_60BKQmpeml4jlToD0FAWU-xbzGcaez9alkqVDDY4v1PAj4yEueYx_D8JFcrjIjFC6Gi_wyQqgULwvZGwg1OuIbemCk1gytBD8x8vydIOLPvvpTQG4y3hlF8wsidMMj0CDUaWJvqCEEPLOCGI2I7eL2dCx1PmnlEjKTG2UD3LVpuFu5dGYxEdJta8_dFgixe9p5_TbJn81ZG"
-              />
-              <div
-                class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8"
+              <a
+                href="/location/{pathname}/photos"
+                aria-label="View all photos from the community"
+                class="cursor-pointer text-primary-tint font-bold text-sm tracking-widest flex items-center gap-3 group uppercase"
               >
-                <span class="text-white font-serif text-2xl mb-1"
-                  >Black Sand Dash</span
-                >
-                <span class="text-white/70 text-xs tracking-widest uppercase"
-                  >Piha Beach</span
-                >
-              </div>
+                View Gallery <ArrowRight
+                  class="size-4 transition-transform group-hover:translate-x-1"
+                />
+              </a>
             </div>
-            <div
-              class="group relative aspect-3/4 overflow-hidden rounded-xl cursor-pointer shadow-lg"
-            >
-              <img
-                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                alt="Hooker Valley Track"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuABLnDjAVjUcpliclE2UCswRDzrHJiQLP-I2TOmS5mHfHoZTNuwJdzCa945qXIITTuwJZ9FEOmuD0OtWBBDtET4Psoeiom0LbpzIn3z09neC8jFcx6JmaVm_JPq4_8h0-t7Vv1pgPg-sP8f2k7_yn9H7aWj3j6TIxxGsP9MABTvj756LJwxfBSHPdQJvEaPDcQnw8FOf1_CoxLUIj5Tf-G_VVUSUzqg8gkth6mbD9rrYviY36-O-jtQ86PxQhkuUD-85vs9AGaumhbo"
-              />
-              <div
-                class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8"
-              >
-                <span class="text-white font-serif text-2xl mb-1"
-                  >Alpine Wander</span
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {#each communityPhotos.data.photos as photo}
+                <a
+                  href="/location/{pathname}/photos"
+                  class="group relative aspect-3/4 overflow-hidden rounded-xl cursor-pointer shadow-lg"
                 >
-                <span class="text-white/70 text-xs tracking-widest uppercase"
-                  >Hooker Valley</span
-                >
-              </div>
+                  <OptimizedImage
+                    imageId={photo.cfImageId}
+                    alt={photo.placeName}
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    height="100%"
+                    variant="large"
+                  />
+                  <div
+                    class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8"
+                  >
+                    <span class="text-white font-serif text-2xl mb-1"
+                      >{photo.placeName}</span
+                    >
+                    {#if photo.reviewerName}
+                      <span
+                        class="text-white/70 text-xs tracking-widest uppercase"
+                        >by {photo.reviewerName}</span
+                      >
+                    {/if}
+                    {#if photo.dogs.length > 0}
+                      <span class="text-white/60 text-xs tracking-wide mt-1">
+                        {photo.dogs.map((d) => d.name).join(", ")}
+                      </span>
+                    {/if}
+                  </div>
+                </a>
+              {/each}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      {/if}
 
       <!-- Places section -->
-      <section class="py-32 max-w-7xl mx-auto px-8">
-        <div class="text-center mb-20">
-          <h2 class="font-serif text-5xl text-on-surface mb-4">
-            Popular Picks
-          </h2>
-          <div class="w-24 h-1 bg-primary-container mx-auto"></div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <!-- TODO: Replace with Place Card component -->
-          <div class="flex flex-col group">
-            <div class="aspect-video overflow-hidden rounded-xl mb-6 relative">
-              <img
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                alt="Lolly's Cafe Wanaka"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp0iUrZmtG857zlA0Ek-mU0M6iaA0cBCWt1RpGQiQkxYvYWtU0Qy0ZV8gbSGKsFo1FRYf-85IHCImnN_NYlPTSu4zzI_nZoubHoINKwHAkWfKBYqdzcVUZ25uhWB5itUWCOftA3bX0KOMwuiZ-QJW1WYpZvACuyCyae4S7Of2dO9tcWf_deAvGoBpOt59D9hGX8yyV50ejptp_0EDCIDmZo8-H-x4J6OGVjENktxbsl1ED0xd9OxpDui42pQbQldMnjCvhUk8LkMh2"
-              />
-              <span
-                class="absolute top-4 left-4 bg-primary-container px-3 py-1 rounded text-white text-[10px] font-bold uppercase tracking-widest"
-                >Eat</span
-              >
-            </div>
-            <div class="flex justify-between items-start mb-3">
-              <h3 class="font-serif text-2xl text-on-surface">Lolly's Cafe</h3>
-              <div class="flex items-center text-primary-container">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  style="font-variation-settings: 'FILL' 1;">star</span
-                >
-                <span class="text-on-surface font-bold text-sm ml-1">4.9</span>
-              </div>
-            </div>
-            <p class="text-on-surface-variant text-base leading-relaxed mb-6">
-              Wanaka's finest coffee with a lakeside view and a dedicated dog
-              biscuit menu.
-            </p>
-            <div class="flex gap-4">
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >Lakeside</span
-              >
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >Dog Friendly</span
-              >
-            </div>
+      {#if location.data.popularPlaces.length > 0}
+        <section class="py-32 max-w-7xl mx-auto px-8">
+          <div class="text-center mb-20">
+            <h2 class="font-serif text-5xl text-on-surface mb-4">
+              Popular Picks
+            </h2>
+            <div class="w-24 h-1 bg-primary-container mx-auto"></div>
           </div>
-          <!-- TODO: Replace with Place Card component -->
-          <div class="flex flex-col group">
-            <div class="aspect-video overflow-hidden rounded-xl mb-6 relative">
-              <img
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                alt="The Hermitage Hotel"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfw5uHbaSgwlCB_kB9OSYxxXXGFQ9EaSXgGQONMeHFIGRR8mAUB-I9uL-goqWct_QWGW0usS0lj0wK3gg3t5fMm5G3mwrmdyDqtlPRBafV4AbjwUGinxQwxATqXz1uqzxHFGFRldaS6nZ7FEQBHR3sYXxG6XQYaO88UPHjNDsILPX2Uwc-Bx8sBt-pmw8nDfZqFVGKmXngKEfw-jBqae1wbuM4wtnP_90lC8Oq4_2GQrTorS0fuTT1zplYAwNoNGGrbBlQ-6k3U9rE"
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {#each location.data.popularPlaces as place}
+              <PlaceCard
+                id={place.id}
+                name={place.name}
+                rating={place.rating}
+                slug={place.slug}
+                cityName={place.cityName}
+                regionName={place.regionName ?? ""}
+                countryCode={place.countryCode}
+                types={place.types}
+                isSaved={place.isSaved}
+                imageId={place.imageId ?? undefined}
+                {user}
+                locationPath={place.locationPath}
+                isVerified={place.isVerified}
+                memberFavourite={place.memberFavourite}
+                reviewCount={place.reviewsCount}
+                dogAmenities={place.dogAmenities}
               />
-              <span
-                class="absolute top-4 left-4 bg-primary-container px-3 py-1 rounded text-white text-[10px] font-bold uppercase tracking-widest"
-                >Stay</span
-              >
-            </div>
-            <div class="flex justify-between items-start mb-3">
-              <h3 class="font-serif text-2xl text-on-surface">The Hermitage</h3>
-              <div class="flex items-center text-primary-container">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  style="font-variation-settings: 'FILL' 1;">star</span
-                >
-                <span class="text-on-surface font-bold text-sm ml-1">4.8</span>
-              </div>
-            </div>
-            <p class="text-on-surface-variant text-base leading-relaxed mb-6">
-              Alpine luxury at the foot of Aoraki. Special dog-friendly wings
-              available for hikers.
-            </p>
-            <div class="flex gap-4">
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >Alpine</span
-              >
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >Luxury</span
-              >
-            </div>
+            {/each}
           </div>
-          <!-- TODO: Replace with Place Card component -->
-          <div class="flex flex-col group">
-            <div class="aspect-video overflow-hidden rounded-xl mb-6 relative">
-              <img
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                alt="Hooker Valley Track"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuABLnDjAVjUcpliclE2UCswRDzrHJiQLP-I2TOmS5mHfHoZTNuwJdzCa945qXIITTuwJZ9FEOmuD0OtWBBDtET4Psoeiom0LbpzIn3z09neC8jFcx6JmaVm_JPq4_8h0-t7Vv1pgPg-sP8f2k7_yn9H7aWj3j6TIxxGsP9MABTvj756LJwxfBSHPdQJvEaPDcQnw8FOf1_CoxLUIj5Tf-G_VVUSUzqg8gkth6mbD9rrYviY36-O-jtQ86PxQhkuUD-85vs9AGaumhbo"
-              />
-              <span
-                class="absolute top-4 left-4 bg-primary-container px-3 py-1 rounded text-white text-[10px] font-bold uppercase tracking-widest"
-                >Trail</span
-              >
-            </div>
-            <div class="flex justify-between items-start mb-3">
-              <h3 class="font-serif text-2xl text-on-surface">Hooker Valley</h3>
-              <div class="flex items-center text-primary-container">
-                <span
-                  class="material-symbols-outlined text-sm"
-                  style="font-variation-settings: 'FILL' 1;">star</span
-                >
-                <span class="text-on-surface font-bold text-sm ml-1">5.0</span>
-              </div>
-            </div>
-            <p class="text-on-surface-variant text-base leading-relaxed mb-6">
-              A stunning, flat boardwalk trail through the heart of the Southern
-              Alps.
-            </p>
-            <div class="flex gap-4">
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >10km Loop</span
-              >
-              <span
-                class="text-[10px] text-on-surface-variant tracking-widest font-bold uppercase"
-                >Easy</span
-              >
-            </div>
+          <div class="mt-12 flex items-center justify-center">
+            <a
+              href={`/explore?lat=${location.data.latitude}&lng=${location.data.longitude}&zoom=${zoom}`}
+              class="bg-primary py-3 px-4 rounded-lg text-white hover:bg-primary/90 cursor-pointer"
+              >Explore {locationArticle}{location.data.name}</a
+            >
           </div>
-        </div>
-        <div class="mt-12 flex items-center justify-center">
-          <a
-            href={`/explore?lat=${location.data.latitude}&lng=${location.data.longitude}&zoom=${zoom}`}
-            class="bg-primary py-3 px-4 rounded-lg text-white hover:bg-primary/90 cursor-pointer"
-            >Explore {location.data.name}</a
-          >
-        </div>
-      </section>
+        </section>
+      {/if}
 
-      <!-- locations section -->
-      {#if location.data.type !== "city"}
+      <!-- locations / nearby cities section -->
+      {#snippet locationCarousel(items: typeof childLocations, heading: string)}
         <section class="py-32 bg-surface-container-low">
           <div class="max-w-7xl mx-auto px-8">
             <div class="mb-16">
               <h2 class="font-serif text-5xl text-on-surface mb-4">
-                Top locations in {location.data.name}
+                {heading}
               </h2>
             </div>
             <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -581,34 +464,53 @@
                 class="flex overflow-x-auto gap-8 pb-8 scroll-smooth"
                 style="-ms-overflow-style: none; scrollbar-width: none;"
               >
-                {#each locationCards as card}
-                  <div
-                    class="flex-none w-87.5 aspect-3/4 relative rounded-xl overflow-hidden group/card cursor-pointer shadow-xl"
-                  >
-                    <img
-                      alt={card.name}
-                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
-                      src={card.src}
-                    />
-                    <div
-                      class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8"
-                    >
-                      <h3 class="text-white font-serif text-3xl mb-2">
-                        {card.name}
-                      </h3>
-                      <div
-                        class="flex items-center gap-2 text-white/80 font-bold text-xs uppercase tracking-widest"
-                      >
-                        <MapPin class="size-3.5 fill-white/80" />
-                        <span>{card.places}</span>
-                      </div>
+                {#if items.isLoading}
+                  {#each Array(5) as _}
+                    <div class="flex-none w-87.5 aspect-3/4 rounded-xl overflow-hidden">
+                      <Skeleton class="w-full h-full rounded-xl" />
                     </div>
-                  </div>
-                {/each}
+                  {/each}
+                {:else if items.isSuccess}
+                  {#each items.data as child}
+                    <a
+                      href="/location/{child.path}"
+                      class="flex-none w-87.5 aspect-3/4 relative rounded-xl overflow-hidden group/card cursor-pointer shadow-xl"
+                    >
+                      {#if child.image}
+                        <OptimizedImage
+                          imageId={child.image}
+                          alt={child.name}
+                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+                          height="100%"
+                          variant="large"
+                        />
+                      {:else}
+                        <div class="absolute inset-0 bg-surface-container-high"></div>
+                      {/if}
+                      <div
+                        class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8"
+                      >
+                        <h3 class="text-white font-serif text-3xl mb-2">
+                          {child.name}
+                        </h3>
+                        <div class="flex items-center gap-2 text-white/80 font-bold text-xs uppercase tracking-widest">
+                          <MapPin class="size-3.5 fill-white/80" />
+                          <span>{child.placeCount} place{child.placeCount === 1 ? "" : "s"}</span>
+                        </div>
+                      </div>
+                    </a>
+                  {/each}
+                {/if}
               </div>
             </div>
           </div>
         </section>
+      {/snippet}
+
+      {#if isCity}
+        {@render locationCarousel(nearbyLocations, `Nearby cities`)}
+      {:else}
+        {@render locationCarousel(childLocations, `Top locations in ${location.data.name}`)}
       {/if}
 
       <!-- Map section -->
@@ -630,6 +532,7 @@
               lat={location.data.latitude}
               lng={location.data.longitude}
               {zoom}
+              {pathname}
               places={Array.from(
                 new Map(
                   [

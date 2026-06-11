@@ -66,20 +66,6 @@
     }
   });
 
-  const handleFavouritePlace = (e: Event) => {
-    if (!user) {
-      toast.info("Please sign in to favourite places", {
-        action: {
-          label: "Sign in",
-          onClick: () => {
-            goto("/sign-in?redirect=" + encodeURIComponent(page.url.pathname));
-          },
-        },
-        duration: 10000,
-      });
-    }
-  };
-
   const goToImage = (index: number) => {
     carouselApi!.scrollTo(index);
     current = index;

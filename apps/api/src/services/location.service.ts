@@ -16,10 +16,15 @@ import { locationPathSchema } from "../routes/location/schemas";
 import {
   Collection,
   CollectionItem,
+  Dog,
   Image,
   Location,
   Place,
   PlaceImage,
+  Review,
+  ReviewDog,
+  ReviewImage,
+  user,
 } from "../db/schema";
 import {
   getPlacesByPlaceSort,
@@ -103,7 +108,7 @@ export class LocationService {
             sql`CASE WHEN ${Place.types}::text[] && ARRAY['Hotel', 'Motel', 'AirBnb']::text[] THEN 1 ELSE 0 END`,
           ).mapWith(Number),
           totalStores: sum(
-            sql`CASE WHEN ${Place.types}::text[] && ARRAY['Retail']::text[] THEN 1 ELSE 0 END`,
+            sql`CASE WHEN ${Place.types}::text[] && ARRAY['Store']::text[] THEN 1 ELSE 0 END`,
           ).mapWith(Number),
         })
         .from(Place)
@@ -150,8 +155,10 @@ export class LocationService {
               sql`${CityLocation.path} LIKE ${validatedPath + "%"}`,
             ),
           )
-          .orderBy(desc(Place.rating))
-          .limit(6),
+          .orderBy(
+            desc(sql`cast(${Place.rating} as decimal) * ${Place.reviewsCount}`),
+          )
+          .limit(9),
         //stays
         this.db
           .select({
@@ -471,6 +478,200 @@ export class LocationService {
         ),
       );
     return new Set(savedItems.map((item) => item.placeId));
+  }
+
+  async getChildLocations(path: string) {
+    const ChildLoc = alias(Location, "child_loc");
+    const PlaceLoc = alias(Location, "place_loc");
+
+    const rows = await this.db
+      .select({
+        id: ChildLoc.id,
+        name: ChildLoc.name,
+        slug: ChildLoc.slug,
+        path: ChildLoc.path,
+        type: ChildLoc.type,
+        imageRowId: ChildLoc.image,
+        placeCount: count(Place.id),
+      })
+      .from(ChildLoc)
+      .innerJoin(Location, eq(ChildLoc.parentId, Location.id))
+      .leftJoin(PlaceLoc, sql`${PlaceLoc.path} LIKE ${ChildLoc.path} || '%'`)
+      .leftJoin(Place, eq(Place.locationId, PlaceLoc.id))
+      .where(eq(Location.path, path))
+      .groupBy(
+        ChildLoc.id,
+        ChildLoc.name,
+        ChildLoc.slug,
+        ChildLoc.path,
+        ChildLoc.type,
+        ChildLoc.image,
+      )
+      .orderBy(desc(count(Place.id)))
+      .limit(20);
+
+    // Resolve cfImageIds in one query
+    const imageRowIds = rows
+      .map((r) => r.imageRowId)
+      .filter((id): id is string => id !== null);
+
+    const imageMap = new Map<string, string>();
+    if (imageRowIds.length > 0) {
+      const images = await this.db
+        .select({ id: Image.id, cfImageId: Image.cfImageId })
+        .from(Image)
+        .where(inArray(Image.id, imageRowIds));
+      for (const img of images) imageMap.set(img.id, img.cfImageId);
+    }
+
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      path: r.path,
+      type: r.type,
+      image: r.imageRowId ? (imageMap.get(r.imageRowId) ?? null) : null,
+      placeCount: r.placeCount,
+    }));
+  }
+
+  async getNearbyLocations(path: string) {
+    const CurrentLoc = alias(Location, "current_loc");
+    const SiblingLoc = alias(Location, "sibling_loc");
+    const PlaceLoc = alias(Location, "place_loc");
+
+    // Find the current location's parentId, then get siblings
+    const current = await this.db
+      .select({ parentId: CurrentLoc.parentId })
+      .from(CurrentLoc)
+      .where(eq(CurrentLoc.path, path))
+      .limit(1);
+
+    if (!current[0]?.parentId) return [];
+
+    const rows = await this.db
+      .select({
+        id: SiblingLoc.id,
+        name: SiblingLoc.name,
+        slug: SiblingLoc.slug,
+        path: SiblingLoc.path,
+        type: SiblingLoc.type,
+        imageRowId: SiblingLoc.image,
+        placeCount: count(Place.id),
+      })
+      .from(SiblingLoc)
+      .leftJoin(PlaceLoc, sql`${PlaceLoc.path} LIKE ${SiblingLoc.path} || '%'`)
+      .leftJoin(Place, eq(Place.locationId, PlaceLoc.id))
+      .where(
+        and(
+          eq(SiblingLoc.parentId, current[0].parentId),
+          sql`${SiblingLoc.path} != ${path}`,
+        ),
+      )
+      .groupBy(
+        SiblingLoc.id,
+        SiblingLoc.name,
+        SiblingLoc.slug,
+        SiblingLoc.path,
+        SiblingLoc.type,
+        SiblingLoc.image,
+      )
+      .orderBy(desc(count(Place.id)))
+      .limit(20);
+
+    const imageRowIds = rows
+      .map((r) => r.imageRowId)
+      .filter((id): id is string => id !== null);
+
+    const imageMap = new Map<string, string>();
+    if (imageRowIds.length > 0) {
+      const images = await this.db
+        .select({ id: Image.id, cfImageId: Image.cfImageId })
+        .from(Image)
+        .where(inArray(Image.id, imageRowIds));
+      for (const img of images) imageMap.set(img.id, img.cfImageId);
+    }
+
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      path: r.path,
+      type: r.type,
+      image: r.imageRowId ? (imageMap.get(r.imageRowId) ?? null) : null,
+      placeCount: r.placeCount,
+    }));
+  }
+
+  async getLocationPhotos(path: string, page = 1, limit = 12) {
+    const offset = (page - 1) * limit;
+    const PlaceLoc = alias(Location, "place_loc");
+
+    const [photos, totalResult] = await Promise.all([
+      this.db
+        .select({
+          cfImageId: Image.cfImageId,
+          placeName: Place.name,
+          placeSlug: Place.slug,
+          locationPath: PlaceLoc.path,
+          reviewerName: user.name,
+          reviewId: Review.id,
+        })
+        .from(ReviewImage)
+        .innerJoin(Image, eq(ReviewImage.imageId, Image.id))
+        .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
+        .innerJoin(user, eq(Review.userId, user.id))
+        .innerJoin(Place, eq(Review.placeId, Place.id))
+        .innerJoin(PlaceLoc, eq(Place.locationId, PlaceLoc.id))
+        .where(sql`${PlaceLoc.path} LIKE ${path + "%"}`)
+        .orderBy(desc(ReviewImage.createdAt))
+        .limit(limit)
+        .offset(offset),
+
+      this.db
+        .select({ total: count() })
+        .from(ReviewImage)
+        .innerJoin(Review, eq(ReviewImage.reviewId, Review.id))
+        .innerJoin(Place, eq(Review.placeId, Place.id))
+        .innerJoin(PlaceLoc, eq(Place.locationId, PlaceLoc.id))
+        .where(sql`${PlaceLoc.path} LIKE ${path + "%"}`),
+    ]);
+
+    // Fetch dogs for each review in one query
+    const reviewIds = [...new Set(photos.map((p) => p.reviewId))];
+    const dogRows =
+      reviewIds.length > 0
+        ? await this.db
+            .select({
+              reviewId: ReviewDog.reviewId,
+              dogName: Dog.name,
+              dogBreed: Dog.breed,
+            })
+            .from(ReviewDog)
+            .innerJoin(Dog, eq(ReviewDog.dogId, Dog.id))
+            .where(inArray(ReviewDog.reviewId, reviewIds))
+        : [];
+
+    const dogsByReview = new Map<string, { name: string; breed: string }[]>();
+    for (const d of dogRows) {
+      const existing = dogsByReview.get(d.reviewId) ?? [];
+      existing.push({ name: d.dogName, breed: d.dogBreed });
+      dogsByReview.set(d.reviewId, existing);
+    }
+
+    return {
+      photos: photos.map((p) => ({
+        cfImageId: p.cfImageId,
+        placeName: p.placeName,
+        placeSlug: p.placeSlug,
+        locationPath: p.locationPath,
+        reviewerName: p.reviewerName,
+        dogs: dogsByReview.get(p.reviewId) ?? [],
+      })),
+      total: totalResult[0]?.total ?? 0,
+      page,
+      limit,
+    };
   }
 
   async getLocationPlaces(

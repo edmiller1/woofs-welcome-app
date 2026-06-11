@@ -11,6 +11,7 @@
     variant?: ImageVariant;
     class?: string;
     loading?: "lazy" | "eager";
+    fetchpriority?: "high" | "low" | "auto";
     sizes?: string;
     responsive?: boolean;
     width?: string;
@@ -23,6 +24,7 @@
     variant = "medium",
     class: className = "",
     loading = "lazy",
+    fetchpriority = "auto",
     sizes = "100vw",
     responsive = true,
     width = "100%",
@@ -39,6 +41,7 @@
   {sizes}
   {alt}
   {loading}
+  {fetchpriority}
   class={className}
   style="width: {width}; height: {height};"
 />
