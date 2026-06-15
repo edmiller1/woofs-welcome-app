@@ -200,8 +200,8 @@
 
 <div bind:this={wrapperEl} class="relative w-full">
   <div
-    class="flex items-center bg-surface-raised rounded-full px-4 py-2 gap-2 transition-shadow {focused
-      ? 'ring-2 ring-primary/20 shadow-md'
+    class="flex items-center bg-input hover:border-primary hover:border rounded-full px-4 py-2 gap-2 transition-shadow {focused
+      ? 'ring-1 ring-primary/20 shadow-md'
       : ''}"
   >
     <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -210,7 +210,7 @@
       bind:value={query}
       onfocus={() => (focused = true)}
       onkeydown={handleKeydown}
-      class="bg-transparent w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
+      class="bg-input w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
       placeholder="Search places or locations..."
       type="text"
       autocomplete="off"

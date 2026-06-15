@@ -117,18 +117,18 @@
   <Dialog.Trigger>
     {#snippet child({ props })}
       {#if user}
-        <Button variant="glass" {...props} class="hidden md:flex">
+        <Button variant="secondary" {...props} class="hidden md:flex">
           <Heart
             class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-white"}`}
           />
           {#if isSaved}
-            <span class="font-headline font-semibold text-sm">Saved</span>
+            <span class="font-semibold text-sm">Saved</span>
           {:else}
-            <span class="font-headline font-semibold text-sm">Save</span>
+            <span class="font-semibold text-sm">Save</span>
           {/if}
         </Button>
         <Button
-          variant="outline"
+          variant="secondary"
           aria-label={isSaved
             ? "Remove from saved places"
             : "Save to collection"}
@@ -142,14 +142,14 @@
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "glass" }), "hidden md:flex")}
+          class={cn(buttonVariants({ variant: "secondary" }), "hidden md:flex")}
           ><Heart class="size-4" /><span
             class="font-headline font-semibold text-sm">Save</span
           >
         </a>
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "glass" }), "md:hidden")}
+          class={cn(buttonVariants({ variant: "secondary" }), "md:hidden")}
           ><Heart class="size-4" />
           <span class="font-headline font-semibold text-sm">Save</span>
         </a>

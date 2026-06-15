@@ -51,7 +51,7 @@
       Woofs Welcome
     </h2>
     {#if !user}
-      <div class="rounded-2xl p-6 mb-8 shadow-sm border border-input">
+      <div class="rounded-2xl p-6 my-8 shadow-sm border border-input">
         <div class="flex flex-col gap-2">
           <h2 class="font-headline text-xl font-bold text-on-surface">
             Join the Pack
@@ -60,7 +60,7 @@
             Sign up to save collections and join our community of adventurers.
           </p>
           <a
-            class="mt-2 font-body text-sm font-semibold text-secondary underline decoration-secondary/30 underline-offset-4"
+            class="mt-2 font-body text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4"
             href="/sign-in">Create Account</a
           >
         </div>
@@ -73,7 +73,7 @@
           <img
             alt={user.name + " profile image"}
             src={user.image}
-            class="w-16 h-16 rounded-full object-cover border-2 border-[#ffdbcc]"
+            class="w-16 h-16 rounded-full object-cover border-2 border-border"
           />
         </div>
         <div class="flex flex-col">
@@ -91,7 +91,7 @@
     <div class="flex-1 flex flex-col space-y-1">
       <!-- Explore -->
       <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {exploreActive &&
+        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {exploreActive &&
           'bg-secondary-container/30 '}"
         href="/explore"
       >
@@ -107,8 +107,8 @@
         <span class="font-body text-lg font-medium">Explore</span>
       </a>
       <!-- Community -->
-      <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {communityActive &&
+      <!-- <a
+        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {communityActive &&
           'bg-secondary-container/30'}"
         href="/community"
       >
@@ -122,11 +122,11 @@
           <Users class="size-5 text-black" />
         {/if}
         <span class="font-body text-lg">Community</span>
-      </a>
+      </a> -->
       {#if user}
         <!-- Collections -->
         <a
-          class="flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group {profileActive &&
+          class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {profileActive &&
             'bg-secondary-container/30'}"
           href={`/profile/${user.id}/${profileLink}/collections`}
         >
@@ -143,7 +143,7 @@
         </a>
         <!-- Account Settings -->
         <button
-          class="cursor-pointer flex items-center gap-4 px-4 py-4 hover:bg-stone-200 rounded-xl transition-all group"
+          class="cursor-pointer flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group"
           onclick={openSettings}
         >
           <Cog class="size-5 text-black" />
@@ -154,7 +154,7 @@
 
     <div class="mt-auto flex flex-col items-center gap-6 pb-4">
       <button
-        class="cursor-pointer hover:bg-primary/95 w-full bg-primary text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20"
+        class="cursor-pointer hover:bg-orange-500/90 w-full bg-orange-500 text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20"
       >
         <Smartphone class="size-5 text-white" />
         Continue in App
@@ -163,7 +163,7 @@
         <a
           role="button"
           href="/sign-in"
-          class="w-full border border-input flex items-center justify-center gap-3 text-on-surface-variant text-center font-body py-4 rounded-xl font-medium hover:text-primary hover:bg-gray-100 transition-colors cursor-pointer"
+          class="w-full border border-input flex items-center justify-center gap-3 text-on-surface-variant text-center font-body py-4 rounded-xl font-medium hover:text-primary hover:bg-muted transition-colors cursor-pointer"
         >
           <LogIn class="size-5 text-primary" />
           Sign In

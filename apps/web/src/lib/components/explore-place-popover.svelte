@@ -27,11 +27,11 @@
         height="64"
       />
     {:else}
-      <div class="w-full h-full bg-gray-100"></div>
+      <div class="w-full h-full bg-muted"></div>
     {/if}
   </div>
   <div class="flex flex-col gap-0.5 min-w-0">
-    <span class="font-bold text-sm text-secondary truncate">{place.name}</span>
+    <span class="font-bold text-sm text-primary truncate">{place.name}</span>
     <span class="text-xs text-muted-foreground truncate"
       >{place.cityName}, {place.regionName || place.countryCode}</span
     >

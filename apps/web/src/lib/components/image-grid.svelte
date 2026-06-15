@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { api } from "$lib/api-helper";
   import type { BAUser, PlaceImage } from "@woofs/types";
   import OptimizedImage from "./optimized-image.svelte";
   import Button from "./ui/button/button.svelte";
@@ -53,10 +52,9 @@
       <div class="absolute top-6 left-6">
         {#if memberFavourite}
           <span
-            class="flex items-center gap-1 bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-bold mb-2 font-body"
-            ><Star
-              class="size-3 fill-on-primary-container text-on-primary-container"
-            />MEMBER FAVOURITE</span
+            class="flex items-center gap-1 bg-orange-500 text-foreground px-3 py-1 rounded-full text-xs font-bold mb-2 font-body"
+            ><Star class="size-3 fill-foreground text-foreground" />MEMBER
+            FAVOURITE</span
           >
         {/if}
       </div>
@@ -64,7 +62,7 @@
         <div class="flex items-center gap-3 mt-4 mb-2">
           <ShareButton url={page.url.href} name={placeName}>
             {#snippet trigger()}
-              <Button variant="glass">
+              <Button variant="secondary">
                 <Share class="size-4" />
                 <span class="font-headline font-semibold text-sm">Share</span>
               </Button>

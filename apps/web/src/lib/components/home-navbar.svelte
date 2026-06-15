@@ -67,32 +67,26 @@
 </script>
 
 <header
-  class="fixed top-0 z-50 w-full bg-background dark:bg-stone-900/70 border-none"
+  class="fixed top-0 z-50 w-full bg-background border-none"
 >
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
-      <a
-        class="hidden lg:block text-2xl font-headline font-bold text-primary-tint"
-        href="/"
+      <a class="hidden lg:block text-2xl font-bold text-primary" href="/"
         >Woofs Welcome
       </a>
-      <a
-        href="/"
-        class="lg:hidden text-2xl font-headline font-bold text-primary-tint"
-        >WW</a
-      >
+      <a href="/" class="lg:hidden text-2xl font-bold text-primary-tint">WW</a>
       <nav class="flex gap-6 items-center">
         <a
-          class="font-body font-medium hover:text-primary-tint transition-colors {exploreActive
+          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
             ? 'text-primary-tint font-semibold'
-            : 'text-stone-600'}"
+            : 'text-muted-foreground'}"
           href="/explore">Explore</a
         >
         <!-- <a
           class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
             ? 'text-primary-tint font-semibold'
-            : 'text-stone-600'}"
+            : 'text-muted-foreground'}"
           href="/community">Community</a
         > -->
       </nav>
@@ -116,9 +110,7 @@
     class="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden w-full px-4 py-3"
   >
     <div class="flex items-center">
-      <a href="/" class="text-2xl font-headline font-bold text-primary-tint"
-        >WW</a
-      >
+      <a href="/" class="text-2xl font-headline font-bold text-primary">WW</a>
     </div>
     <div class="flex items-center">
       <NavbarSearch />

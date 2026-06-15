@@ -14,7 +14,7 @@
 {#if description}
   <div class="py-4 w-full">
     <h4 class="text-xl font-semibold">Description</h4>
-    <p class="mt-2 leading-relaxed text-gray-700 dark:text-gray-300">
+    <p class="mt-2 leading-relaxed text-foreground">
       {description}
     </p>
   </div>

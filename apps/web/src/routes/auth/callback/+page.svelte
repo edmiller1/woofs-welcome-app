@@ -50,9 +50,9 @@
       <Spinner />
       <p>Completing sign in...</p>
     {:else if status === "success"}
-      <p class="text-green-600">Sign in successful!</p>
+      <p class="text-primary">Sign in successful!</p>
     {:else}
-      <p class="text-red-600">Sign in failed. Redirecting...</p>
+      <p class="text-destructive">Sign in failed. Redirecting...</p>
     {/if}
   </div>
 </div>

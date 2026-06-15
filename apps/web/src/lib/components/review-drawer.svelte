@@ -15,7 +15,7 @@
     createQuery,
     useQueryClient,
   } from "@tanstack/svelte-query";
-  import type { Dog } from "@woofs/types";
+  import type { BAUser, Dog } from "@woofs/types";
   import { api } from "$lib/api-helper";
   import { toast } from "svelte-sonner";
   import Calendar from "$lib/components/ui/calendar/calendar.svelte";
@@ -36,9 +36,10 @@
     onOpenChange: (open: boolean) => void;
     placeId: string;
     placeName: string;
+    user: BAUser | null;
   }
 
-  const { open, onOpenChange, placeId, placeName }: Props = $props();
+  const { open, onOpenChange, placeId, placeName, user }: Props = $props();
 
   const queryClient = useQueryClient();
 
@@ -53,6 +54,7 @@
   const profileDogs = createQuery<Dog[]>(() => ({
     queryKey: ["profileDogs"],
     queryFn: api.profile.getProfileDogs,
+    enabled: !!user,
   }));
 
   // Form state
@@ -236,7 +238,9 @@
         <div class="space-y-2">
           <Label>Which dogs did you bring?</Label>
           {#if profileDogs.isLoading}
-            <div class="flex items-center gap-2 text-sm text-muted-foreground py-2">
+            <div
+              class="flex items-center gap-2 text-sm text-muted-foreground py-2"
+            >
               <LoaderCircle class="size-4 animate-spin" />
               Loading your dogs...
             </div>
@@ -262,7 +266,11 @@
                       height="20"
                     />
                   {:else}
-                    <PawPrint class="size-4 {selected ? 'text-white' : 'text-muted-foreground'}" />
+                    <PawPrint
+                      class="size-4 {selected
+                        ? 'text-white'
+                        : 'text-muted-foreground'}"
+                    />
                   {/if}
                   {dog.name}
                   {#if dog.breed}
@@ -273,25 +281,33 @@
             </div>
             {#if selectedDogIds.length > 0}
               <p class="text-xs text-muted-foreground">
-                {selectedDogIds.length} dog{selectedDogIds.length !== 1 ? "s" : ""} selected
+                {selectedDogIds.length} dog{selectedDogIds.length !== 1
+                  ? "s"
+                  : ""} selected
               </p>
             {/if}
           {:else}
             <div class="rounded-lg border border-dashed p-4 text-center">
               <PawPrint class="size-8 mx-auto mb-2 text-muted-foreground" />
-              <p class="text-sm text-muted-foreground mb-2">No dogs on your profile yet.</p>
+              <p class="text-sm text-muted-foreground mb-2">
+                No dogs on your profile yet.
+              </p>
               <a
                 href="/profile"
                 class="text-sm text-primary font-medium hover:underline"
-                target="_blank"
-              >Add your dogs to your profile →</a>
+                target="_blank">Add your dogs to your profile →</a
+              >
             </div>
           {/if}
         </div>
 
         <!-- Additional breeds (for dogs not on profile) -->
         <div class="space-y-2">
-          <Label>Additional dog breeds <span class="text-xs text-muted-foreground font-normal">(optional)</span></Label>
+          <Label
+            >Additional dog breeds <span
+              class="text-xs text-muted-foreground font-normal">(optional)</span
+            ></Label
+          >
           <div class="flex flex-col gap-2">
             <Select.Root type="multiple" bind:value={dogBreeds}>
               <Select.Trigger
@@ -307,7 +323,9 @@
                           onclick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            dogBreeds = dogBreeds.filter((n) => n !== breedName);
+                            dogBreeds = dogBreeds.filter(
+                              (n) => n !== breedName,
+                            );
                           }}
                           class="cursor-pointer z-50 ml-1 rounded-full"
                         >
@@ -316,7 +334,9 @@
                       </Badge>
                     {/each}
                   {:else}
-                    <span class="text-muted-foreground flex-1 text-sm">e.g., Golden Retriever</span>
+                    <span class="text-muted-foreground flex-1 text-sm"
+                      >e.g., Golden Retriever</span
+                    >
                   {/if}
                 </div>
               </Select.Trigger>
@@ -328,28 +348,38 @@
                 />
                 <Select.Group>
                   <Select.Label>
-                    Dog Breeds ({filteredBreeds().length} available) — {dogBreeds.length}/6 selected
+                    Dog Breeds ({filteredBreeds().length} available) — {dogBreeds.length}/6
+                    selected
                   </Select.Label>
                   {#if breeds.isLoading}
                     <div class="flex items-center justify-center p-4">
-                      <LoaderCircle class="size-5 animate-spin text-muted-foreground" />
-                      <span class="ml-2 text-sm text-muted-foreground">Loading breeds...</span>
+                      <LoaderCircle
+                        class="size-5 animate-spin text-muted-foreground"
+                      />
+                      <span class="ml-2 text-sm text-muted-foreground"
+                        >Loading breeds...</span
+                      >
                     </div>
                   {:else if breeds.isError}
-                    <div class="p-4 text-sm text-destructive">Failed to load breeds</div>
+                    <div class="p-4 text-sm text-destructive">
+                      Failed to load breeds
+                    </div>
                   {:else if filteredBreeds().length > 0}
                     {#each filteredBreeds() as breed}
                       <Select.Item
                         value={breed}
                         label={breed}
-                        disabled={dogBreeds.length >= 6 && !dogBreeds.includes(breed)}
+                        disabled={dogBreeds.length >= 6 &&
+                          !dogBreeds.includes(breed)}
                         class="cursor-pointer"
                       >
                         {breed}
                       </Select.Item>
                     {/each}
                   {:else}
-                    <div class="p-4 text-sm text-muted-foreground">No breeds found</div>
+                    <div class="p-4 text-sm text-muted-foreground">
+                      No breeds found
+                    </div>
                   {/if}
                 </Select.Group>
               </Select.Content>

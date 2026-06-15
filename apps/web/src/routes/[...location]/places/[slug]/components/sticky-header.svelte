@@ -46,7 +46,7 @@
 
 {#if showStickyHeader}
   <div
-    class="sticky top-0 w-full border-b border-gray-200 bg-white shadow-lg backdrop-blur-sm dark:border-white/10 dark:bg-gray-900/95 {modalOpen
+    class="sticky top-0 w-full border-b border-border bg-background shadow-lg backdrop-blur-sm {modalOpen
       ? 'z-0'
       : 'z-30'}"
   >
@@ -72,7 +72,7 @@
               class={classNames(
                 currentTab === tab.name
                   ? "border-primary text-primary"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                  : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
                 "whitespace-nowrap border-b-2 px-1 py-4 text-sm",
               )}>{tab.name}</a
             >

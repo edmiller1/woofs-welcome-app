@@ -168,8 +168,8 @@
         variant="small"
       />
     {:else}
-      <div class="flex h-52 w-72 items-center justify-center bg-gray-200">
-        <span class="text-gray-500">No images available</span>
+      <div class="flex h-52 w-72 items-center justify-center bg-muted">
+        <span class="text-muted-foreground">No images available</span>
       </div>
     {/if}
 
@@ -225,7 +225,7 @@
                   "size-6",
                   activePlace.isSaved
                     ? "fill-rose-500 text-rose-500"
-                    : "text-gray-600",
+                    : "text-muted-foreground",
                 )}
               />
             </Button>
@@ -298,7 +298,7 @@
       <div class="absolute left-2 top-[45%] z-20">
         <button
           onclick={prevImage}
-          class="cursor-pointer rounded-full bg-white/80 p-1 text-gray-800 shadow transition-all hover:bg-white focus:outline-none"
+          class="cursor-pointer rounded-full bg-white/80 p-1 text-foreground shadow transition-all hover:bg-white focus:outline-none"
           aria-label="Previous image"
         >
           <ChevronLeft class="size-4" />
@@ -310,7 +310,7 @@
       <div class="absolute right-2 top-[45%] z-20">
         <button
           onclick={nextImage}
-          class="cursor-pointer rounded-full bg-white/80 p-1 text-gray-800 shadow transition-all hover:bg-white focus:outline-none"
+          class="cursor-pointer rounded-full bg-white/80 p-1 text-foreground shadow transition-all hover:bg-white focus:outline-none"
           aria-label="Next image"
         >
           <ChevronRight class="size-4" />

@@ -64,7 +64,7 @@
           new Date().toLocaleDateString("en-AU", { weekday: "long" })}
         <div
           class="flex justify-between p-2 rounded-lg {isToday
-            ? 'bg-secondary-container/60 font-bold border border-secondary-container/20'
+            ? 'bg-primary/30 font-bold'
             : ''}"
         >
           <span class="text-text-subtle">{day.day}</span>

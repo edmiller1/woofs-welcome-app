@@ -63,7 +63,7 @@
       <button
         {...props}
         aria-label="Notifications"
-        class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+        class="cursor-pointer p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors"
       >
         <Bell />
       </button>
@@ -99,7 +99,7 @@
               : ''}"
           >
             <div
-              class="size-12 rounded-full bg-[#eee7e5] flex items-center justify-center text-primary shrink-0"
+              class="size-12 rounded-full bg-muted flex items-center justify-center text-primary shrink-0"
             >
               <Icon />
             </div>

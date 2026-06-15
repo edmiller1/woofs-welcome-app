@@ -67,7 +67,7 @@
 <div
   class={cn(
     "rounded-lg p-6 shadow-xs",
-    highlighted ? "border border-primary bg-primary/5" : "bg-[#f7f3f0]",
+    highlighted ? "border border-primary bg-primary/5" : "bg-muted",
   )}
 >
   <div class="mb-4 flex items-start gap-4">

@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { loading } from "$lib/auth/stores";
   import { api } from "$lib/api-helper";
   import ErrorBoundary from "$lib/components/error-boundary.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Skeleton } from "$lib/components/ui/skeleton";
   import { cn } from "$lib/utils";
-  import { Flag, ThumbsUp, PenLine, X } from "@lucide/svelte";
+  import { Flag, PenLine, X } from "@lucide/svelte";
   import { createQuery } from "@tanstack/svelte-query";
   import * as Avatar from "$lib/components/ui/avatar/index.js";
   import { buildImageUrl } from "@woofs/image-config";

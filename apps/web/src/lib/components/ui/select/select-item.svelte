@@ -1,7 +1,7 @@
 <script lang="ts">
-  import CheckIcon from "@lucide/svelte/icons/check";
   import { Select as SelectPrimitive } from "bits-ui";
   import { cn, type WithoutChild } from "$lib/utils.js";
+  import CheckIcon from "@lucide/svelte/icons/check";
 
   let {
     ref = $bindable(null),
@@ -18,7 +18,7 @@
   {value}
   data-slot="select-item"
   class={cn(
-    "cursor-pointer data-highlighted:bg-stone-200 data-highlighted:text-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full items-center gap-2 rounded-sm py-1.5 ps-2 pe-8 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+    "hover:bg-muted focus:bg-muted data-highlighted:bg-muted not-data-[variant=destructive]:focus:**:text-foreground gap-2.5 rounded-xl hover:rounded-md mx-2 py-2 pr-8 pl-3 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 data-highlighted:text-foreground focus:text-foreground relative flex w-full cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     className,
   )}
   {...restProps}
@@ -26,13 +26,15 @@
   {#snippet children({ selected, highlighted })}
     <span class="absolute end-2 flex size-3.5 items-center justify-center">
       {#if selected}
-        <CheckIcon class="size-4" />
+        <CheckIcon class="cn-select-item-indicator-icon" />
       {/if}
     </span>
-    {#if childrenProp}
-      {@render childrenProp({ selected, highlighted })}
-    {:else}
-      {label || value}
-    {/if}
+    <span class="flex flex-1 gap-2 shrink-0 whitespace-nowrap">
+      {#if childrenProp}
+        {@render childrenProp({ selected, highlighted })}
+      {:else}
+        {label || value}
+      {/if}
+    </span>
   {/snippet}
 </SelectPrimitive.Item>

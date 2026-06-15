@@ -7,13 +7,13 @@
   const isNotFound = $derived(status === 404);
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-[#fdf9f6] p-8">
+<div class="flex min-h-screen flex-col items-center justify-center bg-background p-8">
   <div class="mx-auto max-w-md text-center">
     <div class="mb-6">
-      <span class="text-8xl font-bold text-rose-200">{status}</span>
+      <span class="text-8xl font-bold text-muted-foreground">{status}</span>
     </div>
 
-    <h1 class="mb-3 text-2xl font-bold text-gray-900">
+    <h1 class="mb-3 text-2xl font-bold text-foreground">
       {#if isNotFound}
         Page not found
       {:else}

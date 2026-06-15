@@ -269,7 +269,7 @@
             onValueChange={() => (page = 1)}
           >
             <Select.Trigger
-              class="h-8 text-xs border-none shadow-none text-primary-tint gap-1.5 pl-2 pr-3 rounded-full hover:bg-gray-100 w-auto"
+              class="h-8 text-xs border-none shadow-none text-primary gap-1.5 pl-2 pr-3 rounded-full hover:bg-muted w-auto"
             >
               <ArrowUpDown class="size-3" />
               {#if sortBy === "name_asc"}Name A–Z

@@ -136,7 +136,7 @@
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class="hidden bg-white rounded-full hover:bg-white/90 p-2 md:flex"
+          class="flex bg-white rounded-full hover:bg-white/90 p-2"
           ><Heart class="size-4" />
         </a>
       {/if}

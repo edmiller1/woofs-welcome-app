@@ -773,4 +773,40 @@ export class LocationService {
       });
     }
   }
+
+  async getDirectory(opts: {
+    type: "country" | "island" | "region" | "city";
+    letter?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    try {
+      const { type, letter, page = 1, limit = 100 } = opts;
+      const offset = (page - 1) * limit;
+
+      const conditions = [eq(Location.type, type)];
+      if (letter) {
+        conditions.push(sql`lower(${Location.name}) like ${letter.toLowerCase() + "%"}`);
+      }
+
+      const [rows, countRows] = await Promise.all([
+        this.db
+          .select({ name: Location.name, path: Location.path, countryCode: Location.countryCode })
+          .from(Location)
+          .where(and(...conditions))
+          .orderBy(asc(sql`lower(${Location.name})`))
+          .limit(limit)
+          .offset(offset),
+        this.db
+          .select({ total: count() })
+          .from(Location)
+          .where(and(...conditions)),
+      ]);
+
+      return { locations: rows, total: countRows[0]?.total ?? 0, page, limit };
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new DatabaseError("Failed to get directory", { originalError: error });
+    }
+  }
 }

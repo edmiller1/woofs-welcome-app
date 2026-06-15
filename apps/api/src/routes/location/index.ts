@@ -14,6 +14,21 @@ locationRouter.get("/featured", async (c) => {
   return c.json(result, 200);
 });
 
+locationRouter.get("/directory", async (c) => {
+  const db = c.get("db");
+  const env = c.get("env");
+  const imageUploadService = new ImageUploadService(db, env);
+  const locationService = new LocationService(db, imageUploadService);
+
+  const type = (c.req.query("type") ?? "country") as "country" | "island" | "region" | "city";
+  const letter = c.req.query("letter") ?? undefined;
+  const page = Number(c.req.query("page") ?? "1");
+  const limit = Number(c.req.query("limit") ?? "100");
+
+  const result = await locationService.getDirectory({ type, letter, page, limit });
+  return c.json(result, 200);
+});
+
 // Location route: /location/:path (catch-all)
 // Example: /location/new-zealand/canterbury/christchurch
 // Example: /location/new-zealand/canterbury/christchurch/places?placeSort=popular

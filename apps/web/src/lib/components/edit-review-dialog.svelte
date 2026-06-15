@@ -52,6 +52,7 @@
   const profileDogs = createQuery<Dog[]>(() => ({
     queryKey: ["profileDogs"],
     queryFn: api.profile.getProfileDogs,
+    enabled: open,
   }));
 
   const toCalendarDate = (date: Date | string): CalendarDate => {

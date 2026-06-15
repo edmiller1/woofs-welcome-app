@@ -200,9 +200,9 @@
         {#if place.data.memberFavourite}
           <div class="absolute top-20 left-6">
             <span
-              class="bg-tertiary-dim text-secondary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+              class="bg-orange-500 text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
             >
-              <Star class="size-3 text-secondary fill-secondary" /> MEMBER FAVORITE
+              <Star class="size-3 text-foreground fill-foreground" /> MEMBER FAVORITE
             </span>
           </div>
         {/if}
@@ -447,16 +447,16 @@
               <h1 class="text-4xl md:text-6xl font-headline font-bold mb-4">
                 {place.data.name}
               </h1>
-              <div class="flex items-center gap-2 text-secondary mb-4">
+              <div class="flex items-center gap-2 mb-4">
                 <span class="flex items-center">
-                  <MapPin class="size-4 text-secondary" />
+                  <MapPin class="size-4" />
                   <span class="ml-1"
                     >{place.data.location.name}, {place.data.region.name}</span
                   >
                 </span>
                 <span>•</span>
                 <span class="flex items-center">
-                  <Star class="size-4 text-secondary fill-secondary mr-1" />
+                  <Star class="size-4 text-primary fill-primary mr-1" />
                   <span class="font-bold"
                     >{Number(place.data.rating).toFixed(1)}</span
                   >
@@ -465,8 +465,7 @@
                   >
                 </span>
                 <span>•</span>
-                <span
-                  class="font-label-md px-2 py-0.5 bg-secondary/10 rounded-lg"
+                <span class="font-label-md px-2 py-0.5 bg-input rounded-lg"
                   >$$</span
                 >
               </div>
@@ -489,7 +488,7 @@
                     <li
                       class="flex items-center gap-2 mb-2 text-base font-medium"
                     >
-                      <CircleCheck class="size-5 text-primary-tint hrink-0" />
+                      <CircleCheck class="size-5 text-primary hrink-0" />
                       {amenity}
                     </li>
                   {/each}
@@ -513,7 +512,9 @@
                         >
                         <div class="flex">
                           {#each Array.from({ length: Number(Math.round(place.data.rating)) }, (_, i) => i + 1) as star}
-                            <Star class="size-4 fill-primary-tint mr-1" />
+                            <Star
+                              class="size-4 fill-primary text-primary mr-1"
+                            />
                           {/each}
                         </div>
                       </div>
@@ -685,6 +686,7 @@
       onOpenChange={(open) => (reviewDrawerOpen = open)}
       placeId={place.data.id}
       placeName={place.data.name}
+      {user}
     />
     {#if coordinates() !== null}
       {@const coords = coordinates()}

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import TabsList from "./../../lib/components/ui/tabs/tabs-list.svelte";
   import Navbar from "$lib/components/navbar.svelte";
   import { MapLibre, NavigationControl } from "svelte-maplibre-gl";
   import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
@@ -85,8 +84,8 @@
     const el = placeMarkers.get(id)?.getElement();
     if (!el) return;
     el.style.background = "white";
-    el.style.color = "#1a1a1a";
-    el.style.borderColor = "#e5e7eb";
+    el.style.color = "var(--foreground)";
+    el.style.borderColor = "var(--border)";
     el.style.zIndex = "";
     const svg = el.querySelector("svg");
     if (svg) {
@@ -274,7 +273,7 @@
       source: "places",
       filter: ["has", "point_count"],
       paint: {
-        "circle-color": "#1a1a1a",
+        "circle-color": "oklch(0.4784 0.0411 175.5933)",
         "circle-radius": ["step", ["get", "point_count"], 18, 10, 24, 50, 30],
       },
     });
@@ -425,13 +424,13 @@
       const el = document.createElement("div");
       el.style.cssText = [
         "background:white",
-        "color:#1a1a1a",
+        "color:var(--foreground)",
         "border-radius:8px",
         "padding:5px 10px",
         "font-size:12px",
         "font-weight:700",
         "box-shadow:0 2px 8px rgba(0,0,0,0.18)",
-        "border:1.5px solid #e5e7eb",
+        "border:1.5px solid var(--border)",
         "cursor:pointer",
         "white-space:nowrap",
         "display:flex",
@@ -875,7 +874,7 @@
         {#if hasActiveFilters}
           <button
             onclick={clearAllFilters}
-            class="shrink-0 cursor-pointer bg-gray-100 rounded-full border border-input px-3 py-1.5 text-sm whitespace-nowrap shadow-sm"
+            class="shrink-0 cursor-pointer bg-muted rounded-full border border-input px-3 py-1.5 text-sm whitespace-nowrap shadow-sm"
           >
             Clear all
           </button>
@@ -904,7 +903,7 @@
             </div>
             <button
               onclick={() => (listCollapsed = !listCollapsed)}
-              class="rounded-full border p-2 cursor-pointer bg-gray-100 hover:bg-gray-200 shrink-0 ml-auto"
+              class="rounded-full border p-2 cursor-pointer bg-muted hover:bg-secondary shrink-0 ml-auto"
             >
               <ChevronUp
                 class={cn(
@@ -1068,11 +1067,11 @@
         class="flex items-center gap-2 bg-primary text-white rounded-full px-5 py-3 font-semibold shadow-xl cursor-pointer"
       >
         {#if listCollapsed}
-          <MapIcon class="size-4" />
-          Map
-        {:else}
           <List class="size-4" />
           List
+        {:else}
+          <MapIcon class="size-4" />
+          Map
         {/if}
       </button>
     </div>
@@ -1089,7 +1088,7 @@
       <Popover.Root bind:open={distanceOpen}>
         <Popover.Trigger
           class={cn(
-            "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-gray-50 px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+            "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
             distanceOpen && "text-accent-foreground",
           )}
           >{appliedDistanceFilter === null
@@ -1139,7 +1138,7 @@
         bind:open={ratingOpen}
         onValueChange={() => syncUrl()}
       >
-        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-gray-50"
+        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-muted"
           ><div class="flex items-center gap-2">
             {#if ratingFilter}<Star
                 class="size-4 fill-yellow-400 text-yellow-400"
@@ -1192,7 +1191,7 @@
         bind:open={typesOpen}
         onValueChange={() => syncUrl()}
       >
-        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-gray-50"
+        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-muted"
           >{typeContent}
         </Select.Trigger>
         <Select.Content class="h-64">
@@ -1223,7 +1222,7 @@
           bind:open={difficultyOpen}
         >
           <Select.Trigger
-            class="capitalize w-36 bg-white cursor-pointer hover:bg-gray-50"
+            class="capitalize w-36 bg-white cursor-pointer hover:bg-muted"
             >{difficultyContent}
           </Select.Trigger>
           <Select.Content>
@@ -1254,7 +1253,7 @@
         <Popover.Root bind:open={lengthOpen}>
           <Popover.Trigger
             class={cn(
-              "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-gray-50 px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
               lengthOpen && "text-accent-foreground",
             )}
             >{appliedLengthFilter === null
@@ -1304,7 +1303,7 @@
       {#if hasActiveFilters}
         <button
           onclick={clearAllFilters}
-          class="cursor-pointer bg-white border border-input rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-50 shadow-xs whitespace-nowrap"
+          class="cursor-pointer bg-white border border-input rounded-md px-3 py-2 text-sm font-medium hover:bg-muted shadow-xs whitespace-nowrap"
         >
           Clear all
         </button>
@@ -1312,7 +1311,7 @@
       <div class="absolute top-2 right-0">
         <button
           onclick={getCurrentLocation}
-          class="rounded-full p-4 hover:bg-gray-50 cursor-pointer bg-white border-input shadow-xl"
+          class="rounded-full p-4 hover:bg-muted cursor-pointer bg-white border-input shadow-xl"
           ><Navigation class="size-5" /></button
         >
       </div>
@@ -1321,7 +1320,7 @@
           <Tooltip.Trigger>
             <button
               onclick={toggleMapStyle}
-              class="rounded-full p-4 hover:bg-gray-50 cursor-pointer bg-white border-input shadow-xl"
+              class="rounded-full p-4 hover:bg-muted cursor-pointer bg-white border-input shadow-xl"
             >
               {#if streetsMap}
                 <TentTree class="size-5" />
@@ -1332,7 +1331,7 @@
           </Tooltip.Trigger>
           <Tooltip.Content
             side="bottom"
-            class="bg-white text-sm rounded-lg shadow-xl"
+            class="bg-white text-sm text-foreground rounded-lg shadow-xl"
           >
             {#if streetsMap}
               <p>Switch to Outdoors map</p>

@@ -118,7 +118,7 @@
     validPlaces.forEach((place) => {
       const el = document.createElement("div");
       el.innerHTML = `
-        <div style="background:white;color:black;border-radius:9999px;padding:2px 8px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid #e5e7eb;cursor:pointer;transition:background 0.15s,color 0.15s;white-space:nowrap;">
+        <div style="background:white;color:var(--foreground);border-radius:9999px;padding:2px 8px;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid var(--border);cursor:pointer;transition:background 0.15s,color 0.15s;white-space:nowrap;">
           ★ ${place.rating ? Number(place.rating).toFixed(1) : "N/A"}
         </div>
       `;

@@ -18,7 +18,7 @@
   const row2 = $derived(featuredLocations.slice(2, 4));
 </script>
 
-<div class="bg-surface min-h-screen text-on-surface">
+<div class="bg-background min-h-screen">
   <HomeNavbar {user} />
 
   <main class="pt-18 pb-16">
@@ -41,9 +41,7 @@
         <h1
           class="font-headline text-5xl md:text-[48px] md:leading-14 font-extrabold text-on-surface tracking-tight"
         >
-          Adventure is better with <span class="text-primary-container"
-            >four paws.</span
-          >
+          Adventure is better with <span class="text-primary">four paws.</span>
         </h1>
         <p class="font-body text-lg leading-7 text-on-surface-variant">
           Discover thousands of verified dog-friendly trails, hidden parks, and
@@ -52,16 +50,16 @@
         <div class="flex flex-col sm:flex-row gap-2 pt-6">
           <a
             href="/explore"
-            class="px-16 py-3 text-center bg-primary-container text-on-primary-container font-headline font-bold text-base rounded-full shadow-lg active:scale-95 transition-transform duration-200 cursor-pointer"
+            class="px-16 py-3 text-center bg-primary hover:bg-primary/90 text-white font-headline font-bold text-base rounded-full shadow-lg active:scale-95 transition-transform duration-200 cursor-pointer"
           >
             Start Exploring
           </a>
-          <a
+          <!-- <a
             href="/community"
-            class="px-16 py-3 text-center border-2 border-secondary text-secondary font-headline font-bold text-base rounded-full hover:bg-secondary/10 transition-colors cursor-pointer"
+            class="px-16 py-3 text-center border-2 border-primary text-primary font-headline font-bold text-base rounded-full hover:bg-primary/10 transition-colors cursor-pointer"
           >
             Community
-          </a>
+          </a> -->
         </div>
       </div>
     </section>
@@ -200,8 +198,8 @@
     </section>
 
     <!-- Popular Places -->
-    <section class="bg-surface-container-low py-16 px-5 md:px-12">
-      <div class="max-w-7xl mx-auto space-y-10">
+    <section class="py-16 px-5 md:px-12">
+      <div class="max-w-full mx-auto space-y-10">
         <div class="flex justify-between items-end">
           <div class="space-y-1">
             <h2
@@ -257,11 +255,11 @@
     <!-- App CTA Section -->
     <section class="py-16 px-5 md:px-12 overflow-hidden">
       <div
-        class="max-w-7xl mx-auto bg-secondary text-on-secondary rounded-[40px] p-10 md:p-16 relative flex flex-col md:flex-row items-center gap-16"
+        class="max-w-7xl mx-auto bg-primary rounded-[40px] p-10 md:p-16 relative flex flex-col md:flex-row items-center gap-16"
       >
         <div class="flex-1 space-y-6 z-10">
           <span
-            class="bg-primary-container text-on-primary-container px-6 py-1 rounded-full font-label text-sm font-semibold uppercase tracking-wider"
+            class="bg-orange-500 text-foreground px-6 py-1 rounded-full font-label text-sm font-semibold uppercase tracking-wider"
             >Coming Soon</span
           >
           <h2
@@ -269,7 +267,7 @@
           >
             Adventure in your pocket.
           </h2>
-          <p class="font-body text-lg leading-7 opacity-80">
+          <p class="font-body text-lg text-white leading-7 opacity-80">
             Download the Woofs Welcome app for on the go adventures.
           </p>
           <div class="flex flex-wrap gap-6 pt-3">

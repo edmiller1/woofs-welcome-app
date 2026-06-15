@@ -135,7 +135,7 @@
       class="not-dark:hidden mx-auto h-10 w-auto"
     />
     <h2
-      class="mt-10 text-center text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+      class="mt-10 text-center text-lg font-bold tracking-tight text-foreground"
     >
       Let's finish setting up your profile
     </h2>
@@ -174,7 +174,7 @@
         {:else}
           <Label class="text-sm/6">Add Profile Image (Optional)</Label>
           <div
-            class="bg-muted mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25"
+            class="bg-muted mt-2 flex justify-center rounded-lg border border-dashed border-border px-6 py-10"
             ondragover={handleDragOver}
             ondrop={handleDrop}
             role="button"
@@ -183,7 +183,7 @@
           >
             <div class="text-center">
               <ImagePlus class="text-muted-foreground mx-auto h-12 w-12" />
-              <div class="mt-4 flex text-sm/6 text-gray-600 dark:text-gray-400">
+              <div class="mt-4 flex text-sm/6 text-muted-foreground">
                 <label
                   for="file-upload"
                   class="text-primary focus-within:outline-primary hover:text-primary/90 dark:text-primary relative cursor-pointer font-semibold"

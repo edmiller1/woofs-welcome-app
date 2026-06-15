@@ -22,14 +22,14 @@
             <Breadcrumb.Page
               class={location
                 ? "text-white font-bold"
-                : "text-on-surface font-bold"}>{item.name}</Breadcrumb.Page
+                : "text-primary font-bold"}>{item.name}</Breadcrumb.Page
             >
           {/if}
         {:else}
           <Breadcrumb.Link
             class={location
               ? "text-white/80 hover:text-white"
-              : "text-on-surface-variant hover:text-on-surface"}
+              : "text-foreground"}
             href="/location/{item.path}">{item.name}</Breadcrumb.Link
           >
         {/if}

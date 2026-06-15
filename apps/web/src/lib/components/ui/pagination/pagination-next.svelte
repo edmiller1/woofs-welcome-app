@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Pagination as PaginationPrimitive } from "bits-ui";
-	import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
-	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils.js";
+	import { buttonVariants } from "$lib/components/ui/button/index.js";
+	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 
 	let {
 		ref = $bindable(null),
@@ -15,15 +15,12 @@
 	bind:ref
 	aria-label="Go to next page"
 	class={cn(
-		buttonVariants({
-			size: "default",
-			variant: "ghost",
-			class: "gap-1 px-2.5 sm:pe-2.5",
-		}),
+		buttonVariants({ variant: "ghost", size: "default" }),
+		"pr-2!",
 		className
 	)}
 	{...restProps}
 >
-	<span class="hidden sm:block">Next</span>
-	<ChevronRightIcon /></PaginationPrimitive.NextButton
->
+	<span class="cn-pagination-next-text hidden sm:block">Next</span>
+	<ChevronRightIcon data-icon="inline-end" />
+</PaginationPrimitive.NextButton>

@@ -68,32 +68,26 @@
 </script>
 
 <header
-  class="top-0 z-50 w-full bg-[#fcf9f5]/70 backdrop-blur-md border-b border-border-subtle/20"
+  class="top-0 z-50 w-full bg-background/70 backdrop-blur-md border-b border-border/20"
 >
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
-      <a
-        class="hidden lg:block text-2xl font-headline font-bold text-primary-tint"
-        href="/"
+      <a class="hidden lg:block text-2xl font-bold text-primary" href="/"
         >Woofs Welcome
       </a>
-      <a
-        href="/"
-        class="lg:hidden text-2xl font-headline font-bold text-primary-tint"
-        >WW</a
-      >
+      <a href="/" class="lg:hidden text-2xl font-bold text-primary">WW</a>
       <nav class="flex gap-6 items-center">
         <a
-          class="font-body font-medium hover:text-primary-tint transition-colors {exploreActive
-            ? 'text-primary-tint font-semibold'
-            : 'text-stone-600'}"
+          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
+            ? 'text-primary font-semibold'
+            : 'text-muted-foreground'}"
           href="/explore">Explore</a
         >
         <!-- <a
           class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
-            ? 'text-primary-tint font-semibold'
-            : 'text-stone-600'}"
+            ? 'text-primary font-semibold'
+            : 'text-muted-foreground'}"
           href="/community">Community</a
         > -->
       </nav>
@@ -117,7 +111,7 @@
     class="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden w-full px-4 py-3"
   >
     <div class="flex items-center">
-      <a href="/" class="text-2xl font-headline italic font-bold text-[#154212]"
+      <a href="/" class="text-2xl font-headline italic font-bold text-primary"
         >WW</a
       >
     </div>
@@ -138,7 +132,7 @@
       {#each types as type}
         <a
           href={type.href}
-          class="hover:bg-secondary hover:text-white flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+          class="hover:bg-primary hover:text-white flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
         >
           <type.icon class="size-4" />
           <span class=" text-sm font-medium">{type.name}</span>

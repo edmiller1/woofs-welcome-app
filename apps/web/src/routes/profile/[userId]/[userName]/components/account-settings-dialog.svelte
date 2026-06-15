@@ -394,16 +394,16 @@
 
               {#each Object.entries(emailGrouped) as [category, settings]}
                 <div class="mb-6">
-                  <h3 class="mb-3 text-sm font-medium text-gray-500">
+                  <h3 class="mb-3 text-sm font-medium text-muted-foreground">
                     {category}
                   </h3>
                   <div class="space-y-4">
                     {#each settings as setting}
                       <div
-                        class="flex items-start justify-between border-b border-gray-100 pb-4 last:border-0"
+                        class="flex items-start justify-between border-b border-border pb-4 last:border-0"
                       >
                         <div class="max-w-2xl space-y-1">
-                          <h4 class="text-sm font-medium text-gray-900">
+                          <h4 class="text-sm font-medium text-foreground">
                             {setting.title}
                           </h4>
                           <p class="text-muted-foreground text-xs">
@@ -437,16 +437,16 @@
 
               {#each Object.entries(pushGrouped) as [category, settings]}
                 <div class="mb-6">
-                  <h3 class="mb-3 text-sm font-medium text-gray-500">
+                  <h3 class="mb-3 text-sm font-medium text-muted-foreground">
                     {category}
                   </h3>
                   <div class="space-y-4">
                     {#each settings as setting}
                       <div
-                        class="flex items-start justify-between border-b border-gray-100 pb-4 last:border-0"
+                        class="flex items-start justify-between border-b border-border pb-4 last:border-0"
                       >
                         <div class="max-w-2xl space-y-1">
-                          <h4 class="text-sm font-medium text-gray-900">
+                          <h4 class="text-sm font-medium text-foreground">
                             {setting.title}
                           </h4>
                           <p class="text-muted-foreground text-xs">

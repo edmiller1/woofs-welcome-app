@@ -63,18 +63,16 @@
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Countries</a>
+          <a class="hover:text-primary transition-colors" href="/directory?tab=countries">Countries</a>
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Regions</a>
+          <a class="hover:text-primary transition-colors" href="/directory?tab=regions&letter=A">Regions</a>
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Cities</a>
+          <a class="hover:text-primary transition-colors" href="/directory?tab=cities&letter=A">Cities</a>
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#"
-            >Place types</a
-          >
+          <a class="hover:text-primary transition-colors" href="/directory?tab=place-types">Place types</a>
         </li>
       </ul>
     </div>
@@ -86,18 +84,27 @@
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
-          <a class="hover:text-primary transition-colors" href="#"
-            >Destinations</a
+          <a
+            class="hover:text-primary transition-colors"
+            href="/explore?ltypes=Activity%2CStore%2CService">Retail/Services</a
           >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Stays</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="explore?types=Hotel%2CMotel%2CAirBnb">Stays</a
+          >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Eats</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="/explore?types=Restaurant%2CCafé%2CBar">Eats</a
+          >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="#">Adventures</a
+          <a
+            class="hover:text-primary transition-colors"
+            href="//explore?types=Walk%2CHike%2CTrail">Adventures</a
           >
         </li>
       </ul>
@@ -124,7 +131,8 @@
         </li>
       </ul>
     </div>
-    <div class="md:col-span-4 space-y-4">
+    <!-- TODO: Add language selector, when we have Sherlock i8n complete-->
+    <!-- <div class="md:col-span-4 space-y-4">
       <select
         class="w-full flex bg-surface rounded-xl overflow-hidden p-2 border border-border-subtle/30"
       >
@@ -135,7 +143,7 @@
         <option>German</option>
         <option>Chinese</option>
       </select>
-    </div>
+    </div> -->
   </div>
   <div
     class="max-w-7xl mx-auto px-8 mt-20 pt-8 border-t border-border-subtle/20 flex flex-col md:flex-row justify-between items-center gap-4"

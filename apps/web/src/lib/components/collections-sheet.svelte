@@ -23,7 +23,7 @@
   <Sheet.Trigger>
     <button
       aria-label="My collections"
-      class="cursor-pointer p-2 text-stone-600 hover:bg-stone-200 rounded-full transition-colors"
+      class="cursor-pointer p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors"
     >
       <Bookmark />
     </button></Sheet.Trigger
@@ -46,10 +46,10 @@
         {#each Array(4) as _}
           <div class="space-y-3">
             <div
-              class="h-48 w-full rounded-xl bg-stone-200 animate-pulse"
+              class="h-48 w-full rounded-xl bg-muted animate-pulse"
             ></div>
-            <div class="h-5 w-2/3 rounded-md bg-stone-200 animate-pulse"></div>
-            <div class="h-4 w-1/4 rounded-md bg-stone-200 animate-pulse"></div>
+            <div class="h-5 w-2/3 rounded-md bg-muted animate-pulse"></div>
+            <div class="h-4 w-1/4 rounded-md bg-muted animate-pulse"></div>
           </div>
         {/each}
       {:else if collections.isError}

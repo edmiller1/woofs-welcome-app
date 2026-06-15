@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Slider as SliderPrimitive } from "bits-ui";
-  import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
+	import { Slider as SliderPrimitive } from "bits-ui";
+	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
 
-  let {
-    ref = $bindable(null),
-    value = $bindable(),
-    orientation = "horizontal",
-    class: className,
-    ...restProps
-  }: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
+	let {
+		ref = $bindable(null),
+		value = $bindable(),
+		orientation = "horizontal",
+		class: className,
+		...restProps
+	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
 </script>
 
 <!--
@@ -16,27 +16,37 @@ Discriminated Unions + Destructing (required for bindable) do not
 get along, so we shut typescript up by casting `value` to `never`.
 -->
 <SliderPrimitive.Root
-  bind:ref
-  bind:value={value as never}
-  data-slot="slider"
-  {orientation}
-  class={cn(
-    "data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
-    className,
-  )}
-  {...restProps}
+	bind:ref
+	bind:value={value as never}
+	data-slot="slider"
+	{orientation}
+	class={cn(
+		"data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
+		className
+	)}
+	{...restProps}
 >
-  {#snippet children({ thumbItems })}
-    <span
-      class="relative h-2 w-full grow cursor-pointer overflow-hidden rounded-full bg-gray-200"
-    >
-      <SliderPrimitive.Range class="absolute h-full bg-gray-900" />
-    </span>
-    {#each thumbItems as thumb (thumb.index)}
-      <SliderPrimitive.Thumb
-        index={thumb.index}
-        class="block size-5 cursor-pointer rounded-full border border-gray-300 bg-white shadow-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-      />
-    {/each}
-  {/snippet}
+	{#snippet children({ thumbItems })}
+		<span
+			data-slot="slider-track"
+			data-orientation={orientation}
+			class={cn(
+				"bg-muted rounded-4xl data-horizontal:h-3 data-horizontal:w-full data-vertical:h-full data-vertical:w-3 bg-muted relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"
+			)}
+		>
+			<SliderPrimitive.Range
+				data-slot="slider-range"
+				class={cn(
+					"bg-primary absolute select-none data-horizontal:h-full data-vertical:w-full"
+				)}
+			/>
+		</span>
+		{#each thumbItems as thumb (thumb.index)}
+			<SliderPrimitive.Thumb
+				data-slot="slider-thumb"
+				index={thumb.index}
+				class="border-primary ring-ring/50 size-4 rounded-4xl border bg-white shadow-sm transition-colors hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+			/>
+		{/each}
+	{/snippet}
 </SliderPrimitive.Root>

@@ -103,23 +103,28 @@
             setApi={(emblaApi) => (carouselApi = emblaApi)}
             class="rounded-xl"
           >
-            <div class="relative cursor-pointer">
-              <Carousel.Content>
+            <div class="relative aspect-[1.21] cursor-pointer">
+              <Carousel.Content class="absolute inset-0">
                 {#each images as image}
-                  <Carousel.Item>
-                    <div class="relative aspect-[1.21]">
-                      <OptimizedImage
-                        imageId={image}
-                        alt={name}
-                        class="h-full w-full rounded-lg object-cover"
-                        variant="small"
-                        height="100%"
-                      />
-                    </div>
+                  <Carousel.Item class="h-full">
+                    <OptimizedImage
+                      imageId={image}
+                      alt={name}
+                      class="h-full w-full rounded-lg object-cover"
+                      variant="small"
+                      height="100%"
+                    />
                   </Carousel.Item>
                 {/each}
               </Carousel.Content>
-              <!-- Indicators -->
+              <Carousel.Previous
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white"
+                onclick={(e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); }}
+              />
+              <Carousel.Next
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-muted"
+                onclick={(e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); }}
+              />
               <div
                 class="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2"
               >
@@ -153,7 +158,7 @@
           <div class="space-y-3 py-2">
             <div class="m-0 flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <h3 class="truncate font-semibold text-secondary">{name}</h3>
+                <h3 class="truncate font-semibold text-foreground">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}
@@ -211,7 +216,7 @@
           <div class="space-y-3 py-2 min-w-0">
             <div class="m-0 flex items-center justify-between min-w-0">
               <div class="flex items-center gap-1 overflow-hidden w-5/6">
-                <h3 class="truncate font-semibold text-secondary">{name}</h3>
+                <h3 class="truncate font-semibold text-foreground">{name}</h3>
                 {#if isVerified}
                   <BadgeCheck class="fill-primary size-4" />
                 {/if}

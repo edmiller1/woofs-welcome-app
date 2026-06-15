@@ -466,7 +466,9 @@
               >
                 {#if items.isLoading}
                   {#each Array(5) as _}
-                    <div class="flex-none w-87.5 aspect-3/4 rounded-xl overflow-hidden">
+                    <div
+                      class="flex-none w-87.5 aspect-3/4 rounded-xl overflow-hidden"
+                    >
                       <Skeleton class="w-full h-full rounded-xl" />
                     </div>
                   {/each}
@@ -485,7 +487,9 @@
                           variant="large"
                         />
                       {:else}
-                        <div class="absolute inset-0 bg-surface-container-high"></div>
+                        <div
+                          class="absolute inset-0 bg-surface-container-high"
+                        ></div>
                       {/if}
                       <div
                         class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8"
@@ -493,9 +497,15 @@
                         <h3 class="text-white font-serif text-3xl mb-2">
                           {child.name}
                         </h3>
-                        <div class="flex items-center gap-2 text-white/80 font-bold text-xs uppercase tracking-widest">
+                        <div
+                          class="flex items-center gap-2 text-white/80 font-bold text-xs uppercase tracking-widest"
+                        >
                           <MapPin class="size-3.5 fill-white/80" />
-                          <span>{child.placeCount} place{child.placeCount === 1 ? "" : "s"}</span>
+                          <span
+                            >{child.placeCount} place{child.placeCount === 1
+                              ? ""
+                              : "s"}</span
+                          >
                         </div>
                       </div>
                     </a>
@@ -510,7 +520,10 @@
       {#if isCity}
         {@render locationCarousel(nearbyLocations, `Nearby cities`)}
       {:else}
-        {@render locationCarousel(childLocations, `Top locations in ${location.data.name}`)}
+        {@render locationCarousel(
+          childLocations,
+          `Top locations in ${location.data.name}`,
+        )}
       {/if}
 
       <!-- Map section -->

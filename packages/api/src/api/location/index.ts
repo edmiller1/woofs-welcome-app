@@ -5,6 +5,7 @@ import { getFeaturedLocations } from "./getFeaturedLocations";
 import { getChildLocations } from "./getChildLocations";
 import { getLocationPhotos } from "./getLocationPhotos";
 import { getNearbyLocations } from "./getNearbyLocations";
+import { getDirectory } from "./getDirectory";
 
 export const location = {
   getLocation,
@@ -14,4 +15,5 @@ export const location = {
   getChildLocations,
   getLocationPhotos,
   getNearbyLocations,
+  getDirectory,
 };

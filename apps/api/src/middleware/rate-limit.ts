@@ -139,7 +139,7 @@ export const readRateLimiter = (redis: Redis) => {
 export const globalRateLimiter = (redis: Redis) => {
   return rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 200,
+    limit: 500,
     standardHeaders: "draft-6",
     keyGenerator: getClientIdentifier,
     store: new RedisStore({ client: redis }),

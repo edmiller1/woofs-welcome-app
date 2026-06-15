@@ -57,7 +57,7 @@
       <Star
         class="{sizeClasses[size]} {star <= displayRating
           ? 'fill-yellow-400 text-yellow-400'
-          : 'text-gray-300'} transition-colors"
+          : 'text-border'} transition-colors"
       />
     </button>
   {/each}
