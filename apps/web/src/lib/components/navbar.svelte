@@ -111,9 +111,7 @@
     class="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden w-full px-4 py-3"
   >
     <div class="flex items-center">
-      <a href="/" class="text-2xl font-headline italic font-bold text-primary"
-        >WW</a
-      >
+      <a href="/" class="text-2xl font-headline font-bold text-primary">WW</a>
     </div>
     <div class="flex items-center">
       <NavbarSearch />

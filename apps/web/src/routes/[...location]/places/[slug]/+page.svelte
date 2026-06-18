@@ -33,6 +33,7 @@
     Map,
     MapPin,
     Maximize2,
+    Pencil,
     Phone,
     Share,
     ShieldAlert,
@@ -183,6 +184,7 @@
     <!-- ===================== MOBILE LAYOUT ===================== -->
     <Navbar {user} />
     <div class="lg:hidden pb-32">
+      <Breadcrumbs items={place.data.breadcrumbs} location={false} />
       <!-- Hero Image -->
       <header class="relative w-full h-99.25 mt-0 overflow-hidden">
         {#if place.data.images[0]}
@@ -197,21 +199,20 @@
         <div
           class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none"
         ></div>
-        {#if place.data.memberFavourite}
-          <div class="absolute top-20 left-6">
+        {#if !place.data.memberFavourite}
+          <div class="absolute top-5 left-6">
             <span
-              class="bg-orange-500 text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+              class="bg-secondary text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
             >
-              <Star class="size-3 text-foreground fill-foreground" /> MEMBER FAVORITE
+              <Star class="size-3 text-foreground fill-foreground" /> MEMBER FAVOURITE
             </span>
           </div>
         {/if}
-        <ImageDrawer images={place.data.images} bind:imagesOpen />
         <div class="absolute top-5 right-5">
           <button
             onclick={openImageDrawer}
             aria-label="View all images"
-            class="bg-white text-secondary px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+            class="bg-white text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
           >
             <Images class="size-4" />
             View all photos
@@ -230,31 +231,31 @@
       </header>
 
       <!-- Main Content -->
-      <main class="px-6 -mt-4 relative z-10 bg-surface pt-8">
+      <main class="px-6 -mt-4 relative z-10 pt-8">
         <section class="px-margin-2">
           <div class="flex justify-between items-start">
             <div>
-              <h2 class="font-semibold text-4xl text-on-surface">
+              <h2 class="font-semibold text-4xl">
                 {place.data.name}
               </h2>
               <div class="flex items-center gap-2 mt-1 text-sm">
                 <span class="flex items-center">
-                  <MapPin class="size-4 text-secondary" />
-                  <span class="text-secondary"
+                  <MapPin class="size-4 text-foreground mr-1" />
+                  <span class="text-foreground"
                     >{place.data.location.name}, {place.data.region.name}</span
                   >
                 </span>
                 <span>•</span>
-                <Star class="size-4 text-secondary fill-secondary" />
-                <span class="font-bold text-secondary"
+                <Star class="size-4 text-foreground fill-foreground" />
+                <span class="font-bold text-foreground"
                   >{Number(place.data.rating).toFixed(1)}</span
                 >
-                <span class="opacity-70"
-                  >({place.data.reviewsCount} reviews)</span
+                <a href="#reviews" class="opacity-70"
+                  >({place.data.reviewsCount} reviews)</a
                 >
                 <span>•</span>
                 <span
-                  class="text-secondary px-2 py-0.5 bg-secondary/10 rounded-lg"
+                  class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
                   >$$</span
                 >
               </div>
@@ -263,16 +264,16 @@
         </section>
         <!-- About -->
         <section class="mt-10">
-          <h2 class="font-headline font-bold text-2xl mb-4">About</h2>
-          <p class="text-text-subtle leading-relaxed text-sm font-body">
+          <h2 class="font-bold text-2xl mb-4">About</h2>
+          <p class=" leading-relaxed text-sm">
             {place.data.description}
           </p>
           <div class="my-6 space-y-3">
-            <h4 class="text-xl font-semibold text-secondary">Amenities</h4>
+            <h4 class="text-xl font-semibold">Amenities</h4>
             <div class="flex flex-wrap gap-2">
               {#each place.data.dogAmenities as amenity}
                 <li class="flex items-center gap-2 mb-2 text-sm font-medium">
-                  <CircleCheck class="size-4 text-primary-tint hrink-0" />
+                  <CircleCheck class="size-4 text-primary hrink-0" />
                   {amenity}
                 </li>
               {/each}
@@ -288,7 +289,7 @@
         <!-- Contact & Location Bento -->
         <section class="grid grid-cols-2 gap-4 mb-10">
           <!-- Address + Map -->
-          <div class="bg-white p-4 rounded-2xl shadow-sm col-span-2">
+          <div class="bg-white p-4 rounded-2xl shadow-sm border col-span-2">
             {#if place.data.address}
               <div class="flex items-center gap-3 mb-3">
                 <div
@@ -310,35 +311,48 @@
             {/if}
             {#if coordinates() !== null}
               {@const coords = coordinates()}
-              <div class="w-full h-64 rounded-xl overflow-hidden">
+              <div class="w-full h-48 rounded-xl overflow-hidden">
                 <PlaceMap
                   lng={coords!.lng}
                   lat={coords!.lat}
                   zoom={14}
                   markerLabel={place.data.name}
-                  className="h-32 z-0"
+                  className="h-48 z-0"
+                  onclick={handleMapOpen}
                 />
               </div>
-              <div class="mt-6 flex items-center justify-center">
+              <div class="mt-3 flex gap-2">
                 <Button
-                  variant="secondary"
-                  class="w-full text-white"
+                  variant="outline"
+                  class="flex-1"
                   onclick={handleMapOpen}
                 >
-                  View Map
                   <Map class="size-4" />
+                  View Map
                 </Button>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${coords!.lat},${coords!.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={buttonVariants({
+                    variant: "default",
+                    class: "flex-1",
+                  })}
+                >
+                  <MapPin class="size-4" />
+                  Get Directions
+                </a>
               </div>
             {/if}
           </div>
           {#if place.data.email}
             <a
               href="mailto:{place.data.email}"
-              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Mail class="text-secondary size-5 mb-2" />
+              <Mail class="text-primary size-5 mb-2" />
               <span
-                class="text-[10px] font-bold uppercase text-secondary tracking-widest"
+                class="text-[10px] font-bold uppercase text-primary tracking-widest"
                 >Email</span
               >
             </a>
@@ -347,11 +361,11 @@
           {#if place.data.phone}
             <a
               href="tel:{place.data.phone}"
-              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 border rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Phone class="text-secondary size-5 mb-2" />
+              <Phone class="text-primary size-5 mb-2" />
               <span
-                class="text-[10px] font-bold uppercase text-secondary tracking-widest"
+                class="text-[10px] font-bold uppercase text-primary tracking-widest"
                 >Phone</span
               >
             </a>
@@ -362,11 +376,11 @@
               href={place.data.website}
               target="_blank"
               rel="noopener noreferrer"
-              class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
             >
-              <Globe class="text-secondary size-5 mb-2" />
+              <Globe class="text-primary size-5 mb-2" />
               <span
-                class="text-[10px] font-bold uppercase text-secondary tracking-widest"
+                class="text-[10px] font-bold uppercase text-primary tracking-widest"
                 >Website</span
               >
             </a>
@@ -376,13 +390,13 @@
         <!-- Rules & Guidelines Card -->
         {#if place.data.dogRules && place.data.dogRules.length > 0}
           <div
-            class="mb-10 bg-primary-tint/10 rounded-3xl border-2 border-dashed border-primary-tint p-4"
+            class="mb-10 bg-primary/10 rounded-3xl border-2 border-dashed border-primary p-4"
           >
-            <div class="flex items-center gap-2 mb-2 text-primary-tint">
+            <div class="flex items-center gap-2 mb-2 text-primaryt">
               <ShieldAlert />
               <h3 class="font-semibold text-xl">Rules</h3>
             </div>
-            <ul class="space-y-3 font-body text-sm text-primary-tint">
+            <ul class="space-y-3 font-body text-sm text-primary">
               {#each place.data.dogRules as rule}
                 <li class="flex gap-2">
                   <span class="font-bold">•</span>
@@ -394,12 +408,12 @@
         {/if}
 
         <!-- Community Reviews -->
-        <section class="mb-10">
+        <section id="reviews" class="mb-10">
           <div class="flex items-center justify-between mb-6">
             <h2 class="font-headline font-bold text-2xl">Community reviews</h2>
             <button
               onclick={() => openReviewDrawer(0)}
-              class="text-primary-tint decoration-primary-tint text-xs font-bold underline"
+              class="text-primary decoration-primary text-xs font-bold underline"
               >Write Review</button
             >
           </div>
@@ -425,7 +439,17 @@
     <div class="hidden lg:block mx-auto w-full max-w-screen-2xl px-8">
       <div class="py-2 lg:flex lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1 mt-1.5">
-          <Breadcrumbs items={place.data.breadcrumbs} location={false} />
+          <div class="flex items-center justify-between">
+            <Breadcrumbs items={place.data.breadcrumbs} location={false} />
+            <span
+              class={cn(
+                buttonVariants({ variant: "link" }),
+                "group text-xs text-foreground hover:text-primary",
+              )}
+              ><Pencil class="text-foreground group-hover:text-primary" /> Suggest
+              an edit</span
+            >
+          </div>
 
           <!-- image grid -->
           <ImageGrid
@@ -565,8 +589,8 @@
                 <div class="space-y-4">
                   {#if place.data.address}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary-tint/20 p-2 rounded-lg">
-                        <MapPin class="text-primary-tint" />
+                      <div class="bg-primary/20 p-2 rounded-lg">
+                        <MapPin class="text-primary" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Address</p>
@@ -578,8 +602,8 @@
                   {/if}
                   {#if place.data.phone}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary-tint/20 p-2 rounded-lg">
-                        <Phone class="text-primary-tint" />
+                      <div class="bg-primary/20 p-2 rounded-lg">
+                        <Phone class="text-primary" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Phone</p>
@@ -591,8 +615,8 @@
                   {/if}
                   {#if place.data.email}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary-tint/20 p-2 rounded-lg">
-                        <Mail class="text-primary-tint" />
+                      <div class="bg-primary/20 p-2 rounded-lg">
+                        <Mail class="text-primary" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Email</p>
@@ -604,8 +628,8 @@
                   {/if}
                   {#if place.data.website}
                     <div class="flex items-start gap-4">
-                      <div class="bg-primary-tint/20 p-2 rounded-lg">
-                        <Globe class="text-primary-tint" />
+                      <div class="bg-primary/20 p-2 rounded-lg">
+                        <Globe class="text-primary" />
                       </div>
                       <div>
                         <p class="font-bold text-sm font-body">Website</p>
@@ -624,39 +648,50 @@
                 class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Location</h4>
-                <div
-                  class="w-full h-48 bg-surface-raised rounded-xl mb-6 relative overflow-hidden"
-                >
-                  {#if coordinates() !== null}
-                    {@const coords = coordinates()}
+                {#if coordinates() !== null}
+                  {@const coords = coordinates()}
+                  <div class="w-full h-48 rounded-xl mb-3 overflow-hidden">
                     <PlaceMap
                       bind:this={mapComponent}
                       lng={coords!.lng}
                       lat={coords!.lat}
                       zoom={15}
                       markerLabel={place.data.name}
-                      className="h-96 z-0"
+                      className="h-48 z-0"
+                      onclick={handleMapOpen}
                     />
-                  {/if}
-                </div>
-                <div class="flex items-center justify-center">
-                  <Button
-                    variant="secondary"
-                    class="w-full text-white"
-                    onclick={handleMapOpen}
-                  >
-                    View Map
-                    <Map class="size-4" />
-                  </Button>
-                </div>
+                  </div>
+                  <div class="flex gap-2">
+                    <Button
+                      variant="outline"
+                      class="flex-1"
+                      onclick={handleMapOpen}
+                    >
+                      <Map class="size-4" />
+                      View Map
+                    </Button>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${coords!.lat},${coords!.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class={buttonVariants({
+                        variant: "default",
+                        class: "flex-1",
+                      })}
+                    >
+                      <MapPin class="size-4" />
+                      Get Directions
+                    </a>
+                  </div>
+                {/if}
               </div>
 
               <!-- Rules & Guidelines Card -->
               {#if place.data.dogRules && place.data.dogRules.length > 0}
                 <div
-                  class="bg-primary-tint/10 rounded-3xl border-2 border-dashed border-primary-tint p-4"
+                  class="bg-primary/10 rounded-3xl border-2 border-dashed border-primary p-4"
                 >
-                  <div class="flex items-center gap-2 mb-2 text-primary-tint">
+                  <div class="flex items-center gap-2 mb-2 text-primary">
                     <ShieldAlert />
                     <h3 class="font-semibold text-xl">Rules</h3>
                   </div>

@@ -480,38 +480,65 @@ export class LocationService {
     return new Set(savedItems.map((item) => item.placeId));
   }
 
-  async getChildLocations(path: string) {
+  async getChildLocations(path: string, depth: number = 1) {
+    const LIMIT = 40;
     const ChildLoc = alias(Location, "child_loc");
+    const ParentLoc = alias(Location, "parent_loc");
     const PlaceLoc = alias(Location, "place_loc");
 
-    const rows = await this.db
-      .select({
-        id: ChildLoc.id,
-        name: ChildLoc.name,
-        slug: ChildLoc.slug,
-        path: ChildLoc.path,
-        type: ChildLoc.type,
-        imageRowId: ChildLoc.image,
-        placeCount: count(Place.id),
-      })
-      .from(ChildLoc)
-      .innerJoin(Location, eq(ChildLoc.parentId, Location.id))
-      .leftJoin(PlaceLoc, sql`${PlaceLoc.path} LIKE ${ChildLoc.path} || '%'`)
-      .leftJoin(Place, eq(Place.locationId, PlaceLoc.id))
-      .where(eq(Location.path, path))
-      .groupBy(
-        ChildLoc.id,
-        ChildLoc.name,
-        ChildLoc.slug,
-        ChildLoc.path,
-        ChildLoc.type,
-        ChildLoc.image,
-      )
-      .orderBy(desc(count(Place.id)))
-      .limit(20);
+    // Collect results across all requested depth levels, starting from the
+    // given path and walking down one level at a time.
+    const allRows: {
+      id: string;
+      name: string;
+      slug: string;
+      path: string;
+      type: string;
+      imageRowId: string | null;
+      placeCount: number;
+    }[] = [];
+
+    // Track which parent paths to expand at each depth level
+    let parentPaths = [path];
+
+    for (let d = 0; d < depth && allRows.length < LIMIT; d++) {
+      const remaining = LIMIT - allRows.length;
+
+      const rows = await this.db
+        .select({
+          id: ChildLoc.id,
+          name: ChildLoc.name,
+          slug: ChildLoc.slug,
+          path: ChildLoc.path,
+          type: ChildLoc.type,
+          imageRowId: ChildLoc.image,
+          placeCount: count(Place.id),
+        })
+        .from(ChildLoc)
+        .innerJoin(ParentLoc, eq(ChildLoc.parentId, ParentLoc.id))
+        .leftJoin(PlaceLoc, sql`${PlaceLoc.path} LIKE ${ChildLoc.path} || '%'`)
+        .leftJoin(Place, eq(Place.locationId, PlaceLoc.id))
+        .where(inArray(ParentLoc.path, parentPaths))
+        .groupBy(
+          ChildLoc.id,
+          ChildLoc.name,
+          ChildLoc.slug,
+          ChildLoc.path,
+          ChildLoc.type,
+          ChildLoc.image,
+        )
+        .orderBy(desc(count(Place.id)))
+        .limit(remaining);
+
+      if (rows.length === 0) break;
+
+      allRows.push(...rows);
+      // Next iteration expands from the paths found at this level
+      parentPaths = rows.map((r) => r.path);
+    }
 
     // Resolve cfImageIds in one query
-    const imageRowIds = rows
+    const imageRowIds = allRows
       .map((r) => r.imageRowId)
       .filter((id): id is string => id !== null);
 
@@ -524,7 +551,7 @@ export class LocationService {
       for (const img of images) imageMap.set(img.id, img.cfImageId);
     }
 
-    return rows.map((r) => ({
+    return allRows.map((r) => ({
       id: r.id,
       name: r.name,
       slug: r.slug,

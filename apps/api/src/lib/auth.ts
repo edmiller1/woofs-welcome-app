@@ -42,7 +42,6 @@ export function getAuth(env: Env, db: Db) {
       defaultCookieAttributes: {
         sameSite: env.NODE_ENV === "production" ? "none" : "lax",
         secure: env.NODE_ENV === "production",
-        partitioned: env.NODE_ENV === "production",
       },
     },
     socialProviders: {

@@ -48,7 +48,7 @@
           <div
             class="flex items-center gap-2 px-3 py-1 rounded-full border bg-error/10 border-error/20"
           >
-            <span class="w-2 h-2 rounded-full bg-error/60"></span>
+            <span class="w-2 h-2 rounded-full bg-destructive"></span>
             <span
               class="text-[10px] font-bold font-body uppercase tracking-wider text-error"
               >{status}</span

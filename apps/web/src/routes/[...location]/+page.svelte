@@ -13,7 +13,7 @@
   import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Skeleton } from "$lib/components/ui/skeleton";
   import { createQuery } from "@tanstack/svelte-query";
-  import type { BAUser, PlaceFilter } from "@woofs/types";
+  import type { BAUser, LocationWithDetails, PlaceFilter } from "@woofs/types";
   import {
     ArrowRight,
     ChevronLeft,
@@ -28,20 +28,23 @@
   } from "@lucide/svelte";
   import { cn } from "$lib/utils";
   import "@aejkatappaja/phantom-ui";
+  import { buildImageUrl, buildResponsiveSrcSet } from "@woofs/image-config";
 
   interface Props {
     data: {
       pathname: string;
       user: BAUser | null;
+      initialLocation: LocationWithDetails;
     };
   }
 
   const { data }: Props = $props();
-  const { pathname, user } = $derived(data);
+  const { pathname, user, initialLocation } = $derived(data);
 
   const location = createQuery(() => ({
     queryKey: ["location", pathname],
     queryFn: () => api.location.getLocation(pathname.toString()),
+    initialData: initialLocation,
   }));
 
   const currentPlaceFilter = $derived(
@@ -104,7 +107,7 @@
   const childLocations = $derived(
     createQuery(() => ({
       queryKey: ["childLocations", pathname],
-      queryFn: () => api.location.getChildLocations(pathname.toString()),
+      queryFn: () => api.location.getChildLocations(pathname.toString(), 2),
       enabled: !isCity,
     })),
   );
@@ -124,6 +127,19 @@
     })),
   );
 </script>
+
+<svelte:head>
+  {#if initialLocation?.image}
+    <link
+      rel="preload"
+      as="image"
+      href={buildImageUrl(initialLocation.image, 'xlarge')}
+      imagesrcset={buildResponsiveSrcSet(initialLocation.image)}
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
+  {/if}
+</svelte:head>
 
 <ErrorBoundary error={location.error}>
   {#if location.isLoading}
@@ -224,7 +240,7 @@
             <div class="flex gap-6">
               <a
                 href={`/explore?lat=${location.data.latitude}&lng=${location.data.longitude}&zoom=${zoom}`}
-                class="bg-primary-container px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:brightness-110 transition-all shadow-2xl uppercase"
+                class="bg-primary px-10 py-5 rounded-lg text-white font-bold text-sm tracking-widest hover:brightness-110 transition-all shadow-2xl uppercase"
                 >Start Exploring</a
               >
               {#if communityPhotos.isSuccess && communityPhotos.data.total > 0}
@@ -307,9 +323,9 @@
                 </div>
                 <div class="pt-2">
                   <div
-                    class="flex items-center gap-1 text-secondary font-bold text-xs tracking-wide uppercase mb-2"
+                    class="flex items-center gap-1 text-primary font-bold text-xs tracking-wide uppercase mb-2"
                   >
-                    <Star class="size-3.5 fill-secondary text-secondary" />
+                    <Star class="size-3.5 fill-primary text-primary" />
                     {location.data.averageRating} ({location.data.totalReviews} reviews)
                   </div>
                 </div>
@@ -383,10 +399,8 @@
       <!-- Places section -->
       {#if location.data.popularPlaces.length > 0}
         <section class="py-32 max-w-7xl mx-auto px-8">
-          <div class="text-center mb-20">
-            <h2 class="font-serif text-5xl text-on-surface mb-4">
-              Popular Picks
-            </h2>
+          <div class="mb-20">
+            <h2 class="font-serif text-5xl mb-4">Popular Picks</h2>
             <div class="w-24 h-1 bg-primary-container mx-auto"></div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -440,7 +454,7 @@
               {#if canScrollLeft && carouselHovered}
                 <button
                   onclick={scrollLeft}
-                  class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-10 w-12 h-12 rounded-full bg-surface shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
+                  class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft class="size-5" />
@@ -451,7 +465,7 @@
               {#if canScrollRight && carouselHovered}
                 <button
                   onclick={scrollRight}
-                  class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-10 w-12 h-12 rounded-full bg-surface shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
                   aria-label="Scroll right"
                 >
                   <ChevronRight class="size-5" />
@@ -473,7 +487,7 @@
                     </div>
                   {/each}
                 {:else if items.isSuccess}
-                  {#each items.data as child}
+                  {#each items.data as child, i}
                     <a
                       href="/location/{child.path}"
                       class="flex-none w-87.5 aspect-3/4 relative rounded-xl overflow-hidden group/card cursor-pointer shadow-xl"
@@ -484,7 +498,9 @@
                           alt={child.name}
                           class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
                           height="100%"
-                          variant="large"
+                          variant="medium"
+                          loading={i < 4 ? "eager" : "lazy"}
+                          fetchpriority={i < 4 ? "high" : "auto"}
                         />
                       {:else}
                         <div

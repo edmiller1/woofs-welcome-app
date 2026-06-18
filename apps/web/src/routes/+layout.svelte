@@ -62,6 +62,8 @@
   <link rel="icon" href={favicon} />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Woofs Welcome" />
+  <link rel="preconnect" href="https://imagedelivery.net" crossorigin="anonymous" />
+  <link rel="dns-prefetch" href="https://imagedelivery.net" />
 </svelte:head>
 
 <QueryClientProvider client={queryClient}>

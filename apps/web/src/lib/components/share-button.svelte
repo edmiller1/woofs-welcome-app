@@ -37,7 +37,7 @@
       <Button variant="secondary" class="hidden md:flex">
         Share <Share class="size-4" />
       </Button>
-      <Button variant="secondary" class="md:hidden rounded-full">
+      <Button variant="secondary" class="md:hidden">
         <Share class="size-4" />
       </Button>
     {/if}

@@ -154,7 +154,7 @@
 
     <div class="mt-auto flex flex-col items-center gap-6 pb-4">
       <button
-        class="cursor-pointer hover:bg-orange-500/90 w-full bg-orange-500 text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20"
+        class="cursor-pointer hover:bg-primary/90 w-full bg-primary text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20"
       >
         <Smartphone class="size-5 text-white" />
         Continue in App

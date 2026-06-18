@@ -151,7 +151,6 @@
           href={`/sign-in?redirect=${page.url.pathname}`}
           class={cn(buttonVariants({ variant: "secondary" }), "md:hidden")}
           ><Heart class="size-4" />
-          <span class="font-headline font-semibold text-sm">Save</span>
         </a>
       {/if}
     {/snippet}

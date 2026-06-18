@@ -77,7 +77,8 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
   // Check if this is a /children request
   if (fullPath.endsWith("/children")) {
     const locationPath = fullPath.replace(/\/children$/, "");
-    const result = await locationService.getChildLocations(locationPath);
+    const depth = Math.min(Number(c.req.query("depth") ?? "1"), 3);
+    const result = await locationService.getChildLocations(locationPath, depth);
     return c.json(result, 200);
   }
 

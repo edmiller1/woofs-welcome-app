@@ -103,28 +103,38 @@
             setApi={(emblaApi) => (carouselApi = emblaApi)}
             class="rounded-xl"
           >
-            <div class="relative aspect-[1.21] cursor-pointer">
-              <Carousel.Content class="absolute inset-0">
+            <div class="relative cursor-pointer">
+              <Carousel.Content>
                 {#each images as image}
-                  <Carousel.Item class="h-full">
-                    <OptimizedImage
-                      imageId={image}
-                      alt={name}
-                      class="h-full w-full rounded-lg object-cover"
-                      variant="small"
-                      height="100%"
-                    />
+                  <Carousel.Item>
+                    <div class="relative aspect-[1.21]">
+                      <OptimizedImage
+                        imageId={image}
+                        alt={name}
+                        class="h-full w-full rounded-lg object-cover"
+                        variant="small"
+                        sizes="(max-width: 640px) 100vw, 320px"
+                        height="100%"
+                      />
+                    </div>
                   </Carousel.Item>
                 {/each}
               </Carousel.Content>
-              <Carousel.Previous
-                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white"
-                onclick={(e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); }}
-              />
-              <Carousel.Next
-                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-muted"
-                onclick={(e: MouseEvent) => { e.preventDefault(); e.stopPropagation(); }}
-              />
+              <!-- Indicators -->
+              <!-- svelte-ignore a11y_no_static_element_interactions -->
+              <!-- svelte-ignore a11y_click_events_have_key_events -->
+              <div
+                onclick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                class="contents"
+              >
+                <Carousel.Previous class="absolute left-4 bg-white" />
+                <Carousel.Next
+                  class="absolute right-4 bg-white hover:bg-muted"
+                />
+              </div>
               <div
                 class="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform space-x-2"
               >
@@ -199,6 +209,7 @@
               alt={name}
               class="h-full w-full rounded-lg object-cover"
               variant="small"
+              sizes="(max-width: 640px) 100vw, 320px"
               height="200"
             />
             {#if memberFavourite}

@@ -10,6 +10,7 @@
     markerLabel?: string;
     className?: string;
     interactive?: boolean;
+    onclick?: () => void;
   }
 
   let {
@@ -17,38 +18,53 @@
     lat,
     zoom = 12,
     className = "",
-    interactive = true,
+    interactive = false,
+    onclick,
   }: Props = $props();
 </script>
 
-<MapLibre
-  style={`https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`}
-  class="map-container {className}"
-  center={[lng, lat]}
-  {zoom}
-  {interactive}
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div
+  class="relative {onclick ? 'cursor-pointer group' : ''}"
+  {onclick}
 >
-  <Marker lnglat={[lng, lat]}>
-    {#snippet content()}
-      <div class="custom-marker">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="var(--primary)" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
-          <circle cx="12" cy="10" r="3"/>
-        </svg>
-      </div>
-    {/snippet}
-  </Marker>
-</MapLibre>
+  <MapLibre
+    style={`https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`}
+    class="map-container {className}"
+    center={[lng, lat]}
+    {zoom}
+    {interactive}
+  >
+    <Marker lnglat={[lng, lat]}>
+      {#snippet content()}
+        <div class="custom-marker">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="var(--primary)"
+            stroke="white"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+            />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </div>
+      {/snippet}
+    </Marker>
+  </MapLibre>
+  {#if onclick}
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl pointer-events-none"></div>
+  {/if}
+</div>
 
 <style>
-  .map-container {
-    height: 350px;
-    width: 100%;
-    border-radius: 0.75rem;
-    z-index: 0;
-    isolation: isolate;
-  }
-
   :global(.custom-marker) {
     cursor: pointer;
     transition: transform 0.2s ease;
@@ -58,13 +74,11 @@
     transform: scale(1.1);
   }
 
-  :global(.custom-popup .maplibregl-popup-content) {
-    padding: 0;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  :global(.custom-popup .maplibregl-popup-tip) {
-    border-top-color: white;
+  :global(.map-container) {
+    height: 350px;
+    width: 100%;
+    border-radius: 0.75rem;
+    z-index: 0;
+    isolation: isolate;
   }
 </style>

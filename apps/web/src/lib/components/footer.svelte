@@ -10,13 +10,13 @@
   import { Send, Share2 } from "@lucide/svelte";
 </script>
 
-<footer class="bg-white py-20 mb-10 md:mb-0">
+<footer class="bg-white py-20 border-t mb-10 md:mb-0">
   <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-12 gap-12">
     <div class="md:col-span-4 space-y-6">
       <span class="font-headline font-bold text-primary text-3xl"
         >Woofs Welcome</span
       >
-      <p class="mt-10 text-xl font-body text-text-subtle leading-relaxed">
+      <p class="mt-10 text-base font-body text-text-subtle leading-relaxed">
         Connect with us
       </p>
       <div class="flex gap-2">
@@ -63,16 +63,28 @@
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
-          <a class="hover:text-primary transition-colors" href="/directory?tab=countries">Countries</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="/directory?tab=countries">Countries</a
+          >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="/directory?tab=regions&letter=A">Regions</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="/directory?tab=regions&letter=A">Regions</a
+          >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="/directory?tab=cities&letter=A">Cities</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="/directory?tab=cities&letter=A">Cities</a
+          >
         </li>
         <li>
-          <a class="hover:text-primary transition-colors" href="/directory?tab=place-types">Place types</a>
+          <a
+            class="hover:text-primary transition-colors"
+            href="/directory?tab=place-types">Place types</a
+          >
         </li>
       </ul>
     </div>
