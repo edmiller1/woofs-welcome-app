@@ -1,7 +1,6 @@
 <script lang="ts">
   import HomeNavbar from "$lib/components/home-navbar.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import hero from "$lib/assets/hero.jpg";
   import { ArrowRight, MapPin } from "@lucide/svelte";
   import type { FeaturedLocation, PopularPlace } from "@woofs/types";
@@ -73,12 +72,12 @@
           >
             Featured Destinations
           </h2>
-          <p class="font-body text-base text-on-surface-variant">
+          <p class="font-body sm:text-base text-sm">
             Dog-friendly locations for your next adventure or relaxing day out.
           </p>
         </div>
         <button
-          class="text-primary font-label text-sm font-semibold flex items-center gap-1 hover:underline transition-all cursor-pointer"
+          class="text-primary font-label sm:text-sm text-xs font-semibold flex items-center gap-1 hover:underline transition-all cursor-pointer"
         >
           View more <ArrowRight class="size-4" />
         </button>
@@ -207,13 +206,13 @@
             >
               Popular Places
             </h2>
-            <p class="font-body text-base text-on-surface-variant">
+            <p class="font-body sm:text-base text-sm">
               Our most loved dog-friendly spots.
             </p>
           </div>
           <a
             href="/explore"
-            class="text-primary font-label text-sm font-semibold flex items-center gap-1 hover:underline transition-all"
+            class="text-primary font-label sm:text-sm text-xs font-semibold flex items-center gap-1 hover:underline transition-all"
           >
             View all <ArrowRight class="size-4" />
           </a>
@@ -322,5 +321,4 @@
   </main>
 
   <Footer />
-  <MobileBottomNav {user} />
 </div>

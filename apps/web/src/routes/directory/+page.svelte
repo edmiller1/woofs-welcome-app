@@ -4,10 +4,31 @@
   import { api } from "$lib/api-helper";
   import Navbar from "$lib/components/navbar.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import { createQuery } from "@tanstack/svelte-query";
   import type { BAUser } from "@woofs/types";
-  import { MapPin } from "@lucide/svelte";
+  import {
+    BedDouble,
+    BedSingle,
+    Beer,
+    Coffee,
+    DollarSign,
+    Fish,
+    Footprints,
+    Hotel,
+    House,
+    Kayak,
+    MapPin,
+    Parasol,
+    SportShoe,
+    Stethoscope,
+    TentTree,
+    TreeDeciduous,
+    Trees,
+    Utensils,
+    Waves,
+    WavesHorizontal,
+    Wine,
+  } from "@lucide/svelte";
 
   interface Props {
     data: { user: BAUser | null };
@@ -19,41 +40,48 @@
   const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   const PLACE_TYPES = [
-    { label: "Parks", slug: "Park" },
-    { label: "Restaurants", slug: "Restaurant" },
-    { label: "Hotels", slug: "Hotel" },
-    { label: "Motels", slug: "Motel" },
-    { label: "AirBnbs", slug: "AirBnb" },
-    { label: "Stores", slug: "Store" },
-    { label: "Cafés", slug: "Café" },
-    { label: "Bars", slug: "Bar" },
-    { label: "Dog Parks", slug: "Dog Park" },
-    { label: "Beaches", slug: "Beach" },
-    { label: "Walks", slug: "Walk" },
-    { label: "Hikes", slug: "Hike" },
-    { label: "Services", slug: "Service" },
-    { label: "Activities", slug: "Activity" },
-    { label: "Lakes", slug: "Lake" },
-    { label: "Rivers", slug: "River" },
-    { label: "Trails", slug: "Trail" },
-    { label: "Wineries", slug: "Winery" },
-    { label: "Accommodation", slug: "Accomodation" },
+    { label: "Parks", slug: "Park", icon: Trees },
+    { label: "Restaurants", slug: "Restaurant", icon: Utensils },
+    { label: "Hotels", slug: "Hotel", icon: BedDouble },
+    { label: "Motels", slug: "Motel", icon: BedSingle },
+    { label: "AirBnbs", slug: "AirBnb", icon: House },
+    { label: "Stores", slug: "Store", icon: DollarSign },
+    { label: "Cafés", slug: "Café", icon: Coffee },
+    { label: "Bars", slug: "Bar", icon: Beer },
+    { label: "Dog Parks", slug: "Dog Park", icon: TreeDeciduous },
+    { label: "Beaches", slug: "Beach", icon: WavesHorizontal },
+    { label: "Walks", slug: "Walk", icon: Footprints },
+    { label: "Hikes", slug: "Hike", icon: TentTree },
+    { label: "Services", slug: "Service", icon: Stethoscope },
+    { label: "Activities", slug: "Activity", icon: Parasol },
+    { label: "Lakes", slug: "Lake", icon: Kayak },
+    { label: "Rivers", slug: "River", icon: Fish },
+    { label: "Trails", slug: "Trail", icon: SportShoe },
+    { label: "Wineries", slug: "Winery", icon: Wine },
+    { label: "Accommodation", slug: "Accomodation", icon: Hotel },
   ];
 
   type Tab = "countries" | "islands" | "regions" | "cities" | "place-types";
 
-  const activeTab = $derived((page.url.searchParams.get("tab") ?? "countries") as Tab);
+  const activeTab = $derived(
+    (page.url.searchParams.get("tab") ?? "countries") as Tab,
+  );
   const activeLetter = $derived(page.url.searchParams.get("letter") ?? "A");
   const activePage = $derived(Number(page.url.searchParams.get("page") ?? "1"));
 
   const typeForTab = $derived(
-    activeTab === "countries" ? "country"
-    : activeTab === "islands" ? "island"
-    : activeTab === "regions" ? "region"
-    : "city"
+    activeTab === "countries"
+      ? "country"
+      : activeTab === "islands"
+        ? "island"
+        : activeTab === "regions"
+          ? "region"
+          : "city",
   ) as "country" | "island" | "region" | "city";
 
-  const isPaginated = $derived(activeTab !== "countries" && activeTab !== "place-types");
+  const isPaginated = $derived(
+    activeTab !== "countries" && activeTab !== "place-types",
+  );
 
   const directory = createQuery(() => ({
     queryKey: ["directory", activeTab, activeLetter, activePage],
@@ -89,7 +117,7 @@
   }
 
   const totalPages = $derived(
-    directory.data ? Math.ceil(directory.data.total / directory.data.limit) : 1
+    directory.data ? Math.ceil(directory.data.total / directory.data.limit) : 1,
   );
 
   const tabs: { id: Tab; label: string }[] = [
@@ -103,7 +131,10 @@
 
 <svelte:head>
   <title>Directory — Woofs Welcome</title>
-  <meta name="description" content="Browse all dog-friendly destinations by country, region, city and place type." />
+  <meta
+    name="description"
+    content="Browse all dog-friendly destinations by country, region, city and place type."
+  />
 </svelte:head>
 
 <Navbar {user} />
@@ -113,7 +144,9 @@
   <div class="bg-white border-b border-outline/10">
     <div class="max-w-7xl mx-auto px-8 py-12">
       <h1 class="font-serif text-5xl text-on-surface mb-2">Directory</h1>
-      <p class="text-on-surface-variant">Browse all dog-friendly destinations and place types.</p>
+      <p class="text-on-surface-variant">
+        Browse all dog-friendly destinations and place types.
+      </p>
     </div>
 
     <!-- Tabs -->
@@ -122,7 +155,8 @@
         {#each tabs as tab}
           <button
             onclick={() => setTab(tab.id)}
-            class="px-6 py-4 text-sm font-medium tracking-wide border-b-2 transition-colors cursor-pointer {activeTab === tab.id
+            class="px-6 py-4 text-sm font-medium tracking-wide border-b-2 transition-colors cursor-pointer {activeTab ===
+            tab.id
               ? 'border-primary text-primary'
               : 'border-transparent text-on-surface-variant hover:text-on-surface'}"
           >
@@ -134,31 +168,39 @@
   </div>
 
   <div class="max-w-7xl mx-auto px-8 py-12">
-
     <!-- Place Types tab -->
     {#if activeTab === "place-types"}
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"
+      >
         {#each PLACE_TYPES as type}
           <a
             href="/explore?types={encodeURIComponent(type.slug)}"
             class="flex items-center gap-3 p-4 bg-white rounded-xl border border-outline/10 hover:border-primary/40 hover:bg-primary/5 transition-all group"
           >
-            <MapPin class="size-4 text-primary shrink-0" />
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">{type.label}</span>
+            <type.icon class="size-4 text-primary shrink-0" />
+            <span
+              class="text-sm font-medium group-hover:text-primary transition-colors"
+              >{type.label}</span
+            >
           </a>
         {/each}
       </div>
 
-    <!-- Countries tab (no letter filter, just sorted list) -->
+      <!-- Countries tab (no letter filter, just sorted list) -->
     {:else if activeTab === "countries"}
       {#if directory.isLoading}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
+        >
           {#each Array(30) as _}
             <div class="h-5 bg-surface-container rounded animate-pulse"></div>
           {/each}
         </div>
       {:else if directory.isSuccess}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
+        >
           {#each directory.data.locations as loc}
             <a
               href="/location/{loc.path}"
@@ -170,15 +212,19 @@
         </div>
       {/if}
 
-    <!-- Paginated + letter-filtered tabs -->
+      <!-- Paginated + letter-filtered tabs -->
     {:else}
       <!-- Letter bar -->
       <div class="flex flex-wrap gap-1 mb-8">
-        <span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant self-center mr-2">Browse by</span>
+        <span
+          class="text-xs font-bold tracking-widest uppercase text-on-surface-variant self-center mr-2"
+          >Browse by</span
+        >
         {#each LETTERS as letter}
           <button
             onclick={() => setLetter(letter)}
-            class="w-8 h-8 rounded text-xs font-bold transition-colors cursor-pointer {activeLetter === letter
+            class="w-8 h-8 rounded text-xs font-bold transition-colors cursor-pointer {activeLetter ===
+            letter
               ? 'bg-primary text-white'
               : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
           >
@@ -188,19 +234,25 @@
       </div>
 
       {#if directory.isLoading}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
+        >
           {#each Array(30) as _}
             <div class="h-5 bg-surface-container rounded animate-pulse"></div>
           {/each}
         </div>
       {:else if directory.isSuccess && directory.data.locations.length > 0}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
+        >
           {#each directory.data.locations as loc}
             <a
               href="/location/{loc.path}"
               class="text-sm text-on-surface hover:text-primary transition-colors py-1 border-b border-outline/5"
             >
-              {loc.name}{#if activeTab !== "regions"}<span class="text-on-surface-variant">, {loc.countryCode}</span>{/if}
+              {loc.name}{#if activeTab !== "regions"}<span
+                  class="text-on-surface-variant">, {loc.countryCode}</span
+                >{/if}
             </a>
           {/each}
         </div>
@@ -227,13 +279,13 @@
             </button>
           </div>
         {/if}
-
       {:else if directory.isSuccess}
-        <p class="text-on-surface-variant text-sm">No {activeTab} found starting with "{activeLetter}".</p>
+        <p class="text-on-surface-variant text-sm">
+          No {activeTab} found starting with "{activeLetter}".
+        </p>
       {/if}
     {/if}
   </div>
 </main>
 
 <Footer />
-<MobileBottomNav {user} />

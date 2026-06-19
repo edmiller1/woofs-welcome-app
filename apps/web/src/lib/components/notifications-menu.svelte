@@ -73,20 +73,18 @@
     <div
       class="flex justify-between items-center px-5 py-4 border-b border-surface-container"
     >
-      <h3 class="text-xl font-headline font-semibold text-primary">
-        Notifications
-      </h3>
+      <h3 class="text-xl font-semibold text-primary">Notifications</h3>
       <button
-        class="cursor-pointer text-xs font-label font-bold text-secondary uppercase tracking-widest hover:underline"
+        class="cursor-pointer text-xs font-label font-bold text-muted-foreground uppercase tracking-widest hover:underline"
         >Mark all as read</button
       >
     </div>
     {#if notifications.isLoading}
-      <div class="p-5 text-center text-sm text-secondary">
+      <div class="p-5 text-center text-sm text-muted-foreground">
         <LoaderCircle class="size-4 animate-spin" />
       </div>
     {:else if notifications.data?.length === 0}
-      <div class="p-5 text-center text-sm text-secondary">
+      <div class="p-5 text-center text-sm text-muted-foreground">
         No notifications yet.
       </div>
     {:else}

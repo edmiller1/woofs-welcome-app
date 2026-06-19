@@ -3,7 +3,6 @@
   import { page } from "$app/state";
   import { api } from "$lib/api-helper";
   import ErrorBoundary from "$lib/components/error-boundary.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Navbar from "$lib/components/navbar.svelte";
   import PlaceCard from "$lib/components/place-card.svelte";
   import { Spinner } from "$lib/components/ui/spinner";
@@ -673,9 +672,6 @@
         {/if}
       </div>
     </div>
-
-    <!-- Mobile bottom nav sits above the drawer -->
-    <MobileBottomNav {user} />
   </div>
 </ErrorBoundary>
 

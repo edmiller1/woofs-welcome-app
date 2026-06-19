@@ -9,6 +9,7 @@
     CupSoda,
     Footprints,
     Hotel,
+    Kayak,
     List,
     MapIcon,
     MapPin,
@@ -20,7 +21,7 @@
     TentTree,
     Trees,
     Utensils,
-    Waves,
+    WavesHorizontal,
     Wine,
   } from "@lucide/svelte";
   import type { BAUser } from "@woofs/types";
@@ -144,6 +145,12 @@
   let typeFilters = $state<string[]>(
     page.url.searchParams.get("types")?.split(",").filter(Boolean) ?? [],
   );
+
+  // Re-sync filters when URL changes (e.g. navigating from footer links while already on /explore)
+  $effect(() => {
+    typeFilters = page.url.searchParams.get("types")?.split(",").filter(Boolean) ?? [];
+    ratingFilter = page.url.searchParams.get("rating") ?? "";
+  });
   let typesOpen = $state(false);
   let distanceFilter = $state<number>(
     Number(page.url.searchParams.get("distance") ?? 50),
@@ -568,7 +575,7 @@
       name: "Beaches",
       value: "Beach",
       href: "/explore?type=Beach",
-      icon: Waves,
+      icon: WavesHorizontal,
     },
     {
       name: "Walks",
@@ -598,7 +605,7 @@
       name: "Lakes",
       value: "Lake",
       href: "/explore?type=Lake",
-      icon: Waves,
+      icon: Kayak,
     },
     {
       name: "Wineries",
@@ -1000,7 +1007,7 @@
         >
           <span class="font-semibold">Explore places</span>
           {#if explorePlacesQuery.isSuccess}
-            <span class="text-sm text-muted-foreground">
+            <span class="text-sm text-primary">
               {explorePlacesQuery.data.total}
               {explorePlacesQuery.data.total === 1 ? "place" : "places"}
             </span>

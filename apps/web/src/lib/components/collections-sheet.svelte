@@ -30,11 +30,8 @@
   >
   <Sheet.Content side="right" class="bg-white">
     <Sheet.Header class="mb-0">
-      <Sheet.Title class="text-2xl font-headline italic text-primary"
+      <Sheet.Title class="text-2xl font-headline text-primary"
         >My Collections</Sheet.Title
-      >
-      <Sheet.Description class="text-sm text-muted-foreground font-sans"
-        >Curated memories and planned journeys</Sheet.Description
       >
     </Sheet.Header>
     <div class="px-2">
@@ -45,9 +42,7 @@
       {#if collections.isLoading}
         {#each Array(4) as _}
           <div class="space-y-3">
-            <div
-              class="h-48 w-full rounded-xl bg-muted animate-pulse"
-            ></div>
+            <div class="h-48 w-full rounded-xl bg-muted animate-pulse"></div>
             <div class="h-5 w-2/3 rounded-md bg-muted animate-pulse"></div>
             <div class="h-4 w-1/4 rounded-md bg-muted animate-pulse"></div>
           </div>

@@ -59,7 +59,7 @@
       <h4
         class="font-label text-xs uppercase font-bold tracking-widest text-primary"
       >
-        Explore
+        Discover
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
@@ -92,31 +92,35 @@
       <h4
         class="font-label text-xs uppercase font-bold tracking-widest text-primary"
       >
-        Discover
+        Explore
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
           <a
             class="hover:text-primary transition-colors"
-            href="/explore?ltypes=Activity%2CStore%2CService">Retail/Services</a
+            href="/explore?types=Activity%2CStore%2CService"
+            data-sveltekit-reload>Retail/Services</a
           >
         </li>
         <li>
           <a
             class="hover:text-primary transition-colors"
-            href="explore?types=Hotel%2CMotel%2CAirBnb">Stays</a
+            href="/explore?types=Hotel%2CMotel%2CAirBnb"
+            data-sveltekit-reload>Stays</a
           >
         </li>
         <li>
           <a
             class="hover:text-primary transition-colors"
-            href="/explore?types=Restaurant%2CCafé%2CBar">Eats</a
+            href="/explore?types=Restaurant%2CCafé%2CBar"
+            data-sveltekit-reload>Eats</a
           >
         </li>
         <li>
           <a
             class="hover:text-primary transition-colors"
-            href="//explore?types=Walk%2CHike%2CTrail">Adventures</a
+            href="/explore?types=Walk%2CHike%2CTrail"
+            data-sveltekit-reload>Adventures</a
           >
         </li>
       </ul>

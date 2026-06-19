@@ -54,7 +54,7 @@
 
   <!-- Mobile: first > … > last -->
   <Breadcrumb.List
-    class="flex sm:hidden {!isPlacePage ? 'uppercase text-base' : 'text-sm'}"
+    class="flex sm:hidden {!isPlacePage ? 'uppercase text-xs' : 'text-sm'}"
   >
     {#if items.length > 0}
       <!-- First item -->

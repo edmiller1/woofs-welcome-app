@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { BAUser } from "@woofs/types";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Footer from "$lib/components/footer.svelte";
   import HomeNavbar from "$lib/components/home-navbar.svelte";
   import { Flag, Map, Star, ThumbsUp } from "@lucide/svelte";
@@ -95,9 +94,13 @@
   </header>
 
   <main class="max-w-400 mx-auto px-5 md:px-12 -mt-16 relative z-20">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:h-[calc(100vh-4rem)] lg:overflow-hidden items-start">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:h-[calc(100vh-4rem)] lg:overflow-hidden items-start"
+    >
       <!-- Left Sidebar: Stats -->
-      <aside class="lg:col-span-3 block space-y-6 pt-16 self-start lg:sticky lg:top-0">
+      <aside
+        class="lg:col-span-3 block space-y-6 pt-16 self-start lg:sticky lg:top-0"
+      >
         <div
           class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
         >
@@ -136,10 +139,14 @@
       </aside>
 
       <!-- Main Feed -->
-      <div class="feed-scroll lg:col-span-5 lg:h-full lg:overflow-y-auto pb-16 space-y-6 pt-16">
+      <div
+        class="feed-scroll lg:col-span-5 lg:h-full lg:overflow-y-auto pb-16 space-y-6 pt-16"
+      >
         {#if communityReviews.isLoading}
           {#each [1, 2, 3] as _}
-            <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+            <div
+              class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+            >
               <div class="p-6 flex items-center gap-3">
                 <Skeleton class="size-12 rounded-full shrink-0" />
                 <div class="flex-1 space-y-2">
@@ -163,7 +170,9 @@
             review.user && review.user.image
               ? review.user.image.replace(/=s\d+-c$/, "=s400-c")
               : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
-          <article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+          <article
+            class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+          >
             <div class="p-6 flex items-center gap-3">
               <img
                 alt={review.user.name}
@@ -172,10 +181,13 @@
               />
               <div class="flex flex-col gap-1 min-w-0">
                 <div class="flex items-center gap-1 flex-wrap">
-                  <h4 class="font-label-md text-on-surface">{review.user.name}</h4>
+                  <h4 class="font-label-md text-on-surface">
+                    {review.user.name}
+                  </h4>
                   <span class="text-on-surface-variant/40">·</span>
                   <p class="text-[12px] text-on-surface-variant truncate">
-                    {formatRelative(new Date(review.createdAt), new Date())} · {review.place.name}
+                    {formatRelative(new Date(review.createdAt), new Date())} · {review
+                      .place.name}
                   </p>
                 </div>
                 <div class="flex text-primary">
@@ -199,8 +211,12 @@
             {/if}
             <div class="p-6">
               <p class="mb-2 font-semibold text-on-surface">{review.title}</p>
-              <p class="text-on-surface-variant text-sm mb-6">{review.content}</p>
-              <div class="flex items-center gap-2 border-t border-outline/10 pt-4">
+              <p class="text-on-surface-variant text-sm mb-6">
+                {review.content}
+              </p>
+              <div
+                class="flex items-center gap-2 border-t border-outline/10 pt-4"
+              >
                 <Button variant="outline" class="rounded-full p-1">
                   <ThumbsUp class="h-4 w-4 text-muted-foreground" />
                   <span class="text-xs">{review.likesCount}</span>
@@ -218,7 +234,9 @@
           {#if communityReviews.isFetchingNextPage}
             <div class="space-y-6 pt-2">
               {#each [1, 2] as _}
-                <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm">
+                <div
+                  class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+                >
                   <div class="p-6 flex items-center gap-3">
                     <Skeleton class="size-12 rounded-full shrink-0" />
                     <div class="flex-1 space-y-2">
@@ -239,7 +257,9 @@
       </div>
 
       <!-- Right Sidebar: Trending -->
-      <aside class="lg:col-span-4 space-y-6 pt-16 self-start lg:sticky lg:top-0">
+      <aside
+        class="lg:col-span-4 space-y-6 pt-16 self-start lg:sticky lg:top-0"
+      >
         <div
           class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
         >
@@ -303,7 +323,6 @@
   </main>
 
   <Footer />
-  <MobileBottomNav {user} />
 </div>
 
 <style>

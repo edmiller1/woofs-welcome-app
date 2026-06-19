@@ -7,7 +7,9 @@
   const isNotFound = $derived(status === 404);
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-background p-8">
+<div
+  class="flex min-h-screen flex-col items-center justify-center bg-background p-8"
+>
   <div class="mx-auto max-w-md text-center">
     <div class="mb-6">
       <span class="text-8xl font-bold text-muted-foreground">{status}</span>

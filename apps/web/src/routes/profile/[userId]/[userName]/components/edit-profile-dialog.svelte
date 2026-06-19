@@ -76,8 +76,14 @@
     }
     cityLoading = true;
     try {
-      const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${maptilerKey}&types=municipality&language=en`;
+      const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${maptilerKey}&types=municipality&types=place&language=en`;
       const res = await fetch(url);
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("MapTiler error:", res.status, text);
+        citySuggestions = [];
+        return;
+      }
       const data = await res.json();
       citySuggestions = (data.features ?? []).map((f: any) => ({
         id: f.id,
@@ -111,31 +117,6 @@
     citySearch = formatCity(selectedCity);
     cityLoading = false;
     cityDropdownOpen = false;
-    // try {
-    //   const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${suggestion.mapbox_id}?session_token=${sessionToken}&access_token=${mapboxToken}`;
-    //   const res = await fetch(url);
-    //   const data = await res.json();
-    //   const feature = data.features?.[0];
-    //   if (feature) {
-    //     const ctx = feature.properties.context;
-    //     selectedCity = {
-    //       city: feature.properties.name || suggestion.name,
-    //       locality: ctx?.region?.name || "",
-    //       country: ctx?.country?.name || "",
-    //     };
-    //   } else {
-    //     selectedCity = { city: suggestion.name, locality: "", country: "" };
-    //   }
-    //   citySearch = formatCity(selectedCity);
-    // } catch (e) {
-    //   console.error("City retrieve failed:", e);
-    //   selectedCity = { city: suggestion.name, locality: "", country: "" };
-    //   citySearch = suggestion.name;
-    // } finally {
-    //   cityLoading = false;
-    //   cityDropdownOpen = false;
-    //   sessionToken = crypto.randomUUID();
-    // }
   };
 
   const handleCityInput = (e: Event) => {
@@ -514,7 +495,7 @@
             No dogs added yet. Add your furry friends!
           </p>
         {:else}
-          <div class="flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-3">
             {#each dogs as dog, index}
               <div
                 class="flex items-start gap-3 rounded-lg border border-border p-3"
@@ -525,15 +506,17 @@
                     <img
                       src={dog.imagePreview}
                       alt="Dog"
-                      class="h-16 w-16 rounded-full object-cover"
+                      class="h-10 w-10 rounded-full object-cover"
                     />
                   {:else if dog.existingImageId}
                     <OptimizedImage
                       imageId={dog.existingImageId}
                       alt={dog.name}
                       variant="thumbnail"
-                      class="h-16 w-16 rounded-full object-cover"
+                      class="size-20 rounded-full object-cover"
                       responsive={false}
+                      width="120"
+                      height="120"
                     />
                   {:else}
                     <input
@@ -544,11 +527,11 @@
                       onchange={(e) => handleDogImage(index, e)}
                     />
                     <button
-                      class="cursor-pointer apperance-none flex h-16 w-16 items-center justify-center rounded-full bg-muted"
+                      class="cursor-pointer apperance-none flex h-10 w-10 items-center justify-center rounded-full bg-muted"
                       onclick={() =>
                         document.getElementById(`dog-image-${index}`)?.click()}
                     >
-                      <Camera class="h-6 w-6 text-muted-foreground" />
+                      <Camera class="h-4 w-4 text-muted-foreground" />
                     </button>
                   {/if}
                   <input

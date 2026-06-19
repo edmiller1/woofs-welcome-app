@@ -1,17 +1,22 @@
 import type { Load } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { getUser } from "$lib/auth/guard";
 import { api } from "$lib/api-helper";
 
 export const load: Load = async ({ params }) => {
+  const path = params.location?.toString() ?? "";
+
+  if (path.includes(".")) {
+    error(404, "Not found");
+  }
+
   const user = await getUser();
 
-  const initialLocation = await api.location.getLocation(
-    params.location?.toString()!,
-  );
+  const initialLocation = await api.location.getLocation(path);
 
   return {
     user,
-    pathname: params.location,
+    pathname: path,
     initialLocation,
   };
 };

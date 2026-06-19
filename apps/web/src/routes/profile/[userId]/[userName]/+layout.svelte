@@ -82,7 +82,12 @@
               >
             {/if}
           </div>
-          <p class="mb-2">{profile.data.currentCity}</p>
+          {#if profile.data.currentCity}
+            <p class="mb-2 text-muted-foreground">
+              {profile.data.currentCity.city}, {profile.data.currentCity
+                .locality}, {profile.data.currentCity.country}
+            </p>
+          {/if}
           <!-- Stats Grid -->
           <div class="flex flex-wrap justify-center md:justify-start gap-10">
             <div class="text-center md:text-left">

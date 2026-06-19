@@ -9,7 +9,6 @@
     LogIn,
     Smartphone,
     TextAlignJustify,
-    Users,
   } from "@lucide/svelte";
   import { page } from "$app/state";
   import { settingsOpen } from "$lib/stores/accountSettingsStore";
@@ -67,7 +66,7 @@
       </div>
     {:else}
       <div
-        class="border border-input flex items-center gap-4 p-6 rounded-xl shadow-sm"
+        class="border border-input my-8 flex items-center gap-4 p-6 rounded-xl shadow-sm"
       >
         <div class="relative">
           <img
@@ -91,63 +90,51 @@
     <div class="flex-1 flex flex-col space-y-1">
       <!-- Explore -->
       <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {exploreActive &&
-          'bg-secondary-container/30 '}"
+        class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {exploreActive &&
+          'bg-primary/20'}"
         href="/explore"
       >
         {#if exploreActive}
-          <div
-            class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center"
-          >
-            <Compass class="size-5 text-secondary" />
-          </div>
+          <Compass class="size-5 text-primary" />
         {:else}
           <Compass class="size-5 text-black" />
         {/if}
-        <span class="font-body text-lg font-medium">Explore</span>
+        <span class="text-lg font-medium">Explore</span>
       </a>
       <!-- Community -->
       <!-- <a
-        class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {communityActive &&
-          'bg-secondary-container/30'}"
+        class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {communityActive &&
+          'bg-primary/20'}"
         href="/community"
       >
         {#if communityActive}
-          <div
-            class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center"
-          >
-            <Users class="size-5 text-secondary" />
-          </div>
+            <Users class="size-5 text-primary" />
         {:else}
           <Users class="size-5 text-black" />
         {/if}
-        <span class="font-body text-lg">Community</span>
+        <span class="text-lg font-medium">Community</span>
       </a> -->
       {#if user}
         <!-- Collections -->
         <a
-          class="flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group {profileActive &&
-            'bg-secondary-container/30'}"
+          class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {profileActive &&
+            'bg-primary/20'}"
           href={`/profile/${user.id}/${profileLink}/collections`}
         >
           {#if collectionsActive}
-            <div
-              class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center"
-            >
-              <Bookmark class="size-5 text-secondary" />
-            </div>
+            <Bookmark class="size-5 text-primary" />
           {:else}
             <Bookmark class="size-5 text-black" />
           {/if}
-          <span class="font-body text-lg">Collections</span>
+          <span class="text-lg font-medium">Collections</span>
         </a>
         <!-- Account Settings -->
         <button
-          class="cursor-pointer flex items-center gap-4 px-4 py-4 hover:bg-muted rounded-xl transition-all group"
+          class="cursor-pointer flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group"
           onclick={openSettings}
         >
           <Cog class="size-5 text-black" />
-          <span class="font-body text-lg">Account Settings</span>
+          <span class="font-body text-lg font-medium">Account Settings</span>
         </button>
       {/if}
     </div>

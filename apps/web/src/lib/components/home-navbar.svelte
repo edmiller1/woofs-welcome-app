@@ -66,9 +66,7 @@
   const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
-<header
-  class="fixed top-0 z-50 w-full bg-background border-none"
->
+<header class="fixed top-0 z-50 w-full bg-background border-none">
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
@@ -80,7 +78,7 @@
         <a
           class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
             ? 'text-primary-tint font-semibold'
-            : 'text-muted-foreground'}"
+            : 'text-foreground'}"
           href="/explore">Explore</a
         >
         <!-- <a

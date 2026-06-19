@@ -81,7 +81,7 @@
         <a
           class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
             ? 'text-primary font-semibold'
-            : 'text-muted-foreground'}"
+            : 'text-foreground'}"
           href="/explore">Explore</a
         >
         <!-- <a

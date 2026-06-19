@@ -14,39 +14,27 @@
   import type { Tab } from "@woofs/types";
   import { cn } from "$lib/utils";
   import PlaceHours from "./components/place-hours.svelte";
-  import PlaceDetails from "./components/place-details.svelte";
-  import PlaceDescription from "./components/place-description.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-
   import PlaceMap from "$lib/components/place-map.svelte";
-  import PlaceReviewStats from "./components/place-review-stats.svelte";
   import PlaceReviews from "./components/place-reviews.svelte";
   import ReviewDrawer from "$lib/components/review-drawer.svelte";
   import StickyHeader from "./components/sticky-header.svelte";
   import {
-    Check,
     CircleCheck,
     Globe,
-    Heart,
     Images,
     Mail,
     Map,
     MapPin,
-    Maximize2,
     Pencil,
     Phone,
-    Share,
     ShieldAlert,
-    SquarePen,
     Star,
   } from "@lucide/svelte";
   import PlaceMapDialog from "./components/place-map-dialog.svelte";
-  import { Separator } from "$lib/components/ui/separator";
   import RecommendedPlaces from "./components/recommended-places.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
-  import { ArrowLeft } from "@lucide/svelte";
   import { Badge } from "$lib/components/ui/badge";
 
   interface Props {
@@ -431,8 +419,6 @@
         <!-- Similar Places -->
         <RecommendedPlaces placeId={place.data.id} {user} />
       </main>
-
-      <!-- <MobileBottomNav {user} /> -->
     </div>
     <!-- ===================== END MOBILE LAYOUT ===================== -->
 

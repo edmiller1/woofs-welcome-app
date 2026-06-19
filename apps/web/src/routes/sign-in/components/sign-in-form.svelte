@@ -84,14 +84,14 @@
 <form onsubmit={(e) => handleEmailSignIn(e)} class="space-y-6">
   <div class="space-y-2">
     <label
-      class="block text-sm font-bold text-text-subtle uppercase tracking-widest ml-1"
+      class="block text-sm font-bold uppercase tracking-widest ml-1"
       for="email"
     >
       Email Address
     </label>
     <div class="relative group">
       <Input
-        class="w-full h-14 px-6 rounded-full bg-surface-raised border-none focus:ring-2 focus:ring-primary-container transition-all text-text placeholder:text-border-strong"
+        class="w-full h-14 px-6 rounded-full border-forground focus:ring-2 focus:ring-primary transition-all text-text placeholder:text-border-strong"
         id="email"
         placeholder="explorer@woofswelcome.app"
         type="email"
@@ -117,18 +117,18 @@
 </form>
 
 <div class="flex items-center my-10 gap-4">
-  <div class="h-px flex-1 bg-surface-top"></div>
-  <span class="text-xs font-bold text-border-strong uppercase tracking-widest"
+  <div class="h-px flex-1 bg-muted-foreground"></div>
+  <span class="text-xs font-bold uppercase tracking-widest"
     >or continue with</span
   >
-  <div class="h-px flex-1 bg-surface-top"></div>
+  <div class="h-px flex-1 bg-muted-foreground"></div>
 </div>
 
 <!-- Social Logins -->
 <div class="grid grid-cols-1 gap-4">
   <Button
     variant="outline"
-    class="h-14 bg-surface-subtle hover:bg-surface-raised font-bold text-base rounded-full"
+    class="h-14 bg-white hover:bg-muted font-bold text-base rounded-full"
     onclick={handleGoogleLogin}
     disabled={loading || googleLoading}
   >
@@ -142,7 +142,7 @@
   >
   <Button
     variant="outline"
-    class="h-14 bg-text hover:opacity-90 hover:text-white font-bold text-base text-white hover:bg-text rounded-full"
+    class="h-14 bg-text hover:opacity-90 font-bold text-base hover:bg-muted rounded-full"
     onclick={handleAppleLogin}
     disabled={loading || appleLoading}
   >
@@ -165,15 +165,15 @@
 </p> -->
 <div class="mt-12 flex flex-wrap gap-x-6 gap-y-2">
   <a
-    class="text-[10px] font-bold text-secondary opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
+    class="text-[10px] font-bold text-muted-foreground opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
     href="/terms-of-service">Terms of Service</a
   >
   <a
-    class="text-[10px] font-bold text-secondary opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
+    class="text-[10px] font-bold text-muted-foreground opacity-60 hover:opacity-100 uppercase tracking-widest transition-colors"
     href="/privacy-policy">Privacy Policy</a
   >
   <p
-    class="text-[10px] font-bold text-secondary uppercase opacity-60 tracking-[0.2em]"
+    class="text-[10px] font-bold text-muted-foreground uppercase opacity-60 tracking-[0.2em]"
   >
     © 2026 Woofs Welcome
   </p>

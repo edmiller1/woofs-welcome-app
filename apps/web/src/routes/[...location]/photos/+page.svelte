@@ -2,7 +2,6 @@
   import { api } from "$lib/api-helper";
   import Breadcrumbs from "$lib/components/breadcrumbs.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import Navbar from "$lib/components/navbar.svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { Skeleton } from "$lib/components/ui/skeleton";
@@ -67,15 +66,12 @@
 
     <!-- Header -->
     <div class="mb-12">
-      <h1 class="font-serif text-5xl text-on-surface mb-3">
+      <h1 class="font-serif text-5xl mb-3">
         Community Photos
         {#if locationQuery.isSuccess}
           in {locationQuery.data.name}
         {/if}
       </h1>
-      <p class="text-on-surface-variant text-lg">
-        Real moments captured by our community
-      </p>
     </div>
 
     {#if photosQuery.isLoading && page === 1}
@@ -83,7 +79,10 @@
       <div class="masonry-grid">
         {#each Array(12) as _}
           <div class="masonry-item">
-            <Skeleton class="w-full rounded-xl" style="height: {Math.floor(Math.random() * 120 + 200)}px;" />
+            <Skeleton
+              class="w-full rounded-xl"
+              style="height: {Math.floor(Math.random() * 120 + 200)}px;"
+            />
           </div>
         {/each}
       </div>
@@ -91,7 +90,9 @@
       <!-- Masonry grid -->
       <div class="masonry-grid">
         {#each accumulatedPhotos as photo (photo.cfImageId)}
-          <div class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer">
+          <div
+            class="masonry-item group relative overflow-hidden rounded-xl shadow-md cursor-pointer"
+          >
             <OptimizedImage
               imageId={photo.cfImageId}
               alt={photo.placeName}
@@ -108,14 +109,18 @@
                 >{photo.placeName}</span
               >
               {#if photo.reviewerName}
-                <span class="text-white/70 text-xs tracking-widest uppercase mb-1"
+                <span
+                  class="text-white/70 text-xs tracking-widest uppercase mb-1"
                   >by {photo.reviewerName}</span
                 >
               {/if}
               {#if photo.dogs.length > 0}
                 <span class="text-white/60 text-xs">
                   {#each photo.dogs as dog, i}
-                    {dog.name}{dog.breed ? ` · ${dog.breed}` : ""}{i < photo.dogs.length - 1 ? ", " : ""}
+                    {dog.name}{dog.breed ? ` · ${dog.breed}` : ""}{i <
+                    photo.dogs.length - 1
+                      ? ", "
+                      : ""}
                   {/each}
                 </span>
               {/if}
@@ -135,21 +140,20 @@
             {photosQuery.isFetching ? "Loading..." : "Show more photos"}
           </button>
         {/if}
-        <p class="text-on-surface-variant text-sm">
+        <p class="text-sm">
           Showing 1–{showing} of {total} photos
         </p>
       </div>
     {:else if photosQuery.isSuccess}
       <div class="flex flex-col items-center justify-center py-32 gap-6">
         <Camera class="size-16 text-outline" />
-        <p class="text-on-surface-variant text-lg">No photos yet for this location.</p>
+        <p class="text-lg">No photos yet for this location.</p>
       </div>
     {/if}
   </div>
 </main>
 
 <Footer />
-<MobileBottomNav {user} />
 
 <style>
   .masonry-grid {

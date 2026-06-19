@@ -133,7 +133,7 @@
     <link
       rel="preload"
       as="image"
-      href={buildImageUrl(initialLocation.image, 'xlarge')}
+      href={buildImageUrl(initialLocation.image, "xlarge")}
       imagesrcset={buildResponsiveSrcSet(initialLocation.image)}
       imagesizes="100vw"
       fetchpriority="high"
@@ -230,7 +230,7 @@
               />
             </div>
             <h1
-              class="font-serif text-4xl md:text-8xl lg:text-[100px] mb-8 {location
+              class="font-serif text-6xl md:text-8xl lg:text-[100px] mb-8 {location
                 .data.image
                 ? 'text-white'
                 : 'text-on-surface'}"
@@ -578,7 +578,6 @@
       </section>
     </main>
     <Footer />
-    <MobileBottomNav {user} />
   {/if}
 </ErrorBoundary>
 

@@ -20,19 +20,17 @@
     <header
       class="absolute top-0 left-0 right-0 px-8 py-6 flex justify-between items-center bg-transparent"
     >
-      <a href="/" class="text-3xl text-primary-tint font-semibold"
-        >Woofs Welcome</a
-      >
+      <a href="/" class="text-3xl text-primary font-semibold">Woofs Welcome</a>
     </header>
-    <div class="w-full max-w-110 mt-12">
+    <div class="w-full max-w-110 mt-40 sm:mt-12">
       <div class="mb-10 text-left">
         <h1
-          class="font-headline text-4xl md:text-5xl font-bold text-primary mb-3 leading-tight tracking-tight"
+          class="text-4xl md:text-5xl font-bold text-primary mb-3 leading-tight tracking-tight"
         >
           Welcome Back
         </h1>
-        <p class="text-secondary text-lg font-body leading-relaxed">
-          Sign in or create your account.
+        <p class="text-muted-foreground text-lg leading-relaxed">
+          Sign in or create an account.
         </p>
       </div>
       <!-- Form -->
