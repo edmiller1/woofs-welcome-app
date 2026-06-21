@@ -55,9 +55,27 @@ app.use("*", (c, next) =>
   globalRateLimiter(c.get("redis"))(c as Context, next),
 ); // (200 req / 15min total)
 
-app.all("/api/auth/*", (c) => {
+app.all("/api/auth/*", async (c) => {
   const auth = getAuth(c.get("env"), c.get("db"));
-  return auth.handler(c.req.raw);
+  const response = await auth.handler(c.req.raw);
+
+  const origin = c.req.header("Origin") ?? "";
+  const allowedOrigins =
+    c.env.NODE_ENV === "development"
+      ? ["http://localhost:5173"]
+      : ["https://woofswelcome.app", "https://www.woofswelcome.app"];
+
+  if (allowedOrigins.includes(origin)) {
+    const headers = new Headers(response.headers);
+    headers.set("Access-Control-Allow-Origin", origin);
+    headers.set("Access-Control-Allow-Credentials", "true");
+    headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-User-Context");
+    headers.set("Vary", "Origin");
+    return new Response(response.body, { status: response.status, headers });
+  }
+
+  return response;
 });
 
 app.use("/api/auth/get-session", (c, next) =>
