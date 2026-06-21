@@ -39,6 +39,34 @@ export const searchPlacesSchema = z.object({
   q: z.string().min(1).max(100),
 });
 
+export const SUGGESTABLE_FIELDS = [
+  "name",
+  "address",
+  "phone",
+  "email",
+  "website",
+  "hours",
+  "description",
+  "dogRules",
+  "dogAmenities",
+  "offLeadAllowed",
+  "waterAvailable",
+] as const;
+
+export type SuggestableField = (typeof SUGGESTABLE_FIELDS)[number];
+
+export const suggestEditSchema = z.object({
+  placeId: z.uuid(),
+  field: z.enum(SUGGESTABLE_FIELDS),
+  suggestedValue: z.union([
+    z.string().min(1).max(2000),
+    z.boolean(),
+    z.array(z.string().min(1).max(200)),
+    z.record(z.string(), z.any()),
+  ]),
+  notes: z.string().max(500).optional(),
+});
+
 export const explorePlacesSchema = z.object({
   swLat: z.coerce.number().min(-90).max(90),
   swLng: z.coerce.number().min(-180).max(180),

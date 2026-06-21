@@ -1464,6 +1464,60 @@ export const notificationRelations = relations(Notification, ({ one }) => ({
   }),
 }));
 
+// ============================================================================
+// PLACE SUGGESTED EDITS
+// ============================================================================
+
+export const suggestedEditStatusEnum = pgEnum("suggested_edit_status", [
+  "pending",
+  "accepted",
+  "rejected",
+]);
+
+export const PlaceSuggestedEdit = pgTable(
+  "place_suggested_edit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    placeId: uuid("place_id")
+      .notNull()
+      .references(() => Place.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    field: text("field").notNull(),
+    currentValue: jsonb("current_value"),
+    suggestedValue: jsonb("suggested_value").notNull(),
+    notes: text("notes"),
+    status: suggestedEditStatusEnum("status").notNull().default("pending"),
+    reviewedBy: text("reviewed_by").references(() => user.id),
+    reviewedAt: timestamp("reviewed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    placeIdIdx: index("place_suggested_edit_place_id_idx").on(table.placeId),
+    userIdIdx: index("place_suggested_edit_user_id_idx").on(table.userId),
+    statusIdx: index("place_suggested_edit_status_idx").on(table.status),
+  }),
+);
+
+export const placeSuggestedEditRelations = relations(
+  PlaceSuggestedEdit,
+  ({ one }) => ({
+    place: one(Place, {
+      fields: [PlaceSuggestedEdit.placeId],
+      references: [Place.id],
+    }),
+    user: one(user, {
+      fields: [PlaceSuggestedEdit.userId],
+      references: [user.id],
+    }),
+    reviewer: one(user, {
+      fields: [PlaceSuggestedEdit.reviewedBy],
+      references: [user.id],
+    }),
+  }),
+);
+
 export type CityData = {
   city: string;
   locality: string;

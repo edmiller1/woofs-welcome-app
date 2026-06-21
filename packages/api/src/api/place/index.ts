@@ -7,6 +7,7 @@ import { getCommunityStats } from "./getCommunityStats";
 import { explorePlaces } from "./explorePlaces";
 import { searchPlaces } from "./searchPlaces";
 import { getPopularPlaces } from "./getPopularPlaces";
+import { suggestEdit } from "./suggestEdit";
 
 export const place = {
   getPlace,
@@ -18,4 +19,5 @@ export const place = {
   explorePlaces,
   searchPlaces,
   getPopularPlaces,
+  suggestEdit,
 };

@@ -36,6 +36,7 @@
   import Footer from "$lib/components/footer.svelte";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { Badge } from "$lib/components/ui/badge";
+  import SuggestEditDialog from "$lib/components/suggest-edit-dialog.svelte";
 
   interface Props {
     data: {
@@ -69,6 +70,7 @@
   let headerElement = $state<HTMLElement>();
   let showStickyHeader = $state(false);
   let mapOpen = $state<boolean>(false);
+  let suggestEditOpen = $state<boolean>(false);
   let currentPage = $state<number>(1);
   let reviewDrawerOpen = $state<boolean>(false);
 
@@ -187,7 +189,7 @@
         <div
           class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none"
         ></div>
-        {#if !place.data.memberFavourite}
+        {#if place.data.memberFavourite}
           <div class="absolute top-5 left-6">
             <span
               class="bg-secondary text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
@@ -223,7 +225,7 @@
         <section class="px-margin-2">
           <div class="flex justify-between items-start">
             <div>
-              <h2 class="font-semibold text-4xl">
+              <h2 class="font-semibold text-4xl truncate">
                 {place.data.name}
               </h2>
               <div class="flex items-center gap-2 mt-1 text-sm">
@@ -248,6 +250,26 @@
                 >
               </div>
             </div>
+            {#if user}
+              <Button
+                variant="ghost"
+                size="sm"
+                class="text-muted-foreground shrink-0 mt-2"
+                onclick={() => (suggestEditOpen = true)}
+              >
+                <Pencil class="size-4" />
+              </Button>
+            {:else}
+              <a
+                href={`/sign-in?redirect=${page.url.pathname}`}
+                class={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "text-muted-foreground shrink-0 mt-2",
+                )}
+              >
+                <Pencil class="size-4" />
+              </a>
+            {/if}
           </div>
         </section>
         <!-- About -->
@@ -427,14 +449,27 @@
         <div class="min-w-0 flex-1 mt-1.5">
           <div class="flex items-center justify-between">
             <Breadcrumbs items={place.data.breadcrumbs} location={false} />
-            <span
-              class={cn(
-                buttonVariants({ variant: "link" }),
-                "group text-xs text-foreground hover:text-primary",
-              )}
-              ><Pencil class="text-foreground group-hover:text-primary" /> Suggest
-              an edit</span
-            >
+            {#if user}
+              <button
+                class={cn(
+                  buttonVariants({ variant: "link" }),
+                  "group text-xs text-foreground hover:text-primary",
+                )}
+                onclick={() => (suggestEditOpen = true)}
+                ><Pencil class="text-foreground group-hover:text-primary" /> Suggest
+                an edit</button
+              >
+            {:else}
+              <a
+                href={`/sign-in?redirect=${page.url.pathname}`}
+                class={cn(
+                  buttonVariants({ variant: "link" }),
+                  "group text-xs text-foreground hover:text-primary",
+                )}
+                ><Pencil class="text-foreground group-hover:text-primary" /> Suggest
+                an edit</a
+              >
+            {/if}
           </div>
 
           <!-- image grid -->
@@ -718,6 +753,10 @@
         place={place.data}
         onOpenChange={(open) => (mapOpen = open)}
       />
+    {/if}
+
+    {#if user}
+      <SuggestEditDialog bind:open={suggestEditOpen} place={place.data} />
     {/if}
   {/if}
 </ErrorBoundary>

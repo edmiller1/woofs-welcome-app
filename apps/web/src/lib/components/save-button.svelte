@@ -119,7 +119,7 @@
       {#if user}
         <Button variant="secondary" {...props} class="hidden md:flex">
           <Heart
-            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-white"}`}
+            class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-foreground"}`}
           />
           {#if isSaved}
             <span class="font-semibold text-sm">Saved</span>

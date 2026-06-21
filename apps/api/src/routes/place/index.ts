@@ -1,11 +1,14 @@
 import { Hono } from "hono";
-import { optionalAuthMiddleware } from "../../middleware/auth";
+import { optionalAuthMiddleware, authMiddleware } from "../../middleware/auth";
 import { PlaceService } from "../../services/place.service";
 import { BadRequestError } from "../../lib/errors";
 import { zValidator } from "@hono/zod-validator";
-import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, searchPlacesSchema, trendingPlacesSchema } from "./schemas";
+import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, searchPlacesSchema, suggestEditSchema, trendingPlacesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { CollectionService } from "../../services/collection.service";
+import { PlaceSuggestedEdit, Place } from "../../db/schema";
+import { eq, and, count } from "drizzle-orm";
+import { sendDiscordSuggestedEditNotification } from "../../lib/discord";
 
 export const placeRouter = new Hono();
 
@@ -222,6 +225,70 @@ placeRouter.get("/popular", async (c) => {
   const result = await placeService.getPopularPlaces(4);
   return c.json(result, 200);
 });
+
+placeRouter.post(
+  "/suggest-edit",
+  authMiddleware,
+  zValidator("json", suggestEditSchema),
+  async (c) => {
+    const auth = c.get("user")!;
+    const db = c.get("db");
+    const env = c.get("env");
+    const { placeId, field, suggestedValue, notes } = c.req.valid("json");
+
+    // Rate limit: max 5 pending suggestions per user per place
+    const [{ pendingCount }] = await db
+      .select({ pendingCount: count() })
+      .from(PlaceSuggestedEdit)
+      .where(
+        and(
+          eq(PlaceSuggestedEdit.placeId, placeId),
+          eq(PlaceSuggestedEdit.userId, auth.id),
+          eq(PlaceSuggestedEdit.status, "pending"),
+        ),
+      );
+
+    if (pendingCount >= 5) {
+      throw new BadRequestError("You have too many pending suggestions for this place");
+    }
+
+    // Fetch current place value to snapshot it
+    const [place] = await db
+      .select()
+      .from(Place)
+      .where(eq(Place.id, placeId))
+      .limit(1);
+
+    if (!place) throw new BadRequestError("Place not found");
+
+    const currentValue = place[field as keyof typeof place] ?? null;
+
+    const [edit] = await db
+      .insert(PlaceSuggestedEdit)
+      .values({
+        placeId,
+        userId: auth.id,
+        field,
+        currentValue: currentValue as any,
+        suggestedValue,
+        notes,
+      })
+      .returning();
+
+    // Discord notification (non-blocking)
+    sendDiscordSuggestedEditNotification(env, {
+      placeName: place.name,
+      placeSlug: place.slug,
+      locationPath: "", // location path not on Place directly, just omit for now
+      userName: auth.name ?? auth.email,
+      field,
+      suggestedValue,
+      notes,
+    }).catch(() => {});
+
+    return c.json({ id: edit.id }, 201);
+  },
+);
 
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   //Context
