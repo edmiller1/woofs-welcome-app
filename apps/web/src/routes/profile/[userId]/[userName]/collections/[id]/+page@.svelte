@@ -292,7 +292,7 @@
           </Select.Root>
         </div>
         <div class="space-y-4 py-4 overflow-y-auto max-h-200 no-scrollbar pr-2">
-          {#if collectionWithPlaces.isLoading || collectionWithPlaces.isFetching}
+          {#if collectionWithPlaces.isLoading}
             {#each { length: 5 } as _}
               <div
                 class="bg-white rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"
@@ -500,7 +500,7 @@
               ? 'overflow-y-auto'
               : 'overflow-hidden'}"
           >
-            {#if collectionWithPlaces.isLoading || collectionWithPlaces.isFetching}
+            {#if collectionWithPlaces.isLoading}
               {#each { length: 5 } as _}
                 <div
                   class="bg-white rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"

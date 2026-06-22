@@ -130,7 +130,7 @@
 </script>
 
 <div class="min-h-100">
-  {#if profileReviews.isLoading || profileReviews.isFetching}
+  {#if profileReviews.isLoading}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each Array(6) as _}
         <div

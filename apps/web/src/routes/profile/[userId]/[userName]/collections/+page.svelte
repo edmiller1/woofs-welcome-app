@@ -62,7 +62,7 @@
 </script>
 
 <div class="min-h-100">
-  {#if profileCollections.isLoading || profileCollections.isFetching}
+  {#if profileCollections.isLoading}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each Array(6) as _}
         <Skeleton class="rounded-3xl aspect-4/5" />

@@ -133,7 +133,7 @@
 </script>
 
 <Separator bind:ref={reviewsContainer} />
-<phantom-ui loading={reviews.isLoading || reviews.isFetching}>
+<phantom-ui loading={reviews.isLoading}>
   <ErrorBoundary error={reviews.error}>
     {#if reviews.isLoading}
       <div class="space-y-6 my-6">

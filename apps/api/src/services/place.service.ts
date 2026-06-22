@@ -32,7 +32,6 @@ import { CollectionService } from "./collection.service";
 import {
   calculateDistance,
   getBoundingBox,
-  getPlaceDescription,
   isMemberFavourite,
 } from "../lib/helpers/place";
 import { RecommendationService } from "./recommendation.service";
@@ -207,26 +206,6 @@ export class PlaceService {
           percentage: totalReviews > 0 ? (ratingCount / totalReviews) * 100 : 0,
         };
       });
-
-      if (!place.description) {
-        try {
-          const AIdesc = await getPlaceDescription(
-            this.env,
-            place.name,
-            place.address || "",
-            location.path,
-          );
-
-          await this.db
-            .update(Place)
-            .set({
-              description: AIdesc,
-            })
-            .where(eq(Place.id, place.id));
-        } catch (error) {
-          console.error("Error generating place description:", error);
-        }
-      }
 
       const memberFavourite = isMemberFavourite(
         Number(place.rating),

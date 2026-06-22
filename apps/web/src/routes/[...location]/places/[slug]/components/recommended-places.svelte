@@ -23,7 +23,7 @@
 <Separator />
 
 <ErrorBoundary error={similarPlaces.error}>
-  {#if similarPlaces.isLoading || similarPlaces.isFetching}
+  {#if similarPlaces.isLoading}
     <!-- Mobile -->
     <section class="mt-12 md:hidden">
       <Skeleton class="h-8 w-40 mb-6" />

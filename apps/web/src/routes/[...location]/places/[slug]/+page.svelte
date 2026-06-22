@@ -55,12 +55,11 @@
   ];
 
   const { data }: Props = $props();
-  const { user, slug, locationPath, initialPlace, reviewId } = $derived(data);
+  const { user, slug, locationPath, reviewId } = $derived(data);
 
   const place = createQuery(() => ({
     queryKey: ["place", locationPath, slug],
     queryFn: () => api.place.getPlace(`${locationPath}/${slug}`),
-    initialData: initialPlace,
   }));
 
   let imagesOpen = $state<boolean>(false);
