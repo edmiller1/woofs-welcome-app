@@ -6,8 +6,8 @@ import { zValidator } from "@hono/zod-validator";
 import { explorePlacesSchema, nearbyPlacesSchema, placeReviewsSchema, searchPlacesSchema, suggestEditSchema, trendingPlacesSchema } from "./schemas";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { CollectionService } from "../../services/collection.service";
-import { PlaceSuggestedEdit, Place } from "../../db/schema";
-import { eq, and, count } from "drizzle-orm";
+import { PlaceSuggestedEdit, Place, Location } from "../../db/schema";
+import { eq, and, count, asc } from "drizzle-orm";
 import { sendDiscordSuggestedEditNotification } from "../../lib/discord";
 
 export const placeRouter = new Hono();
@@ -213,6 +213,35 @@ placeRouter.get(
     return c.json(result, 200);
   },
 );
+
+placeRouter.get("/sitemap", async (c) => {
+  const db = c.get("db");
+  const redis = c.get("redis");
+
+  const page = Number(c.req.query("page") ?? "1");
+  const limit = 50_000;
+  const offset = (page - 1) * limit;
+
+  const CACHE_KEY = `sitemap:places:${page}`;
+  const cached = await redis.get<{ slug: string; locationPath: string; updatedAt: string }[]>(CACHE_KEY);
+  if (cached) return c.json(cached, 200);
+
+  const places = await db
+    .select({
+      slug: Place.slug,
+      locationPath: Location.path,
+      updatedAt: Place.updatedAt,
+    })
+    .from(Place)
+    .innerJoin(Location, eq(Place.locationId, Location.id))
+    .orderBy(asc(Place.updatedAt))
+    .limit(limit)
+    .offset(offset);
+
+  await redis.set(CACHE_KEY, places, { ex: 60 * 60 * 24 }); // 24h
+
+  return c.json(places, 200);
+});
 
 placeRouter.get("/popular", async (c) => {
   const db = c.get("db");

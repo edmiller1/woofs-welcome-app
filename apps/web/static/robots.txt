@@ -1,3 +1,9 @@
-# allow crawling everything by default
 User-agent: *
-Disallow:
+Disallow: /profile/
+Disallow: /onboarding
+Disallow: /welcome
+Disallow: /sign-in
+Disallow: /verify-otp
+Disallow: /auth/
+
+Sitemap: https://woofswelcome.app/sitemap.xml

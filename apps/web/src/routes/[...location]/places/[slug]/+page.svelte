@@ -113,6 +113,30 @@
   });
 </script>
 
+<svelte:head>
+  {#if place.isSuccess}
+    <title>{place.data.name} — Dog-Friendly | Woofs Welcome</title>
+    <meta
+      name="description"
+      content={place.data.description
+        ? place.data.description.slice(0, 155)
+        : `${place.data.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
+    />
+    <meta property="og:title" content="{place.data.name} — Dog-Friendly | Woofs Welcome" />
+    <meta
+      property="og:description"
+      content={place.data.description
+        ? place.data.description.slice(0, 155)
+        : `${place.data.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
+    />
+    {#if place.data.images?.[0]}
+      <meta property="og:image" content={place.data.images[0]} />
+    {/if}
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
+  {/if}
+</svelte:head>
+
 <svelte:window bind:scrollY />
 
 <ErrorBoundary error={place.error}>

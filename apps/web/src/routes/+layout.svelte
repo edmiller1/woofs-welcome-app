@@ -59,9 +59,14 @@
 </script>
 
 <svelte:head>
+  <title>Woofs Welcome — Dog-Friendly Places in New Zealand</title>
   <link rel="icon" href={favicon} />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Woofs Welcome" />
+  <meta name="description" content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog." />
+  <meta property="og:site_name" content="Woofs Welcome" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://woofswelcome.app/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://imagedelivery.net" crossorigin="anonymous" />
   <link rel="dns-prefetch" href="https://imagedelivery.net" />
 </svelte:head>

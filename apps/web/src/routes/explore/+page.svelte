@@ -678,6 +678,21 @@
   });
 </script>
 
+<svelte:head>
+  <title>Explore Dog-Friendly Places in New Zealand | Woofs Welcome</title>
+  <meta
+    name="description"
+    content="Explore dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand on an interactive map. Find the perfect spot for you and your dog."
+  />
+  <meta property="og:title" content="Explore Dog-Friendly Places in New Zealand | Woofs Welcome" />
+  <meta
+    property="og:description"
+    content="Explore dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand on an interactive map. Find the perfect spot for you and your dog."
+  />
+  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://woofswelcome.app/explore" />
+</svelte:head>
+
 <div class="flex flex-col h-screen overflow-hidden">
   <Navbar {user} />
   <div class="flex-1 relative">

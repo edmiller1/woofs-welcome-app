@@ -129,6 +129,23 @@
 </script>
 
 <svelte:head>
+  {#if initialLocation}
+    <title>{initialLocation.name} — Dog-Friendly Places | Woofs Welcome</title>
+    <meta
+      name="description"
+      content="Discover dog-friendly places in {initialLocation.name}, New Zealand. Find cafes, restaurants, accommodation, walks and more that welcome your dog."
+    />
+    <meta property="og:title" content="{initialLocation.name} — Dog-Friendly Places | Woofs Welcome" />
+    <meta
+      property="og:description"
+      content="Discover dog-friendly places in {initialLocation.name}, New Zealand. Find cafes, restaurants, accommodation, walks and more that welcome your dog."
+    />
+    {#if initialLocation.image}
+      <meta property="og:image" content={buildImageUrl(initialLocation.image, "xlarge")} />
+    {/if}
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://woofswelcome.app/location/{initialLocation.pathname}" />
+  {/if}
   {#if initialLocation?.image}
     <link
       rel="preload"

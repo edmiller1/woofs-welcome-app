@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import { optionalAuthMiddleware } from "../../middleware/auth";
 import { LocationService } from "../../services/location.service";
 import { ImageUploadService } from "../../services/image-upload.service";
+import { Location } from "../../db/schema";
+import { asc } from "drizzle-orm";
 
 export const locationRouter = new Hono();
 
@@ -121,4 +123,22 @@ locationRouter.get("/:path{.+}", optionalAuthMiddleware, async (c) => {
   const result = await locationService.getLocation(fullPath, auth?.id);
 
   return c.json(result, 200);
+});
+
+locationRouter.get("/sitemap", async (c) => {
+  const db = c.get("db");
+  const redis = c.get("redis");
+
+  const CACHE_KEY = "sitemap:locations";
+  const cached = await redis.get<{ path: string; updatedAt: string }[]>(CACHE_KEY);
+  if (cached) return c.json(cached, 200);
+
+  const locations = await db
+    .select({ path: Location.path, updatedAt: Location.updatedAt })
+    .from(Location)
+    .orderBy(asc(Location.path));
+
+  await redis.set(CACHE_KEY, locations, { ex: 60 * 60 * 24 }); // 24h
+
+  return c.json(locations, 200);
 });
