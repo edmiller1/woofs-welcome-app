@@ -236,8 +236,16 @@ export class ImageUploadService {
     options: UploadOptions & { filename?: string },
   ): Promise<UploadResult> {
     try {
-      // Fetch the image from the URL
-      const response = await fetch(url);
+      const parsed = new URL(url);
+      if (parsed.protocol !== "https:") {
+        throw new BadRequestError("Only HTTPS URLs are allowed");
+      }
+      const blocked = ["localhost", "127.0.0.1", "0.0.0.0", "169.254.169.254"];
+      if (blocked.some((h) => parsed.hostname === h || parsed.hostname.endsWith(".internal"))) {
+        throw new BadRequestError("URL not allowed");
+      }
+
+      const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
 
       if (!response.ok) {
         throw new BadRequestError(

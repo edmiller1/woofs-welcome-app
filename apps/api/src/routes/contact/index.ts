@@ -1,10 +1,15 @@
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { getResend } from "../../lib/resend";
 import { sendDiscordContactNotification } from "../../lib/discord";
+import { authRateLimiter } from "../../middleware/rate-limit";
 
 export const contactRouter = new Hono();
+
+contactRouter.use("/", (c, next) =>
+  authRateLimiter(c.get("redis"))(c as Context, next),
+);
 
 const contactSchema = z.object({
   name: z.string().min(1).max(100),
@@ -31,9 +36,21 @@ const subjectLabels: Record<string, string> = {
   other: "Other",
 };
 
+const escapeHtml = (str: string) =>
+  str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 contactRouter.post("/", zValidator("json", contactSchema), async (c) => {
   const env = c.get("env");
   const { name, email, subject, message } = c.req.valid("json");
+
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
   const resend = getResend(env);
 
@@ -43,12 +60,12 @@ contactRouter.post("/", zValidator("json", contactSchema), async (c) => {
     from: "Woofs Welcome <hello@woofswelcome.app>",
     to: "woofswelcome1@gmail.com",
     replyTo: email,
-    subject: `[Contact] ${subjectLabel} — ${name}`,
+    subject: `[Contact] ${subjectLabel} — ${safeName}`,
     html: `
-      <p><strong>From:</strong> ${name} (${email})</p>
+      <p><strong>From:</strong> ${safeName} (${safeEmail})</p>
       <p><strong>Subject:</strong> ${subjectLabel}</p>
       <hr />
-      <p>${message.replace(/\n/g, "<br>")}</p>
+      <p>${safeMessage}</p>
     `,
   });
 
@@ -58,11 +75,11 @@ contactRouter.post("/", zValidator("json", contactSchema), async (c) => {
       to: email,
       subject: `We've received your message — ${subjectLabel}`,
       html: `
-      <p>Hi ${name},</p>
+      <p>Hi ${safeName},</p>
       <p>Thanks for reaching out! We've received your message and will get back to you as soon as possible.</p>
       <p><strong>Your message:</strong></p>
       <blockquote style="border-left:3px solid #ccc;margin:0;padding:0 1em;color:#666;">
-        <p>${message.replace(/\n/g, "<br>")}</p>
+        <p>${safeMessage}</p>
       </blockquote>
       <br />
       <p>— The Woofs Welcome Team</p>

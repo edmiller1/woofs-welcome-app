@@ -17,10 +17,19 @@
   const row2 = $derived(featuredLocations.slice(2, 4));
 </script>
 
+<svelte:head>
+  <title>Woofs Welcome — Dog-Friendly Places in New Zealand</title>
+  <meta name="description" content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog." />
+  <meta property="og:title" content="Woofs Welcome — Dog-Friendly Places in New Zealand" />
+  <meta property="og:description" content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog." />
+  <meta property="og:url" content="https://woofswelcome.app" />
+  <link rel="canonical" href="https://woofswelcome.app" />
+</svelte:head>
+
 <div class="bg-background min-h-screen">
   <HomeNavbar {user} />
 
-  <main class="pt-18 pb-16">
+  <main class="pt-17 pb-16">
     <!-- Hero Section -->
     <section
       class="relative h-217.5 w-full overflow-hidden flex items-center px-5 md:px-12"

@@ -9,6 +9,15 @@
   const { user } = $derived(data);
 </script>
 
+<svelte:head>
+  <title>About | Woofs Welcome</title>
+  <meta name="description" content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works." />
+  <meta property="og:title" content="About | Woofs Welcome" />
+  <meta property="og:description" content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works." />
+  <meta property="og:url" content="https://woofswelcome.app/about" />
+  <link rel="canonical" href="https://woofswelcome.app/about" />
+</svelte:head>
+
 <HomeNavbar {user} />
 <main class="min-h-screen bg-background">
   <div class="max-w-7xl mx-auto px-4 py-6 sm:py-12">

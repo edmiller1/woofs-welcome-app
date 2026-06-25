@@ -690,6 +690,7 @@
     content="Explore dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand on an interactive map. Find the perfect spot for you and your dog."
   />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://woofswelcome.app/explore" />
   <link rel="canonical" href="https://woofswelcome.app/explore" />
 </svelte:head>
 

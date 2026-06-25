@@ -73,7 +73,7 @@
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a class="hidden lg:block text-2xl font-bold text-primary" href="/"
-        >Woofs Welcome
+        >WoofsWelcome
       </a>
       <a href="/" class="lg:hidden text-2xl font-bold text-primary-tint">WW</a>
       <nav class="flex gap-6 items-center">

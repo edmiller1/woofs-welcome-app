@@ -108,7 +108,7 @@ showRoutes(app);
 
 app.onError((err, c) => {
   console.error("Unhandled error:", err);
-  return c.json({ error: err.message, stack: err.stack }, 500);
+  return c.json({ error: "Internal server error" }, 500);
 });
 
 export default app;

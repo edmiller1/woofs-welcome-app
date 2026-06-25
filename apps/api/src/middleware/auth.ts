@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono";
 import { type Db } from "../db";
-import { eq } from "drizzle-orm";
+import { eq, lt } from "drizzle-orm";
 import { session } from "../db/schema";
 import type { Session, User as betterAuthUser } from "better-auth/types";
 import type { Env } from "../config/env";
@@ -41,8 +41,9 @@ export const authMiddleware = async (c: Context, next: Next) => {
       return c.json({ error: "Unauthorized - Invalid session" }, 401);
     }
 
-    // Check if session is expired
+    // Check if session is expired — delete it so it can't be reused
     if (userSession.expiresAt < new Date()) {
+      await db.delete(session).where(eq(session.token, token));
       return c.json({ error: "Unauthorized - Session expired" }, 401);
     }
 

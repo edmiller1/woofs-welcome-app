@@ -55,11 +55,12 @@
   ];
 
   const { data }: Props = $props();
-  const { user, slug, locationPath, reviewId } = $derived(data);
+  const { user, slug, locationPath, initialPlace, reviewId } = $derived(data);
 
   const place = createQuery(() => ({
     queryKey: ["place", locationPath, slug],
     queryFn: () => api.place.getPlace(`${locationPath}/${slug}`),
+    initialData: initialPlace,
   }));
 
   let imagesOpen = $state<boolean>(false);
@@ -114,27 +115,40 @@
 </script>
 
 <svelte:head>
-  {#if place.isSuccess}
-    <title>{place.data.name} — Dog-Friendly | Woofs Welcome</title>
-    <meta
-      name="description"
-      content={place.data.description
-        ? place.data.description.slice(0, 155)
-        : `${place.data.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
-    />
-    <meta property="og:title" content="{place.data.name} — Dog-Friendly | Woofs Welcome" />
-    <meta
-      property="og:description"
-      content={place.data.description
-        ? place.data.description.slice(0, 155)
-        : `${place.data.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
-    />
-    {#if place.data.images?.[0]}
-      <meta property="og:image" content={place.data.images[0]} />
-    {/if}
-    <meta property="og:type" content="website" />
-    <link rel="canonical" href="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
+  <title>{initialPlace.name} — Dog-Friendly | Woofs Welcome</title>
+  <meta
+    name="description"
+    content={initialPlace.description
+      ? initialPlace.description.slice(0, 155)
+      : `${initialPlace.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
+  />
+  <meta property="og:title" content="{initialPlace.name} — Dog-Friendly | Woofs Welcome" />
+  <meta
+    property="og:description"
+    content={initialPlace.description
+      ? initialPlace.description.slice(0, 155)
+      : `${initialPlace.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
+  />
+  {#if initialPlace.images?.[0]}
+    <meta property="og:image" content={initialPlace.images[0]} />
   {/if}
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
+  <link rel="canonical" href="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": initialPlace.name,
+    "description": initialPlace.description || undefined,
+    "url": `https://woofswelcome.app/location/${locationPath}/places/${slug}`,
+    ...(initialPlace.address ? { "address": { "@type": "PostalAddress", "streetAddress": initialPlace.address, "addressCountry": initialPlace.countryCode } } : {}),
+    ...(initialPlace.phone ? { "telephone": initialPlace.phone } : {}),
+    ...(initialPlace.email ? { "email": initialPlace.email } : {}),
+    ...(initialPlace.website ? { "sameAs": initialPlace.website } : {}),
+    ...(initialPlace.latitude && initialPlace.longitude ? { "geo": { "@type": "GeoCoordinates", "latitude": initialPlace.latitude, "longitude": initialPlace.longitude } } : {}),
+    ...(initialPlace.images?.[0] ? { "image": initialPlace.images[0] } : {}),
+    ...(initialPlace.reviewsCount > 0 ? { "aggregateRating": { "@type": "AggregateRating", "ratingValue": Number(initialPlace.rating).toFixed(1), "reviewCount": initialPlace.reviewsCount, "bestRating": "5", "worstRating": "1" } } : {}),
+  })}</script>`}
 </svelte:head>
 
 <svelte:window bind:scrollY />

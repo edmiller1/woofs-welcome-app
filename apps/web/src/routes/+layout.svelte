@@ -68,8 +68,8 @@
   <meta property="og:image" content="https://woofswelcome.app/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="google-site-verification" content="3u1cAqx67sHaDtejcVWJ9UkskDFDA2UHYQ-HMua0Mbo" />
-  <link rel="preconnect" href="https://imagedelivery.net" crossorigin="anonymous" />
-  <link rel="dns-prefetch" href="https://imagedelivery.net" />
+  <link rel="preconnect" href="https://images.woofswelcome.app" crossorigin="anonymous" />
+  <link rel="dns-prefetch" href="https://images.woofswelcome.app" />
 </svelte:head>
 
 <QueryClientProvider client={queryClient}>
