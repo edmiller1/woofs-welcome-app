@@ -60,13 +60,15 @@
     page.url.pathname.includes("/explore") ||
     page.url.pathname.includes("/business/dashboard") ||
     page.url.pathname.includes("/profile") ||
-    page.url.pathname.includes("/community");
+    page.url.pathname.includes("/community") ||
+    page.url.pathname.includes("/about") ||
+    page.url.pathname.includes("/contact");
 
   const exploreActive = $derived(page.url.pathname.includes("/explore"));
   const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
-<header class="fixed top-0 z-50 w-full bg-background border-none">
+<header class="fixed top-0 z-50 w-full bg-background border-b border-border">
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">

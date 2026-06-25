@@ -26,7 +26,7 @@ export const sendDiscordSuggestedEditNotification = async (
   },
 ) => {
   const webhookUrl = env.DISCORD_SUGGESTED_EDIT_WEBHOOK_URL;
-  if (!webhookUrl) throw new NotFoundError("Discord webhook URL not found");
+  if (!webhookUrl) return;
 
   const placeUrl = `https://woofswelcome.app/location/${input.locationPath}/places/${input.placeSlug}`;
   const valueDisplay =
@@ -55,6 +55,53 @@ export const sendDiscordSuggestedEditNotification = async (
     return await sendWebhook(webhookUrl, payload);
   } catch (error) {
     console.error("Error sending Discord suggested edit notification:", error);
+  }
+};
+
+export const sendDiscordContactNotification = async (
+  env: Env,
+  input: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+  },
+) => {
+  const webhookUrl = env.DISCORD_CONTACT_WEBHOOK_URL;
+  console.log("Discord contact webhook URL:", webhookUrl ? "present" : "MISSING");
+  if (!webhookUrl) return;
+
+  const subjectLabels: Record<string, string> = {
+    generalInquiry: "General Inquiry",
+    feedback: "Feedback",
+    partnership: "Partnership",
+    "press/media": "Press/Media",
+    bugReport: "Bug Report",
+    featureRequest: "Feature Request",
+    other: "Other",
+  };
+
+  const payload = {
+    embeds: [
+      {
+        title: `📬 Contact Form — ${subjectLabels[input.subject] ?? input.subject}`,
+        color: 0x2d6a4f,
+        fields: [
+          { name: "Name", value: input.name, inline: true },
+          { name: "Email", value: input.email, inline: true },
+          { name: "Message", value: input.message },
+        ],
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  };
+
+  try {
+    const res = await sendWebhook(webhookUrl, payload);
+    console.log("Discord contact webhook status:", res.status);
+    return res;
+  } catch (error) {
+    console.error("Error sending Discord contact notification:", error);
   }
 };
 

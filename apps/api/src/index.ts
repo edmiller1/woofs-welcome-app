@@ -17,6 +17,7 @@ import { collectionRouter } from "./routes/collection";
 import { reviewRouter } from "./routes/review";
 import { profileRouter } from "./routes/profile";
 import { eventRouter } from "./routes/event";
+import { contactRouter } from "./routes/contact";
 import { createDb } from "./db";
 import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
@@ -36,12 +37,15 @@ app.use("*", async (c, next) => {
   await next();
 });
 
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "https://woofswelcome.app",
+  "https://www.woofswelcome.app",
+];
+
 app.use("*", async (c, next) =>
   cors({
-    origin:
-      c.env.NODE_ENV === "development"
-        ? ["http://localhost:5173"]
-        : ["https://woofswelcome.app", "https://www.woofswelcome.app"],
+    origin: ALLOWED_ORIGINS,
     maxAge: 86400,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     exposeHeaders: ["Content-Length"],
@@ -60,12 +64,8 @@ app.all("/api/auth/*", async (c) => {
   const response = await auth.handler(c.req.raw);
 
   const origin = c.req.header("Origin") ?? "";
-  const allowedOrigins =
-    c.env.NODE_ENV === "development"
-      ? ["http://localhost:5173"]
-      : ["https://woofswelcome.app", "https://www.woofswelcome.app"];
 
-  if (allowedOrigins.includes(origin)) {
+  if (ALLOWED_ORIGINS.includes(origin)) {
     const headers = new Headers(response.headers);
     headers.set("Access-Control-Allow-Origin", origin);
     headers.set("Access-Control-Allow-Credentials", "true");
@@ -98,6 +98,7 @@ app.route("/api/collection", collectionRouter);
 app.route("/api/review", reviewRouter);
 app.route("/api/profile", profileRouter);
 app.route("/api/event", eventRouter);
+app.route("/api/contact", contactRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

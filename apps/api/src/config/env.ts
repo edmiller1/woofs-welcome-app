@@ -46,6 +46,7 @@ export const envSchema = z.object({
   DISCORD_CLAIM_WEBHOOK_URL: z.string().min(1),
   DISCORD_REPORT_WEBHOOK_URL: z.string().min(1),
   DISCORD_SUGGESTED_EDIT_WEBHOOK_URL: z.string().min(1),
+  DISCORD_CONTACT_WEBHOOK_URL: z.string().min(1),
 
   // Cloudflare
   CF_ACCOUNT_ID: z.string().min(1),

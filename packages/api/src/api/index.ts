@@ -6,6 +6,7 @@ import { collection } from "./collection";
 import { review } from "./review";
 import { profile } from "./profile";
 import { event } from "./event";
+import { contact } from "./contact";
 
 export const api = {
   auth,
@@ -16,4 +17,5 @@ export const api = {
   review,
   profile,
   event,
+  contact,
 };

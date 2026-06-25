@@ -237,7 +237,7 @@ placeRouter.post(
     const { placeId, field, suggestedValue, notes } = c.req.valid("json");
 
     // Rate limit: max 5 pending suggestions per user per place
-    const [{ pendingCount }] = await db
+    const pendingResult = await db
       .select({ pendingCount: count() })
       .from(PlaceSuggestedEdit)
       .where(
@@ -248,7 +248,7 @@ placeRouter.post(
         ),
       );
 
-    if (pendingCount >= 5) {
+    if ((pendingResult[0]?.pendingCount ?? 0) >= 5) {
       throw new BadRequestError("You have too many pending suggestions for this place");
     }
 
@@ -286,7 +286,7 @@ placeRouter.post(
       notes,
     }).catch(() => {});
 
-    return c.json({ id: edit.id }, 201);
+    return c.json({ id: edit!.id }, 201);
   },
 );
 

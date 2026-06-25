@@ -68,7 +68,7 @@
 </script>
 
 <header
-  class="top-0 z-50 w-full bg-background/70 backdrop-blur-md border-b border-border/20"
+  class="top-0 z-50 w-full bg-background/70 backdrop-blur-md border-b border-border"
 >
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">

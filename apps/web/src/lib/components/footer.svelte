@@ -133,7 +133,8 @@
       </h4>
       <ul class="space-y-2 text-text-subtle text-sm font-medium">
         <li>
-          <a class="hover:text-primary transition-colors" href="#">About</a>
+          <a class="hover:text-primary transition-colors" href="/about">About</a
+          >
         </li>
         <li>
           <a class="hover:text-primary transition-colors" href="/contact"
