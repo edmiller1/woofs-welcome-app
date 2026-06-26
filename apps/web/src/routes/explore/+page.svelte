@@ -40,6 +40,7 @@
   import PlaceCard from "$lib/components/place-card.svelte";
   import ExplorePlacePopover from "$lib/components/explore-place-popover.svelte";
   import { mount, unmount, onDestroy } from "svelte";
+  import { afterNavigate } from "$app/navigation";
   import type { ExplorePlaceItem } from "@woofs/types";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
@@ -675,6 +676,13 @@
     placeMarkers.clear();
     if (activeMounted) unmount(activeMounted);
     activePopup?.remove();
+  });
+
+  let mapKey = $state(0);
+  afterNavigate(({ from }) => {
+    if (from?.url.pathname !== "/explore") {
+      mapKey++;
+    }
   });
 </script>
 
@@ -1366,13 +1374,15 @@
       </div>
     </div>
 
-    <MapLibre
-      style={`https://api.maptiler.com/maps/${streetsMap ? "streets" : "outdoor"}/style.json?key=${PUBLIC_MAPTILER_API_KEY}`}
-      class="h-full w-full"
-      attributionControl={{ compact: true, customAttribution: "" }}
-      bind:map
-    >
-      <NavigationControl position="bottom-right" showCompass={false} />
-    </MapLibre>
+    {#key mapKey}
+      <MapLibre
+        style={`https://api.maptiler.com/maps/${streetsMap ? "streets" : "outdoor"}/style.json?key=${PUBLIC_MAPTILER_API_KEY}`}
+        class="h-full w-full"
+        attributionControl={{ compact: true, customAttribution: "" }}
+        bind:map
+      >
+        <NavigationControl position="bottom-right" showCompass={false} />
+      </MapLibre>
+    {/key}
   </div>
 </div>
