@@ -5,10 +5,8 @@ import {
   count,
   desc,
   eq,
-  ilike,
   inArray,
   ne,
-  or,
   sql,
 } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -16,13 +14,11 @@ import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
   CheckIn,
   CollectionItem,
-  Dog,
   Location,
   Place,
   PlaceImage,
   placeTypeEnum,
   Review,
-  ReviewDog,
 } from "../db/schema";
 import { Google } from "../lib/google";
 import { ImageUploadService } from "./image-upload.service";
@@ -32,6 +28,7 @@ import { CollectionService } from "./collection.service";
 import {
   calculateDistance,
   getBoundingBox,
+  getPlaceDescription,
   isMemberFavourite,
 } from "../lib/helpers/place";
 import { RecommendationService } from "./recommendation.service";
@@ -87,6 +84,66 @@ export class PlaceService {
         .select()
         .from(PlaceImage)
         .where(eq(PlaceImage.placeId, place.id));
+
+      // If no images, try to fetch from Google Places
+      if (images.length === 0) {
+        try {
+          const placesData = await Google.searchPlaces(
+            this.env,
+            place.name,
+            location.countryCode,
+          );
+
+          if (placesData.length === 0) {
+            console.log("No Google Places results found");
+          } else {
+            const imageUrls = await Google.getPlacePhotos(
+              this.env,
+              placesData[0].place_id,
+            );
+
+            if (imageUrls && imageUrls.length > 0) {
+              // Upload images from Google to Cloudflare
+              const uploadedImages =
+                await this.imageUploadService.uploadMultipleImagesFromUrls(
+                  imageUrls.slice(0, 20), // Limit to 20 images
+                  {
+                    imageType: "place_gallery",
+                    metadata: {
+                      source: "google_places",
+                      placeId: place.id,
+                      googlePlaceId: placesData[0].place_id,
+                    },
+                  },
+                );
+
+              // Create PlaceImage records linking images to the place
+              if (uploadedImages.length > 0) {
+                await this.db.insert(PlaceImage).values(
+                  uploadedImages.map((img, index) => ({
+                    placeId: place.id,
+                    imageId: img.id,
+                    isPrimary: index === 0, // First image is primary
+                    displayOrder: index,
+                  })),
+                );
+
+                // Re-fetch images after upload
+                const newImages = await this.db
+                  .select()
+                  .from(PlaceImage)
+                  .where(eq(PlaceImage.placeId, place.id));
+
+                images.push(...newImages);
+              }
+            } else {
+              console.log("No images found from Google Places");
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching/uploading place images:", error);
+        }
+      }
 
       // Build breadcrumbs from location path + place
       const pathSegments = validatedLocationPath.split("/");
@@ -147,6 +204,26 @@ export class PlaceService {
         };
       });
 
+      if (!place.description) {
+        try {
+          const AIdesc = await getPlaceDescription(
+            this.env,
+            place.name,
+            place.address || "",
+            location.path,
+          );
+
+          await this.db
+            .update(Place)
+            .set({
+              description: AIdesc,
+            })
+            .where(eq(Place.id, place.id));
+        } catch (error) {
+          console.error("Error generating place description:", error);
+        }
+      }
+
       const memberFavourite = isMemberFavourite(
         Number(place.rating),
         place.reviewsCount || 0,
@@ -180,84 +257,6 @@ export class PlaceService {
     }
   }
 
-  async fetchAndStoreGoogleImages(placeId: string): Promise<void> {
-    const [place] = await this.db
-      .select()
-      .from(Place)
-      .where(eq(Place.id, placeId))
-      .limit(1);
-
-    if (!place) return;
-
-    const existing = await this.db
-      .select({ id: PlaceImage.id })
-      .from(PlaceImage)
-      .where(eq(PlaceImage.placeId, placeId))
-      .limit(1);
-
-    if (existing.length > 0) return;
-
-    const [location] = await this.db
-      .select({ countryCode: Location.countryCode })
-      .from(Location)
-      .where(eq(Location.id, place.locationId))
-      .limit(1);
-
-    if (!location) return;
-
-    try {
-      const placesData = await Google.searchPlaces(
-        this.env,
-        place.name,
-        location.countryCode,
-      );
-
-      if (placesData.length === 0) {
-        console.log(`[Google Images] No results for "${place.name}"`);
-        return;
-      }
-
-      const imageUrls = await Google.getPlacePhotos(
-        this.env,
-        placesData[0].place_id,
-      );
-
-      if (!imageUrls || imageUrls.length === 0) {
-        console.log(`[Google Images] No photos for "${place.name}"`);
-        return;
-      }
-
-      const uploadedImages =
-        await this.imageUploadService.uploadMultipleImagesFromUrls(
-          imageUrls.slice(0, 10),
-          {
-            imageType: "place_gallery",
-            metadata: {
-              source: "google_places",
-              placeId: place.id,
-              googlePlaceId: placesData[0].place_id,
-            },
-          },
-        );
-
-      if (uploadedImages.length > 0) {
-        await this.db.insert(PlaceImage).values(
-          uploadedImages.map((img, index) => ({
-            placeId: place.id,
-            imageId: img.id,
-            isPrimary: index === 0,
-            displayOrder: index,
-          })),
-        );
-        console.log(
-          `[Google Images] Stored ${uploadedImages.length} images for "${place.name}"`,
-        );
-      }
-    } catch (error) {
-      console.error(`[Google Images] Error for "${place.name}":`, error);
-    }
-  }
-
   async getPlaceReviews(
     placeId: string,
     page: number,
@@ -272,13 +271,6 @@ export class PlaceService {
           likes: true,
           replies: true,
           reports: true,
-          dogs: {
-            with: {
-              dog: {
-                columns: { id: true, name: true, breed: true },
-              },
-            },
-          },
           user: {
             columns: {
               id: true,
@@ -431,7 +423,10 @@ export class PlaceService {
 
       if (filters.types && filters.types.length > 0) {
         conditions.push(
-          sql`${Place.types} && ARRAY[${sql.join(filters.types.map((t) => sql`${t}`), sql`, `)}]::place_type[]`,
+          sql`${Place.types} && ARRAY[${sql.join(
+            filters.types.map((t) => sql`${t}`),
+            sql`, `,
+          )}]::place_type[]`,
         );
       }
 
@@ -532,94 +527,30 @@ export class PlaceService {
     }
   }
 
-  async getPopularPlaces(limit: number = 4) {
-    try {
-      const CityLocation = alias(Location, "city");
-      const RegionLocation = alias(Location, "region");
-
-      const places = await this.db
-        .select({
-          id: Place.id,
-          name: Place.name,
-          slug: Place.slug,
-          types: Place.types,
-          rating: Place.rating,
-          reviewsCount: Place.reviewsCount,
-          isVerified: Place.isVerified,
-          countryCode: Place.countryCode,
-          dogAmenities: Place.dogAmenities,
-          imageId: PlaceImage.imageId,
-          cityName: CityLocation.name,
-          regionName: RegionLocation.name,
-          locationPath: CityLocation.path,
-        })
-        .from(Place)
-        .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
-        .leftJoin(RegionLocation, eq(CityLocation.parentId, RegionLocation.id))
-        .leftJoin(
-          PlaceImage,
-          and(eq(PlaceImage.placeId, Place.id), eq(PlaceImage.isPrimary, true)),
-        )
-        .where(sql`${Place.reviewsCount} > 0`)
-        .orderBy(
-          desc(sql`cast(${Place.rating} as decimal) * ${Place.reviewsCount}`),
-        )
-        .limit(limit);
-
-      return places.map((p) => ({
-        ...p,
-        isSaved: false,
-        memberFavourite: isMemberFavourite(Number(p.rating), p.reviewsCount || 0),
-      }));
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      throw new DatabaseError("Failed to get popular places", {
-        originalError: error,
-      });
-    }
-  }
-
   async getTrendingPlaces(limit: number = 6, userId?: string) {
     try {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-      const [checkInCounts, reviewCounts] = await Promise.all([
-        this.db
-          .select({ placeId: CheckIn.placeId, checkInCount: count() })
-          .from(CheckIn)
-          .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`)
-          .groupBy(CheckIn.placeId),
-        this.db
-          .select({ placeId: Review.placeId, reviewCount: count() })
-          .from(Review)
-          .where(sql`${Review.createdAt} >= ${oneWeekAgo.toISOString()}`)
-          .groupBy(Review.placeId),
-      ]);
+      const checkInCounts = await this.db
+        .select({
+          placeId: CheckIn.placeId,
+          checkInCount: count(),
+        })
+        .from(CheckIn)
+        .where(sql`${CheckIn.date} >= ${oneWeekAgo.toISOString()}`)
+        .groupBy(CheckIn.placeId)
+        .orderBy(desc(count()))
+        .limit(limit);
 
-      const checkInMap = new Map(checkInCounts.map((r) => [r.placeId, r.checkInCount]));
-      const reviewMap = new Map(reviewCounts.map((r) => [r.placeId, r.reviewCount]));
-
-      const allPlaceIds = [...new Set([
-        ...checkInCounts.map((r) => r.placeId),
-        ...reviewCounts.map((r) => r.placeId),
-      ])];
-
-      if (allPlaceIds.length === 0) {
+      if (checkInCounts.length === 0) {
         return [];
       }
 
-      const scoredIds = allPlaceIds
-        .map((id) => ({
-          id,
-          score: (checkInMap.get(id) ?? 0) + (reviewMap.get(id) ?? 0),
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, limit)
-        .map((r) => r.id);
+      const placeIds = checkInCounts.map((r) => r.placeId);
 
       const places = await this.db.query.Place.findMany({
-        where: inArray(Place.id, scoredIds),
+        where: inArray(Place.id, placeIds),
         with: {
           location: {
             with: {
@@ -635,10 +566,14 @@ export class PlaceService {
         },
       });
 
+      const countMap = new Map(
+        checkInCounts.map((r) => [r.placeId, r.checkInCount]),
+      );
+
       let savedPlaceIds = new Set<string>();
       if (userId) {
         savedPlaceIds = await this.collectionService.getSavedPlaceIds(
-          scoredIds,
+          placeIds,
           userId,
         );
       }
@@ -646,20 +581,14 @@ export class PlaceService {
       return places
         .map((place) => ({
           ...place,
-          imageId: place.images[0]?.imageId ?? null,
-          images: undefined,
-          checkInCount: checkInMap.get(place.id) ?? 0,
+          checkInCount: countMap.get(place.id) ?? 0,
           isSaved: savedPlaceIds.has(place.id),
           memberFavourite: isMemberFavourite(
             Number(place.rating),
             place.reviewsCount || 0,
           ),
         }))
-        .sort((a, b) => {
-          const scoreA = (checkInMap.get(a.id) ?? 0) + (reviewMap.get(a.id) ?? 0);
-          const scoreB = (checkInMap.get(b.id) ?? 0) + (reviewMap.get(b.id) ?? 0);
-          return scoreB - scoreA;
-        });
+        .sort((a, b) => b.checkInCount - a.checkInCount);
     } catch (error) {
       if (error instanceof AppError) {
         console.error("Get trending places error:", error);
@@ -785,70 +714,6 @@ export class PlaceService {
       throw new DatabaseError("Failed to get similar places", {
         originalError: error,
       });
-    }
-  }
-
-  async search(q: string) {
-    try {
-      const term = `%${q}%`;
-
-      const [places, locations] = await Promise.all([
-        this.db
-          .select({
-            id: Place.id,
-            name: Place.name,
-            slug: Place.slug,
-            types: Place.types,
-            rating: Place.rating,
-            locationPath: Location.path,
-            locationName: Location.name,
-            imageId: sql<string | null>`(
-              select i."cf_image_id" from "place_image" pi
-              inner join "image" i on pi."image_id" = i.id
-              where pi."place_id" = ${Place.id} and pi."is_primary" = true
-              limit 1
-            )`,
-          })
-          .from(Place)
-          .innerJoin(Location, eq(Place.locationId, Location.id))
-          .where(ilike(Place.name, term))
-          .orderBy(desc(Place.rating))
-          .limit(5),
-
-        this.db
-          .select({
-            id: Location.id,
-            name: Location.name,
-            path: Location.path,
-            type: Location.type,
-            latitude: Location.latitude,
-            longitude: Location.longitude,
-            image: Location.image,
-          })
-          .from(Location)
-          .where(
-            and(
-              ilike(Location.name, term),
-              or(
-                sql`${Location.level} = 3`,
-                sql`${Location.level} = 2`,
-              ),
-            ),
-          )
-          .orderBy(desc(Location.isPopular), asc(Location.level))
-          .limit(4),
-      ]);
-
-      return {
-        places: places.map((p) => ({ ...p, resultType: "place" as const })),
-        locations: locations.map((l) => ({
-          ...l,
-          resultType: "location" as const,
-        })),
-      };
-    } catch (error) {
-      if (error instanceof AppError) throw error;
-      throw new DatabaseError("Failed to search", { originalError: error });
     }
   }
 }
