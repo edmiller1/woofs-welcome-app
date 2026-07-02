@@ -88,66 +88,6 @@ export class PlaceService {
         .from(PlaceImage)
         .where(eq(PlaceImage.placeId, place.id));
 
-      // If no images, try to fetch from Google Places
-      if (images.length === 0) {
-        try {
-          const placesData = await Google.searchPlaces(
-            this.env,
-            place.name,
-            location.countryCode,
-          );
-
-          if (placesData.length === 0) {
-            console.log("No Google Places results found");
-          } else {
-            const imageUrls = await Google.getPlacePhotos(
-              this.env,
-              placesData[0].place_id,
-            );
-
-            if (imageUrls && imageUrls.length > 0) {
-              // Upload images from Google to Cloudflare
-              const uploadedImages =
-                await this.imageUploadService.uploadMultipleImagesFromUrls(
-                  imageUrls.slice(0, 20), // Limit to 20 images
-                  {
-                    imageType: "place_gallery",
-                    metadata: {
-                      source: "google_places",
-                      placeId: place.id,
-                      googlePlaceId: placesData[0].place_id,
-                    },
-                  },
-                );
-
-              // Create PlaceImage records linking images to the place
-              if (uploadedImages.length > 0) {
-                await this.db.insert(PlaceImage).values(
-                  uploadedImages.map((img, index) => ({
-                    placeId: place.id,
-                    imageId: img.id,
-                    isPrimary: index === 0, // First image is primary
-                    displayOrder: index,
-                  })),
-                );
-
-                // Re-fetch images after upload
-                const newImages = await this.db
-                  .select()
-                  .from(PlaceImage)
-                  .where(eq(PlaceImage.placeId, place.id));
-
-                images.push(...newImages);
-              }
-            } else {
-              console.log("No images found from Google Places");
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching/uploading place images:", error);
-        }
-      }
-
       // Build breadcrumbs from location path + place
       const pathSegments = validatedLocationPath.split("/");
       const ancestorPaths = pathSegments.map((_, index) =>
@@ -237,6 +177,84 @@ export class PlaceService {
       throw new DatabaseError("Failed to get place", {
         originalError: error,
       });
+    }
+  }
+
+  async fetchAndStoreGoogleImages(placeId: string): Promise<void> {
+    const [place] = await this.db
+      .select()
+      .from(Place)
+      .where(eq(Place.id, placeId))
+      .limit(1);
+
+    if (!place) return;
+
+    const existing = await this.db
+      .select({ id: PlaceImage.id })
+      .from(PlaceImage)
+      .where(eq(PlaceImage.placeId, placeId))
+      .limit(1);
+
+    if (existing.length > 0) return;
+
+    const [location] = await this.db
+      .select({ countryCode: Location.countryCode })
+      .from(Location)
+      .where(eq(Location.id, place.locationId))
+      .limit(1);
+
+    if (!location) return;
+
+    try {
+      const placesData = await Google.searchPlaces(
+        this.env,
+        place.name,
+        location.countryCode,
+      );
+
+      if (placesData.length === 0) {
+        console.log(`[Google Images] No results for "${place.name}"`);
+        return;
+      }
+
+      const imageUrls = await Google.getPlacePhotos(
+        this.env,
+        placesData[0].place_id,
+      );
+
+      if (!imageUrls || imageUrls.length === 0) {
+        console.log(`[Google Images] No photos for "${place.name}"`);
+        return;
+      }
+
+      const uploadedImages =
+        await this.imageUploadService.uploadMultipleImagesFromUrls(
+          imageUrls.slice(0, 10),
+          {
+            imageType: "place_gallery",
+            metadata: {
+              source: "google_places",
+              placeId: place.id,
+              googlePlaceId: placesData[0].place_id,
+            },
+          },
+        );
+
+      if (uploadedImages.length > 0) {
+        await this.db.insert(PlaceImage).values(
+          uploadedImages.map((img, index) => ({
+            placeId: place.id,
+            imageId: img.id,
+            isPrimary: index === 0,
+            displayOrder: index,
+          })),
+        );
+        console.log(
+          `[Google Images] Stored ${uploadedImages.length} images for "${place.name}"`,
+        );
+      }
+    } catch (error) {
+      console.error(`[Google Images] Error for "${place.name}":`, error);
     }
   }
 

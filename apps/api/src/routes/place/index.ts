@@ -347,5 +347,11 @@ placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
 
   const result = await placeService.getPlace(locationPath, slug, auth?.id);
 
+  if (result.images.length === 0) {
+    c.executionCtx.waitUntil(
+      placeService.fetchAndStoreGoogleImages(result.id),
+    );
+  }
+
   return c.json(result, 200);
 });
