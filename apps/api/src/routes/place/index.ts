@@ -319,6 +319,30 @@ placeRouter.post(
   },
 );
 
+placeRouter.post("/:placeId/fetch-images", async (c) => {
+  const db = c.get("db");
+  const env = c.get("env");
+  const placeId = c.req.param("placeId");
+
+  const imageUploadService = new ImageUploadService(db, env);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(db, imageUploadService, collectionService, env);
+
+  const [place] = await db.select().from(Place).where(eq(Place.id, placeId)).limit(1);
+  if (!place) throw new BadRequestError("Place not found");
+
+  const [location] = await db
+    .select({ countryCode: Location.countryCode })
+    .from(Location)
+    .where(eq(Location.id, place.locationId))
+    .limit(1);
+  if (!location) throw new BadRequestError("Location not found");
+
+  await placeService.fetchAndStoreGoogleImages(placeId, place.name, location.countryCode);
+
+  return c.json({ success: true }, 200);
+});
+
 placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   //Context
   const auth = c.get("user");
