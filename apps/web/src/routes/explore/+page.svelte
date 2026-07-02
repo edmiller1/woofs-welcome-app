@@ -281,7 +281,7 @@
       source: "places",
       filter: ["has", "point_count"],
       paint: {
-        "circle-color": "oklch(0.4784 0.0411 175.5933)",
+        "circle-color": "#3d7a6e",
         "circle-radius": ["step", ["get", "point_count"], 18, 10, 24, 50, 30],
       },
     });
@@ -489,7 +489,7 @@
   $effect(() => {
     if (!map) return;
     const onRender = () => {
-      if (!map!.isSourceLoaded("places")) return;
+      if (!map!.getSource("places") || !map!.isSourceLoaded("places")) return;
       for (const [, marker] of placeMarkers) {
         const point = map!.project(marker.getLngLat());
         const clustered =
