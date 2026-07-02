@@ -245,7 +245,7 @@ export class ImageUploadService {
         throw new BadRequestError("URL not allowed");
       }
 
-      const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+      const response = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(10_000) });
 
       if (!response.ok) {
         throw new BadRequestError(

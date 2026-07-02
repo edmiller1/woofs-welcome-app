@@ -1,0 +1,1 @@
+DROP INDEX "location_slug_country_idx";

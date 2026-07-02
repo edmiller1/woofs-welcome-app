@@ -399,12 +399,6 @@ export const Location = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
-    // Slug must be unique within a country
-    slugCountryIdx: uniqueIndex("location_slug_country_idx").on(
-      table.slug,
-      table.countryCode,
-    ),
-
     // Path must be globally unique
     pathIdx: uniqueIndex("location_path_idx").on(table.path),
 
