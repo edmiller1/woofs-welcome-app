@@ -58,6 +58,7 @@
   const NZ_ZOOM = 5;
 
   let map = $state<maplibregl.Map | undefined>();
+  let mapReady = $state(false);
   let listCollapsed = $state<boolean>(
     typeof window !== "undefined" && window.innerWidth < 768,
   );
@@ -384,6 +385,7 @@
       });
 
       addPlacesLayer();
+      mapReady = true;
 
       // Click anywhere on the map (not a marker) → close popup
       map!.on("click", () => {
@@ -392,6 +394,7 @@
       });
     };
 
+    mapReady = false;
     map.once("load", onLoad);
   });
 
@@ -1377,7 +1380,9 @@
         attributionControl={{ compact: true, customAttribution: "" }}
         bind:map
       >
-        <NavigationControl position="bottom-right" showCompass={false} />
+        {#if mapReady}
+          <NavigationControl position="bottom-right" showCompass={false} />
+        {/if}
       </MapLibre>
     {/key}
   </div>
