@@ -319,7 +319,7 @@ placeRouter.post(
   },
 );
 
-placeRouter.post("/:placeId/fetch-images", async (c) => {
+placeRouter.get("/:placeId/fetch-images", async (c) => {
   const db = c.get("db");
   const env = c.get("env");
   const placeId = c.req.param("placeId");
