@@ -349,7 +349,11 @@ placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
 
   if (result.images.length === 0) {
     c.executionCtx.waitUntil(
-      placeService.fetchAndStoreGoogleImages(result.id),
+      placeService.fetchAndStoreGoogleImages(
+        result.id,
+        result.name,
+        result.location.countryCode,
+      ),
     );
   }
 
