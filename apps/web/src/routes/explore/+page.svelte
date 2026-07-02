@@ -392,11 +392,7 @@
       });
     };
 
-    if (map.isStyleLoaded()) {
-      onLoad();
-    } else {
-      map.once("load", onLoad);
-    }
+    map.once("load", onLoad);
   });
 
   // Fly to geolocation if it arrives after map load and no URL position set
