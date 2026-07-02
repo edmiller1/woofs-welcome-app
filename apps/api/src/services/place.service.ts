@@ -203,6 +203,7 @@ export class PlaceService {
     placeId: string,
     placeName: string,
     countryCode: string,
+    cityName?: string,
   ): Promise<void> {
     const existing = await this.db
       .select({ id: PlaceImage.id })
@@ -210,42 +211,23 @@ export class PlaceService {
       .where(eq(PlaceImage.placeId, placeId))
       .limit(1);
 
-    if (existing.length > 0) {
-      console.log(`[Google Images] Already has images for "${placeName}", skipping`);
-      return;
-    }
-
-    console.log(`[Google Images] Starting fetch for "${placeName}" (${countryCode})`);
+    if (existing.length > 0) return;
 
     try {
       const placesData = await Google.searchPlaces(
         this.env,
         placeName,
-        countryCode,
+        cityName ?? countryCode,
       );
 
-      console.log(`[Google Images] Search returned ${placesData.length} results for "${placeName}"`);
-
-      if (placesData.length === 0) {
-        console.log(`[Google Images] No results for "${placeName}"`);
-        return;
-      }
-
-      console.log(`[Google Images] Using place_id: ${placesData[0].place_id} ("${placesData[0].name}")`);
+      if (placesData.length === 0) return;
 
       const imageUrls = await Google.getPlacePhotos(
         this.env,
         placesData[0].place_id,
       );
 
-      console.log(`[Google Images] Got ${imageUrls?.length ?? 0} photo URLs for "${placeName}"`);
-
-      if (!imageUrls || imageUrls.length === 0) {
-        console.log(`[Google Images] No photos for "${placeName}"`);
-        return;
-      }
-
-      console.log(`[Google Images] Uploading ${Math.min(imageUrls.length, 10)} images to Cloudflare`);
+      if (!imageUrls || imageUrls.length === 0) return;
 
       const uploadedImages =
         await this.imageUploadService.uploadMultipleImagesFromUrls(
@@ -260,8 +242,6 @@ export class PlaceService {
           },
         );
 
-      console.log(`[Google Images] Successfully uploaded ${uploadedImages.length} images`);
-
       if (uploadedImages.length > 0) {
         await this.db.insert(PlaceImage).values(
           uploadedImages.map((img, index) => ({
@@ -270,9 +250,6 @@ export class PlaceService {
             isPrimary: index === 0,
             displayOrder: index,
           })),
-        );
-        console.log(
-          `[Google Images] Stored ${uploadedImages.length} images for "${placeName}"`,
         );
       }
     } catch (error) {

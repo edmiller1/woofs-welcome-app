@@ -10,8 +10,6 @@ export const Google = {
 
     const data = (await response.json()) as any;
 
-    console.log(data);
-
     if (data.status === "OK") {
       return data.results.map((place: any) => ({
         place_id: place.place_id,

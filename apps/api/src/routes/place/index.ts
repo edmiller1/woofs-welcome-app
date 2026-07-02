@@ -332,13 +332,13 @@ placeRouter.get("/:placeId/fetch-images", async (c) => {
   if (!place) throw new BadRequestError("Place not found");
 
   const [location] = await db
-    .select({ countryCode: Location.countryCode })
+    .select({ countryCode: Location.countryCode, name: Location.name })
     .from(Location)
     .where(eq(Location.id, place.locationId))
     .limit(1);
   if (!location) throw new BadRequestError("Location not found");
 
-  await placeService.fetchAndStoreGoogleImages(placeId, place.name, location.countryCode);
+  await placeService.fetchAndStoreGoogleImages(placeId, place.name, location.countryCode, location.name);
 
   return c.json({ success: true }, 200);
 });
