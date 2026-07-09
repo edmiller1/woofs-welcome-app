@@ -11,6 +11,7 @@
   import { toast } from "svelte-sonner";
   import { api } from "$lib/api-helper";
   import { LoaderCircle } from "@lucide/svelte";
+  import dogs from "$lib/assets/dogs.jpg";
 
   const { data } = $props();
   const { user } = $derived(data);
@@ -68,110 +69,129 @@
         </Breadcrumb.Item>
       </Breadcrumb.List>
     </Breadcrumb.Root>
-    <div class="mb-8 sm:mb-12">
-      <h1 class="text-4xl sm:text-5xl font-bold mb-6">Contact Us</h1>
-      <p class="text-base sm:text-lg text-kuma-text-secondary">
-        Have questions, feedback, or partnership inquiries? We'd love to hear
-        from you.
-      </p>
-    </div>
-    <div class="max-w-2xl">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-6">Send us a message</h2>
-      {#if submitted}
-        <div
-          class="rounded-lg border border-border bg-muted/40 p-8 text-center space-y-3"
-        >
-          <p class="text-2xl font-bold">Message sent!</p>
-          <p class="text-muted-foreground">
-            Thanks for reaching out. We'll get back to you as soon as possible.
+    <section class="flex items-center gap-24">
+      <div class="flex-1 min-w-0">
+        <div class="mb-8 sm:mb-12">
+          <h1 class="text-4xl sm:text-5xl font-bold mb-6">Contact Us</h1>
+          <p class="text-base sm:text-lg text-kuma-text-secondary">
+            Have questions, feedback, or partnership inquiries? We'd love to
+            hear from you.
           </p>
-          <Button
-            variant="outline"
-            onclick={() => {
-              submitted = false;
-              name = "";
-              email = "";
-              message = "";
-              subject = "generalInquiry";
-            }}
-          >
-            Send another message
-          </Button>
         </div>
-      {:else}
-        <form class="space-y-6" onsubmit={handleSubmit}>
-          <div>
-            <Label for="name" class="block text-sm font-bold mb-2">Name</Label>
-            <Input
-              type="text"
-              id="name"
-              bind:value={name}
-              required
-              class="block w-full rounded-md bg-background px-3 py-1.5 text-base"
-            />
-          </div>
-          <div>
-            <Label for="email" class="block text-sm font-bold mb-2">Email</Label
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-bold mb-6">Send us a message</h2>
+          {#if submitted}
+            <div
+              class="rounded-lg border border-border bg-muted/40 p-8 text-center space-y-3"
             >
-            <Input
-              type="email"
-              id="email"
-              bind:value={email}
-              required
-              class="block w-full rounded-md bg-background px-3 py-1.5 text-base"
-            />
-          </div>
-          <div>
-            <Label for="subject" class="block text-sm font-bold mb-2"
-              >Subject</Label
-            >
-            <Select.Root type="single" name="subject" bind:value={subject}>
-              <Select.Trigger class="w-full bg-background"
-                >{triggerContent}</Select.Trigger
+              <p class="text-2xl font-bold">Message sent!</p>
+              <p class="text-muted-foreground">
+                Thanks for reaching out. We'll get back to you as soon as
+                possible.
+              </p>
+              <Button
+                variant="outline"
+                onclick={() => {
+                  submitted = false;
+                  name = "";
+                  email = "";
+                  message = "";
+                  subject = "generalInquiry";
+                }}
               >
-              <Select.Content>
-                <Select.Group>
-                  {#each subjects as subjectOption}
-                    <Select.Item value={subjectOption.value}
-                      >{subjectOption.label}</Select.Item
-                    >
-                  {/each}
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          </div>
-          <div>
-            <Label for="message" class="block text-sm font-bold mb-2"
-              >Message</Label
-            >
-            <Textarea
-              bind:value={message}
-              id="message"
-              required
-              minlength={10}
-              maxlength={2000}
-              rows={6}
-              class="w-full bg-background"
-            />
-            <p class="text-sm mt-1 text-muted-foreground">
-              {message.length}/2000
-            </p>
-          </div>
-          <Button
-            type="submit"
-            class="w-full py-6"
-            disabled={mutation.isPending}
-          >
-            {#if mutation.isPending}
-              <LoaderCircle class="mr-2 size-4 animate-spin" />
-              Sending...
-            {:else}
-              Send Message
-            {/if}
-          </Button>
-        </form>
-      {/if}
-    </div>
+                Send another message
+              </Button>
+            </div>
+          {:else}
+            <form class="space-y-6" onsubmit={handleSubmit}>
+              <div>
+                <Label for="name" class="block text-sm font-bold mb-2"
+                  >Name</Label
+                >
+                <Input
+                  type="text"
+                  id="name"
+                  bind:value={name}
+                  required
+                  class="block w-full rounded-md bg-background px-3 py-1.5 text-base"
+                />
+              </div>
+              <div>
+                <Label for="email" class="block text-sm font-bold mb-2"
+                  >Email</Label
+                >
+                <Input
+                  type="email"
+                  id="email"
+                  bind:value={email}
+                  required
+                  class="block w-full rounded-md bg-background px-3 py-1.5 text-base"
+                />
+              </div>
+              <div>
+                <Label for="subject" class="block text-sm font-bold mb-2"
+                  >Subject</Label
+                >
+                <Select.Root type="single" name="subject" bind:value={subject}>
+                  <Select.Trigger class="w-full bg-background"
+                    >{triggerContent}</Select.Trigger
+                  >
+                  <Select.Content>
+                    <Select.Group>
+                      {#each subjects as subjectOption}
+                        <Select.Item value={subjectOption.value}
+                          >{subjectOption.label}</Select.Item
+                        >
+                      {/each}
+                    </Select.Group>
+                  </Select.Content>
+                </Select.Root>
+              </div>
+              <div>
+                <Label for="message" class="block text-sm font-bold mb-2"
+                  >Message</Label
+                >
+                <Textarea
+                  bind:value={message}
+                  id="message"
+                  required
+                  minlength={10}
+                  maxlength={2000}
+                  rows={6}
+                  class="w-full bg-background"
+                />
+                <p class="text-sm mt-1 text-muted-foreground">
+                  {message.length}/2000
+                </p>
+              </div>
+              <Button
+                type="submit"
+                class="w-full py-6"
+                disabled={mutation.isPending}
+              >
+                {#if mutation.isPending}
+                  <LoaderCircle class="mr-2 size-4 animate-spin" />
+                  Sending...
+                {:else}
+                  Send Message
+                {/if}
+              </Button>
+            </form>
+          {/if}
+        </div>
+      </div>
+      <div class="flex-1 min-w-0 relative">
+        <div
+          class="relative rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2"
+        >
+          <img
+            class="w-full h-full object-cover"
+            alt="A man sitting with a rough collie between his legs"
+            src={dogs}
+          />
+        </div>
+      </div>
+    </section>
   </div>
   <Footer />
 </main>

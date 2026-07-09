@@ -4,6 +4,7 @@
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
   import { buttonVariants } from "$lib/components/ui/button";
   import { cn } from "$lib/utils";
+  import peggyForest from "$lib/assets/peggy-forest.jpeg";
 
   const { data } = $props();
   const { user } = $derived(data);
@@ -11,9 +12,15 @@
 
 <svelte:head>
   <title>About | Woofs Welcome</title>
-  <meta name="description" content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works." />
+  <meta
+    name="description"
+    content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works."
+  />
   <meta property="og:title" content="About | Woofs Welcome" />
-  <meta property="og:description" content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works." />
+  <meta
+    property="og:description"
+    content="Woofs Welcome is on a mission to make dog-friendly places easier to find. Learn why we built the app and how it works."
+  />
   <meta property="og:url" content="https://woofswelcome.app/about" />
   <link rel="canonical" href="https://woofswelcome.app/about" />
 </svelte:head>
@@ -32,44 +39,65 @@
         </Breadcrumb.Item>
       </Breadcrumb.List>
     </Breadcrumb.Root>
-    <div class="mb-8 sm:mb-12">
-      <h1 class="text-4xl sm:text-5xl font-bold mb-6">About Woofs Welcome</h1>
-      <p class="text-lg sm:text-xl text-muted-foreground">
-        Making dog-friendly places more accessible and easier to find for
-        everyone.
-      </p>
-    </div>
+    <section class="relative">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 z-10">
+          <div class="mb-8 sm:mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-6">
+              About Woofs Welcome
+            </h1>
+            <p class="text-lg sm:text-xl text-muted-foreground">
+              Making dog-friendly places more accessible and easier to find for
+              everyone.
+            </p>
+          </div>
 
-    <section class="mb-20 pt-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-6">
-        Why Woofs Welcome Exists
-      </h2>
-      <div class="leading-relaxed space-y-6">
-        <p>
-          We have four dogs. Finding places we can actually take them has always
-          been a hassle.
-        </p>
-        <p>
-          Whether it's booking accommodation, planning a hike, or just finding
-          somewhere to eat — the answer to "is this dog-friendly?" was never
-          easy to find. You'd search, read through outdated reviews, call ahead,
-          and still sometimes show up only to be turned away at the door.
-        </p>
-        <p>
-          That frustration is why Woofs Welcome exists. We wanted a single place
-          where dog owners could find verified, up-to-date information about
-          dog-friendly places — without the guesswork. Open the website or
-          mobile app, and if a place is dog-friendly, it's there. Simple as
-          that.
-        </p>
-        <p>
-          We're starting in New Zealand, but the goal is to build this for every
-          dog owner, everywhere. Every park, trail, café, hotel, and beach that
-          welcomes dogs — on one map, with real information from real dog
-          owners.
-        </p>
+          <div class="mb-20 pt-20">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6">
+              Why Woofs Welcome Exists
+            </h2>
+            <div class="leading-relaxed space-y-6">
+              <p>
+                We have four dogs. Finding places we can actually take them has
+                always been a hassle.
+              </p>
+              <p>
+                Whether it's booking accommodation, planning a hike, or just
+                finding somewhere to eat — the answer to "is this dog-friendly?"
+                was never easy to find. You'd search, read through outdated
+                reviews, call ahead, and still sometimes show up only to be
+                turned away at the door.
+              </p>
+              <p>
+                That frustration is why Woofs Welcome exists. We wanted a single
+                place where dog owners could find verified, up-to-date
+                information about dog-friendly places — without the guesswork.
+                Open the website or mobile app, and if a place is dog-friendly,
+                it's there. Simple as that.
+              </p>
+              <p>
+                We're starting in New Zealand, but the goal is to build this for
+                every dog owner, everywhere. Every park, trail, café, hotel, and
+                beach that welcomes dogs — on one map, with real information
+                from real dog owners.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-5 relative">
+          <div
+            class="relative rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2"
+          >
+            <img
+              class="w-full h-full object-cover"
+              alt="A cocker spaniel looking towards a forest"
+              src={peggyForest}
+            />
+          </div>
+        </div>
       </div>
     </section>
+
     <section class="mb-20 pt-20">
       <h2 class="text-2xl sm:text-3xl font-bold mb-6">Get in Touch</h2>
       <p class="mb-8">
