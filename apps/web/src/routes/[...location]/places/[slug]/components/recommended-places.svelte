@@ -59,24 +59,26 @@
       <h2 class="font-headline font-bold text-2xl mb-6">Similar Places</h2>
       <div class="flex overflow-x-auto gap-4 pb-6 -mx-6 px-6 no-scrollbar">
         {#each similarPlaces.data as place}
-          <PlaceCard
-            id={place.id}
-            name={place.name}
-            rating={place.rating.toString()}
-            slug={place.slug}
-            cityName={place.location.name}
-            regionName={place.parentLocationName!}
-            countryCode={place.location.countryCode}
-            types={place.types}
-            isSaved={place.isSaved}
-            imageIds={place.images.map((i) => i.imageId)}
-            {user}
-            locationPath={place.location.path}
-            isVerified={place.isVerified}
-            memberFavourite={place.memberFavourite}
-            reviewCount={place.reviewsCount}
-            dogAmenities={place.dogAmenities}
-          />
+          <div class="shrink-0 w-65">
+            <PlaceCard
+              id={place.id}
+              name={place.name}
+              rating={place.rating.toString()}
+              slug={place.slug}
+              cityName={place.location.name}
+              regionName={place.parentLocationName!}
+              countryCode={place.location.countryCode}
+              types={place.types}
+              isSaved={place.isSaved}
+              imageIds={place.images.map((i) => i.imageId)}
+              {user}
+              locationPath={place.location.path}
+              isVerified={place.isVerified}
+              memberFavourite={place.memberFavourite}
+              reviewCount={place.reviewsCount}
+              dogAmenities={place.dogAmenities}
+            />
+          </div>
         {/each}
       </div>
     </section>

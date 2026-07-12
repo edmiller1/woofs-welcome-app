@@ -98,7 +98,7 @@
   >
     <div class="relative w-full overflow-hidden rounded-lg">
       {#if images.length > 1}
-        <div class="group basis-70 md:basis-[320px]">
+        <div class="group w-full">
           <Carousel.Root
             setApi={(emblaApi) => (carouselApi = emblaApi)}
             class="rounded-xl"
@@ -166,14 +166,14 @@
             <HeartButton {isSaved} {user} placeId={id} />
           </div>
           <div class="space-y-3 py-2">
-            <div class="m-0 flex items-center justify-between">
-              <div class="flex items-center gap-1">
+            <div class="m-0 flex items-center justify-between gap-2 min-w-0">
+              <div class="flex items-center gap-1 min-w-0 overflow-hidden">
                 <h3 class="truncate font-semibold text-foreground">{name}</h3>
                 {#if isVerified}
-                  <BadgeCheck class="fill-primary size-4" />
+                  <BadgeCheck class="fill-primary size-4 shrink-0" />
                 {/if}
               </div>
-              <div class="flex items-center gap-1">
+              <div class="flex items-center gap-1 shrink-0">
                 <Star class="size-3 fill-yellow-500 text-yellow-500" />
                 <span class="text-sm">{Number(rating).toFixed(1)}</span>
                 <span class="text-muted-foreground">({reviewCount})</span>
@@ -202,7 +202,7 @@
           </div>
         </div>
       {:else if images.length === 1}
-        <div class="group basis-70 md:basis-[320px]">
+        <div class="group w-full">
           <div class="relative aspect-[1.21]">
             <OptimizedImage
               imageId={images[0]}
@@ -225,11 +225,11 @@
             </div>
           </div>
           <div class="space-y-3 py-2 min-w-0">
-            <div class="m-0 flex items-center justify-between min-w-0">
-              <div class="flex items-center gap-1 overflow-hidden w-5/6">
+            <div class="m-0 flex items-center justify-between gap-2 min-w-0">
+              <div class="flex items-center gap-1 min-w-0 overflow-hidden">
                 <h3 class="truncate font-semibold text-foreground">{name}</h3>
                 {#if isVerified}
-                  <BadgeCheck class="fill-primary size-4" />
+                  <BadgeCheck class="fill-primary size-4 shrink-0" />
                 {/if}
               </div>
               <div class="flex items-center gap-1 shrink-0">

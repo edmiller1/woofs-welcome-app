@@ -35,7 +35,7 @@
     { name: "Things to Do", href: "/explore?types=Activity", icon: MapPin },
     {
       name: "Accommodation",
-      href: "/explore?types=AirBnb%2CHotel%2CMotel",
+      href: "/explore?types=AirBnb%2CHotel%2CMotel%2CAccommodation",
       icon: Hotel,
     },
     { name: "Retail", href: "/explore?types=Store", icon: ShoppingBag },

@@ -19,9 +19,18 @@
 
 <svelte:head>
   <title>Woofs Welcome — Dog-Friendly Places in New Zealand</title>
-  <meta name="description" content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog." />
-  <meta property="og:title" content="Woofs Welcome — Dog-Friendly Places in New Zealand" />
-  <meta property="og:description" content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog." />
+  <meta
+    name="description"
+    content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog."
+  />
+  <meta
+    property="og:title"
+    content="Woofs Welcome — Dog-Friendly Places in New Zealand"
+  />
+  <meta
+    property="og:description"
+    content="Find dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand. Discover places that welcome your dog."
+  />
   <meta property="og:url" content="https://woofswelcome.app" />
   <link rel="canonical" href="https://woofswelcome.app" />
 </svelte:head>
@@ -52,8 +61,8 @@
           Adventure is better with <span class="text-primary">four paws.</span>
         </h1>
         <p class="font-body text-lg leading-7 text-on-surface-variant">
-          Discover thousands of verified dog-friendly trails, hidden parks, and
-          local outdoor communities tailored for you and your best friend.
+          Discover thousands of verified dog-friendly cafés, parks, stays and
+          more across New Zealand.
         </p>
         <div class="flex flex-col sm:flex-row gap-2 pt-6">
           <a

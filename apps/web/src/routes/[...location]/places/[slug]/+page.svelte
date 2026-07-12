@@ -37,6 +37,7 @@
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { Badge } from "$lib/components/ui/badge";
   import SuggestEditDialog from "$lib/components/suggest-edit-dialog.svelte";
+  import { buildImageUrl } from "@woofs/image-config";
 
   interface Props {
     data: {
@@ -122,7 +123,10 @@
       ? initialPlace.description.slice(0, 155)
       : `${initialPlace.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
   />
-  <meta property="og:title" content="{initialPlace.name} — Dog-Friendly | Woofs Welcome" />
+  <meta
+    property="og:title"
+    content="{initialPlace.name} — Dog-Friendly | Woofs Welcome"
+  />
   <meta
     property="og:description"
     content={initialPlace.description
@@ -130,24 +134,59 @@
       : `${initialPlace.name} is a dog-friendly place in New Zealand. Read reviews, see photos and find out more on Woofs Welcome.`}
   />
   {#if initialPlace.images?.[0]}
-    <meta property="og:image" content={initialPlace.images[0]} />
+    <meta
+      property="og:image"
+      content={buildImageUrl(initialPlace.images[0].imageId, "medium")}
+    />
   {/if}
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
-  <link rel="canonical" href="https://woofswelcome.app/location/{locationPath}/places/{slug}" />
+  <meta
+    property="og:url"
+    content="https://woofswelcome.app/location/{locationPath}/places/{slug}"
+  />
+  <link
+    rel="canonical"
+    href="https://woofswelcome.app/location/{locationPath}/places/{slug}"
+  />
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": initialPlace.name,
-    "description": initialPlace.description || undefined,
-    "url": `https://woofswelcome.app/location/${locationPath}/places/${slug}`,
-    ...(initialPlace.address ? { "address": { "@type": "PostalAddress", "streetAddress": initialPlace.address, "addressCountry": initialPlace.countryCode } } : {}),
-    ...(initialPlace.phone ? { "telephone": initialPlace.phone } : {}),
-    ...(initialPlace.email ? { "email": initialPlace.email } : {}),
-    ...(initialPlace.website ? { "sameAs": initialPlace.website } : {}),
-    ...(initialPlace.latitude && initialPlace.longitude ? { "geo": { "@type": "GeoCoordinates", "latitude": initialPlace.latitude, "longitude": initialPlace.longitude } } : {}),
-    ...(initialPlace.images?.[0] ? { "image": initialPlace.images[0] } : {}),
-    ...(initialPlace.reviewsCount > 0 ? { "aggregateRating": { "@type": "AggregateRating", "ratingValue": Number(initialPlace.rating).toFixed(1), "reviewCount": initialPlace.reviewsCount, "bestRating": "5", "worstRating": "1" } } : {}),
+    name: initialPlace.name,
+    description: initialPlace.description || undefined,
+    url: `https://woofswelcome.app/location/${locationPath}/places/${slug}`,
+    ...(initialPlace.address
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: initialPlace.address,
+            addressCountry: initialPlace.countryCode,
+          },
+        }
+      : {}),
+    ...(initialPlace.phone ? { telephone: initialPlace.phone } : {}),
+    ...(initialPlace.email ? { email: initialPlace.email } : {}),
+    ...(initialPlace.website ? { sameAs: initialPlace.website } : {}),
+    ...(initialPlace.latitude && initialPlace.longitude
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: initialPlace.latitude,
+            longitude: initialPlace.longitude,
+          },
+        }
+      : {}),
+    ...(initialPlace.images?.[0] ? { image: initialPlace.images[0] } : {}),
+    ...(initialPlace.reviewsCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: Number(initialPlace.rating).toFixed(1),
+            reviewCount: initialPlace.reviewsCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+        }
+      : {}),
   })}</script>`}
 </svelte:head>
 
@@ -311,10 +350,12 @@
         </section>
         <!-- About -->
         <section class="mt-10">
-          <h2 class="font-bold text-2xl mb-4">About</h2>
-          <p class=" leading-relaxed text-sm">
-            {place.data.description}
-          </p>
+          {#if place.data.description}
+            <h2 class="font-bold text-2xl mb-4">About</h2>
+            <p class=" leading-relaxed text-sm">
+              {place.data.description}
+            </p>
+          {/if}
           <div class="my-6 space-y-3">
             <h4 class="text-xl font-semibold">Amenities</h4>
             <div class="flex flex-wrap gap-2">
@@ -559,12 +600,14 @@
 
               <!-- About -->
               <div class="mb-12">
-                <h3 class="text-3xl font-headline font-bold mb-3">About</h3>
-                <div
-                  class="max-w-none text-text-subtle font-body leading-relaxed space-y-4"
-                >
-                  <p>{place.data.description}</p>
-                </div>
+                {#if place.data.description}
+                  <h3 class="text-3xl font-headline font-bold mb-3">About</h3>
+                  <div
+                    class="max-w-none text-text-subtle font-body leading-relaxed space-y-4"
+                  >
+                    <p>{place.data.description}</p>
+                  </div>
+                {/if}
                 <ul class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-sm">
                   {#each place.data.dogAmenities as amenity}
                     <li
