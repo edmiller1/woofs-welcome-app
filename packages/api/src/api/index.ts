@@ -1,3 +1,4 @@
+import { admin } from "./admin";
 import { auth } from "./auth";
 import { notification } from "./notification";
 import { location } from "./location";
@@ -9,6 +10,7 @@ import { event } from "./event";
 import { contact } from "./contact";
 
 export const api = {
+  admin,
   auth,
   collection,
   notification,

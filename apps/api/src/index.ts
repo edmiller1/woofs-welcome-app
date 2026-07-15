@@ -18,6 +18,7 @@ import { reviewRouter } from "./routes/review";
 import { profileRouter } from "./routes/profile";
 import { eventRouter } from "./routes/event";
 import { contactRouter } from "./routes/contact";
+import { adminRouter } from "./routes/admin";
 import { createDb } from "./db";
 import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
@@ -99,6 +100,7 @@ app.route("/api/review", reviewRouter);
 app.route("/api/profile", profileRouter);
 app.route("/api/event", eventRouter);
 app.route("/api/contact", contactRouter);
+app.route("/api/admin", adminRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

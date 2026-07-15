@@ -63,7 +63,8 @@
     page.url.pathname.includes("/community") ||
     page.url.pathname.includes("/about") ||
     page.url.pathname.includes("/contact") ||
-    page.url.pathname.includes("/advertise");
+    page.url.pathname.includes("/advertise") ||
+    page.url.pathname.includes("/admin");
 
   const exploreActive = $derived(page.url.pathname.includes("/explore"));
   const communityActive = $derived(page.url.pathname.includes("/community"));

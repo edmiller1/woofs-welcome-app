@@ -33,19 +33,25 @@
     if (previewImageInput) previewImageInput.value = "";
   }
 
-  const previewDisplayName = $derived(previewName.trim() || "Your Business Name");
-  const previewDisplayTagline = $derived(previewTagline.trim() || "Your dog-friendly tagline here");
+  const previewDisplayName = $derived(
+    previewName.trim() || "Your Business Name",
+  );
+  const previewDisplayTagline = $derived(
+    previewTagline.trim() || "Your dog-friendly tagline here",
+  );
   const previewDisplayUrl = $derived(previewUrl.trim() || "yourwebsite.co.nz");
 
   async function handlePreviewSubmit(e: SubmitEvent) {
     e.preventDefault();
     if (!previewName.trim() || !previewEmail.trim()) return;
-    await api.contact.sendMessage({
-      name: previewName,
-      email: previewEmail,
-      subject: "partnership",
-      message: `Ad preview request\n\nBusiness: ${previewName}\nWebsite: ${previewUrl}\nTagline: ${previewTagline}`,
-    }).catch(() => {});
+    await api.contact
+      .sendMessage({
+        name: previewName,
+        email: previewEmail,
+        subject: "partnership",
+        message: `Ad preview request\n\nBusiness: ${previewName}\nWebsite: ${previewUrl}\nTagline: ${previewTagline}`,
+      })
+      .catch(() => {});
     previewSubmitted = true;
   }
 </script>
@@ -72,32 +78,44 @@
         </Breadcrumb.Item>
         <Breadcrumb.Separator />
         <Breadcrumb.Item>
-          <Breadcrumb.Page>Free Preview</Breadcrumb.Page>
+          <Breadcrumb.Page>Preview</Breadcrumb.Page>
         </Breadcrumb.Item>
       </Breadcrumb.List>
     </Breadcrumb.Root>
 
     <div class="max-w-3xl mb-12">
-      <h1 class="text-4xl sm:text-5xl font-bold mb-4 leading-tight">Create a free preview</h1>
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4 leading-tight">
+        Create a free preview
+      </h1>
       <p class="text-lg text-muted-foreground">
-        Fill in your details and see exactly what your ad will look like across every placement on Woofs Welcome — no payment required.
+        Fill in your details and see exactly what your ad will look like across
+        every placement on Woofs Welcome — no payment required.
       </p>
     </div>
 
     {#if previewSubmitted}
-      <div class="rounded-2xl border border-border bg-muted/40 p-10 text-center max-w-lg">
+      <div
+        class="rounded-2xl border border-border bg-muted/40 p-10 text-center max-w-lg"
+      >
         <p class="text-2xl font-bold mb-2">Request sent!</p>
         <p class="text-muted-foreground mb-6">
-          Thanks — we'll be in touch at <span class="font-medium text-foreground">{previewEmail}</span> shortly.
+          Thanks — we'll be in touch at <span
+            class="font-medium text-foreground">{previewEmail}</span
+          > shortly.
         </p>
         <div class="flex gap-3 justify-center">
           <button
             class={cn(buttonVariants({ variant: "outline" }))}
-            onclick={() => { previewSubmitted = false; }}
+            onclick={() => {
+              previewSubmitted = false;
+            }}
           >
             Start over
           </button>
-          <a href="/advertise" class={cn(buttonVariants({ variant: "default" }))}>
+          <a
+            href="/advertise"
+            class={cn(buttonVariants({ variant: "default" }))}
+          >
             Back to Advertise
           </a>
         </div>
@@ -109,11 +127,19 @@
           <!-- Image upload -->
           <div>
             <p class="text-sm font-bold mb-2">
-              Ad image <span class="text-muted-foreground font-normal">(optional)</span>
+              Ad image <span class="text-muted-foreground font-normal"
+                >(optional)</span
+              >
             </p>
             {#if previewImageUrl}
-              <div class="relative w-full aspect-[3] rounded-xl overflow-hidden border border-border">
-                <img src={previewImageUrl} alt="Ad preview" class="w-full h-full object-cover" />
+              <div
+                class="relative w-full aspect-[3] rounded-xl overflow-hidden border border-border"
+              >
+                <img
+                  src={previewImageUrl}
+                  alt="Ad preview"
+                  class="w-full h-full object-cover"
+                />
                 <button
                   type="button"
                   onclick={clearImage}
@@ -131,8 +157,12 @@
                 onclick={() => previewImageInput?.click()}
               >
                 <Upload class="size-6 text-muted-foreground mb-2" />
-                <span class="text-sm text-muted-foreground">Click to upload</span>
-                <span class="text-xs text-muted-foreground mt-1">PNG, JPG, WEBP · max 10MB</span>
+                <span class="text-sm text-muted-foreground"
+                  >Click to upload</span
+                >
+                <span class="text-xs text-muted-foreground mt-1"
+                  >PNG, JPG, WEBP · max 10MB</span
+                >
               </label>
               <input
                 bind:this={previewImageInput}
@@ -159,7 +189,9 @@
 
           <div>
             <label for="preview-tagline" class="block text-sm font-bold mb-2">
-              Tagline / description <span class="text-muted-foreground font-normal">(optional)</span>
+              Tagline / description <span
+                class="text-muted-foreground font-normal">(optional)</span
+              >
             </label>
             <input
               id="preview-tagline"
@@ -169,12 +201,16 @@
               maxlength={80}
               class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
-            <p class="text-xs text-muted-foreground mt-1">{previewTagline.length}/80</p>
+            <p class="text-xs text-muted-foreground mt-1">
+              {previewTagline.length}/80
+            </p>
           </div>
 
           <div>
             <label for="preview-url" class="block text-sm font-bold mb-2">
-              Website URL <span class="text-muted-foreground font-normal">(optional)</span>
+              Website URL <span class="text-muted-foreground font-normal"
+                >(optional)</span
+              >
             </label>
             <input
               id="preview-url"
@@ -201,7 +237,10 @@
           <button
             type="submit"
             disabled={!previewName.trim() || !previewEmail.trim()}
-            class={cn(buttonVariants({ variant: "default" }), "w-full py-5 text-sm font-bold disabled:opacity-40")}
+            class={cn(
+              buttonVariants({ variant: "default" }),
+              "w-full py-5 text-sm font-bold disabled:opacity-40",
+            )}
           >
             Submit for review
           </button>
@@ -212,39 +251,70 @@
 
         <!-- Live preview -->
         <div class="lg:sticky lg:top-6 space-y-4">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Live preview</p>
+          <p
+            class="text-xs font-semibold text-muted-foreground uppercase tracking-wide"
+          >
+            Live preview
+          </p>
 
           <!-- Location page preview -->
           <div class="rounded-2xl border border-border overflow-hidden">
-            <div class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2">
+            <div
+              class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2"
+            >
               <div class="size-2 rounded-full bg-red-400"></div>
               <div class="size-2 rounded-full bg-yellow-400"></div>
               <div class="size-2 rounded-full bg-green-400"></div>
-              <span class="text-[11px] text-muted-foreground ml-1">Location page</span>
+              <span class="text-[11px] text-muted-foreground ml-1"
+                >Location page</span
+              >
             </div>
             <div>
-              <div class="bg-linear-to-br from-slate-700 to-slate-900 h-16 flex items-end px-4 pb-2.5">
+              <div
+                class="bg-linear-to-br from-slate-700 to-slate-900 h-16 flex items-end px-4 pb-2.5"
+              >
                 <p class="text-white font-bold text-sm">Christchurch</p>
               </div>
               <div class="p-4">
-                <div class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3.5 relative">
-                  <span class="absolute top-2.5 right-3 text-[9px] font-semibold text-primary/60 uppercase tracking-wide">Featured</span>
+                <div
+                  class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3.5 relative"
+                >
+                  <span
+                    class="absolute top-2.5 right-3 text-[9px] font-semibold text-primary/60 uppercase tracking-wide"
+                    >Featured</span
+                  >
                   <div class="flex gap-3">
-                    <div class="size-14 rounded-lg bg-muted shrink-0 overflow-hidden flex items-center justify-center">
+                    <div
+                      class="size-14 rounded-lg bg-muted shrink-0 overflow-hidden flex items-center justify-center"
+                    >
                       {#if previewImageUrl}
-                        <img src={previewImageUrl} alt={previewDisplayName} class="w-full h-full object-cover" />
+                        <img
+                          src={previewImageUrl}
+                          alt={previewDisplayName}
+                          class="w-full h-full object-cover"
+                        />
                       {:else}
                         <Star class="size-5 text-muted-foreground" />
                       {/if}
                     </div>
                     <div class="min-w-0">
-                      <p class="font-semibold text-sm truncate">{previewDisplayName}</p>
+                      <p class="font-semibold text-sm truncate">
+                        {previewDisplayName}
+                      </p>
                       {#if previewUrl}
-                        <p class="text-[11px] text-primary flex items-center gap-1 mt-0.5">
-                          <ExternalLink class="size-3 shrink-0" />{previewDisplayUrl}
+                        <p
+                          class="text-[11px] text-primary flex items-center gap-1 mt-0.5"
+                        >
+                          <ExternalLink
+                            class="size-3 shrink-0"
+                          />{previewDisplayUrl}
                         </p>
                       {/if}
-                      <p class="text-xs text-muted-foreground mt-1 line-clamp-2">{previewDisplayTagline}</p>
+                      <p
+                        class="text-xs text-muted-foreground mt-1 line-clamp-2"
+                      >
+                        {previewDisplayTagline}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -267,25 +337,48 @@
 
           <!-- Explore panel preview -->
           <div class="rounded-2xl border border-border overflow-hidden">
-            <div class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2">
+            <div
+              class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2"
+            >
               <div class="size-2 rounded-full bg-red-400"></div>
               <div class="size-2 rounded-full bg-yellow-400"></div>
               <div class="size-2 rounded-full bg-green-400"></div>
-              <span class="text-[11px] text-muted-foreground ml-1">Explore page</span>
+              <span class="text-[11px] text-muted-foreground ml-1"
+                >Explore page</span
+              >
             </div>
             <div class="p-3 space-y-2">
-              <p class="text-[10px] font-semibold text-muted-foreground px-1">Explore places · 8 places</p>
-              <div class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 relative">
-                <span class="absolute top-2 right-2 text-[9px] font-semibold text-primary/60 uppercase tracking-wide">Featured</span>
-                <div class="aspect-[2.4] rounded-lg bg-muted mb-2 overflow-hidden flex items-center justify-center">
+              <p class="text-[10px] font-semibold text-muted-foreground px-1">
+                Explore places · 8 places
+              </p>
+              <div
+                class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 relative"
+              >
+                <span
+                  class="absolute top-2 right-2 text-[9px] font-semibold text-primary/60 uppercase tracking-wide"
+                  >Featured</span
+                >
+                <div
+                  class="aspect-[2.4] rounded-lg bg-muted mb-2 overflow-hidden flex items-center justify-center"
+                >
                   {#if previewImageUrl}
-                    <img src={previewImageUrl} alt={previewDisplayName} class="w-full h-full object-cover" />
+                    <img
+                      src={previewImageUrl}
+                      alt={previewDisplayName}
+                      class="w-full h-full object-cover"
+                    />
                   {:else}
-                    <span class="text-[10px] text-muted-foreground">Your photo</span>
+                    <span class="text-[10px] text-muted-foreground"
+                      >Your photo</span
+                    >
                   {/if}
                 </div>
-                <p class="font-semibold text-[11px] truncate">{previewDisplayName}</p>
-                <p class="text-[10px] text-muted-foreground line-clamp-1">{previewDisplayTagline}</p>
+                <p class="font-semibold text-[11px] truncate">
+                  {previewDisplayName}
+                </p>
+                <p class="text-[10px] text-muted-foreground line-clamp-1">
+                  {previewDisplayTagline}
+                </p>
               </div>
               {#each [1, 2] as _}
                 <div class="rounded-xl border border-border p-2.5 space-y-1.5">
@@ -299,29 +392,50 @@
 
           <!-- Similar Places preview -->
           <div class="rounded-2xl border border-border overflow-hidden">
-            <div class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2">
+            <div
+              class="bg-muted/50 px-4 py-2.5 border-b border-border flex items-center gap-2"
+            >
               <div class="size-2 rounded-full bg-red-400"></div>
               <div class="size-2 rounded-full bg-yellow-400"></div>
               <div class="size-2 rounded-full bg-green-400"></div>
-              <span class="text-[11px] text-muted-foreground ml-1">Place page · Similar Places</span>
+              <span class="text-[11px] text-muted-foreground ml-1"
+                >Place page · Similar Places</span
+              >
             </div>
             <div class="p-3">
               <p class="text-xs font-bold mb-2 px-1">Similar Places</p>
               <div class="flex gap-2 overflow-hidden">
-                <div class="shrink-0 w-32 rounded-xl border-2 border-primary/30 bg-primary/5 p-2.5 relative">
-                  <span class="absolute top-1.5 right-1.5 text-[8px] font-semibold text-primary/60 uppercase tracking-wide">Featured</span>
-                  <div class="aspect-[1.2] bg-muted rounded-lg mb-2 overflow-hidden flex items-center justify-center">
+                <div
+                  class="shrink-0 w-32 rounded-xl border-2 border-primary/30 bg-primary/5 p-2.5 relative"
+                >
+                  <span
+                    class="absolute top-1.5 right-1.5 text-[8px] font-semibold text-primary/60 uppercase tracking-wide"
+                    >Featured</span
+                  >
+                  <div
+                    class="aspect-[1.2] bg-muted rounded-lg mb-2 overflow-hidden flex items-center justify-center"
+                  >
                     {#if previewImageUrl}
-                      <img src={previewImageUrl} alt={previewDisplayName} class="w-full h-full object-cover" />
+                      <img
+                        src={previewImageUrl}
+                        alt={previewDisplayName}
+                        class="w-full h-full object-cover"
+                      />
                     {:else}
                       <Star class="size-3.5 text-muted-foreground" />
                     {/if}
                   </div>
-                  <p class="text-[10px] font-semibold leading-tight truncate">{previewDisplayName}</p>
-                  <p class="text-[9px] text-muted-foreground mt-0.5">Christchurch</p>
+                  <p class="text-[10px] font-semibold leading-tight truncate">
+                    {previewDisplayName}
+                  </p>
+                  <p class="text-[9px] text-muted-foreground mt-0.5">
+                    Christchurch
+                  </p>
                 </div>
                 {#each [1, 2] as _}
-                  <div class="shrink-0 w-32 rounded-xl border border-border p-2.5 space-y-1.5">
+                  <div
+                    class="shrink-0 w-32 rounded-xl border border-border p-2.5 space-y-1.5"
+                  >
                     <div class="aspect-[1.2] bg-muted rounded-lg"></div>
                     <div class="h-2 bg-muted rounded w-3/4"></div>
                     <div class="h-1.5 bg-muted rounded w-1/2"></div>

@@ -52,6 +52,7 @@ export async function getAdminUser() {
   }
 
   const user = session.data.user as unknown as BAUser;
+  console.log("user", user);
 
   if (!user.isAdmin) {
     return null;
