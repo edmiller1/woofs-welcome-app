@@ -52,7 +52,7 @@
       <div class="absolute top-6 left-6">
         {#if memberFavourite}
           <span
-            class="flex items-center gap-1 bg-orange-500 text-foreground px-3 py-1 rounded-full text-xs font-bold mb-2 font-body"
+            class="flex items-center gap-1 bg-yellow-500 text-foreground px-3 py-1 rounded-full text-xs font-bold mb-2 font-body"
             ><Star class="size-3 fill-foreground text-foreground" />MEMBER
             FAVOURITE</span
           >

@@ -113,6 +113,21 @@
       showStickyHeader = scrollY > headerBottom;
     }
   });
+
+  const PAID_TYPES = new Set([
+    "Café",
+    "Bar",
+    "Restaurant",
+    "Store",
+    "Hotel",
+    "Accommodation",
+    "Motel",
+    "Service",
+  ]);
+
+  const isPaid = $derived(
+    place.data.types.some((type) => PAID_TYPES.has(type)),
+  );
 </script>
 
 <svelte:head>
@@ -268,7 +283,7 @@
         {#if place.data.memberFavourite}
           <div class="absolute top-5 left-6">
             <span
-              class="bg-secondary text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
+              class="bg-yellow-500 text-foreground px-4 py-1.5 rounded-full text-xs font-bold tracking-wide flex items-center gap-1 shadow-lg"
             >
               <Star class="size-3 text-foreground fill-foreground" /> MEMBER FAVOURITE
             </span>
@@ -320,10 +335,12 @@
                   >({place.data.reviewsCount} reviews)</a
                 >
                 <span>•</span>
-                <span
-                  class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
-                  >$$</span
-                >
+                {#if isPaid}
+                  <span
+                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
+                    >$$</span
+                  >
+                {/if}
               </div>
             </div>
             {#if user}
@@ -588,9 +605,12 @@
                   >
                 </span>
                 <span>•</span>
-                <span class="font-label-md px-2 py-0.5 bg-input rounded-lg"
-                  >$$</span
-                >
+                {#if isPaid}
+                  <span
+                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
+                    >$$</span
+                  >
+                {/if}
               </div>
               <div class="flex flex-wrap gap-2 mb-6">
                 {#each place.data.types as type}

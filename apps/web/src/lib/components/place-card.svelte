@@ -157,8 +157,8 @@
           </Carousel.Root>
           {#if memberFavourite}
             <div class="absolute top-2 left-2">
-              <Badge variant="favourite" class="shrink-0 font-semibold"
-                ><Star class="fill-black" /> Member Favourite</Badge
+              <Badge class="text-black shrink-0 font-semibold bg-yellow-500"
+                ><Star class="fill-black text-black" /> Member Favourite</Badge
               >
             </div>
           {/if}
@@ -214,8 +214,8 @@
             />
             {#if memberFavourite}
               <div class="absolute top-2 left-2">
-                <Badge variant="favourite" class="shrink-0 font-semibold"
-                  ><Star class="fill-black" /> Member Favourite</Badge
+                <Badge class="text-black shrink-0 font-semibold bg-yellow-500"
+                  ><Star class="fill-black text-black" /> Member Favourite</Badge
                 >
               </div>
             {/if}
