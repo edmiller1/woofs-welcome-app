@@ -125,7 +125,7 @@
 
   const showContact = $derived(isBusiness || isAccommodation || isActivity);
   const showHoursToggle = $derived(isBusiness || isActivity);
-  const showAddress = $derived(isBusiness || isAccommodation || isActivity);
+  const showAddress = $derived(!isAdventure);
   const showAdventure = $derived(isAdventure);
 
   // Auto-generate slug from name unless manually edited
@@ -389,7 +389,7 @@
                 <button
                   type="button"
                   onclick={() => toggleType(type)}
-                  class="px-3 py-1.5 rounded-full text-sm border transition-colors {active
+                  class="cursor-pointer px-3 py-1.5 rounded-full text-sm border transition-colors {active
                     ? 'bg-primary text-primary-foreground border-primary'
                     : 'border-border text-muted-foreground hover:border-primary/50'}"
                 >
