@@ -373,17 +373,19 @@
               {place.data.description}
             </p>
           {/if}
-          <div class="my-6 space-y-3">
-            <h4 class="text-xl font-semibold">Amenities</h4>
-            <div class="flex flex-wrap gap-2">
-              {#each place.data.dogAmenities as amenity}
-                <li class="flex items-center gap-2 mb-2 text-sm font-medium">
-                  <CircleCheck class="size-4 text-primary hrink-0" />
-                  {amenity}
-                </li>
-              {/each}
+          {#if place.data.dogAmenities && place.data.dogAmenities.length > 0}
+            <div class="my-6 space-y-3">
+              <h4 class="text-xl font-semibold">Amenities</h4>
+              <div class="flex flex-wrap gap-2">
+                {#each place.data.dogAmenities as amenity}
+                  <li class="flex items-center gap-2 mb-2 text-sm font-medium">
+                    <CircleCheck class="size-4 text-primary hrink-0" />
+                    {amenity}
+                  </li>
+                {/each}
+              </div>
             </div>
-          </div>
+          {/if}
         </section>
 
         <!-- Opening Hours -->
@@ -703,67 +705,69 @@
               <!-- Opening Hours Card -->
               <PlaceHours hours={place.data.hours} />
               <!-- Contact & Connect Card -->
-              <div
-                class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
-              >
-                <h4 class="text-xl font-headline font-bold mb-6">Contact</h4>
-                <div class="space-y-4">
-                  {#if place.data.address}
-                    <div class="flex items-start gap-4">
-                      <div class="bg-primary/20 p-2 rounded-lg">
-                        <MapPin class="text-primary" />
+              {#if place.data.address || place.data.phone || place.data.email || place.data.website}
+                <div
+                  class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+                >
+                  <h4 class="text-xl font-headline font-bold mb-6">Contact</h4>
+                  <div class="space-y-4">
+                    {#if place.data.address}
+                      <div class="flex items-start gap-4">
+                        <div class="bg-primary/20 p-2 rounded-lg">
+                          <MapPin class="text-primary" />
+                        </div>
+                        <div>
+                          <p class="font-bold text-sm font-body">Address</p>
+                          <p class="text-xs text-text-subtle font-body">
+                            {place.data.address}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p class="font-bold text-sm font-body">Address</p>
-                        <p class="text-xs text-text-subtle font-body">
-                          {place.data.address}
-                        </p>
+                    {/if}
+                    {#if place.data.phone}
+                      <div class="flex items-start gap-4">
+                        <div class="bg-primary/20 p-2 rounded-lg">
+                          <Phone class="text-primary" />
+                        </div>
+                        <div>
+                          <p class="font-bold text-sm font-body">Phone</p>
+                          <p class="text-xs text-text-subtle font-body">
+                            {place.data.phone}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  {/if}
-                  {#if place.data.phone}
-                    <div class="flex items-start gap-4">
-                      <div class="bg-primary/20 p-2 rounded-lg">
-                        <Phone class="text-primary" />
+                    {/if}
+                    {#if place.data.email}
+                      <div class="flex items-start gap-4">
+                        <div class="bg-primary/20 p-2 rounded-lg">
+                          <Mail class="text-primary" />
+                        </div>
+                        <div>
+                          <p class="font-bold text-sm font-body">Email</p>
+                          <p class="text-xs text-text-subtle font-body">
+                            {place.data.email}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p class="font-bold text-sm font-body">Phone</p>
-                        <p class="text-xs text-text-subtle font-body">
-                          {place.data.phone}
-                        </p>
+                    {/if}
+                    {#if place.data.website}
+                      <div class="flex items-start gap-4">
+                        <div class="bg-primary/20 p-2 rounded-lg">
+                          <Globe class="text-primary" />
+                        </div>
+                        <div>
+                          <p class="font-bold text-sm font-body">Website</p>
+                          <a
+                            class="text-xs text-primary-tint font-body hover:underline"
+                            href={place.data.website}
+                            target="_blank">{place.data.website}</a
+                          >
+                        </div>
                       </div>
-                    </div>
-                  {/if}
-                  {#if place.data.email}
-                    <div class="flex items-start gap-4">
-                      <div class="bg-primary/20 p-2 rounded-lg">
-                        <Mail class="text-primary" />
-                      </div>
-                      <div>
-                        <p class="font-bold text-sm font-body">Email</p>
-                        <p class="text-xs text-text-subtle font-body">
-                          {place.data.email}
-                        </p>
-                      </div>
-                    </div>
-                  {/if}
-                  {#if place.data.website}
-                    <div class="flex items-start gap-4">
-                      <div class="bg-primary/20 p-2 rounded-lg">
-                        <Globe class="text-primary" />
-                      </div>
-                      <div>
-                        <p class="font-bold text-sm font-body">Website</p>
-                        <a
-                          class="text-xs text-primary-tint font-body hover:underline"
-                          href={place.data.website}
-                          target="_blank">{place.data.website}</a
-                        >
-                      </div>
-                    </div>
-                  {/if}
+                    {/if}
+                  </div>
                 </div>
-              </div>
+              {/if}
               <!-- Location & Amenities Card -->
               <div
                 class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
