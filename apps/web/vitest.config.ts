@@ -11,6 +11,7 @@ export default defineConfig({
     setupFiles: ["./src/test/setup.ts"],
   },
   resolve: {
+    conditions: ["browser"],
     alias: {
       $lib: resolve(__dirname, "src/lib"),
       $app: resolve(__dirname, "src/test/mocks/app"),
