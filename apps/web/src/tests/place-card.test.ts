@@ -18,6 +18,7 @@ const baseProps = {
   memberFavourite: false,
   reviewCount: 10,
   dogAmenities: [],
+  imageIds: ["test-image-id"],
 };
 
 describe("PlaceCard", () => {
