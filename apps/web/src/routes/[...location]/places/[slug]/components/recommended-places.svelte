@@ -20,8 +20,6 @@
   }));
 </script>
 
-<Separator />
-
 <ErrorBoundary error={similarPlaces.error}>
   {#if similarPlaces.isLoading}
     <!-- Mobile -->
@@ -55,6 +53,7 @@
   {/if}
 
   {#if similarPlaces.isSuccess && similarPlaces.data.length > 0}
+    <Separator class="mb-0" />
     <section class="mt-12 md:hidden">
       <h2 class="font-headline font-bold text-2xl mb-6">Similar Places</h2>
       <div class="flex overflow-x-auto gap-4 pb-6 -mx-6 px-6 no-scrollbar">

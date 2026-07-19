@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "build": "echo 'bun build handled at runtime'",
+    "test": "vitest run",
     "cf:login": "wrangler login",
     "r2:create": "wrangler r2 bucket create woofs-welcome-images",
     "r2:list": "wrangler r2 bucket list",
@@ -17,6 +18,7 @@
     "@types/node": "^25.0.9",
     "drizzle-kit": "^0.31.8",
     "tsx": "^4.21.0",
+    "vitest": "^4.1.10",
     "wrangler": "^4.59.2"
   },
   "peerDependencies": {

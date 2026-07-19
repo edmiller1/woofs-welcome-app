@@ -34,10 +34,10 @@
   import PlaceMapDialog from "./components/place-map-dialog.svelte";
   import RecommendedPlaces from "./components/recommended-places.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import OptimizedImage from "$lib/components/optimized-image.svelte";
+
   import { Badge } from "$lib/components/ui/badge";
   import SuggestEditDialog from "$lib/components/suggest-edit-dialog.svelte";
-  import { buildImageUrl } from "@woofs/image-config";
+  import { buildImageUrl, buildResponsiveSrcSet } from "@woofs/image-config";
 
   interface Props {
     data: {
@@ -267,14 +267,18 @@
     <div class="lg:hidden pb-32">
       <Breadcrumbs items={place.data.breadcrumbs} location={false} />
       <!-- Hero Image -->
-      <header class="relative w-full h-99.25 mt-0 overflow-hidden">
+      <header
+        class="relative w-full mt-0 overflow-hidden"
+        style="height: 397px;"
+      >
         {#if place.data.images[0]}
-          <OptimizedImage
-            imageId={place.data.images[0].imageId}
+          <img
+            src={buildImageUrl(place.data.images[0].imageId, "medium")}
+            srcset={buildResponsiveSrcSet(place.data.images[0].imageId)}
+            sizes="100vw"
             alt={place.data.images[0].caption || place.data.name}
-            class="h-full w-full object-cover"
-            width="100%"
-            height="100%"
+            loading="eager"
+            style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"
           />
         {/if}
         <div
@@ -312,33 +316,51 @@
       </header>
 
       <!-- Main Content -->
-      <main class="px-6 -mt-4 relative z-10 pt-8">
-        <section class="px-margin-2">
+      <main class="px-6 pt-8">
+        <section>
           <div class="flex justify-between items-start">
-            <div>
-              <h2 class="font-semibold text-4xl truncate">
+            <div class="min-w-0">
+              <h2 class="font-semibold text-4xl wrap-break-word">
                 {place.data.name}
               </h2>
-              <div class="flex items-center gap-2 mt-1 text-sm">
-                <span class="flex items-center">
-                  <MapPin class="size-4 text-foreground mr-1" />
+              <div
+                class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-sm"
+              >
+                <span class="flex items-center shrink-0">
+                  <MapPin class="size-4 text-foreground mr-1 shrink-0" />
                   <span class="text-foreground"
                     >{place.data.location.name}, {place.data.region.name}</span
                   >
                 </span>
-                <span>•</span>
-                <Star class="size-4 text-foreground fill-foreground" />
-                <span class="font-bold text-foreground"
-                  >{Number(place.data.rating).toFixed(1)}</span
-                >
-                <a href="#reviews" class="opacity-70"
-                  >({place.data.reviewsCount} reviews)</a
-                >
-                <span>•</span>
+                <span aria-hidden="true">•</span>
+                <span class="flex items-center gap-1 shrink-0">
+                  <Star class="size-4 text-foreground fill-foreground" />
+                  <span class="font-bold text-foreground"
+                    >{Number(place.data.rating).toFixed(1)}</span
+                  >
+                  <a href="#reviews" class="opacity-70"
+                    >({place.data.reviewsCount} reviews)</a
+                  >
+                </span>
                 {#if isPaid}
+                  <span aria-hidden="true">•</span>
                   <span
-                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
+                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg shrink-0"
                     >$$</span
+                  >
+                {/if}
+                {#if place.data.difficulty}
+                  <span aria-hidden="true">•</span>
+                  <div
+                    class={`w-2 h-2 shrink-0 ${place.data.difficulty === "beginner" ? "bg-green-800" : place.data.difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+                  ></div>
+                  <span class="capitalize">{place.data.difficulty}</span>
+                {/if}
+                {#if place.data.distanceKm !== 0 && place.data.durationMins !== 0}
+                  <span aria-hidden="true">•</span>
+                  <span
+                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg shrink-0"
+                    >{place.data.distanceKm} km / {place.data.durationMins} mins</span
                   >
                 {/if}
               </div>
@@ -606,11 +628,25 @@
                     >({place.data.reviewsCount} reviews)</span
                   >
                 </span>
-                <span>•</span>
                 {#if isPaid}
+                  <span>•</span>
                   <span
                     class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg"
                     >$$</span
+                  >
+                {/if}
+                {#if place.data.difficulty}
+                  <span aria-hidden="true">•</span>
+                  <div
+                    class={`w-2 h-2 shrink-0 ${place.data.difficulty === "beginner" ? "bg-green-800" : place.data.difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+                  ></div>
+                  <span class="capitalize">{place.data.difficulty}</span>
+                {/if}
+                {#if place.data.distanceKm !== 0 && place.data.durationMins !== 0}
+                  <span aria-hidden="true">•</span>
+                  <span
+                    class="text-primary px-2 py-0.5 bg-muted-foreground/10 rounded-lg shrink-0"
+                    >{place.data.distanceKm} km / {place.data.durationMins} mins</span
                   >
                 {/if}
               </div>

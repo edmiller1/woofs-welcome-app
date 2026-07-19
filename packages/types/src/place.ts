@@ -17,6 +17,9 @@ export interface Place {
   email: string;
   website: string;
   hours: DayOfWeekHours;
+  difficulty: "beginner" | "intermediate" | "advanced" | null;
+  distanceKm: number;
+  durationMins: number;
   dogRules: string[] | null;
   dogAmenities: string[];
   rating: number;
