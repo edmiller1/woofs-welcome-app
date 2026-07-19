@@ -1,7 +1,7 @@
 import { getProfile } from "./getProfile";
 import { updateProfile } from "./updateProfile";
 import { getProfileReviews } from "./getProfileReviews";
-import { getProfileReviewStats } from "./getProfilereviewStats";
+import { getProfileReviewStats } from "./getProfileReviewStats";
 import { updateProfileSettings } from "./updateProfileSettings";
 import { getProfilePhotos } from "./getProfilePhotos";
 import { getProfileDogs } from "./getProfileDogs";
