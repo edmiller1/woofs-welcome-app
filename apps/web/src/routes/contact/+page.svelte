@@ -11,7 +11,7 @@
   import { toast } from "svelte-sonner";
   import { api } from "$lib/api-helper";
   import { LoaderCircle } from "@lucide/svelte";
-  import dogs from "$lib/assets/dogs.jpg";
+  import dogs from "$lib/assets/dogs.JPG";
 
   const { data } = $props();
   const { user } = $derived(data);
