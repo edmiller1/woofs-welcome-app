@@ -1,4 +1,4 @@
-import { Hono, type ExecutionContext } from "hono";
+import { Hono, type Context, type ExecutionContext } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { showRoutes } from "hono/dev";
@@ -20,6 +20,7 @@ import { eventRouter } from "./routes/event";
 import { contactRouter } from "./routes/contact";
 import { adminRouter } from "./routes/admin";
 import { createDb } from "./db";
+import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -27,8 +28,13 @@ const app = new Hono<{ Bindings: Env }>();
 app.use("*", async (c, next) => {
   const env = validateEnv(c.env);
   const db = createDb(env);
+  const redis = new Redis({
+    url: env.UPSTASH_REDIS_REST_URL,
+    token: env.UPSTASH_REDIS_REST_TOKEN,
+  });
   c.set("env", env);
   c.set("db", db);
+  c.set("redis", redis);
   await next();
 });
 
@@ -50,7 +56,7 @@ app.use("*", async (c, next) =>
 );
 
 app.use("*", logger());
-app.use("*", globalRateLimiter);
+app.use("*", (c, next) => globalRateLimiter(c.get("redis"))(c as Context, next));
 
 app.all("/api/auth/*", async (c) => {
   const auth = getAuth(c.get("env"), c.get("db"));
@@ -71,9 +77,9 @@ app.all("/api/auth/*", async (c) => {
   return response;
 });
 
-app.use("/api/auth/get-session", sessionRateLimiter);
-app.use("/api/auth/email-otp/*", authRateLimiter);
-app.use("/api/auth/sign-in/*", authRateLimiter);
+app.use("/api/auth/get-session", (c, next) => sessionRateLimiter(c.get("redis"))(c as Context, next));
+app.use("/api/auth/email-otp/*", (c, next) => authRateLimiter(c.get("redis"))(c as Context, next));
+app.use("/api/auth/sign-in/*", (c, next) => authRateLimiter(c.get("redis"))(c as Context, next));
 app.use("/api/user", authMiddleware);
 
 // custom routes
