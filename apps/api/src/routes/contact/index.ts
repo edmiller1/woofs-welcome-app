@@ -1,4 +1,4 @@
-import { Hono, type Context } from "hono";
+import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { getResend } from "../../lib/resend";
@@ -7,9 +7,7 @@ import { authRateLimiter } from "../../middleware/rate-limit";
 
 export const contactRouter = new Hono();
 
-contactRouter.use("/", (c, next) =>
-  authRateLimiter(c.get("redis"))(c as Context, next),
-);
+contactRouter.use("/", authRateLimiter);
 
 const contactSchema = z.object({
   name: z.string().min(1).max(100),

@@ -4,8 +4,6 @@ import { eq, lt } from "drizzle-orm";
 import { session } from "../db/schema";
 import type { Session, User as betterAuthUser } from "better-auth/types";
 import type { Env } from "../config/env";
-import type { Redis } from "@upstash/redis/cloudflare";
-
 declare module "hono" {
   interface ContextVariableMap {
     user: betterAuthUser | null;
@@ -14,7 +12,6 @@ declare module "hono" {
     isAdmin: boolean;
     db: Db;
     env: Env;
-    redis: Redis;
   }
 }
 

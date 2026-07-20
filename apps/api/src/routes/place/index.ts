@@ -216,15 +216,10 @@ placeRouter.get(
 
 placeRouter.get("/sitemap", async (c) => {
   const db = c.get("db");
-  const redis = c.get("redis");
 
   const page = Number(c.req.query("page") ?? "1");
   const limit = 50_000;
   const offset = (page - 1) * limit;
-
-  const CACHE_KEY = `sitemap:places:${page}`;
-  const cached = await redis.get<{ slug: string; locationPath: string; updatedAt: string }[]>(CACHE_KEY);
-  if (cached) return c.json(cached, 200);
 
   const places = await db
     .select({
@@ -237,8 +232,6 @@ placeRouter.get("/sitemap", async (c) => {
     .orderBy(asc(Place.updatedAt))
     .limit(limit)
     .offset(offset);
-
-  await redis.set(CACHE_KEY, places, { ex: 60 * 60 * 24 }); // 24h
 
   return c.json(places, 200);
 });
