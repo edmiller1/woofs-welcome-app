@@ -12,7 +12,12 @@ export const load: Load = async ({ params }) => {
 
   const user = await getUser();
 
-  const initialLocation = await api.location.getLocation(path);
+  let initialLocation;
+  try {
+    initialLocation = await api.location.getLocation(path);
+  } catch {
+    error(404, "Not found");
+  }
 
   return {
     user,
