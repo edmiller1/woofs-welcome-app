@@ -43,12 +43,13 @@
   {loading}
   {fetchpriority}
   class={className}
-  style="width: {width}; height: {height};"
+  style="width: {width}; height: {height}; object-fit: cover; object-position: center;"
 />
 
 <style>
   img {
     display: block;
     object-fit: cover;
+    object-position: center;
   }
 </style>

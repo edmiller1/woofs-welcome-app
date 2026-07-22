@@ -113,6 +113,13 @@
       "when": 1782524905641,
       "tag": "0015_large_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1784697177617,
+      "tag": "0016_clean_agent_brand",
+      "breakpoints": true
     }
   ]
 }

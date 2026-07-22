@@ -461,7 +461,7 @@ export const Place = pgTable(
     //adventure specific
     distanceKm: integer("distance_km").default(0),
     durationMins: integer("duration_mins").default(0),
-    difficulty: difficultyEnum("difficulty").default("beginner"),
+    difficulty: difficultyEnum("difficulty"),
 
     // Metrics and flags
     rating: numeric("rating", { precision: 3, scale: 2 }).default("0"),

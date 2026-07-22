@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Drawer } from "vaul-svelte";
+  import * as Dialog from "$lib/components/ui/dialog/index.js";
   import type { PlaceImage } from "@woofs/types";
   import * as Carousel from "$lib/components/ui/carousel/index.js";
   import type { CarouselAPI } from "$lib/components/ui/carousel/context.js";
@@ -33,67 +34,140 @@
   };
 </script>
 
-<Drawer.Root open={imagesOpen} onOpenChange={(open) => (imagesOpen = open)}>
-  <Drawer.Portal>
-    <Drawer.Overlay class="fixed inset-0 bg-black/40" />
-    <Drawer.Content
-      class="fixed bottom-0 left-0 right-0 z-99 mt-24 flex h-full flex-col rounded-t-[10px] bg-white"
-    >
-      <!-- Drag handle -->
-      <div class="shrink-0 pt-3 pb-2 flex items-center justify-center">
-        <div class="h-1.5 w-12 rounded-full bg-zinc-300"></div>
-      </div>
+<!-- ===================== MOBILE: Drawer ===================== -->
+<div class="lg:hidden">
+  <Drawer.Root open={imagesOpen} onOpenChange={(open) => (imagesOpen = open)}>
+    <Drawer.Portal>
+      <Drawer.Overlay class="fixed inset-0 bg-black/40" />
+      <Drawer.Content
+        class="fixed bottom-0 left-0 right-0 z-99 mt-24 flex h-full flex-col rounded-t-[10px] bg-white"
+      >
+        <!-- Drag handle -->
+        <div class="shrink-0 pt-3 pb-2 flex items-center justify-center">
+          <div class="h-1.5 w-12 rounded-full bg-zinc-300"></div>
+        </div>
 
+        <!-- Counter -->
+        <div class="shrink-0 text-center text-xs text-muted-foreground pb-2">
+          {current + 1} / {count}
+        </div>
+
+        <!-- Main carousel -->
+        <div class="flex-1 min-h-0">
+          <Carousel.Root
+            setApi={(emblaApi) => (mainApi = emblaApi)}
+            class="h-full"
+          >
+            <Carousel.Content class="h-full">
+              {#each images as image}
+                <Carousel.Item class="h-full">
+                  <img
+                    src={`https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ/${image.imageId}/w=960,q=85,fit=cover,f=webp`}
+                    alt={image.caption || ""}
+                    style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                    loading="eager"
+                  />
+                </Carousel.Item>
+              {/each}
+            </Carousel.Content>
+            <Carousel.Previous class="left-2" />
+            <Carousel.Next class="right-2" />
+          </Carousel.Root>
+        </div>
+
+        <!-- Thumbnail strip -->
+        <div class="shrink-0 pb-8 pt-3">
+          <Carousel.Root
+            setApi={(emblaApi) => (thumbApi = emblaApi)}
+            opts={{ align: "center", dragFree: true }}
+            class="w-full"
+          >
+            <Carousel.Content class="-ml-2 mt-2">
+              {#each images as image, index}
+                <Carousel.Item class="basis-auto pl-2">
+                  <button
+                    type="button"
+                    onclick={() => scrollToIndex(index)}
+                    class="w-16 h-12 shrink-0 overflow-hidden rounded-md transition-all {current === index
+                      ? 'ring-2 ring-primary ring-offset-1'
+                      : 'opacity-60 hover:opacity-90'}"
+                  >
+                    <img
+                      src={`https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ/${image.imageId}/w=320,q=80,fit=cover,f=webp`}
+                      alt={image.caption || ""}
+                      style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                    />
+                  </button>
+                </Carousel.Item>
+              {/each}
+            </Carousel.Content>
+          </Carousel.Root>
+        </div>
+      </Drawer.Content>
+    </Drawer.Portal>
+  </Drawer.Root>
+</div>
+
+<!-- ===================== DESKTOP: Dialog ===================== -->
+<div class="hidden lg:block">
+  <Dialog.Root open={imagesOpen} onOpenChange={(open) => (imagesOpen = open)}>
+    <Dialog.Content class="max-w-5xl w-full h-[90vh] flex flex-col p-0 gap-0">
       <!-- Counter -->
-      <div class="shrink-0 text-center text-xs text-muted-foreground pb-2">
+      <div class="shrink-0 text-center text-xs text-muted-foreground pt-4 pb-2">
         {current + 1} / {count}
       </div>
 
-      <!-- Main carousel — fills all available space -->
-      <div class="flex-1 min-h-0">
+      <!-- Main carousel -->
+      <div class="flex-1 min-h-0 px-16">
         <Carousel.Root
           setApi={(emblaApi) => (mainApi = emblaApi)}
           class="h-full"
         >
           <Carousel.Content class="h-full">
             {#each images as image}
-              <Carousel.Item class="h-full">
-                <img
-                  src={`https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ/${image.imageId}/w=960,q=85,fit=cover,f=webp`}
+              <Carousel.Item class="h-full flex items-center justify-center">
+                <OptimizedImage
+                  imageId={image.imageId}
                   alt={image.caption || ""}
-                  style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                  class="w-full max-h-[75vh] rounded-lg object-contain"
+                  variant="xlarge"
+                  responsive={false}
+                  width="auto"
+                  height="600px"
                   loading="eager"
                 />
               </Carousel.Item>
             {/each}
           </Carousel.Content>
-          <Carousel.Previous class="left-2" />
-          <Carousel.Next class="right-2" />
+          <Carousel.Previous />
+          <Carousel.Next />
         </Carousel.Root>
       </div>
 
       <!-- Thumbnail strip -->
-      <div class="shrink-0 pb-8 pt-3">
+      <div class="shrink-0 pb-6 pt-3">
         <Carousel.Root
           setApi={(emblaApi) => (thumbApi = emblaApi)}
           opts={{ align: "center", dragFree: true }}
-          class="w-full"
+          class="w-full px-4"
         >
-          <Carousel.Content class="-ml-2 mt-2">
+          <Carousel.Content class="-ml-2">
             {#each images as image, index}
-              <Carousel.Item class="basis-auto pl-2">
+              <Carousel.Item class="basis-auto ml-2 py-2">
                 <button
                   type="button"
                   onclick={() => scrollToIndex(index)}
-                  class="w-16 h-12 shrink-0 overflow-hidden rounded-md transition-all {current ===
-                  index
-                    ? 'ring-2 ring-primary ring-offset-1'
-                    : 'opacity-60 hover:opacity-90'}"
+                  class="cursor-pointer w-28 h-20 shrink-0 overflow-hidden rounded-md transition-all {current === index
+                    ? 'ring-2 ring-primary ring-offset-2'
+                    : 'opacity-70 hover:opacity-100'}"
                 >
-                  <img
-                    src={`https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ/${image.imageId}/w=320,q=80,fit=cover,f=webp`}
+                  <OptimizedImage
+                    imageId={image.imageId}
                     alt={image.caption || ""}
-                    style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                    variant="thumbnail"
+                    width="100%"
+                    height="100%"
+                    class="w-full h-full object-cover object-center"
                   />
                 </button>
               </Carousel.Item>
@@ -101,6 +175,6 @@
           </Carousel.Content>
         </Carousel.Root>
       </div>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>
+    </Dialog.Content>
+  </Dialog.Root>
+</div>
