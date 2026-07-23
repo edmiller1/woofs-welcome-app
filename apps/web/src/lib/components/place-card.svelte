@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
   import { Badge } from "$lib/components/ui/badge";
-  import { BadgeCheck, Heart, LoaderCircle, Star } from "@lucide/svelte";
+  import { BadgeCheck, Heart, LoaderCircle, PawPrint, Star } from "@lucide/svelte";
   import type { CarouselAPI } from "$lib/components/ui/carousel/context";
   import * as Carousel from "$lib/components/ui/carousel/index.js";
   import { page } from "$app/state";
@@ -199,6 +199,14 @@
                 <Badge variant="secondary" class="rounded-full">{type}</Badge>
               {/each}
             </div>
+          </div>
+        </div>
+      {:else if images.length === 0}
+        <div class="relative aspect-[1.21] w-full rounded-lg bg-muted flex flex-col items-center justify-center gap-2">
+          <PawPrint class="size-8 text-muted-foreground opacity-40" />
+          <p class="font-headline font-semibold text-muted-foreground text-sm">No photos yet</p>
+          <div class="absolute right-2 top-2 z-10">
+            <HeartButton {isSaved} {user} placeId={id} />
           </div>
         </div>
       {:else if images.length === 1}

@@ -1,11 +1,11 @@
 <script lang="ts">
+  import SaveButton from "./save-button.svelte";
   import type { BAUser, PlaceImage } from "@woofs/types";
   import OptimizedImage from "./optimized-image.svelte";
   import Button from "./ui/button/button.svelte";
-  import { Images, Share, Star } from "@lucide/svelte";
+  import { Images, PawPrint, Share, Star } from "@lucide/svelte";
   import ShareButton from "./share-button.svelte";
   import { page } from "$app/state";
-  import SaveButton from "./save-button.svelte";
 
   interface Props {
     images: PlaceImage[];
@@ -60,7 +60,32 @@
 {/snippet}
 
 {#if images.length === 0}
-  <!-- no images -->
+  <section
+    class="my-4 mb-12 h-125 md:h-162.5 relative overflow-hidden rounded-xl bg-muted flex flex-col items-center justify-center gap-4"
+  >
+    <PawPrint class="size-10 text-muted-foreground" />
+    <div class="text-center">
+      <p class="font-headline font-semibold text-muted-foreground text-lg">
+        No photos yet
+      </p>
+      <p class="font-body text-muted-foreground text-sm opacity-70 mt-1">
+        Be the first to share a photo of this place
+      </p>
+    </div>
+    <div class="absolute bottom-6 left-6">
+      <div class="flex items-center gap-3">
+        <ShareButton url={page.url.href} name={placeName}>
+          {#snippet trigger()}
+            <Button variant="default">
+              <Share class="size-4" />
+              <span class="font-headline font-semibold text-sm">Share</span>
+            </Button>
+          {/snippet}
+        </ShareButton>
+        <SaveButton {user} {placeId} {isSaved} variant="default" />
+      </div>
+    </div>
+  </section>
 {:else if images.length === 1}
   <!-- 1 image: full width -->
   <section
@@ -103,8 +128,12 @@
   </section>
 {:else if images.length === 3}
   <!-- 3 images: 2/3 left + two 1/3 stacked right -->
-  <section class="my-4 mb-12 grid grid-cols-3 grid-rows-2 gap-4 h-125 md:h-162.5">
-    <div class="col-span-2 row-span-2 relative overflow-hidden rounded-xl group">
+  <section
+    class="my-4 mb-12 grid grid-cols-3 grid-rows-2 gap-4 h-125 md:h-162.5"
+  >
+    <div
+      class="col-span-2 row-span-2 relative overflow-hidden rounded-xl group"
+    >
       <OptimizedImage
         imageId={images[0].imageId}
         alt={images[0].caption || ""}

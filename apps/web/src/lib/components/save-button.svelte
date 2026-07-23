@@ -19,9 +19,10 @@
     user: BAUser | null;
     placeId: string;
     isSaved: boolean;
+    variant?: "default" | "secondary";
   }
 
-  const { user, placeId, isSaved }: Props = $props();
+  const { user, placeId, isSaved, variant = "secondary" }: Props = $props();
 
   let dialogOpen = $state(false);
   let showNewCollectionForm = $state(false);
@@ -117,7 +118,7 @@
   <Dialog.Trigger>
     {#snippet child({ props })}
       {#if user}
-        <Button variant="secondary" {...props} class="hidden md:flex">
+        <Button {variant} {...props} class="hidden md:flex">
           <Heart
             class={`size-4 ${isSaved ? "fill-rose-500 text-rose-500" : "text-foreground"}`}
           />
@@ -128,7 +129,7 @@
           {/if}
         </Button>
         <Button
-          variant="secondary"
+          {variant}
           aria-label={isSaved
             ? "Remove from saved places"
             : "Save to collection"}
@@ -142,14 +143,14 @@
       {:else}
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "secondary" }), "hidden md:flex")}
+          class={cn(buttonVariants({ variant }), "hidden md:flex")}
           ><Heart class="size-4" /><span
             class="font-headline font-semibold text-sm">Save</span
           >
         </a>
         <a
           href={`/sign-in?redirect=${page.url.pathname}`}
-          class={cn(buttonVariants({ variant: "secondary" }), "md:hidden")}
+          class={cn(buttonVariants({ variant }), "md:hidden")}
           ><Heart class="size-4" />
         </a>
       {/if}
