@@ -1,7 +1,13 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
   import { Badge } from "$lib/components/ui/badge";
-  import { BadgeCheck, Heart, LoaderCircle, PawPrint, Star } from "@lucide/svelte";
+  import {
+    BadgeCheck,
+    Heart,
+    LoaderCircle,
+    PawPrint,
+    Star,
+  } from "@lucide/svelte";
   import type { CarouselAPI } from "$lib/components/ui/carousel/context";
   import * as Carousel from "$lib/components/ui/carousel/index.js";
   import { page } from "$app/state";
@@ -202,11 +208,50 @@
           </div>
         </div>
       {:else if images.length === 0}
-        <div class="relative aspect-[1.21] w-full rounded-lg bg-muted flex flex-col items-center justify-center gap-2">
+        <div
+          class="relative aspect-[1.21] w-full rounded-lg bg-muted flex flex-col items-center justify-center gap-2"
+        >
           <PawPrint class="size-8 text-muted-foreground opacity-40" />
-          <p class="font-headline font-semibold text-muted-foreground text-sm">No photos yet</p>
+          <p class="font-headline font-semibold text-muted-foreground text-sm">
+            No photos yet
+          </p>
           <div class="absolute right-2 top-2 z-10">
             <HeartButton {isSaved} {user} placeId={id} />
+          </div>
+        </div>
+        <div class="space-y-3 py-2 min-w-0">
+          <div class="m-0 flex items-center justify-between gap-2 min-w-0">
+            <div class="flex items-center gap-1 min-w-0 overflow-hidden">
+              <h3 class="truncate font-semibold text-foreground">{name}</h3>
+              {#if isVerified}
+                <BadgeCheck class="fill-primary size-4 shrink-0" />
+              {/if}
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <Star class="size-3 fill-yellow-500 text-yellow-500" />
+              <span class="text-sm">{Number(rating).toFixed(1)}</span>
+              <span class="text-sm text-muted-foreground">({reviewCount})</span>
+            </div>
+          </div>
+          <div class="text-muted-foreground m-0 text-left text-sm">
+            {cityName}, {regionName}
+            {countryCode}
+            {#if isPaid}
+              ·
+              <Badge variant="secondary">$$</Badge>
+            {/if}
+          </div>
+          {#if amenity}
+            <div
+              class="mt-2.5 pl-2.5 border-l-2 border-primary font-body italic text-[12.5px] leading-[1.55] text-muted-foreground"
+            >
+              {amenity}
+            </div>
+          {/if}
+          <div class="mt-2 flex items-center gap-1">
+            {#each types.sort((a, b) => a.localeCompare(b)) as type}
+              <Badge variant="secondary" class="rounded-full">{type}</Badge>
+            {/each}
           </div>
         </div>
       {:else if images.length === 1}
