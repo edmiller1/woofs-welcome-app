@@ -68,7 +68,7 @@ adminRouter.post(
         waterAvailable: body.waterAvailable ?? false,
         distanceKm: body.distanceKm ?? 0,
         durationMins: body.durationMins ?? 0,
-        difficulty: body.difficulty ?? "beginner",
+        difficulty: body.difficulty ?? null,
         isVerified: body.isVerified ?? false,
         isFeatured: body.isFeatured ?? false,
       })

@@ -1,12 +1,20 @@
 import { initSentry } from "$lib/sentry-client";
-import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
-import * as Sentry from "@sentry/sveltekit";
+import { handleErrorWithSentry } from "@sentry/sveltekit";
+import type { HandleClientError } from "@sveltejs/kit";
 
-// Initialize Sentry
-initSentry();
+try {
+  initSentry();
+} catch {
+  // Sentry blocked by ad blocker or network — fail silently
+}
 
-// Handle errors
-export const handleError = handleErrorWithSentry();
+export const handleError: HandleClientError = ({ error, event, status, message }) => {
+  try {
+    return handleErrorWithSentry()({ error, event, status, message });
+  } catch {
+    return { message: message ?? "An unexpected error occurred" };
+  }
+};
 
 // Optional: If you want to add custom error handling
 // export const handleError = handleErrorWithSentry((input) => {
