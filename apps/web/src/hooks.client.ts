@@ -8,11 +8,11 @@ try {
   // Sentry blocked by ad blocker or network — fail silently
 }
 
-export const handleError: HandleClientError = ({ error, event, status, message }) => {
+export const handleError: HandleClientError = (input) => {
   try {
-    return handleErrorWithSentry()({ error, event, status, message });
+    return handleErrorWithSentry<HandleClientError>()(input);
   } catch {
-    return { message: message ?? "An unexpected error occurred" };
+    return { message: input.message ?? "An unexpected error occurred" };
   }
 };
 

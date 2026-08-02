@@ -11,7 +11,7 @@
   import { toast } from "svelte-sonner";
   import { api } from "$lib/api-helper";
   import { LoaderCircle } from "@lucide/svelte";
-  import dogs from "$lib/assets/dogs.JPG";
+  import dogs from "$lib/assets/dogs.jpg";
 
   const { data } = $props();
   const { user } = $derived(data);
@@ -69,7 +69,9 @@
         </Breadcrumb.Item>
       </Breadcrumb.List>
     </Breadcrumb.Root>
-    <section class="flex flex-col md:flex-row items-start md:items-center gap-12 md:gap-24">
+    <section
+      class="flex flex-col md:flex-row items-start md:items-center gap-12 md:gap-24"
+    >
       <div class="flex-1 min-w-0">
         <div class="mb-8 sm:mb-12">
           <h1 class="text-4xl sm:text-5xl font-bold mb-6">Contact Us</h1>

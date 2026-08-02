@@ -238,7 +238,7 @@
               </div>
               <div class="mt-auto flex items-center gap-2">
                 {#each review.dogBreeds.slice(0, 2) as breed}
-                  <Badge variant="breed" class="rounded-full text-xs">
+                  <Badge variant="secondary" class="rounded-full text-xs">
                     {breed}
                   </Badge>
                 {/each}

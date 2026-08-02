@@ -30,7 +30,7 @@
 			: "start-1/2 -top-12 -translate-x-1/2 rotate-90",
 		className
 	)}
-	onclick={(e: MouseEvent) => { onclickProp?.(e); emblaCtx.scrollPrev(e); }}
+	onclick={(e: MouseEvent) => { onclickProp?.(e); emblaCtx.scrollPrev(); }}
 	onkeydown={emblaCtx.handleKeyDown}
 	{...restProps}
 	bind:ref

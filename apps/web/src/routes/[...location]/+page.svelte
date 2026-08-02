@@ -143,8 +143,8 @@
     <meta property="og:image" content={buildImageUrl(initialLocation.image, "xlarge")} />
   {/if}
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://woofswelcome.app/location/{initialLocation.pathname}" />
-  <link rel="canonical" href="https://woofswelcome.app/location/{initialLocation.pathname}" />
+  <meta property="og:url" content="https://woofswelcome.app/{initialLocation.path}" />
+  <link rel="canonical" href="https://woofswelcome.app/{initialLocation.path}" />
   {#if initialLocation.image}
     <link
       rel="preload"
