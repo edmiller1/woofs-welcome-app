@@ -150,7 +150,8 @@
 
   // Re-sync filters when URL changes (e.g. navigating from footer links while already on /explore)
   $effect(() => {
-    typeFilters = page.url.searchParams.get("types")?.split(",").filter(Boolean) ?? [];
+    typeFilters =
+      page.url.searchParams.get("types")?.split(",").filter(Boolean) ?? [];
     ratingFilter = page.url.searchParams.get("rating") ?? "";
   });
   let typesOpen = $state(false);
@@ -497,12 +498,16 @@
     if (!map) return;
     const currentMap = map;
     const onRender = () => {
-      if (!currentMap.getSource("places") || !currentMap.isSourceLoaded("places")) return;
+      if (
+        !currentMap.getSource("places") ||
+        !currentMap.isSourceLoaded("places")
+      )
+        return;
       for (const [, marker] of placeMarkers) {
         const point = currentMap.project(marker.getLngLat());
         const clustered =
-          currentMap.queryRenderedFeatures(point, { layers: ["clusters"] }).length >
-          0;
+          currentMap.queryRenderedFeatures(point, { layers: ["clusters"] })
+            .length > 0;
         marker.getElement().style.display = clustered ? "none" : "flex";
       }
     };
@@ -697,7 +702,10 @@
     name="description"
     content="Explore dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand on an interactive map. Find the perfect spot for you and your dog."
   />
-  <meta property="og:title" content="Explore Dog-Friendly Places in New Zealand | Woofs Welcome" />
+  <meta
+    property="og:title"
+    content="Explore Dog-Friendly Places in New Zealand | Woofs Welcome"
+  />
   <meta
     property="og:description"
     content="Explore dog-friendly cafes, restaurants, accommodation, walks and more across New Zealand on an interactive map. Find the perfect spot for you and your dog."
@@ -1365,10 +1373,7 @@
               {/if}
             </button>
           </Tooltip.Trigger>
-          <Tooltip.Content
-            side="bottom"
-            class="bg-white text-sm text-foreground rounded-lg shadow-xl"
-          >
+          <Tooltip.Content side="bottom">
             {#if streetsMap}
               <p>Switch to Outdoors map</p>
             {:else}

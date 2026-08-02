@@ -118239,7 +118239,7 @@ var placeSlugSchema = zod_default.string().min(1, "Place slug is required").max(
 );
 var placeReviewsSchema = zod_default.object({
   page: zod_default.coerce.number().min(1).default(1),
-  limit: zod_default.coerce.number().min(1).default(10),
+  limit: zod_default.coerce.number().min(1).default(6),
   placeId: zod_default.uuid()
 });
 var nearbyPlacesSchema = zod_default.object({
@@ -119033,32 +119033,38 @@ var PlaceService = class {
   }
   async getPlaceReviews(placeId, page, limit, userId) {
     try {
-      const reviews = await this.db.query.Review.findMany({
-        where: eq(Review.placeId, placeId),
-        with: {
-          images: true,
-          likes: true,
-          replies: true,
-          reports: true,
-          user: {
-            columns: {
-              id: true,
-              name: true,
-              image: true,
-              profileImageId: true
+      const [reviews, countResult] = await Promise.all([
+        this.db.query.Review.findMany({
+          where: eq(Review.placeId, placeId),
+          with: {
+            images: true,
+            likes: true,
+            replies: true,
+            reports: true,
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+                profileImageId: true
+              }
             }
-          }
-        },
-        orderBy: desc(Review.createdAt),
-        limit,
-        offset: (page - 1) * limit
-      });
-      return reviews.map((review) => ({
-        ...review,
-        isOwner: userId ? review.userId === userId : false,
-        hasLiked: userId ? review.likes.some((like2) => like2.userId === userId) : false,
-        hasReported: userId ? review.reports.some((report) => report.userId === userId) : false
-      }));
+          },
+          orderBy: desc(Review.createdAt),
+          limit,
+          offset: (page - 1) * limit
+        }),
+        this.db.select({ total: count() }).from(Review).where(eq(Review.placeId, placeId))
+      ]);
+      return {
+        reviews: reviews.map((review) => ({
+          ...review,
+          isOwner: userId ? review.userId === userId : false,
+          hasLiked: userId ? review.likes.some((like2) => like2.userId === userId) : false,
+          hasReported: userId ? review.reports.some((report) => report.userId === userId) : false
+        })),
+        total: countResult[0]?.total ?? 0
+      };
     } catch (error49) {
       if (error49 instanceof AppError) {
         console.error("Get place reviews error:", error49);

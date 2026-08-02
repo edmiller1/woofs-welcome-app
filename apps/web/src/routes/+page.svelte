@@ -237,7 +237,7 @@
         </div>
 
         {#if popularPlaces.length > 0}
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             {#each popularPlaces as place}
               <PlaceCard
                 id={place.id}

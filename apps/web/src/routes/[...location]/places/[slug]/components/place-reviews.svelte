@@ -13,7 +13,6 @@
   import type { BAUser, ReviewImage } from "@woofs/types";
   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
   import { Badge } from "$lib/components/ui/badge";
-  import * as Pagination from "$lib/components/ui/pagination/index.js";
   import { Separator } from "$lib/components/ui/separator";
   import { page } from "$app/state";
   import { untrack } from "svelte";
@@ -25,6 +24,7 @@
   import LikeReviewButton from "./like-review-button.svelte";
   import type { UpdateReviewData } from "@woofs/types";
   import "@aejkatappaja/phantom-ui";
+  import AllReviewsDialog from "./all-reviews-dialog.svelte";
 
   interface Props {
     placeId: string;
@@ -46,11 +46,9 @@
     reviewId,
   }: Props = $props();
 
-  let initialRating = $state(0);
   let reviewsContainer = $state<HTMLElement | null | undefined>(null);
 
-  let currentPage = $state<number>(1);
-  const limit = $state<number>(5);
+  const INITIAL_LIMIT = 6;
   let imageDialogOpen = $state<boolean>(false);
   let currentImage = $state<ReviewImage>();
   let showHighlighted = $state(true);
@@ -59,6 +57,7 @@
   let deleteOpen = $state(false);
   let deleteReviewId = $state<string>("");
   let editOpen = $state(false);
+  let allReviewsOpen = $state(false);
   let editReviewData = $state<UpdateReviewData>({
     reviewId: "",
     title: "",
@@ -81,9 +80,11 @@
   };
 
   const reviews = createQuery(() => ({
-    queryKey: ["place-reviews", placeId, currentPage, limit],
-    queryFn: () => api.place.getPlaceReviews(placeId, currentPage, limit),
+    queryKey: ["place-reviews", placeId, 1, INITIAL_LIMIT],
+    queryFn: () => api.place.getPlaceReviews(placeId, 1, INITIAL_LIMIT),
   }));
+
+  const total = $derived(reviews.data?.total ?? reviewCount);
 
   const highlightedReview = createQuery(() => ({
     queryKey: ["place-review", reviewId],
@@ -93,7 +94,7 @@
   }));
 
   const filteredReviews = $derived(
-    reviews.data?.filter((rev) => rev.id !== reviewId) ?? [],
+    reviews.data?.reviews.filter((rev) => rev.id !== reviewId) ?? [],
   );
 
   const handleOpenReportDialog = (reviewId: string, hasReported: boolean) => {
@@ -101,17 +102,6 @@
     reportReviewId = reviewId;
     reportOpen = true;
   };
-
-  $effect(() => {
-    if (currentPage > 1) {
-      untrack(() =>
-        reviewsContainer?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        }),
-      );
-    }
-  });
 
   $effect(() => {
     if (highlightedReview.data && showHighlighted) {
@@ -158,13 +148,13 @@
       </div>
     {/if}
 
-    {#if reviews.isSuccess && reviews.data.length > 0}
+    {#if reviews.isSuccess && reviews.data.reviews.length > 0}
       <ReportReviewDialog
         bind:open={reportOpen}
         reviewId={reportReviewId}
         {placeId}
-        {currentPage}
-        {limit}
+        currentPage={1}
+        limit={INITIAL_LIMIT}
       />
       <div class="space-y-6 my-6">
         {#if highlightedReview.data && showHighlighted}
@@ -226,8 +216,8 @@
                         hasLiked={highlightedReview.data.hasLiked}
                         likesCount={highlightedReview.data.likesCount}
                         {placeId}
-                        {currentPage}
-                        {limit}
+                        currentPage={1}
+                        limit={INITIAL_LIMIT}
                       />
                       <Tooltip.Root>
                         <Tooltip.Trigger>
@@ -287,7 +277,7 @@
                 <div class="mt-2 flex flex-wrap gap-1">
                   {#each highlightedReview.data.dogBreeds as breed}
                     <Badge
-                      variant="breed"
+                      variant="secondary"
                       class="rounded-full px-2 py-1 text-xs font-semibold"
                     >
                       {breed}
@@ -367,8 +357,8 @@
                         hasLiked={review.hasLiked}
                         likesCount={review.likesCount}
                         {placeId}
-                        {currentPage}
-                        {limit}
+                        currentPage={1}
+                        limit={INITIAL_LIMIT}
                       />
                       <Tooltip.Root>
                         <Tooltip.Trigger>
@@ -391,7 +381,7 @@
                             />
                           </Button>
                         </Tooltip.Trigger>
-                        <Tooltip.Content>
+                        <Tooltip.Content class="bg-black">
                           <p>
                             {review.hasReported
                               ? "Update your report"
@@ -427,7 +417,7 @@
                 <div class="mt-2 flex flex-wrap gap-1">
                   {#each review.dogBreeds as breed}
                     <Badge
-                      variant="breed"
+                      variant="secondary"
                       class="rounded-full px-2 py-1 text-xs font-medium"
                     >
                       {breed}
@@ -472,42 +462,11 @@
           />
         {/each}
       </div>
-      {#if reviewCount > 5}
-        <div class="py-8">
-          <Pagination.Root
-            count={reviewCount}
-            perPage={5}
-            bind:page={currentPage}
-          >
-            {#snippet children({ pages, currentPage })}
-              <Pagination.Content>
-                <Pagination.Item>
-                  <Pagination.PrevButton />
-                </Pagination.Item>
-                <Pagination.Item class="flex items-center gap-2">
-                  {#each pages as page (page.key)}
-                    {#if page.type === "ellipsis"}
-                      <Pagination.Item>
-                        <Pagination.Ellipsis />
-                      </Pagination.Item>
-                    {:else}
-                      <Pagination.Item>
-                        <Pagination.Link
-                          {page}
-                          isActive={currentPage === page.value}
-                        >
-                          {page.value}
-                        </Pagination.Link>
-                      </Pagination.Item>
-                    {/if}
-                  {/each}
-                </Pagination.Item>
-                <Pagination.Item>
-                  <Pagination.NextButton />
-                </Pagination.Item>
-              </Pagination.Content>
-            {/snippet}
-          </Pagination.Root>
+      {#if total > INITIAL_LIMIT}
+        <div class="py-6 flex justify-center">
+          <Button variant="outline" onclick={() => (allReviewsOpen = true)}>
+            Show all {total} reviews
+          </Button>
         </div>
       {/if}
     {:else if !reviews.isLoading}
@@ -540,4 +499,11 @@
   onOpenChange={(o) => (editOpen = o)}
   reviewData={editReviewData}
   {placeName}
+/>
+<AllReviewsDialog
+  open={allReviewsOpen}
+  onOpenChange={(o) => (allReviewsOpen = o)}
+  {placeId}
+  {total}
+  {user}
 />

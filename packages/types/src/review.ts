@@ -145,3 +145,8 @@ export interface CommunityReview {
     hasNextPage: boolean;
   };
 }
+
+export interface PlaceReviewsResponse {
+  reviews: PlaceReview[];
+  total: number;
+}

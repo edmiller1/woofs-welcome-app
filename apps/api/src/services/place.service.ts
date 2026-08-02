@@ -264,37 +264,43 @@ export class PlaceService {
     userId?: string,
   ) {
     try {
-      const reviews = await this.db.query.Review.findMany({
-        where: eq(Review.placeId, placeId),
-        with: {
-          images: true,
-          likes: true,
-          replies: true,
-          reports: true,
-          user: {
-            columns: {
-              id: true,
-              name: true,
-              image: true,
-              profileImageId: true,
+      const [reviews, countResult] = await Promise.all([
+        this.db.query.Review.findMany({
+          where: eq(Review.placeId, placeId),
+          with: {
+            images: true,
+            likes: true,
+            replies: true,
+            reports: true,
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                image: true,
+                profileImageId: true,
+              },
             },
           },
-        },
-        orderBy: desc(Review.createdAt),
-        limit: limit,
-        offset: (page - 1) * limit,
-      });
+          orderBy: desc(Review.createdAt),
+          limit: limit,
+          offset: (page - 1) * limit,
+        }),
+        this.db.select({ total: count() }).from(Review).where(eq(Review.placeId, placeId)),
+      ]);
 
-      return reviews.map((review) => ({
-        ...review,
-        isOwner: userId ? review.userId === userId : false,
-        hasLiked: userId
-          ? review.likes.some((like) => like.userId === userId)
-          : false,
-        hasReported: userId
-          ? review.reports.some((report) => report.userId === userId)
-          : false,
-      }));
+      return {
+        reviews: reviews.map((review) => ({
+          ...review,
+          isOwner: userId ? review.userId === userId : false,
+          hasLiked: userId
+            ? review.likes.some((like) => like.userId === userId)
+            : false,
+          hasReported: userId
+            ? review.reports.some((report) => report.userId === userId)
+            : false,
+        })),
+        total: countResult[0]?.total ?? 0,
+      };
     } catch (error) {
       if (error instanceof AppError) {
         console.error("Get place reviews error:", error);
