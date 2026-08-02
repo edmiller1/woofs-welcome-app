@@ -357,6 +357,7 @@
   // On map load: fly to URL position, then URL-less geolocation, then NZ fallback
   $effect(() => {
     if (!map) return;
+    const currentMap = map;
 
     const onLoad = () => {
       const urlLat = page.url.searchParams.get("lat");
@@ -367,35 +368,38 @@
         !!(urlLat && urlLng) && !(urlLat === "0.00000" && urlLng === "0.00000");
 
       if (hasUrlPosition) {
-        map!.flyTo({
+        currentMap.flyTo({
           center: [parseFloat(urlLng!), parseFloat(urlLat!)],
           zoom: urlZoom ? parseFloat(urlZoom) : 11,
           speed: 2,
         });
       } else if ($userLocation) {
-        map!.flyTo({ center: $userLocation, zoom: 9, speed: 1.5 });
+        currentMap.flyTo({ center: $userLocation, zoom: 9, speed: 1.5 });
       } else {
-        map!.flyTo({ center: NZ_CENTER, zoom: NZ_ZOOM });
+        currentMap.flyTo({ center: NZ_CENTER, zoom: NZ_ZOOM });
       }
 
       // Only start syncing URL position after the initial fly-to ends
-      map!.once("moveend", () => {
+      currentMap.once("moveend", () => {
         updateBbox();
-        map!.on("moveend", onMapMoveend);
+        currentMap.on("moveend", onMapMoveend);
       });
 
       addPlacesLayer();
       mapReady = true;
 
       // Click anywhere on the map (not a marker) → close popup
-      map!.on("click", () => {
+      currentMap.on("click", () => {
         activePopup?.remove();
         activePopup = null;
       });
     };
 
     mapReady = false;
-    map.once("load", onLoad);
+    currentMap.once("load", onLoad);
+    return () => {
+      currentMap.off("load", onLoad);
+    };
   });
 
   // Fly to geolocation if it arrives after map load and no URL position set
@@ -491,19 +495,20 @@
   // On each render, hide DOM markers that are absorbed into a cluster
   $effect(() => {
     if (!map) return;
+    const currentMap = map;
     const onRender = () => {
-      if (!map!.getSource("places") || !map!.isSourceLoaded("places")) return;
+      if (!currentMap.getSource("places") || !currentMap.isSourceLoaded("places")) return;
       for (const [, marker] of placeMarkers) {
-        const point = map!.project(marker.getLngLat());
+        const point = currentMap.project(marker.getLngLat());
         const clustered =
-          map!.queryRenderedFeatures(point, { layers: ["clusters"] }).length >
+          currentMap.queryRenderedFeatures(point, { layers: ["clusters"] }).length >
           0;
         marker.getElement().style.display = clustered ? "none" : "flex";
       }
     };
-    map.on("render", onRender);
+    currentMap.on("render", onRender);
     return () => {
-      map!.off("render", onRender);
+      currentMap.off("render", onRender);
     };
   });
 
@@ -675,6 +680,7 @@
     placeMarkers.clear();
     if (activeMounted) unmount(activeMounted);
     activePopup?.remove();
+    map?.remove();
   });
 
   let mapKey = $state(0);

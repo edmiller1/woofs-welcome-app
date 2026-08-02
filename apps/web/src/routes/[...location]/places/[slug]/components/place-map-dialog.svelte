@@ -261,16 +261,17 @@
   // Hide DOM markers that are inside a cluster
   $effect(() => {
     if (!map) return;
+    const currentMap = map;
     const onRender = () => {
-      if (!map!.isSourceLoaded("dialog-places")) return;
+      if (!currentMap.isSourceLoaded("dialog-places")) return;
       for (const [, marker] of markers) {
-        const point = map!.project(marker.getLngLat());
-        const clustered = map!.queryRenderedFeatures(point, { layers: ["dialog-clusters"] }).length > 0;
+        const point = currentMap.project(marker.getLngLat());
+        const clustered = currentMap.queryRenderedFeatures(point, { layers: ["dialog-clusters"] }).length > 0;
         marker.getElement().style.display = clustered ? "none" : "flex";
       }
     };
-    map.on("render", onRender);
-    return () => { map!.off("render", onRender); };
+    currentMap.on("render", onRender);
+    return () => { currentMap.off("render", onRender); };
   });
 
   // Add main marker once map is ready

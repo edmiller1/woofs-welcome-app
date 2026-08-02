@@ -29,10 +29,14 @@
   $effect(() => {
     if (mainApi) {
       current = mainApi.selectedScrollSnap();
-      mainApi.on("select", () => {
+      const handler = () => {
         current = mainApi!.selectedScrollSnap();
         thumbApi?.scrollTo(current);
-      });
+      };
+      mainApi.on("select", handler);
+      return () => {
+        mainApi?.off("select", handler);
+      };
     }
   });
 

@@ -66,9 +66,13 @@
   $effect(() => {
     if (carouselApi) {
       current = carouselApi.scrollSnapList().length;
-      carouselApi.on("select", () => {
+      const handler = () => {
         current = carouselApi!.selectedScrollSnap();
-      });
+      };
+      carouselApi.on("select", handler);
+      return () => {
+        carouselApi?.off("select", handler);
+      };
     }
   });
 

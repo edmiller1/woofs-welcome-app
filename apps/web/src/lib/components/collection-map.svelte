@@ -225,16 +225,17 @@
   // Hide DOM markers absorbed into a cluster
   $effect(() => {
     if (!map) return;
+    const currentMap = map;
     const onRender = () => {
-      if (!map!.isSourceLoaded("collection-places")) return;
+      if (!currentMap.isSourceLoaded("collection-places")) return;
       for (const [, marker] of placeMarkers) {
-        const point = map!.project(marker.getLngLat());
-        const clustered = map!.queryRenderedFeatures(point, { layers: ["collection-clusters"] }).length > 0;
+        const point = currentMap.project(marker.getLngLat());
+        const clustered = currentMap.queryRenderedFeatures(point, { layers: ["collection-clusters"] }).length > 0;
         marker.getElement().style.display = clustered ? "none" : "flex";
       }
     };
-    map.on("render", onRender);
-    return () => { map!.off("render", onRender); };
+    currentMap.on("render", onRender);
+    return () => { currentMap.off("render", onRender); };
   });
 
   // Sync markers when places or map changes
