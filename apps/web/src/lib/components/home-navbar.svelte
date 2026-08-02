@@ -67,6 +67,8 @@
     page.url.pathname.includes("/admin");
 
   const exploreActive = $derived(page.url.pathname.includes("/explore"));
+  const aboutActive = $derived(page.url.pathname.includes("/about"));
+  const contactActive = $derived(page.url.pathname.includes("/contact"));
   const communityActive = $derived(page.url.pathname.includes("/community"));
 </script>
 
@@ -85,6 +87,19 @@
             : 'text-foreground'}"
           href="/explore">Explore</a
         >
+        <a
+          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {aboutActive
+            ? 'text-primary-tint font-semibold'
+            : 'text-foreground'}"
+          href="/about">About</a
+        >
+        <a
+          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {contactActive
+            ? 'text-primary-tint font-semibold'
+            : 'text-foreground'}"
+          href="/contact">Contact</a
+        >
+
         <!-- <a
           class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
             ? 'text-primary-tint font-semibold'
