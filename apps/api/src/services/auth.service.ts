@@ -5,7 +5,7 @@
  */
 
 import { eq, inArray } from "drizzle-orm";
-import { Dog, user, UserSettings } from "../db/schema";
+import { Dog, session, user, UserSettings } from "../db/schema";
 import {
   AppError,
   DatabaseError,
@@ -253,6 +253,56 @@ export class AuthService {
         throw error;
       }
       throw new DatabaseError("Failed to update profile", {
+        originalError: error,
+      });
+    }
+  }
+
+  /**
+   * Soft-delete a user account: anonymize personal info and revoke sessions.
+   * Content (reviews, replies, check-ins, etc.) is left intact and attributed
+   * to the anonymized user record so it remains visible to other users.
+   */
+  async deleteAccount(userId: string) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, userId),
+      });
+
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+
+      if (userRecord.deletedAt) {
+        throw new ValidationError("Account already deleted");
+      }
+
+      await this.db
+        .update(user)
+        .set({
+          name: "Deleted User",
+          email: `deleted-${userId}@woofswelcome.app`,
+          emailVerified: false,
+          image: null,
+          profileImageId: null,
+          currentCity: null,
+          instagram: null,
+          facebook: null,
+          x: null,
+          tiktok: null,
+          deletedAt: new Date(),
+        })
+        .where(eq(user.id, userId));
+
+      await this.db.delete(session).where(eq(session.userId, userId));
+
+      return { success: true };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Delete account error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to delete account", {
         originalError: error,
       });
     }

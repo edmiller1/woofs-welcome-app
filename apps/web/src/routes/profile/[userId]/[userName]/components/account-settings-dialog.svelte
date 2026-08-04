@@ -1,5 +1,6 @@
 <script lang="ts">
   import { api } from "$lib/api-helper";
+  import { auth } from "$lib/auth/stores";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import {
     createMutation,
@@ -19,6 +20,7 @@
   } from "@woofs/types";
   import { Label } from "$lib/components/ui/label";
   import * as Alert from "$lib/components/ui/alert/index.js";
+  import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
 
   interface Props {
     open: boolean;
@@ -56,6 +58,18 @@
   }));
 
   let currentTab = $state<"Account" | "Notifications">("Account");
+  let deleteAlertOpen = $state(false);
+
+  const deleteAccount = createMutation(() => ({
+    mutationFn: api.auth.deleteAccount,
+    onSuccess: async () => {
+      toast.success("Your account has been deleted");
+      await auth.signOut();
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to delete account: ${error.message}`);
+    },
+  }));
 
   const handleNotificationToggle = (
     category: "email" | "push",
@@ -346,7 +360,6 @@
             </div>
           </div>
           <Separator />
-          <!-- TODO: Delete Account -->
           <div class="spacey-4 my-4">
             <h3 class="text-lg font-medium">Delete Account</h3>
             <Alert.Root variant="destructive" class="my-4">
@@ -356,7 +369,12 @@
                 >This action is not reversible. Proceed with caution.</Alert.Description
               >
             </Alert.Root>
-            <Button variant="destructive">Delete account</Button>
+            <Button
+              variant="destructive"
+              onclick={() => (deleteAlertOpen = true)}
+            >
+              Delete account
+            </Button>
           </div>
         </div>
       </Tabs.Content>
@@ -477,3 +495,25 @@
     </Tabs.Root>
   </Dialog.Content>
 </Dialog.Root>
+
+<AlertDialog.Root bind:open={deleteAlertOpen}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Delete your account?</AlertDialog.Title>
+      <AlertDialog.Description>
+        This will permanently remove your personal information and sign you
+        out everywhere. This action cannot be undone.
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action
+        class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        onclick={() => deleteAccount.mutate()}
+        disabled={deleteAccount.isPending}
+      >
+        {deleteAccount.isPending ? "Deleting…" : "Delete account"}
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>

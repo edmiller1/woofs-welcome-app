@@ -47,6 +47,11 @@ export const authMiddleware = async (c: Context, next: Next) => {
       return c.json({ error: "Unauthorized - Session expired" }, 401);
     }
 
+    if (userSession.user.deletedAt) {
+      await db.delete(session).where(eq(session.token, token));
+      return c.json({ error: "Unauthorized - Account deleted" }, 401);
+    }
+
     // get user context
     const userContext = c.req.header("X-User-Context") || "personal";
 
@@ -80,7 +85,7 @@ export const optionalAuthMiddleware = async (c: Context, next: Next) => {
     },
   });
 
-  if (!userSession) {
+  if (!userSession || userSession.user.deletedAt) {
     c.set("user", null);
     c.set("session", null);
     return next();

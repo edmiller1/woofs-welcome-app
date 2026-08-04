@@ -33,3 +33,22 @@ authRouter.post(
     return c.json(result, 200);
   },
 );
+
+authRouter.post("/delete", authMiddleware, async (c) => {
+  //Context
+  const auth = c.get("user");
+  const db = c.get("db");
+  const env = c.get("env");
+
+  // Services
+  const imageUploadService = new ImageUploadService(db, env);
+  const authService = new AuthService(db, imageUploadService);
+
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+
+  const result = await authService.deleteAccount(auth.id);
+
+  return c.json(result, 200);
+});

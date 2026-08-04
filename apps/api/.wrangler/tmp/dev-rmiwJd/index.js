@@ -98587,6 +98587,10 @@ var authMiddleware = /* @__PURE__ */ __name(async (c2, next) => {
       await db.delete(session).where(eq(session.token, token2));
       return c2.json({ error: "Unauthorized - Session expired" }, 401);
     }
+    if (userSession.user.deletedAt) {
+      await db.delete(session).where(eq(session.token, token2));
+      return c2.json({ error: "Unauthorized - Account deleted" }, 401);
+    }
     const userContext = c2.req.header("X-User-Context") || "personal";
     const isAdmin = userSession.user.isAdmin;
     c2.set("user", userSession.user);
@@ -98612,7 +98616,7 @@ var optionalAuthMiddleware = /* @__PURE__ */ __name(async (c2, next) => {
       user: true
     }
   });
-  if (!userSession) {
+  if (!userSession || userSession.user.deletedAt) {
     c2.set("user", null);
     c2.set("session", null);
     return next();
@@ -99110,6 +99114,47 @@ var AuthService = class {
       });
     }
   }
+  /**
+   * Soft-delete a user account: anonymize personal info and revoke sessions.
+   * Content (reviews, replies, check-ins, etc.) is left intact and attributed
+   * to the anonymized user record so it remains visible to other users.
+   */
+  async deleteAccount(userId) {
+    try {
+      const userRecord = await this.db.query.user.findFirst({
+        where: eq(user.id, userId)
+      });
+      if (!userRecord) {
+        throw new NotFoundError("User not found");
+      }
+      if (userRecord.deletedAt) {
+        throw new ValidationError("Account already deleted");
+      }
+      await this.db.update(user).set({
+        name: "Deleted User",
+        email: `deleted-${userId}@woofswelcome.app`,
+        emailVerified: false,
+        image: null,
+        profileImageId: null,
+        currentCity: null,
+        instagram: null,
+        facebook: null,
+        x: null,
+        tiktok: null,
+        deletedAt: /* @__PURE__ */ new Date()
+      }).where(eq(user.id, userId));
+      await this.db.delete(session).where(eq(session.userId, userId));
+      return { success: true };
+    } catch (error50) {
+      if (error50 instanceof AppError) {
+        console.error("Delete account error:", error50);
+        throw error50;
+      }
+      throw new DatabaseError("Failed to delete account", {
+        originalError: error50
+      });
+    }
+  }
 };
 
 // src/routes/auth/schemas.ts
@@ -99458,6 +99503,18 @@ authRouter.post(
     return c2.json(result, 200);
   }
 );
+authRouter.post("/delete", authMiddleware, async (c2) => {
+  const auth = c2.get("user");
+  const db = c2.get("db");
+  const env2 = c2.get("env");
+  const imageUploadService = new ImageUploadService(db, env2);
+  const authService = new AuthService(db, imageUploadService);
+  if (!auth) {
+    throw new UnauthorizedError("Unauthorized");
+  }
+  const result = await authService.deleteAccount(auth.id);
+  return c2.json(result, 200);
+});
 
 // src/routes/notification/index.ts
 init_checked_fetch();

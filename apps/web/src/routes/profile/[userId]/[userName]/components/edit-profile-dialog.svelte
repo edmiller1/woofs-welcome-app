@@ -162,13 +162,6 @@
   let removedDogIds = $state<string[]>([]);
   let dogBreedSearch = $state<string>("");
 
-  // Settings
-  let showAbout = $derived(localProfile.userSettings.showAbout);
-  let showDogs = $derived(localProfile.userSettings.showDogs);
-  let showCheckIns = $derived(localProfile.userSettings.showCheckIns);
-  let showReviews = $derived(localProfile.userSettings.showReviews);
-  let showCollections = $derived(localProfile.userSettings.showCollections);
-
   // Reset form when dialog opens with fresh profile data
   $effect(() => {
     if (open) {
@@ -191,11 +184,6 @@
         imagePreview: "",
       }));
       removedDogIds = [];
-      showAbout = profile.userSettings.showAbout;
-      showDogs = profile.userSettings.showDogs;
-      showCheckIns = profile.userSettings.showCheckIns;
-      showReviews = profile.userSettings.showReviews;
-      showCollections = profile.userSettings.showCollections;
     }
   });
 
@@ -272,11 +260,6 @@
       facebook,
       x,
       tiktok,
-      showAbout,
-      showDogs,
-      showCheckIns,
-      showReviews,
-      showCollections,
     };
 
     if (avatarFile) data.image = avatarFile;
@@ -597,36 +580,6 @@
       </div>
 
       <!-- <Separator /> -->
-
-      <!-- Privacy Settings -->
-      <!-- <div>
-        <h3 class="mb-3 text-sm font-medium">Privacy Settings</h3>
-        <p class="mb-4 text-xs text-muted-foreground">
-          Control what other people can see on your profile.
-        </p>
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <Label for="show-about">Show About Section</Label>
-            <Switch id="show-about" bind:checked={showAbout} />
-          </div>
-          <div class="flex items-center justify-between">
-            <Label for="show-dogs">Show Dogs</Label>
-            <Switch id="show-dogs" bind:checked={showDogs} />
-          </div>
-          <div class="flex items-center justify-between">
-            <Label for="show-checkins">Show Check-ins</Label>
-            <Switch id="show-checkins" bind:checked={showCheckIns} />
-          </div>
-          <div class="flex items-center justify-between">
-            <Label for="show-reviews">Show Reviews</Label>
-            <Switch id="show-reviews" bind:checked={showReviews} />
-          </div>
-          <div class="flex items-center justify-between">
-            <Label for="show-collections">Show Collections</Label>
-            <Switch id="show-collections" bind:checked={showCollections} />
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <Dialog.Footer
