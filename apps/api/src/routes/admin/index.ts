@@ -82,9 +82,20 @@ adminRouter.post(
       .limit(1);
 
     if (location) {
-      c.executionCtx.waitUntil(
-        placeService.fetchAndStoreGoogleImages(place.id, place.name, location.countryCode, location.name),
+      const fetchImages = placeService.fetchAndStoreGoogleImages(
+        place.id,
+        place.name,
+        location.countryCode,
+        location.name,
       );
+
+      try {
+        c.executionCtx.waitUntil(fetchImages);
+      } catch {
+        // No ExecutionContext available (e.g. local dev outside the Workers
+        // runtime) — let the enrichment run without blocking the response.
+        fetchImages.catch(() => {});
+      }
     }
 
     return c.json({ id: place.id, name: place.name }, 201);

@@ -365,13 +365,20 @@ placeRouter.get("/:path{.*}", optionalAuthMiddleware, async (c) => {
   const result = await placeService.getPlace(locationPath, slug, auth?.id);
 
   if (result.images.length === 0) {
-    c.executionCtx.waitUntil(
-      placeService.fetchAndStoreGoogleImages(
-        result.id,
-        result.name,
-        result.location.countryCode,
-      ),
+    const fetchImages = placeService.fetchAndStoreGoogleImages(
+      result.id,
+      result.name,
+      result.location.countryCode,
+      result.location.name,
     );
+
+    try {
+      c.executionCtx.waitUntil(fetchImages);
+    } catch {
+      // No ExecutionContext available (e.g. local dev outside the Workers
+      // runtime) — let the enrichment run without blocking the response.
+      fetchImages.catch(() => {});
+    }
   }
 
   return c.json(result, 200);
