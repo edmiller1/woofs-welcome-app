@@ -110,6 +110,7 @@ export interface ExplorePlaceItem {
   slug: string;
   types: string[];
   rating: number;
+  difficulty: "beginner" | "intermediate" | "advanced" | null;
   reviewsCount: number;
   lat: number;
   lng: number;

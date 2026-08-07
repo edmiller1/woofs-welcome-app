@@ -1020,6 +1020,7 @@
                     isVerified={place.isVerified}
                     memberFavourite={place.memberFavourite}
                     dogAmenities={place.dogAmenities}
+                    difficulty={place.difficulty}
                     {user}
                   />
                 </div>
@@ -1094,6 +1095,7 @@
                     isVerified={place.isVerified}
                     memberFavourite={place.memberFavourite}
                     dogAmenities={place.dogAmenities}
+                    difficulty={place.difficulty}
                     {user}
                   />
                 </div>

@@ -146,25 +146,25 @@ export class PlaceService {
         };
       });
 
-      if (!place.description) {
-        try {
-          const AIdesc = await getPlaceDescription(
-            this.env,
-            place.name,
-            place.address || "",
-            location.path,
-          );
+      // if (!place.description) {
+      //   try {
+      //     const AIdesc = await getPlaceDescription(
+      //       this.env,
+      //       place.name,
+      //       place.address || "",
+      //       location.path,
+      //     );
 
-          await this.db
-            .update(Place)
-            .set({
-              description: AIdesc,
-            })
-            .where(eq(Place.id, place.id));
-        } catch (error) {
-          console.error("Error generating place description:", error);
-        }
-      }
+      //     await this.db
+      //       .update(Place)
+      //       .set({
+      //         description: AIdesc,
+      //       })
+      //       .where(eq(Place.id, place.id));
+      //   } catch (error) {
+      //     console.error("Error generating place description:", error);
+      //   }
+      // }
 
       const memberFavourite = isMemberFavourite(
         Number(place.rating),
@@ -285,7 +285,10 @@ export class PlaceService {
           limit: limit,
           offset: (page - 1) * limit,
         }),
-        this.db.select({ total: count() }).from(Review).where(eq(Review.placeId, placeId)),
+        this.db
+          .select({ total: count() })
+          .from(Review)
+          .where(eq(Review.placeId, placeId)),
       ]);
 
       return {
@@ -508,6 +511,7 @@ export class PlaceService {
           Number(place.rating),
           place.reviewsCount || 0,
         ),
+        difficulty: place.difficulty,
       }));
 
       return { places: mapped, total: mapped.length };
@@ -760,7 +764,10 @@ export class PlaceService {
       return places.map((p) => ({
         ...p,
         isSaved: false,
-        memberFavourite: isMemberFavourite(Number(p.rating), p.reviewsCount || 0),
+        memberFavourite: isMemberFavourite(
+          Number(p.rating),
+          p.reviewsCount || 0,
+        ),
       }));
     } catch (error) {
       if (error instanceof AppError) throw error;
@@ -811,10 +818,7 @@ export class PlaceService {
           .where(
             and(
               ilike(Location.name, term),
-              or(
-                sql`${Location.level} = 3`,
-                sql`${Location.level} = 2`,
-              ),
+              or(sql`${Location.level} = 3`, sql`${Location.level} = 2`),
             ),
           )
           .orderBy(desc(Location.isPopular), asc(Location.level))

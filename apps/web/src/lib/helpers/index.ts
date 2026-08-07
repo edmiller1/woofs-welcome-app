@@ -252,3 +252,16 @@ export const formatDate = (dateString: string) => {
     day: "numeric",
   });
 };
+
+export const getPlaceDifficulty = (difficulty: string) => {
+  switch (difficulty) {
+    case "beginner":
+      return "Beginner";
+    case "intermediate":
+      return "Intermediate";
+    case "advanced":
+      return "Advanced";
+    default:
+      return "Unknown";
+  }
+};

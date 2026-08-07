@@ -67,6 +67,7 @@ export interface LocationPlace {
   lng: string | null;
   memberFavourite: boolean;
   dogAmenities: string[];
+  difficulty: "beginner" | "intermediate" | "advanced" | null;
 }
 
 export interface LocationWithDetails extends Location {

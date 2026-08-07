@@ -134,17 +134,29 @@
     name="description"
     content="Discover dog-friendly places in {initialLocation.name}, New Zealand. Find cafes, restaurants, accommodation, walks and more that welcome your dog."
   />
-  <meta property="og:title" content="{initialLocation.name} — Dog-Friendly Places | Woofs Welcome" />
+  <meta
+    property="og:title"
+    content="{initialLocation.name} — Dog-Friendly Places | Woofs Welcome"
+  />
   <meta
     property="og:description"
     content="Discover dog-friendly places in {initialLocation.name}, New Zealand. Find cafes, restaurants, accommodation, walks and more that welcome your dog."
   />
   {#if initialLocation.image}
-    <meta property="og:image" content={buildImageUrl(initialLocation.image, "xlarge")} />
+    <meta
+      property="og:image"
+      content={buildImageUrl(initialLocation.image, "xlarge")}
+    />
   {/if}
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://woofswelcome.app/{initialLocation.path}" />
-  <link rel="canonical" href="https://woofswelcome.app/{initialLocation.path}" />
+  <meta
+    property="og:url"
+    content="https://woofswelcome.app/{initialLocation.path}"
+  />
+  <link
+    rel="canonical"
+    href="https://woofswelcome.app/{initialLocation.path}"
+  />
   {#if initialLocation.image}
     <link
       rel="preload"
@@ -438,6 +450,7 @@
                 memberFavourite={place.memberFavourite}
                 reviewCount={place.reviewsCount}
                 dogAmenities={place.dogAmenities}
+                difficulty={place.difficulty}
               />
             {/each}
           </div>

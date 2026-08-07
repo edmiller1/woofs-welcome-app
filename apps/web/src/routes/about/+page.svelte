@@ -52,7 +52,7 @@
             </p>
           </div>
 
-          <div class="mb-20 pt-20">
+          <div class="mb-20 pt-10">
             <h2 class="text-2xl sm:text-3xl font-bold mb-6">
               Why Woofs Welcome Exists
             </h2>
@@ -98,7 +98,7 @@
       </div>
     </section>
 
-    <section class="mb-20 pt-20">
+    <section class="mb-20 pt-10">
       <h2 class="text-2xl sm:text-3xl font-bold mb-6">Get in Touch</h2>
       <p class="mb-8">
         Questions, feedback, or partnership inquiries? Get in touch.

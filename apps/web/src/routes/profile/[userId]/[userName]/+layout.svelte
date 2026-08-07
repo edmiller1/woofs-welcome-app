@@ -4,6 +4,7 @@
   import Footer from "$lib/components/footer.svelte";
   import Navbar from "$lib/components/navbar.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import { getUserInitials } from "$lib/helpers";
   import EditProfileDialog from "./components/edit-profile-dialog.svelte";
   import { createQuery } from "@tanstack/svelte-query";
   import { buildImageUrl } from "@woofs/image-config";
@@ -62,12 +63,20 @@
         <div
           class="w-32 h-32 md:w-40 md:h-40 rounded-4xl overflow-hidden shadow-xl border-4 border-white"
         >
-          <img
-            src={profileImage}
-            alt={(profile.data?.name ?? "User") + " profile"}
-            class="w-full h-full object-cover"
-            referrerpolicy="no-referrer"
-          />
+          {#if profile.data?.image || profile.data?.profileImageId}
+            <img
+              src={profileImage}
+              alt={(profile.data?.name ?? "User") + " profile"}
+              class="w-full h-full object-cover"
+              referrerpolicy="no-referrer"
+            />
+          {:else}
+            <div
+              class="w-full h-full flex items-center justify-center bg-muted text-4xl md:text-5xl font-semibold text-muted-foreground"
+            >
+              {getUserInitials(profile.data?.name ?? "")}
+            </div>
+          {/if}
         </div>
         <div class="flex-1 text-center md:text-left">
           <div class="flex flex-col md:flex-row mb-2 gap-10 items-center">

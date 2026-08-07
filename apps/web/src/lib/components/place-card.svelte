@@ -16,6 +16,8 @@
   import { goto } from "$app/navigation";
   import OptimizedImage from "./optimized-image.svelte";
   import HeartButton from "./heart-button.svelte";
+  import { getPlace } from "../../../../../packages/api/src/api/place/getPlace";
+  import { getPlaceDifficulty } from "$lib/helpers";
 
   interface Props {
     id: string;
@@ -35,6 +37,7 @@
     memberFavourite: boolean;
     reviewCount: number;
     dogAmenities: string[];
+    difficulty: string | null;
   }
 
   const {
@@ -55,6 +58,7 @@
     memberFavourite,
     reviewCount,
     dogAmenities,
+    difficulty,
   }: Props = $props();
 
   const images = $derived(imageIds ?? (imageId ? [imageId] : []));
@@ -196,6 +200,12 @@
                 ·
                 <Badge variant="secondary">$$</Badge>
               {/if}
+              {#if difficulty}
+                <div
+                  class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+                ></div>
+                <span>{getPlaceDifficulty(difficulty)}</span>
+              {/if}
             </div>
             {#if amenity}
               <div
@@ -243,6 +253,12 @@
             {#if isPaid}
               ·
               <Badge variant="secondary">$$</Badge>
+            {/if}
+            {#if difficulty}
+              <div
+                class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+              ></div>
+              <span>{getPlaceDifficulty(difficulty)}</span>
             {/if}
           </div>
           {#if amenity}

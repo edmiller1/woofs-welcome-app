@@ -124,16 +124,7 @@
 
 <div class="flex min-h-screen flex-col items-center justify-center">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img
-      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-      alt="Your Company"
-      class="mx-auto h-10 w-auto dark:hidden"
-    />
-    <img
-      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-      alt="Your Company"
-      class="not-dark:hidden mx-auto h-10 w-auto"
-    />
+    <h1 class="text-4xl text-primary">WW</h1>
     <h2
       class="mt-10 text-center text-lg font-bold tracking-tight text-foreground"
     >

@@ -135,6 +135,7 @@ export class LocationService {
             lat: Place.latitude,
             lng: Place.longitude,
             dogAmenities: Place.dogAmenities,
+            difficulty: Place.difficulty,
           })
           .from(Place)
           .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))
@@ -813,12 +814,18 @@ export class LocationService {
 
       const conditions = [eq(Location.type, type)];
       if (letter) {
-        conditions.push(sql`lower(${Location.name}) like ${letter.toLowerCase() + "%"}`);
+        conditions.push(
+          sql`lower(${Location.name}) like ${letter.toLowerCase() + "%"}`,
+        );
       }
 
       const [rows, countRows] = await Promise.all([
         this.db
-          .select({ name: Location.name, path: Location.path, countryCode: Location.countryCode })
+          .select({
+            name: Location.name,
+            path: Location.path,
+            countryCode: Location.countryCode,
+          })
           .from(Location)
           .where(and(...conditions))
           .orderBy(asc(sql`lower(${Location.name})`))
@@ -833,7 +840,9 @@ export class LocationService {
       return { locations: rows, total: countRows[0]?.total ?? 0, page, limit };
     } catch (error) {
       if (error instanceof AppError) throw error;
-      throw new DatabaseError("Failed to get directory", { originalError: error });
+      throw new DatabaseError("Failed to get directory", {
+        originalError: error,
+      });
     }
   }
 }

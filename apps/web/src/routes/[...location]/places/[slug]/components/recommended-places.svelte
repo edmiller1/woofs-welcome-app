@@ -39,7 +39,9 @@
     <!-- Desktop -->
     <section class="my-16 hidden md:block">
       <Skeleton class="h-9 w-48 mb-8" />
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
+      >
         {#each Array(6) as _}
           <div class="space-y-2">
             <Skeleton class="aspect-[1.21] w-full rounded-lg" />
@@ -76,6 +78,7 @@
               memberFavourite={place.memberFavourite}
               reviewCount={place.reviewsCount}
               dogAmenities={place.dogAmenities}
+              difficulty={place.difficulty}
             />
           </div>
         {/each}
@@ -113,6 +116,7 @@
             memberFavourite={place.memberFavourite}
             reviewCount={place.reviewsCount}
             dogAmenities={place.dogAmenities}
+            difficulty={place.difficulty}
           />
         {/each}
       </div>
