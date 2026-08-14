@@ -163,8 +163,8 @@ src/
 - [x] Reviews & ratings
 - [x] Favourites
 - [x] Image uploads
-- [ ] MapLibre explore page (in progress)
-- [ ] Place data seeding (Auckland, Wellington, Christchurch)
+- [x] MapLibre explore page (in progress)
+- [x] Place data seeding (Auckland, Wellington, Christchurch)
 - [ ] Business claiming & advertiser dashboard
 - [ ] React Native mobile app
 - [ ] Australia expansion
@@ -173,7 +173,7 @@ src/
 
 ## 📄 License
 
-Private — all rights reserved.
+MIT — all rights reserved.
 
 ---
 
