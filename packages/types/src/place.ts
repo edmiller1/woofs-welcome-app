@@ -76,6 +76,7 @@ export interface PopularPlace {
   locationPath: string;
   isSaved: boolean;
   memberFavourite: boolean;
+  difficulty: "beginner" | "intermediate" | "advanced" | null;
 }
 
 export interface TrendingPlace extends Place {

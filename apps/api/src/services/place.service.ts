@@ -747,6 +747,7 @@ export class PlaceService {
           cityName: CityLocation.name,
           regionName: RegionLocation.name,
           locationPath: CityLocation.path,
+          difficulty: Place.difficulty,
         })
         .from(Place)
         .innerJoin(CityLocation, eq(Place.locationId, CityLocation.id))

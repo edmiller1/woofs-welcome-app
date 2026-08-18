@@ -84,6 +84,10 @@
     crossorigin="anonymous"
   />
   <link rel="dns-prefetch" href="https://imagedelivery.net" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400..800;1,400&display=swap"
+    rel="stylesheet"
+  />
 </svelte:head>
 
 <QueryClientProvider client={queryClient}>
