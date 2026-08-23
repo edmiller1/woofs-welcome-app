@@ -2,8 +2,6 @@
   import Footer from "$lib/components/footer.svelte";
   import HomeNavbar from "$lib/components/home-navbar.svelte";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
-  import { buttonVariants } from "$lib/components/ui/button";
-  import { cn } from "$lib/utils";
   import { MapPin, Search, Star, TrendingUp, Users, Zap } from "@lucide/svelte";
 
   const { data } = $props();
@@ -24,7 +22,7 @@
         "Northland",
       ],
       badge: "High intent",
-      badgeClass: "bg-primary/10 text-primary",
+      badgeClass: "bg-secondary text-secondary-foreground",
     },
     {
       name: "Explore Map",
@@ -33,7 +31,7 @@
       icon: Search,
       examples: ["Explore map results", "Filter results", "Nearby places"],
       badge: "High reach",
-      badgeClass: "bg-blue-500/10 text-blue-600",
+      badgeClass: "bg-accent text-accent-foreground",
     },
     {
       name: "Place Pages",
@@ -42,7 +40,7 @@
       icon: TrendingUp,
       examples: ["Similar Places", "Place detail pages", "Search results"],
       badge: "Wide exposure",
-      badgeClass: "bg-orange-500/10 text-orange-600",
+      badgeClass: "bg-primary text-primary-foreground",
     },
   ];
 
@@ -123,61 +121,70 @@
 <HomeNavbar {user} />
 <main class="min-h-screen bg-background">
   <div class="max-w-7xl mx-auto px-4 py-6 sm:py-12">
-    <Breadcrumb.Root class="mt-10 mb-6">
+    <Breadcrumb.Root class="mt-16 sm:mt-10 mb-6">
       <Breadcrumb.List>
         <Breadcrumb.Item>
-          <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          <Breadcrumb.Link
+            href="/"
+            class="text-muted-foreground no-underline hover:text-primary"
+            >Home</Breadcrumb.Link
+          >
         </Breadcrumb.Item>
         <Breadcrumb.Separator />
         <Breadcrumb.Item>
-          <Breadcrumb.Page>Advertise</Breadcrumb.Page>
+          <Breadcrumb.Page class="font-bold text-primary"
+            >Advertise</Breadcrumb.Page
+          >
         </Breadcrumb.Item>
       </Breadcrumb.List>
     </Breadcrumb.Root>
 
     <!-- Hero -->
-    <section class="mb-20 pt-4">
+    <section class="mb-14 pt-4">
       <div class="max-w-3xl">
-        <h1 class="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-          Reach dog owners<br />where they're searching
+        <h1
+          class="m-0 max-w-190 text-[52px] leading-[1.06] tracking-[-0.035em]"
+        >
+          Reach dog owners where they're searching
         </h1>
-        <p class="text-lg sm:text-xl text-muted-foreground mb-8">
+        <p class="mt-5 max-w-150 text-base leading-[1.6] text-pretty">
           Woofs Welcome is New Zealand's dog-friendly places directory. Every
           visitor is a dog owner actively looking for places to take their dog —
           making it one of the most targeted audiences you can reach.
         </p>
         <a
           href="/contact?subject=partnership"
-          class={cn(
-            buttonVariants({ variant: "default" }),
-            "px-8 py-6 text-base font-bold",
-          )}
+          class="mt-6 inline-block rounded-lg bg-primary px-6 py-3.5 text-sm font-extrabold text-primary-foreground no-underline hover:brightness-95"
+          >Get in touch</a
         >
-          Get in touch
-        </a>
-      </div>
-
-      <div class="grid grid-cols-3 gap-6 mt-16 max-w-lg">
-        {#each stats as stat}
-          <div class="text-center">
-            <p class="text-2xl sm:text-3xl font-bold text-primary">
-              {stat.value}
-            </p>
-            <p class="text-sm text-muted-foreground mt-1">{stat.label}</p>
-          </div>
-        {/each}
+        <dl class="m-0 mt-11 flex flex-wrap gap-14">
+          {#each stats as stat}
+            <div>
+              <dd
+                class="m-0 text-[26px] font-extrabold tracking-[-0.02em] text-primary"
+              >
+                {stat.value}
+              </dd>
+              <dt class="mt-1 text-[13px] text-muted-foreground">
+                {stat.label}
+              </dt>
+            </div>
+          {/each}
+        </dl>
       </div>
     </section>
 
     <!-- Platform stats -->
-    <section class="mb-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4">Our audience</h2>
-      <p class="text-muted-foreground mb-10 max-w-2xl">
+    <section class="py-14">
+      <h2 class="m-0 text-[28px] tracking-[-0.025em]">Our audience</h2>
+      <p class="mt-2.5 text-[14.5px] text-muted-foreground">
         Woofs Welcome is growing fast. Here's a snapshot of the platform today.
       </p>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <div class="m-0 mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {#each platformStats as stat}
-          <div class="rounded-2xl border border-border p-6 text-center">
+          <div
+            class="rounded-xl border border-border p-6 text-center px-5 py-6 bg-card"
+          >
             <p class="text-3xl font-bold text-primary mb-1">{stat.value}</p>
             <p class="text-sm text-muted-foreground">{stat.label}</p>
           </div>
@@ -186,40 +193,45 @@
     </section>
 
     <!-- Placement options -->
-    <section class="mb-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4">Placement options</h2>
-      <p class="text-muted-foreground mb-10 max-w-2xl">
+    <section class="py-14">
+      <h2 class="m-0 text-[28px] tracking-[-0.025em]">Placement options</h2>
+      <p class="mt-2.5 max-w-140 text-[14.5px] text-muted-foreground">
         Choose where your business appears, or run across all placements for
         maximum visibility.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
         {#each placements as placement}
-          <div class="rounded-2xl border border-border p-6 space-y-4">
+          <div class="rounded-xl bg-card border border-border p-6 space-y-4">
             <div class="flex items-start justify-between gap-4">
               <div class="rounded-xl bg-muted p-3">
                 <placement.icon class="size-5 text-foreground" />
               </div>
               <span
-                class="text-xs font-semibold px-2.5 py-1 rounded-full {placement.badgeClass}"
+                class="rounded-full px-2.5 py-1.5 text-[11px] font-bold {placement.badgeClass}"
               >
                 {placement.badge}
               </span>
             </div>
             <div>
-              <h3 class="font-bold text-lg mb-2">{placement.name}</h3>
-              <p class="text-sm text-muted-foreground leading-relaxed">
+              <h3
+                class="m-0 mt-4 text-[17px] font-extrabold tracking-[-0.02em]"
+              >
+                {placement.name}
+              </h3>
+              <p class="mt-2.5 text-[13.5px] leading-[1.6] text-pretty">
                 {placement.description}
               </p>
             </div>
             <div class="pt-2">
               <p
-                class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide"
+                class="mt-4 text-[10.5px] font-extrabold uppercase tracking-widest text-muted-foreground"
               >
                 Examples
               </p>
-              <div class="flex flex-wrap gap-1.5">
+              <div class="m-0 mt-2 flex list-none flex-wrap gap-1.5 p-0">
                 {#each placement.examples as example}
-                  <span class="text-xs bg-muted px-2.5 py-1 rounded-full"
+                  <span
+                    class="rounded-md bg-secondary px-2.5 py-1.5 text-[11.5px] font-semibold text-secondary-foreground"
                     >{example}</span
                   >
                 {/each}
@@ -231,44 +243,40 @@
     </section>
 
     <!-- Ad inventory -->
-    <section class="mb-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4">Available placements</h2>
-      <p class="text-muted-foreground mb-10 max-w-2xl">
+    <section class="py-14">
+      <h2 class="m-0 text-[28px] tracking-[-0.025em]">Available placements</h2>
+      <p class="mt-2.5 text-[14.5px] text-muted-foreground">
         Each location page has a single featured spot — first in, first served.
       </p>
-      <div class="rounded-2xl border border-border overflow-hidden">
+      <div class="mt-5 rounded-xl border border-border overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b border-border bg-muted/50">
-                <th class="text-left px-6 py-4 font-semibold">Location</th>
-                <th class="text-left px-6 py-4 font-semibold">Type</th>
-                <th class="text-left px-6 py-4 font-semibold">Places listed</th>
-                <th class="text-left px-6 py-4 font-semibold">Monthly views</th>
-                <th class="text-left px-6 py-4 font-semibold">Status</th>
-              </tr>
+          <table class="w-full border-collapse text-left text-[13.5px]">
+            <thead
+              class="bg-secondary text-[12px] font-extrabold text-secondary-foreground"
+            >
+              <tr
+                ><th class="px-5 py-3.5 font-extrabold">Location</th><th
+                  class="px-5 py-3.5 font-extrabold">Type</th
+                ><th class="px-5 py-3.5 font-extrabold">Places listed</th><th
+                  class="px-5 py-3.5 font-extrabold">Monthly views</th
+                ><th class="px-5 py-3.5 font-extrabold">Status</th></tr
+              >
             </thead>
-            <tbody>
+            <tbody class="bg-card">
               {#each adInventory as row, i}
-                <tr
-                  class="border-b border-border last:border-0 {i % 2 === 1
-                    ? 'bg-muted/20'
-                    : ''}"
-                >
-                  <td class="px-6 py-4 font-medium">{row.location}</td>
-                  <td class="px-6 py-4 text-muted-foreground">{row.type}</td>
-                  <td class="px-6 py-4 text-muted-foreground">{row.places}</td>
-                  <td class="px-6 py-4 text-muted-foreground"
+                <tr class="border-t border-border">
+                  <td class="px-5 py-3.5 font-bold">{row.location}</td>
+                  <td class="px-5 py-3.5">{row.type}</td>
+                  <td class="px-5 py-3.5">{row.places}</td>
+                  <td class="px-5 py-3.5 text-muted-foreground"
                     >{row.monthlyViews}</td
                   >
-                  <td class="px-6 py-4">
+                  <td class="px-5 py-3.5">
                     {#if row.spotsAvailable > 0}
                       <span
-                        class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700 bg-green-100 px-2.5 py-1 rounded-full dark:bg-green-900/30 dark:text-green-400"
+                        class="flex items-center gap-2 font-bold text-[#4b7c5c]"
                       >
-                        <span
-                          class="size-1.5 rounded-full bg-green-500 inline-block"
-                        ></span>
+                        <span class="size-1.5 rounded-full bg-[#4b7c5c]"></span>
                         Available
                       </span>
                     {:else}
@@ -283,12 +291,12 @@
               {/each}
             </tbody>
           </table>
-        </div>
-        <div class="px-6 py-4 bg-muted/30 border-t border-border">
-          <p class="text-xs text-muted-foreground">
+          <p
+            class="m-0 border-t border-border bg-muted px-5 py-3.5 text-[12.5px] text-muted-foreground"
+          >
             Don't see your location? <a
               href="/contact?subject=partnership"
-              class="underline text-foreground">Get in touch</a
+              class="font-bold text-foreground">Get in touch</a
             > — we're adding new locations regularly.
           </p>
         </div>
@@ -296,343 +304,327 @@
     </section>
 
     <!-- Mockups -->
-    <section class="mb-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4">What it looks like</h2>
-      <p class="text-muted-foreground mb-10 max-w-2xl">
+    <section class="py-14">
+      <h2 class="m-0 text-[28px] tracking-[-0.025em]">What it looks like</h2>
+      <p class="mt-2.5 max-w-145 text-[14.5px] text-muted-foreground">
         Ads appear as featured listings — native to the design, clearly
         labelled, and positioned where users are already looking.
       </p>
-      <div class="space-y-8">
-        <!-- Explore mockup -->
-        <div class="rounded-2xl border border-border overflow-hidden">
-          <div
-            class="bg-muted/50 px-4 py-3 border-b border-border flex items-center gap-2"
+
+      <figure
+        class="m-0 mt-5 overflow-hidden rounded-xl border border-border bg-card"
+      >
+        <div
+          class="flex items-center gap-2.5 border-b border-border px-3.5 py-2.5"
+        >
+          <span class="flex gap-1.5">
+            <span class="size-2.5 rounded-full bg-[#d98a72]"></span>
+            <span class="size-2.5 rounded-full bg-[#d9b872]"></span>
+            <span class="size-2.5 rounded-full bg-[#8fb894]"></span>
+          </span>
+          <span class="font-mono text-[11.5px] text-muted-foreground"
+            >woofswelcome.app/explore</span
           >
-            <div class="size-2.5 rounded-full bg-red-400"></div>
-            <div class="size-2.5 rounded-full bg-yellow-400"></div>
-            <div class="size-2.5 rounded-full bg-green-400"></div>
-            <span class="text-xs text-muted-foreground ml-2"
-              >woofswelcome.app/explore</span
-            >
-          </div>
-          <div class="flex h-72 overflow-hidden">
-            <!-- Left panel -->
+        </div>
+        <div class="flex h-70">
+          <div class="w-[34%] border-r border-border p-3">
+            <div class="flex flex-wrap gap-1.5">
+              <span
+                class="rounded-md border border-border px-2.5 py-1.5 text-[11px] font-semibold"
+                >Distance away ⌄</span
+              >
+              <span
+                class="rounded-md border border-border px-2.5 py-1.5 text-[11px] font-semibold"
+                >Rating ⌄</span
+              >
+              <span
+                class="rounded-md border border-border px-2.5 py-1.5 text-[11px] font-semibold"
+                >Type ⌄</span
+              >
+            </div>
+            <div class="mt-3 text-[11.5px] font-bold text-muted-foreground">
+              Explore places · 8 places
+            </div>
             <div
-              class="w-85 shrink-0 border-r border-border flex flex-col overflow-hidden"
+              class="mt-2.5 rounded-[10px] border border-primary/45 bg-muted p-2.5"
             >
-              <!-- Filter bar -->
               <div
-                class="px-3 py-2 border-b border-border flex gap-2 bg-background"
+                class="text-right text-[9px] font-extrabold uppercase tracking-[0.12em] text-primary"
               >
-                {#each ["Distance away", "Rating", "Type"] as f}
-                  <div
-                    class="rounded-md border border-border px-2.5 py-1 text-[10px] text-muted-foreground flex items-center gap-1"
-                  >
-                    {f} <span class="opacity-50">▾</span>
-                  </div>
-                {/each}
+                Featured
               </div>
-              <div class="p-3 space-y-2 overflow-hidden">
-                <p class="text-[10px] font-semibold text-muted-foreground px-1">
-                  Explore places · 8 places
-                </p>
-                <!-- Featured ad card -->
-                <div
-                  class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 relative"
-                >
-                  <span
-                    class="absolute top-2 right-2 text-[9px] font-semibold text-primary/60 uppercase tracking-wide"
-                    >Featured</span
-                  >
-                  <div
-                    class="aspect-[2.2] rounded-lg bg-muted mb-2 flex items-center justify-center"
-                  >
-                    <span class="text-[10px] text-muted-foreground"
-                      >Your photo</span
-                    >
-                  </div>
-                  <p class="font-semibold text-[11px]">Your Business Name</p>
-                  <p class="text-[10px] text-muted-foreground">
-                    Christchurch · Café · $$
-                  </p>
-                </div>
-                <!-- Regular place cards -->
-                {#each [1, 2] as _}
-                  <div class="rounded-xl border border-border p-3 space-y-1.5">
-                    <div class="aspect-[2.2] bg-muted rounded-lg"></div>
-                    <div class="h-2 bg-muted rounded w-3/4"></div>
-                    <div class="h-1.5 bg-muted rounded w-1/2"></div>
-                  </div>
-                {/each}
+              <div
+                class="photo mt-1 h-20.5 overflow-hidden rounded-lg"
+                data-photo="Your photo"
+              ></div>
+              <div class="mt-2.5 text-[12.5px] font-extrabold">
+                Your Business Name
+              </div>
+              <div class="mt-0.5 text-[11px] text-muted-foreground">
+                Christchurch · Café · $$
               </div>
             </div>
-            <!-- Map panel -->
-            <div class="flex-1 bg-[#e8e0d5] relative overflow-hidden">
-              <!-- Fake map roads -->
-              <svg
-                class="absolute inset-0 w-full h-full opacity-30"
-                viewBox="0 0 300 288"
-                preserveAspectRatio="xMidYMid slice"
-              >
-                <line
-                  x1="0"
-                  y1="100"
-                  x2="300"
-                  y2="120"
-                  stroke="#b5a898"
-                  stroke-width="3"
-                />
-                <line
-                  x1="80"
-                  y1="0"
-                  x2="100"
-                  y2="288"
-                  stroke="#b5a898"
-                  stroke-width="2"
-                />
-                <line
-                  x1="150"
-                  y1="0"
-                  x2="160"
-                  y2="288"
-                  stroke="#b5a898"
-                  stroke-width="1.5"
-                />
-                <line
-                  x1="0"
-                  y1="180"
-                  x2="300"
-                  y2="160"
-                  stroke="#b5a898"
-                  stroke-width="1.5"
-                />
-                <line
-                  x1="0"
-                  y1="240"
-                  x2="300"
-                  y2="230"
-                  stroke="#c4bab0"
-                  stroke-width="1"
-                />
-                <path
-                  d="M0,60 Q100,80 200,50 T300,70"
-                  stroke="#b5a898"
-                  stroke-width="1"
-                  fill="none"
-                />
-              </svg>
-              <!-- Map pins -->
-              <div
-                class="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2"
-              >
-                <div
-                  class="bg-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-md"
-                >
-                  4.2
-                </div>
-              </div>
-              <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              >
-                <div
-                  class="bg-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-md"
-                >
-                  4.7
-                </div>
-              </div>
-              <div
-                class="absolute top-2/3 left-2/3 -translate-x-1/2 -translate-y-1/2"
-              >
-                <div
-                  class="bg-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-md"
-                >
-                  3.8
-                </div>
-              </div>
-            </div>
+          </div>
+          <div class="relative flex-1 bg-muted">
+            <div
+              class="absolute inset-0"
+              style="background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:52px 52px"
+            ></div>
+            <span
+              class="absolute -translate-x-1/2 -translate-y-full rounded-full bg-primary px-2.5 py-1.5 text-[10.5px] font-extrabold text-primary-foreground"
+              style="left:46%;top:34%">★ 4.8</span
+            >
+            <span
+              class="absolute -translate-x-1/2 -translate-y-full rounded-full bg-primary px-2.5 py-1.5 text-[10.5px] font-extrabold text-primary-foreground"
+              style="left:34%;top:58%">★ 4.0</span
+            >
+            <span
+              class="absolute -translate-x-1/2 -translate-y-full rounded-full bg-primary px-2.5 py-1.5 text-[10.5px] font-extrabold text-primary-foreground"
+              style="left:40%;top:72%">★ 3.7</span
+            >
+            <span
+              class="absolute -translate-x-1/2 -translate-y-full rounded-full bg-primary px-2.5 py-1.5 text-[10.5px] font-extrabold text-primary-foreground"
+              style="left:52%;top:26%">★ 4.6</span
+            >
           </div>
         </div>
+      </figure>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Location page mockup -->
-          <div class="rounded-2xl border border-border overflow-hidden">
-            <div
-              class="bg-muted/50 px-4 py-3 border-b border-border flex items-center gap-2"
+      <div class="mt-5 grid items-start gap-5 lg:grid-cols-2">
+        <figure
+          class="m-0 overflow-hidden rounded-xl border border-border bg-card"
+        >
+          <div
+            class="flex items-center gap-2.5 border-b border-border px-3.5 py-2.5"
+          >
+            <span class="flex gap-1.5"
+              ><span class="size-2.5 rounded-full bg-[#d98a72]"></span><span
+                class="size-2.5 rounded-full bg-[#d9b872]"
+              ></span><span class="size-2.5 rounded-full bg-[#8fb894]"
+              ></span></span
             >
-              <div class="size-2.5 rounded-full bg-red-400"></div>
-              <div class="size-2.5 rounded-full bg-yellow-400"></div>
-              <div class="size-2.5 rounded-full bg-green-400"></div>
-              <span class="text-xs text-muted-foreground ml-2"
-                >woofswelcome.app/christchurch</span
-              >
-            </div>
-            <div class="overflow-hidden">
-              <!-- Hero image area -->
+            <span class="font-mono text-[11.5px] text-muted-foreground"
+              >woofswelcome.app/christchurch</span
+            >
+          </div>
+          <div class="flex flex-col gap-3 p-3.5">
+            <div
+              class="flex items-end justify-between gap-3 rounded-[10px] bg-[oklch(31.37%_0.0374_62.43)] px-4 py-4"
+            >
+              <div>
+                <div
+                  class="text-[9.5px] font-extrabold uppercase tracking-[0.14em] text-accent"
+                >
+                  Dog-friendly places in
+                </div>
+                <div
+                  class="mt-1 text-[22px] font-extrabold tracking-[-0.025em] text-[#faf4ec]"
+                >
+                  Christchurch
+                </div>
+              </div>
               <div
-                class="bg-linear-to-br from-slate-700 to-slate-900 h-24 flex items-end p-4 relative"
+                class="rounded-md bg-white/12 px-2.5 py-1.5 text-right text-[10.5px] font-bold text-[#f3e8da]"
               >
-                <div>
-                  <p
-                    class="text-white/60 text-[10px] uppercase tracking-widest"
-                  >
-                    Dog-friendly places in
-                  </p>
-                  <p class="text-white font-bold text-lg">Christchurch</p>
-                </div>
-                <div
-                  class="absolute top-3 right-3 bg-white/10 backdrop-blur rounded-lg px-3 py-1.5 text-white text-[10px]"
+                18 places<br />★ 4.1 avg
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-3 rounded-[10px] border border-primary/45 bg-muted p-3"
+            >
+              <div
+                class="flex size-7.5 flex-none items-center justify-center rounded-lg border border-border bg-card"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="var(--accent)"
+                  ><path
+                    d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"
+                  /></svg
                 >
-                  <p class="font-semibold">18 places</p>
-                  <p class="opacity-60">★ 4.1 avg</p>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="text-[12.5px] font-extrabold">
+                  Your Business Name
+                </div>
+                <div class="mt-0.5 text-[11px] text-muted-foreground">
+                  Christchurch · $$
+                </div>
+                <div class="mt-0.5 text-[11px]">
+                  Your dog-friendly tagline here
                 </div>
               </div>
-              <!-- Featured ad below hero -->
-              <div class="px-4 pt-4 pb-2">
-                <div
-                  class="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 relative"
-                >
-                  <span
-                    class="absolute top-2.5 right-2.5 text-[9px] font-semibold text-primary/60 uppercase tracking-wide"
-                    >Featured</span
-                  >
-                  <div class="flex gap-3">
-                    <div
-                      class="size-12 rounded-lg bg-muted shrink-0 flex items-center justify-center"
-                    >
-                      <Star class="size-4 text-muted-foreground" />
-                    </div>
-                    <div class="min-w-0">
-                      <p class="font-semibold text-[11px]">
-                        Your Business Name
-                      </p>
-                      <p class="text-[10px] text-muted-foreground">
-                        Christchurch · $$
-                      </p>
-                      <p class="text-[10px] text-muted-foreground mt-0.5">
-                        Your dog-friendly tagline here
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div
+                class="self-start text-[9px] font-extrabold uppercase tracking-[0.12em] text-primary"
+              >
+                Featured
               </div>
-              <!-- Regular cards -->
-              <div class="px-4 pb-4 space-y-2 mt-2">
-                {#each [1, 2] as _}
-                  <div class="rounded-xl border border-border p-3">
-                    <div class="flex gap-3">
-                      <div class="size-12 rounded-lg bg-muted shrink-0"></div>
-                      <div class="space-y-1.5 flex-1">
-                        <div class="h-2.5 bg-muted rounded w-3/4"></div>
-                        <div class="h-2 bg-muted rounded w-1/2"></div>
-                        <div class="h-2 bg-muted rounded w-2/3"></div>
-                      </div>
-                    </div>
-                  </div>
-                {/each}
+            </div>
+            <div
+              class="flex items-center gap-3 rounded-[10px] border border-border p-3"
+            >
+              <div class="size-7.5 flex-none rounded-lg bg-muted"></div>
+              <div class="flex flex-1 flex-col gap-1.5">
+                <div class="h-2 rounded bg-muted" style="width:62%"></div>
+                <div class="h-2 rounded bg-secondary" style="width:42%"></div>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-3 rounded-[10px] border border-border p-3"
+            >
+              <div class="size-7.5 flex-none rounded-lg bg-muted"></div>
+              <div class="flex flex-1 flex-col gap-1.5">
+                <div class="h-2 rounded bg-muted" style="width:54%"></div>
+                <div class="h-2 rounded bg-secondary" style="width:34%"></div>
               </div>
             </div>
           </div>
+        </figure>
 
-          <!-- Place detail / Similar Places mockup -->
-          <div class="rounded-2xl border border-border overflow-hidden">
-            <div
-              class="bg-muted/50 px-4 py-3 border-b border-border flex items-center gap-2"
+        <figure
+          class="m-0 overflow-hidden rounded-xl border border-border bg-card"
+        >
+          <div
+            class="flex items-center gap-2.5 border-b border-border px-3.5 py-2.5"
+          >
+            <span class="flex gap-1.5"
+              ><span class="size-2.5 rounded-full bg-[#d98a72]"></span><span
+                class="size-2.5 rounded-full bg-[#d9b872]"
+              ></span><span class="size-2.5 rounded-full bg-[#8fb894]"
+              ></span></span
             >
-              <div class="size-2.5 rounded-full bg-red-400"></div>
-              <div class="size-2.5 rounded-full bg-yellow-400"></div>
-              <div class="size-2.5 rounded-full bg-green-400"></div>
-              <span class="text-xs text-muted-foreground ml-2"
-                >woofswelcome.app/.../places/dog-friendly-place</span
-              >
+            <span class="font-mono text-[11.5px] text-muted-foreground"
+              >woofswelcome.app/…/places/dog-friendly-place</span
+            >
+          </div>
+          <div class="flex flex-col gap-3 p-3.5">
+            <div
+              class="photo h-18.5 overflow-hidden rounded-[10px]"
+              data-photo="Place photos"
+            ></div>
+            <div class="flex flex-col gap-1.5">
+              <div class="h-2.5 w-[46%] rounded bg-muted"></div>
+              <div class="h-2 w-[72%] rounded bg-secondary"></div>
+              <div class="h-2 w-[58%] rounded bg-secondary"></div>
             </div>
-            <div class="p-4 space-y-3">
-              <!-- Place hero stub -->
+            <div class="text-[12px] font-extrabold">Similar Places</div>
+            <div class="grid grid-cols-3 gap-2.5">
               <div
-                class="rounded-xl bg-muted h-20 flex items-center justify-center"
+                class="rounded-[9px] border border-primary/45 bg-muted p-2.5"
               >
-                <span class="text-xs text-muted-foreground">Place photos</span>
-              </div>
-              <div class="space-y-1">
-                <div class="h-3 bg-muted rounded w-1/2"></div>
-                <div class="h-2.5 bg-muted rounded w-1/3"></div>
-              </div>
-              <div class="border-t border-border pt-3">
-                <p class="text-xs font-bold mb-2">Similar Places</p>
-                <div class="flex gap-2 overflow-hidden">
-                  <!-- Featured ad card -->
-                  <div
-                    class="shrink-0 w-28 rounded-xl border-2 border-primary/30 bg-primary/5 p-2 relative"
-                  >
-                    <span
-                      class="absolute top-1.5 right-1.5 text-[8px] font-semibold text-primary/60 uppercase tracking-wide"
-                      >Featured</span
-                    >
-                    <div
-                      class="aspect-[1.2] bg-muted rounded-lg mb-1.5 flex items-center justify-center"
-                    >
-                      <Star class="size-3 text-muted-foreground" />
-                    </div>
-                    <p class="text-[10px] font-semibold leading-tight">
-                      Your Business
-                    </p>
-                    <p class="text-[9px] text-muted-foreground">Ashburton</p>
-                  </div>
-                  <!-- Regular cards -->
-                  {#each [1, 2] as _}
-                    <div
-                      class="shrink-0 w-28 rounded-xl border border-border p-2 space-y-1.5"
-                    >
-                      <div class="aspect-[1.2] bg-muted rounded-lg"></div>
-                      <div class="h-2 bg-muted rounded w-3/4"></div>
-                      <div class="h-1.5 bg-muted rounded w-1/2"></div>
-                    </div>
-                  {/each}
+                <div
+                  class="text-right text-[8.5px] font-extrabold uppercase tracking-[0.12em] text-primary"
+                >
+                  Featured
                 </div>
+                <div class="mt-1 flex justify-center">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="var(--accent)"
+                    ><path
+                      d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"
+                    /></svg
+                  >
+                </div>
+                <div class="mt-2 text-[10.5px] font-extrabold">
+                  Your Business
+                </div>
+                <div class="mt-0.5 text-[9.5px] text-muted-foreground">
+                  Ashburton
+                </div>
+              </div>
+              <div
+                class="flex flex-col gap-1.5 rounded-[9px] border border-border p-2.5"
+              >
+                <div class="h-8.5 rounded-md bg-muted"></div>
+                <div class="h-1.5 rounded bg-secondary" style="width:80%"></div>
+                <div class="h-1.5 rounded bg-secondary" style="width:55%"></div>
+              </div>
+              <div
+                class="flex flex-col gap-1.5 rounded-[9px] border border-border p-2.5"
+              >
+                <div class="h-8.5 rounded-md bg-muted"></div>
+                <div class="h-1.5 rounded bg-secondary" style="width:70%"></div>
+                <div class="h-1.5 rounded bg-secondary" style="width:45%"></div>
               </div>
             </div>
           </div>
-        </div>
+        </figure>
       </div>
     </section>
 
     <!-- Why advertise -->
-    <section class="mb-20">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-10">
-        Why advertise with us
-      </h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
-        <div class="space-y-3">
-          <div
-            class="rounded-xl bg-muted w-10 h-10 flex items-center justify-center"
-          >
-            <Users class="size-5" />
+    <section class="py-14">
+      <h2 class="m-0 text-[28px] tracking-[-0.025em]">Why advertise with us</h2>
+      <div class="mt-6 grid gap-9 lg:grid-cols-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--primary)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle
+                cx="9"
+                cy="7"
+                r="4"
+              /><path d="M22 20v-2a4 4 0 0 0-3-3.9" /></svg
+            >
+            <h3 class="m-0 text-[15px] font-extrabold">
+              100% dog owner audience
+            </h3>
           </div>
-          <h3 class="font-bold">100% dog owner audience</h3>
-          <p class="text-sm text-muted-foreground leading-relaxed">
+          <p class="mt-2 text-[13.5px] leading-[1.6] text-pretty">
             Every person on Woofs Welcome is a dog owner. No wasted impressions
             on people who'll never visit a dog-friendly business.
           </p>
         </div>
-        <div class="space-y-3">
-          <div
-            class="rounded-xl bg-muted w-10 h-10 flex items-center justify-center"
-          >
-            <Zap class="size-5" />
+        <div>
+          <div class="flex items-center gap-2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--primary)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="M13 2L4.5 13H11l-1 9 8.5-11H12z" /></svg
+            >
+            <h3 class="m-0 text-[15px] font-extrabold">High purchase intent</h3>
           </div>
-          <h3 class="font-bold">High purchase intent</h3>
-          <p class="text-sm text-muted-foreground leading-relaxed">
+          <p class="mt-2 text-[13.5px] leading-[1.6] text-pretty">
             Users on Woofs Welcome are actively looking for somewhere to go.
             They're ready to visit — your ad meets them at the right moment.
           </p>
         </div>
-        <div class="space-y-3">
-          <div
-            class="rounded-xl bg-muted w-10 h-10 flex items-center justify-center"
-          >
-            <MapPin class="size-5" />
+        <div>
+          <div class="flex items-center gap-2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--primary)"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path
+                d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"
+              /><circle cx="12" cy="10" r="2.4" /></svg
+            >
+            <h3 class="m-0 text-[15px] font-extrabold">Location-targeted</h3>
           </div>
-          <h3 class="font-bold">Location-targeted</h3>
-          <p class="text-sm text-muted-foreground leading-relaxed">
+          <p class="mt-2 text-[13.5px] leading-[1.6] text-pretty">
             Pin your ad to specific regions or cities so you only reach dog
             owners who are local or planning to visit your area.
           </p>
@@ -641,36 +633,26 @@
     </section>
 
     <!-- CTA -->
-    <section class="mb-20">
-      <div
-        class="rounded-2xl bg-primary/5 border border-primary/20 p-8 sm:p-12 max-w-2xl"
-      >
-        <h2 class="text-2xl sm:text-3xl font-bold mb-4">
+    <section class="py-14">
+      <div class="rounded-2xl border border-border bg-card px-10 py-9">
+        <h2 class="m-0 text-[30px] tracking-[-0.03em]">
           See what your ad looks like
         </h2>
-        <p class="text-muted-foreground mb-8">
+        <p class="mt-3 max-w-130 text-[14.5px] leading-[1.6] text-pretty">
           Upload your image, add your details, and get an instant live preview
           of your ad across every placement — free, no payment required.
         </p>
-        <div class="flex flex-wrap gap-4">
+        <div class="mt-6 flex flex-wrap gap-3">
           <a
             href="/advertise/preview"
-            class={cn(
-              buttonVariants({ variant: "default" }),
-              "px-8 py-6 text-base font-bold",
-            )}
+            class="rounded-lg bg-primary px-6 py-3.5 text-sm font-extrabold text-primary-foreground no-underline hover:brightness-95"
+            >Create a free preview</a
           >
-            Create a free preview
-          </a>
           <a
             href="/contact?subject=partnership"
-            class={cn(
-              buttonVariants({ variant: "outline" }),
-              "px-8 py-6 text-base",
-            )}
+            class="rounded-lg border border-border px-6 py-3.5 text-sm font-extrabold text-foreground no-underline hover:bg-muted"
+            >Get in touch</a
           >
-            Get in touch
-          </a>
         </div>
       </div>
     </section>

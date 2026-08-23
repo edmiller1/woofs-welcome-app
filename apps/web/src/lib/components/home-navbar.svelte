@@ -76,39 +76,41 @@
   <!-- Desktop layout -->
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
-      <a class="hidden lg:block text-2xl font-bold text-primary" href="/"
+      <a
+        class="text-xl font-extrabold tracking-[-0.02em] text-primary no-underline"
+        href="/"
         >WoofsWelcome
       </a>
       <a href="/" class="lg:hidden text-2xl font-bold text-primary-tint">WW</a>
-      <nav class="flex gap-6 items-center">
+      <nav class="flex items-center">
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
-            ? 'text-primary-tint font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {exploreActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/explore">Explore</a
         >
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {aboutActive
-            ? 'text-primary-tint font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {aboutActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/about">About</a
         >
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {contactActive
-            ? 'text-primary-tint font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {contactActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/contact">Contact</a
         >
 
         <!-- <a
-          class="font-body font-medium hover:text-primary-tint transition-colors {communityActive
-            ? 'text-primary-tint font-semibold'
-            : 'text-muted-foreground'}"
+         class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-walnut no-underline hover:bg-muted {exploreActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary-tint font-semibold'
+            : 'text-foreground'}"
           href="/community">Community</a
         > -->
       </nav>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex flex-1 items-center gap-4">
       <NavbarSearch />
       {#if user}
         <NotificationsMenu />

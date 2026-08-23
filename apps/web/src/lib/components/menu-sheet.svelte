@@ -4,14 +4,18 @@
   import { Button } from "./ui/button";
   import {
     Bookmark,
+    CircleQuestionMark,
     Cog,
     Compass,
+    Heart,
     LogIn,
     Smartphone,
     TextAlignJustify,
+    User,
   } from "@lucide/svelte";
   import { page } from "$app/state";
   import { settingsOpen } from "$lib/stores/accountSettingsStore";
+  import { getUserInitials } from "$lib/helpers";
 
   interface Props {
     user: BAUser | null;
@@ -22,11 +26,14 @@
   let menuOpen = $state(false);
 
   const exploreActive = $derived(page.url.pathname.includes("/explore"));
+  const aboutActive = $derived(page.url.pathname.includes("/about"));
+  const contactActive = $derived(page.url.pathname.includes("/contact"));
   const communityActive = $derived(page.url.pathname.includes("/community"));
   const profileActive = $derived(page.url.pathname.includes("/profile"));
   const collectionsActive = $derived(
     page.url.pathname.includes("/collections"),
   );
+  const supportActive = $derived(page.url.pathname.includes("/support"));
   const profileLink = $derived(
     user ? user.name.split(" ").join("-").toLowerCase() : "",
   );
@@ -45,122 +52,135 @@
       </Button>
     </div>
   </Sheet.Trigger>
-  <Sheet.Content class="w-screen bg-white p-4">
-    <h2 class="text-2xl font-headline font-bold text-primary-tint">
-      Woofs Welcome
-    </h2>
-    {#if !user}
-      <div class="rounded-2xl p-6 my-8 shadow-sm border border-input">
-        <div class="flex flex-col gap-2">
-          <h2 class="font-headline text-xl font-bold text-on-surface">
-            Join the Pack
-          </h2>
-          <p class="font-body text-sm text-on-secondary-fixed-variant">
-            Sign up to save collections and join our community of adventurers.
-          </p>
-          <a
-            class="mt-2 font-body text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4"
-            href="/sign-in">Create Account</a
-          >
-        </div>
-      </div>
-    {:else}
-      <div
-        class="border border-input my-8 flex items-center gap-4 p-6 rounded-xl shadow-sm"
-      >
-        <div class="relative">
-          <img
-            alt={user.name + " profile image"}
-            src={user.image}
-            class="w-16 h-16 rounded-full object-cover border-2 border-border"
-          />
-        </div>
-        <div class="flex flex-col">
-          <h2 class="text-2xl font-bold text-on-surface leading-tight">
-            {user.name}
-          </h2>
-          <a
-            class="text-label-md font-medium text-primary hover:underline decoration-primary underline-offset-4 transition-colors"
-            href={`/profile/${user.id}/${profileLink}`}>View Profile</a
-          >
-        </div>
-      </div>
-    {/if}
-
-    <div class="flex-1 flex flex-col space-y-1">
-      <!-- Explore -->
-      <a
-        class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {exploreActive &&
-          'bg-primary/20'}"
-        href="/explore"
-      >
-        {#if exploreActive}
-          <Compass class="size-5 text-primary" />
-        {:else}
-          <Compass class="size-5 text-black" />
-        {/if}
-        <span class="text-lg font-medium">Explore</span>
-      </a>
-      <!-- Community -->
-      <!-- <a
-        class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {communityActive &&
-          'bg-primary/20'}"
-        href="/community"
-      >
-        {#if communityActive}
-            <Users class="size-5 text-primary" />
-        {:else}
-          <Users class="size-5 text-black" />
-        {/if}
-        <span class="text-lg font-medium">Community</span>
-      </a> -->
+  <Sheet.Content class="w-screen bg-background p-4">
+    <span class="mt-1 text-xl font-extrabold tracking-[-0.02em] text-primary"
+      >Woofs Welcome</span
+    >
+    <div class="flex flex-col gap-5 px-5 py-5">
       {#if user}
-        <!-- Collections -->
-        <a
-          class="flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group {profileActive &&
-            'bg-primary/20'}"
-          href={`/profile/${user.id}/${profileLink}/collections`}
+        <div
+          class="flex items-center gap-3.5 rounded-2xl bg-secondary px-4 py-3.5"
         >
-          {#if collectionsActive}
-            <Bookmark class="size-5 text-primary" />
-          {:else}
-            <Bookmark class="size-5 text-black" />
-          {/if}
-          <span class="text-lg font-medium">Collections</span>
-        </a>
-        <!-- Account Settings -->
-        <button
-          class="cursor-pointer flex items-center gap-2 px-4 py-4 hover:bg-muted rounded-xl transition-all group"
-          onclick={openSettings}
-        >
-          <Cog class="size-5 text-black" />
-          <span class="font-body text-lg font-medium">Account Settings</span>
-        </button>
+          <span
+            class="grid size-11.5 flex-none place-items-center rounded-full border-[1.5px] border-border bg-muted text-[15px] font-extrabold text-muted-foreground"
+            >{getUserInitials(user.name)}</span
+          >
+          <div class="min-w-0">
+            <div class="text-[15.5px] font-extrabold text-foreground">
+              {user.name}
+            </div>
+            <div class="mt-0.5 truncate text-[12.5px] text-muted-foreground">
+              {user.email}
+            </div>
+          </div>
+        </div>
       {/if}
-    </div>
 
-    <div class="mt-auto flex flex-col items-center gap-6 pb-4">
-      <button
-        class="cursor-pointer hover:bg-primary/90 w-full bg-primary text-white text-center py-3 rounded-full font-body text-lg flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20"
-      >
-        <Smartphone class="size-5 text-white" />
-        Continue in App
-      </button>
-      {#if !user}
+      <nav class="py-6 flex flex-col gap-1">
         <a
-          role="button"
-          href="/sign-in"
-          class="w-full border border-input flex items-center justify-center gap-3 text-on-surface-variant text-center font-body py-4 rounded-xl font-medium hover:text-primary hover:bg-muted transition-colors cursor-pointer"
+          href="/explore"
+          aria-current="page"
+          class="flex items-center justify-between rounded-xl px-4 py-4 text-[17px] font-extrabold text-secondary-foreground no-underline {exploreActive
+            ? 'bg-secondary'
+            : 'text-foreground hover:bg-muted'}"
+          >Explore<svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--primary)"
+            stroke-width="2.4"
+            stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg
+          ></a
         >
-          <LogIn class="size-5 text-primary" />
-          Sign In
-        </a>
+        <a
+          href="/about"
+          class="flex items-center justify-between rounded-xl px-4 py-4 text-[17px] font-extrabold text-secondary-foreground no-underline {aboutActive
+            ? 'bg-secondary'
+            : 'text-foreground hover:bg-muted'}"
+          >About<svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--muted-foreground)"
+            stroke-width="2.4"
+            stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg
+          ></a
+        >
+        <a
+          href="/contact"
+          class="flex items-center justify-between rounded-xl px-4 py-4 text-[17px] font-extrabold text-secondary-foreground no-underline {contactActive
+            ? 'bg-secondary'
+            : 'text-foreground hover:bg-muted'}"
+          >Contact<svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--muted-foreground)"
+            stroke-width="2.4"
+            stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg
+          ></a
+        >
+      </nav>
+
+      <!-- account -->
+      {#if user}
+        <div class="flex flex-col gap-0.5 border-t border-border pt-4">
+          <div
+            class="px-1 pb-2 text-[10.5px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground"
+          >
+            Your account
+          </div>
+          <a
+            href={`/profile/${user.id}/${profileLink}`}
+            class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {profileActive
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              : 'text-foreground'}"
+          >
+            <User class="text-primary size-4" />
+            Profile
+          </a>
+          <a
+            href={`/profile/${user.id}/${profileLink}/collections`}
+            class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {collectionsActive
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              : 'text-foreground'}"
+          >
+            <Heart class="text-primary size-4" />
+            Collections
+            <!-- <span
+                class="ml-auto rounded-full bg-secondary px-2.5 py-1 text-[11.5px] font-extrabold text-secondary-foreground"
+                >12</span
+              > -->
+          </a>
+          <button
+            onclick={openSettings}
+            class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted"
+          >
+            <Cog class="text-primary size-4" />
+            Settings
+          </button>
+          <a
+            href={`/profile/${user.id}/${profileLink}/support`}
+            class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {supportActive
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              : 'text-foreground'}"
+          >
+            <CircleQuestionMark class="text-primary size-4" />
+            Help &amp; support
+          </a>
+        </div>
       {/if}
-      <div class="w-full pt-8 border-t border-surface-variant/30 text-center">
-        <p class="font-display italic text-primary-tint font-semibold text-sm">
-          "The world is better explored with your furry best friend."
-        </p>
+
+      <div class="flex flex-col gap-3 border-t border-border pt-5">
+        <a
+          href="/sign-in"
+          class="rounded-lg bg-primary px-5 py-4 text-center text-[15px] font-extrabold text-primary-foreground no-underline hover:brightness-95"
+          >Sign In</a
+        >
       </div>
-    </div>
-  </Sheet.Content>
+    </div></Sheet.Content
+  >
 </Sheet.Root>

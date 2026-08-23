@@ -79,22 +79,22 @@
         >Woofs Welcome
       </a>
       <a href="/" class="lg:hidden text-2xl font-bold text-primary">WW</a>
-      <nav class="flex gap-6 items-center">
+      <nav class="flex gap-2 items-center">
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {exploreActive
-            ? 'text-primary font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {exploreActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/explore">Explore</a
         >
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {aboutActive
-            ? 'text-primary-tint font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {aboutActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/about">About</a
         >
         <a
-          class="font-body font-medium hover:text-primary hover:underline decoration-primary transition-colors {contactActive
-            ? 'text-primary-tint font-semibold'
+          class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {contactActive
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
             : 'text-foreground'}"
           href="/contact">Contact</a
         >
@@ -106,7 +106,7 @@
         > -->
       </nav>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex flex-1 items-center gap-4">
       <NavbarSearch />
       {#if user}
         <NotificationsMenu />

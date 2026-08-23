@@ -1,172 +1,213 @@
-<footer class="bg-white py-20 border-t mb-10 md:mb-0">
-  <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-12 gap-12">
-    <div class="md:col-span-4 space-y-6">
-      <span class="font-headline font-bold text-primary text-3xl"
-        >Woofs Welcome</span
-      >
-      <p class="mt-10 text-base font-body text-text-subtle leading-relaxed">
-        Connect with us
+<footer class="mt-16 border-t border-border px-6 pt-12 sm:px-10">
+  <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <div class="text-2xl font-extrabold tracking-[-0.025em] text-walnut">
+        Woofs Welcome
+      </div>
+      <p class="mt-2.5 max-w-65 text-sm text-muted-foreground">
+        Discover and explore the world's dog-friendly places.
       </p>
-      <div class="flex gap-2">
-        <!-- Instagram -->
-        <a class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:scale-110 transition-transform" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3C16.2426 3 18.364 3 19.682 4.31802C21 5.63604 21 7.75736 21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12Z"/>
-            <path d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"/>
-            <path d="M17.3748 6.75024H17.2498M17.4998 6.75024C17.4998 6.88832 17.3878 7.00024 17.2498 7.00024C17.1117 7.00024 16.9998 6.88832 16.9998 6.75024C16.9998 6.61217 17.1117 6.50024 17.2498 6.50024C17.3878 6.50024 17.4998 6.61217 17.4998 6.75024Z"/>
-          </svg>
+      <div class="mt-5.5 text-[13px] font-bold">Connect with us</div>
+      <div class="mt-3 flex gap-2.5">
+        <a
+          href="#"
+          aria-label="Instagram"
+          class="flex size-8.5 items-center justify-center rounded-full bg-primary no-underline hover:bg-walnut"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fdf9f3"
+            stroke-width="2"
+            stroke-linecap="round"
+            ><rect x="2" y="2" width="20" height="20" rx="5" /><circle
+              cx="12"
+              cy="12"
+              r="4"
+            /><circle cx="17.5" cy="6.5" r="1" /></svg
+          >
         </a>
-        <!-- TikTok -->
-        <a class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:scale-110 transition-transform" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke-linejoin="round"/>
-            <path d="M10.5359 11.0075C9.71585 10.8916 7.84666 11.0834 6.93011 12.7782C6.01355 14.4729 6.9373 16.2368 7.51374 16.9069C8.08298 17.5338 9.89226 18.721 11.8114 17.5619C12.2871 17.2746 12.8797 17.0603 13.552 14.8153L13.4738 5.98145C13.3441 6.95419 14.4186 9.23575 17.478 9.5057"/>
-          </svg>
+        <a
+          href="#"
+          aria-label="Facebook"
+          class="flex size-8.5 items-center justify-center rounded-full bg-primary no-underline hover:bg-walnut"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fdf9f3"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path
+              d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+            /></svg
+          >
         </a>
-        <!-- Facebook -->
-        <a class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:scale-110 transition-transform" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" stroke-linejoin="round"/>
-            <path d="M16.9265 8.02637H13.9816C12.9378 8.02637 12.0894 8.86847 12.0817 9.91229L11.9964 21.4268M10.082 14.0017H14.8847"/>
-          </svg>
+        <a
+          href="#"
+          aria-label="X"
+          class="flex size-8.5 items-center justify-center rounded-full bg-primary no-underline hover:bg-walnut"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#fdf9f3"
+            ><path
+              d="M17.5 3h3.2l-7 8 8.2 10h-6.4l-5-6.1L4.7 21H1.5l7.5-8.6L1.2 3h6.6l4.5 5.6zm-1.1 16h1.8L7.7 4.8H5.8z"
+            /></svg
+          >
         </a>
-        <!-- X (Twitter) -->
-        <a class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:scale-110 transition-transform" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2.50012 12C2.50012 7.52166 2.50012 5.28249 3.89136 3.89124C5.28261 2.5 7.52178 2.5 12.0001 2.5C16.4785 2.5 18.7176 2.5 20.1089 3.89124C21.5001 5.28249 21.5001 7.52166 21.5001 12C21.5001 16.4783 21.5001 18.7175 20.1089 20.1088C18.7176 21.5 16.4785 21.5 12.0001 21.5C7.52178 21.5 5.28261 21.5 3.89136 20.1088C2.50012 18.7175 2.50012 16.4783 2.50012 12Z"/>
-            <path d="M7.00012 17L11.1937 12.8065M17.0001 7L12.8066 11.1935M12.8066 11.1935L9.7779 7H7.00012L11.1937 12.8065M12.8066 11.1935L17.0001 17H14.2223L11.1937 12.8065"/>
-          </svg>
+        <a
+          href="#"
+          aria-label="LinkedIn"
+          class="flex size-8.5 items-center justify-center rounded-full bg-primary no-underline hover:bg-walnut"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fdf9f3"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"
+            /><rect x="2" y="9" width="4" height="12" /><circle
+              cx="4"
+              cy="4"
+              r="2"
+            /></svg
+          >
         </a>
-        <!-- LinkedIn -->
-        <a class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:scale-110 transition-transform" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 10V17"/>
-            <path d="M11 13V17M11 13C11 11.3431 12.3431 10 14 10C15.6569 10 17 11.3431 17 13V17M11 13V10"/>
-            <path d="M7.125 6.75H7M7.25 6.75C7.25 6.88807 7.13807 7 7 7C6.86193 7 6.75 6.88807 6.75 6.75C6.75 6.61193 6.86193 6.5 7 6.5C7.13807 6.5 7.25 6.61193 7.25 6.75Z"/>
-            <path d="M3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3C16.2426 3 18.364 3 19.682 4.31802C21 5.63604 21 7.75736 21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12Z"/>
-          </svg>
+        <a
+          href="#"
+          aria-label="YouTube"
+          class="flex size-8.5 items-center justify-center rounded-full bg-primary no-underline hover:bg-walnut"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fdf9f3"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path
+              d="M22.5 7.4a2.8 2.8 0 0 0-2-2C18.8 5 12 5 12 5s-6.8 0-8.5.4a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1.2 12a29 29 0 0 0 .3 4.6 2.8 2.8 0 0 0 2 2C5.2 19 12 19 12 19s6.8 0 8.5-.4a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .3-4.6 29 29 0 0 0-.3-4.6z"
+            /><path d="M10 15l5-3-5-3z" /></svg
+          >
         </a>
       </div>
     </div>
-    <div class="md:col-span-2 space-y-4">
-      <h4
-        class="font-label text-xs uppercase font-bold tracking-widest text-primary"
+    <nav>
+      <h2
+        class="m-0 text-[11px] font-extrabold uppercase tracking-widest text-primary"
       >
         Discover
-      </h4>
-      <ul class="space-y-2 text-text-subtle text-sm font-medium">
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/directory?tab=countries">Countries</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/directory?tab=regions&letter=A">Regions</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/directory?tab=cities&letter=A">Cities</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/directory?tab=place-types">Place types</a
-          >
-        </li>
-      </ul>
-    </div>
-    <div class="md:col-span-2 space-y-4">
-      <h4
-        class="font-label text-xs uppercase font-bold tracking-widest text-primary"
+      </h2>
+      <div class="mt-4 flex flex-col gap-2.5">
+        <a
+          href="/directory?tab=countries"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Countries</a
+        >
+        <a
+          href="/directory?tab=regions&letter=A"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Regions</a
+        >
+        <a
+          href="/directory?tab=cities&letter=A"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Cities</a
+        >
+        <a
+          href="/directory?tab=place-types"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Place types</a
+        >
+      </div>
+    </nav>
+    <nav>
+      <h2
+        class="m-0 text-[11px] font-extrabold uppercase tracking-widest text-primary"
       >
         Explore
-      </h4>
-      <ul class="space-y-2 text-text-subtle text-sm font-medium">
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/explore?types=Activity%2CStore%2CService"
-            data-sveltekit-reload>Retail/Services</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/explore?types=Hotel%2CMotel%2CAirBnb"
-            data-sveltekit-reload>Stays</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/explore?types=Restaurant%2CCafé%2CBar"
-            data-sveltekit-reload>Eats</a
-          >
-        </li>
-        <li>
-          <a
-            class="hover:text-primary transition-colors"
-            href="/explore?types=Walk%2CHike%2CTrail"
-            data-sveltekit-reload>Adventures</a
-          >
-        </li>
-      </ul>
-    </div>
-    <div class="md:col-span-2 space-y-4">
-      <h4
-        class="font-label text-xs uppercase font-bold tracking-widest text-primary"
+      </h2>
+      <div class="mt-4 flex flex-col gap-2.5">
+        <a
+          href="/explore?types=Activity%2CStore%2CService"
+          data-sveltekit-reload
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Retail &amp; services</a
+        >
+        <a
+          href="/explore?types=Hotel%2CMotel%2CAirBnb"
+          data-sveltekit-reload
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Stays</a
+        >
+        <a
+          href="/explore?types=Restaurant%2CCafé%2CBar"
+          data-sveltekit-reload
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Eats</a
+        >
+        <a
+          href="/explore?types=Walk%2CHike%2CTrail"
+          data-sveltekit-reload
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Adventures</a
+        >
+      </div>
+    </nav>
+    <nav>
+      <h2
+        class="m-0 text-[11px] font-extrabold uppercase tracking-widest text-primary"
       >
         Company
-      </h4>
-      <ul class="space-y-2 text-text-subtle text-sm font-medium">
-        <li>
-          <a class="hover:text-primary transition-colors" href="/about">About</a
-          >
-        </li>
-        <li>
-          <a class="hover:text-primary transition-colors" href="/contact"
-            >Contact</a
-          >
-        </li>
-        <li>
-          <a class="hover:text-primary transition-colors" href="/advertise"
-            >Advertise</a
-          >
-        </li>
-      </ul>
-    </div>
-    <!-- TODO: Add language selector, when we have Sherlock i8n complete-->
-    <!-- <div class="md:col-span-4 space-y-4">
-      <select
-        class="w-full flex bg-surface rounded-xl overflow-hidden p-2 border border-border-subtle/30"
-      >
-        <option>English (US)</option>
-        <option>English (UK)</option>
-        <option>Spanish</option>
-        <option>French</option>
-        <option>German</option>
-        <option>Chinese</option>
-      </select>
-    </div> -->
+      </h2>
+      <div class="mt-4 flex flex-col gap-2.5">
+        <a
+          href="/about"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >About</a
+        >
+        <a
+          href="/contact"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Contact</a
+        >
+        <a
+          href="/advertise"
+          class="text-[14.5px] font-semibold text-foreground no-underline hover:text-primary"
+          >Advertise</a
+        >
+      </div>
+    </nav>
   </div>
   <div
-    class="max-w-7xl mx-auto px-8 mt-20 pt-8 border-t border-border-subtle/20 flex flex-col md:flex-row justify-between items-center gap-4"
+    class="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-border pb-9 pt-5"
   >
-    <span
-      class="text-text-subtle/60 text-xs font-label uppercase tracking-widest"
-      >© 2026 Woofs Welcome. All Rights Reserved.</span
-    >
     <div
-      class="flex gap-8 text-text-subtle/60 text-xs font-label uppercase tracking-widest"
+      class="text-[11.5px] font-bold uppercase tracking-widest text-muted-foreground"
     >
-      <a class="hover:text-primary" href="/privacy-policy">Privacy Policy</a>
-      <a class="hover:text-primary" href="/terms-of-service">Terms of Service</a
+      © 2026 Woofs Welcome. All rights reserved.
+    </div>
+    <div class="flex gap-6">
+      <a
+        href="/privacy-policy"
+        class="text-[11.5px] font-bold uppercase tracking-widest text-muted-foreground no-underline hover:text-primary"
+        >Privacy policy</a
+      >
+      <a
+        href="/terms-of-service"
+        class="text-[11.5px] font-bold uppercase tracking-widest text-muted-foreground no-underline hover:text-primary"
+        >Terms of service</a
       >
     </div>
   </div>

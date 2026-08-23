@@ -28,7 +28,7 @@
 <HomeNavbar {user} />
 <main class="min-h-screen bg-background">
   <div class="max-w-7xl mx-auto px-4 py-6 sm:py-12">
-    <Breadcrumb.Root class="mt-10 mb-6">
+    <Breadcrumb.Root class="mt-14 sm:mt-10 mb-6">
       <Breadcrumb.List>
         <Breadcrumb.Item>
           <Breadcrumb.Link href="/">Home</Breadcrumb.Link>

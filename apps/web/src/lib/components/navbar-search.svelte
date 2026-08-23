@@ -198,11 +198,9 @@
   });
 </script>
 
-<div bind:this={wrapperEl} class="relative w-full">
+<div bind:this={wrapperEl} class="relative ml-auto w-full max-w-160">
   <div
-    class="flex items-center bg-input rounded-full px-4 py-2 gap-2 transition-shadow {focused
-      ? 'ring-1 ring-primary/20 shadow-md'
-      : ''}"
+    class="flex w-full items-center gap-2.5 rounded-full border border-border bg-muted px-4 py-2.5"
   >
     <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
     <input
@@ -210,7 +208,7 @@
       bind:value={query}
       onfocus={() => (focused = true)}
       onkeydown={handleKeydown}
-      class="bg-input w-full lg:w-96 border-none focus:ring-0 text-sm font-body outline-none"
+      class="min-w-0 flex-1 border-0 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
       placeholder="Search places or locations..."
       type="text"
       autocomplete="off"
@@ -232,7 +230,7 @@
 
   {#if showDropdown}
     <div
-      class="absolute top-full mt-2 left-0 w-full min-w-72 lg:w-120 bg-white rounded-2xl shadow-xl border border-border/40 z-50 overflow-hidden"
+      class="absolute top-full mt-2 left-0 w-full min-w-72 bg-white rounded-2xl shadow-xl border border-border/40 z-50 overflow-hidden"
     >
       {#if showRecent}
         <!-- Recent searches -->
