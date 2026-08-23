@@ -4,7 +4,9 @@ test.describe("Happy paths", () => {
   test("homepage loads and shows navigation", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Woofs Welcome/i);
-    await expect(page.getByRole("link", { name: "Explore" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Explore", exact: true }).first(),
+    ).toBeVisible();
   });
 
   test("explore page loads with map", async ({ page }) => {
