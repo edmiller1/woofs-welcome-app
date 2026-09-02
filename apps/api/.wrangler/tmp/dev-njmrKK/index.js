@@ -32,7 +32,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// .wrangler/tmp/bundle-UEeatc/checked-fetch.js
+// .wrangler/tmp/bundle-8TOjqb/checked-fetch.js
 function checkURL(request, init2) {
   const url2 = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init2) : request).url
@@ -50,7 +50,7 @@ function checkURL(request, init2) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-UEeatc/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-8TOjqb/checked-fetch.js"() {
     "use strict";
     urls = /* @__PURE__ */ new Set();
     __name(checkURL, "checkURL");
@@ -60175,11 +60175,11 @@ var init_kysely_adapter2 = __esm({
   }
 });
 
-// .wrangler/tmp/bundle-UEeatc/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-8TOjqb/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-UEeatc/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -97412,7 +97412,9 @@ var Place = pgTable(
       table.rating.desc()
     ),
     featuredIdx: index("place_featured_idx").on(table.isFeatured).where(sql`${table.isFeatured} = true`),
-    claimedByIdx: index("place_claimed_by_idx").on(table.claimedBy)
+    claimedByIdx: index("place_claimed_by_idx").on(table.claimedBy),
+    // For bbox/map explore queries filtering on lat/lng ranges
+    latLngIdx: index("place_lat_lng_idx").on(table.latitude, table.longitude)
   })
 );
 var Image = pgTable(
@@ -98565,25 +98567,44 @@ function createDbWithTransactions(env2) {
 __name(createDbWithTransactions, "createDbWithTransactions");
 
 // src/middleware/auth.ts
+var SESSION_CACHE_SECONDS = 60;
+function fetchUserSession(db, token2) {
+  return db.query.session.findFirst({
+    where: eq(session.token, token2),
+    with: {
+      user: true
+    }
+  });
+}
+__name(fetchUserSession, "fetchUserSession");
+async function findUserSession(db, redis, token2) {
+  const cacheKey = `session:${token2}`;
+  const cached3 = await redis.get(cacheKey);
+  if (cached3 !== null && cached3 !== void 0) {
+    return cached3;
+  }
+  const userSession = await fetchUserSession(db, token2);
+  await redis.set(cacheKey, userSession ?? null, {
+    ex: SESSION_CACHE_SECONDS
+  });
+  return userSession ?? null;
+}
+__name(findUserSession, "findUserSession");
 var authMiddleware = /* @__PURE__ */ __name(async (c2, next) => {
   try {
     const db = c2.get("db");
+    const redis = c2.get("redis");
     const authHeader = c2.req.header("Authorization");
     const token2 = authHeader?.split(" ")[1] || "";
     if (!token2) {
       console.log("No token provided");
       return c2.json({ error: "Unauthorized - No token" }, 401);
     }
-    const userSession = await db.query.session.findFirst({
-      where: eq(session.token, token2),
-      with: {
-        user: true
-      }
-    });
+    const userSession = await findUserSession(db, redis, token2);
     if (!userSession) {
       return c2.json({ error: "Unauthorized - Invalid session" }, 401);
     }
-    if (userSession.expiresAt < /* @__PURE__ */ new Date()) {
+    if (new Date(userSession.expiresAt) < /* @__PURE__ */ new Date()) {
       await db.delete(session).where(eq(session.token, token2));
       return c2.json({ error: "Unauthorized - Session expired" }, 401);
     }
@@ -98605,17 +98626,13 @@ var authMiddleware = /* @__PURE__ */ __name(async (c2, next) => {
 }, "authMiddleware");
 var optionalAuthMiddleware = /* @__PURE__ */ __name(async (c2, next) => {
   const db = c2.get("db");
+  const redis = c2.get("redis");
   const authHeader = c2.req.header("Authorization");
   const token2 = authHeader?.split(" ")[1] || "";
   if (!token2) {
     return next();
   }
-  const userSession = await db.query.session.findFirst({
-    where: eq(session.token, token2),
-    with: {
-      user: true
-    }
-  });
+  const userSession = await findUserSession(db, redis, token2);
   if (!userSession || userSession.user.deletedAt) {
     c2.set("user", null);
     c2.set("session", null);
@@ -102677,8 +102694,8 @@ var LocationService = class {
         Place.types,
         filters.types
       ) : void 0;
-      const locationFilter = filters.bbox ? sql`${Place.latitude}::numeric BETWEEN ${filters.bbox.swLat} AND ${filters.bbox.neLat}
-            AND ${Place.longitude}::numeric BETWEEN ${filters.bbox.swLng} AND ${filters.bbox.neLng}` : sql`${CityLocation4.path} LIKE ${locationPathSchema.parse(path2) + "%"}`;
+      const locationFilter = filters.bbox ? sql`${Place.latitude} BETWEEN ${filters.bbox.swLat} AND ${filters.bbox.neLat}
+            AND ${Place.longitude} BETWEEN ${filters.bbox.swLng} AND ${filters.bbox.neLng}` : sql`${CityLocation4.path} LIKE ${locationPathSchema.parse(path2) + "%"}`;
       const whereClause = and(typeFilter, locationFilter);
       const [places, totalResult] = await Promise.all([
         this.db.select({
@@ -103937,13 +103954,9 @@ var PlaceService = class {
     try {
       const bbox = getBoundingBox(lat, lng, radius);
       const conditions = [
+        between(Place.latitude, bbox.minLat.toString(), bbox.maxLat.toString()),
         between(
-          sql`CAST(${Place.latitude} AS DECIMAL)`,
-          bbox.minLat.toString(),
-          bbox.maxLat.toString()
-        ),
-        between(
-          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          Place.longitude,
           bbox.minLng.toString(),
           bbox.maxLng.toString()
         )
@@ -104002,12 +104015,12 @@ var PlaceService = class {
     try {
       const conditions = [
         between(
-          sql`CAST(${Place.latitude} AS DECIMAL)`,
+          Place.latitude,
           filters.swLat.toString(),
           filters.neLat.toString()
         ),
         between(
-          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          Place.longitude,
           filters.swLng.toString(),
           filters.neLng.toString()
         )
@@ -133042,25 +133055,7 @@ var welcomeEmail = /* @__PURE__ */ __name(() => {
 // src/lib/helpers/auth.ts
 init_checked_fetch();
 init_modules_watch_stub();
-var getContext = /* @__PURE__ */ __name(async (db, userId) => {
-  const userRecord = await db.query.user.findFirst({
-    where: eq(user.id, userId)
-  });
-  return userRecord?.activeContext || "personal";
-}, "getContext");
-var isUserAdmin = /* @__PURE__ */ __name(async (db, userId) => {
-  const userRecord = await db.query.user.findFirst({
-    where: eq(user.id, userId)
-  });
-  return userRecord?.isAdmin ?? false;
-}, "isUserAdmin");
-var getUserProvider = /* @__PURE__ */ __name(async (db, userId) => {
-  const userRecord = await db.query.user.findFirst({
-    where: eq(user.id, userId)
-  });
-  return userRecord?.provider ?? null;
-}, "getUserProvider");
-var getUserProfileImageId = /* @__PURE__ */ __name(async (db, userId) => {
+var getUserAuthContext = /* @__PURE__ */ __name(async (db, userId) => {
   const userRecord = await db.query.user.findFirst({
     where: eq(user.id, userId),
     with: {
@@ -133069,14 +133064,18 @@ var getUserProfileImageId = /* @__PURE__ */ __name(async (db, userId) => {
   });
   if (!userRecord) return null;
   return {
+    provider: userRecord.provider ?? null,
+    activeContext: userRecord.activeContext || "personal",
+    isAdmin: userRecord.isAdmin ?? false,
     profileImageId: userRecord.profileImageId,
     altText: userRecord.profileImage?.altText
   };
-}, "getUserProfileImageId");
+}, "getUserAuthContext");
 
 // src/lib/auth.ts
 var cachedAuth = null;
-function getAuth(env2, db) {
+var AUTH_CONTEXT_CACHE_SECONDS = 300;
+function getAuth(env2, db, redis) {
   const resend = getResend(env2);
   if (cachedAuth) return cachedAuth;
   cachedAuth = betterAuth({
@@ -133102,20 +133101,30 @@ function getAuth(env2, db) {
         redirectURI: env2.GOOGLE_REDIRECT_URI
       }
     },
+    session: {
+      cookieCache: {
+        enabled: true,
+        maxAge: AUTH_CONTEXT_CACHE_SECONDS
+      }
+    },
     plugins: [
       customSession(async ({ user: user3, session: session2 }) => {
-        const provider = await getUserProvider(db, user3.id);
-        const context = await getContext(db, user3.id);
-        const isAdmin = await isUserAdmin(db, user3.id);
-        const imageData = await getUserProfileImageId(db, user3.id);
+        const cacheKey = `auth-context:${user3.id}`;
+        const cached3 = await redis.get(cacheKey);
+        const authContext = cached3 ?? await getUserAuthContext(db, user3.id).then(async (result) => {
+          await redis.set(cacheKey, result, {
+            ex: AUTH_CONTEXT_CACHE_SECONDS
+          });
+          return result;
+        });
         return {
           user: {
             ...user3,
-            provider: provider || "google",
-            activeContext: context || "personal",
-            isAdmin,
-            profileImageId: imageData?.profileImageId,
-            altText: imageData?.altText
+            provider: authContext?.provider || "google",
+            activeContext: authContext?.activeContext || "personal",
+            isAdmin: authContext?.isAdmin ?? false,
+            profileImageId: authContext?.profileImageId,
+            altText: authContext?.altText
           },
           session: session2
         };
@@ -133212,7 +133221,7 @@ app.use(
 app.use("*", logger());
 app.use("*", (c2, next) => globalRateLimiter(c2.get("redis"))(c2, next));
 app.all("/api/auth/*", async (c2) => {
-  const auth = getAuth(c2.get("env"), c2.get("db"));
+  const auth = getAuth(c2.get("env"), c2.get("db"), c2.get("redis"));
   const response = await auth.handler(c2.req.raw);
   const origin = c2.req.header("Origin") ?? "";
   if (ALLOWED_ORIGINS.includes(origin)) {
@@ -133295,7 +133304,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-UEeatc/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -133329,7 +133338,7 @@ function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-UEeatc/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-8TOjqb/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

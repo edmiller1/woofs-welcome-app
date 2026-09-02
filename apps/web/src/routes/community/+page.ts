@@ -3,10 +3,10 @@ import { redirect, type Load } from "@sveltejs/kit";
 import { api } from "$lib/api-helper";
 import { QueryClient, dehydrate } from "@tanstack/svelte-query";
 
-export const load: Load = async () => {
+export const load: Load = async ({ fetch }) => {
   redirect(302, "/");
 
-  const user = await getUser();
+  const user = await getUser(fetch);
 
   const queryClient = new QueryClient();
 

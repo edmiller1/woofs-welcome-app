@@ -1,0 +1,1 @@
+CREATE INDEX "place_lat_lng_idx" ON "place" USING btree ("latitude","longitude");

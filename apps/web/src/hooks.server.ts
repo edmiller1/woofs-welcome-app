@@ -1,3 +1,9 @@
 import { sequence } from "@sveltejs/kit/hooks";
+import type { Handle } from "@sveltejs/kit";
 
-export const handle = sequence();
+const allowResponseHeaders: Handle = ({ event, resolve }) =>
+  resolve(event, {
+    filterSerializedResponseHeaders: (name) => name === "content-type",
+  });
+
+export const handle = sequence(allowResponseHeaders);

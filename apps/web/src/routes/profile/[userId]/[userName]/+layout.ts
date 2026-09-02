@@ -4,14 +4,14 @@ import { redirect, type Load } from "@sveltejs/kit";
 
 export const ssr = false;
 
-export const load: Load = async ({ params }) => {
+export const load: Load = async ({ params, fetch }) => {
   const { userId, userName } = params;
 
   if (!userId || !userName) {
     throw redirect(302, "/");
   }
 
-  const user = await getUser();
+  const user = await getUser(fetch);
 
   const [initialProfile, initialProfileReviews, initialProfileReviewStats, initialProfileCollections, initialProfilePhotos] =
     await Promise.all([

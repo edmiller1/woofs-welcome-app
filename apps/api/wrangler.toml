@@ -35,7 +35,14 @@ CF_IMAGES_DELIVERY_URL = "https://imagedelivery.net/WGsCUST9DldetrA1NTPARQ"
 CF_ENDPOINT = "https://08e981cecb92746f1f2cf59ac9969f40.r2.cloudflarestorage.com/woofs-welcome-images"
 CF_BUCKET_NAME = "woofs-welcome-images"
 
-[observability]
+
 [observability.logs]
-enabled = false
+enabled = true
+head_sampling_rate = 1
 invocation_logs = true
+persist = true
+
+[observability.traces]
+enabled = true
+head_sampling_rate = 1
+persist = true

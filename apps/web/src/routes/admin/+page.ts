@@ -3,7 +3,7 @@ import type { Load } from "@sveltejs/kit";
 
 export const ssr = false;
 
-export const load: Load = async () => {
-  const user = await getUser();
+export const load: Load = async ({ fetch }) => {
+  const user = await getUser(fetch);
   return { user };
 };

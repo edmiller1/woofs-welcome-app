@@ -503,6 +503,9 @@ export const Place = pgTable(
       .where(sql`${table.isFeatured} = true`),
 
     claimedByIdx: index("place_claimed_by_idx").on(table.claimedBy),
+
+    // For bbox/map explore queries filtering on lat/lng ranges
+    latLngIdx: index("place_lat_lng_idx").on(table.latitude, table.longitude),
   }),
 );
 

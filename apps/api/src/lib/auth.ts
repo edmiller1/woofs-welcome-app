@@ -14,16 +14,14 @@ import * as schema from "../db/schema";
 import { type Env } from "../config/env";
 import { otpEmailHtml } from "../emails/otp-email";
 import { welcomeEmail } from "../emails/welcome-email";
-import {
-  getContext,
-  getUserProfileImageId,
-  getUserProvider,
-  isUserAdmin,
-} from "./helpers/auth";
+import { getUserAuthContext, type UserAuthContext } from "./helpers/auth";
+import type { Redis } from "@upstash/redis/cloudflare";
 
 let cachedAuth: ReturnType<typeof betterAuth> | null = null;
 
-export function getAuth(env: Env, db: Db) {
+const AUTH_CONTEXT_CACHE_SECONDS = 300;
+
+export function getAuth(env: Env, db: Db, redis: Redis) {
   const resend = getResend(env);
   if (cachedAuth) return cachedAuth;
 
@@ -51,20 +49,34 @@ export function getAuth(env: Env, db: Db) {
         redirectURI: env.GOOGLE_REDIRECT_URI,
       },
     },
+    session: {
+      cookieCache: {
+        enabled: true,
+        maxAge: AUTH_CONTEXT_CACHE_SECONDS,
+      },
+    },
     plugins: [
       customSession(async ({ user, session }) => {
-        const provider = await getUserProvider(db, user.id);
-        const context = await getContext(db, user.id);
-        const isAdmin = await isUserAdmin(db, user.id);
-        const imageData = await getUserProfileImageId(db, user.id);
+        const cacheKey = `auth-context:${user.id}`;
+        const cached = await redis.get<UserAuthContext | null>(cacheKey);
+
+        const authContext =
+          cached ??
+          (await getUserAuthContext(db, user.id).then(async (result) => {
+            await redis.set(cacheKey, result, {
+              ex: AUTH_CONTEXT_CACHE_SECONDS,
+            });
+            return result;
+          }));
+
         return {
           user: {
             ...user,
-            provider: provider || "google",
-            activeContext: context || "personal",
-            isAdmin,
-            profileImageId: imageData?.profileImageId,
-            altText: imageData?.altText,
+            provider: authContext?.provider || "google",
+            activeContext: authContext?.activeContext || "personal",
+            isAdmin: authContext?.isAdmin ?? false,
+            profileImageId: authContext?.profileImageId,
+            altText: authContext?.altText,
           },
           session,
         };

@@ -327,13 +327,9 @@ export class PlaceService {
       const bbox = getBoundingBox(lat, lng, radius);
 
       const conditions = [
+        between(Place.latitude, bbox.minLat.toString(), bbox.maxLat.toString()),
         between(
-          sql`CAST(${Place.latitude} AS DECIMAL)`,
-          bbox.minLat.toString(),
-          bbox.maxLat.toString(),
-        ),
-        between(
-          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          Place.longitude,
           bbox.minLng.toString(),
           bbox.maxLng.toString(),
         ),
@@ -419,12 +415,12 @@ export class PlaceService {
     try {
       const conditions = [
         between(
-          sql`CAST(${Place.latitude} AS DECIMAL)`,
+          Place.latitude,
           filters.swLat.toString(),
           filters.neLat.toString(),
         ),
         between(
-          sql`CAST(${Place.longitude} AS DECIMAL)`,
+          Place.longitude,
           filters.swLng.toString(),
           filters.neLng.toString(),
         ),

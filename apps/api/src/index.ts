@@ -59,7 +59,7 @@ app.use("*", logger());
 app.use("*", (c, next) => globalRateLimiter(c.get("redis"))(c as Context, next));
 
 app.all("/api/auth/*", async (c) => {
-  const auth = getAuth(c.get("env"), c.get("db"));
+  const auth = getAuth(c.get("env"), c.get("db"), c.get("redis"));
   const response = await auth.handler(c.req.raw);
 
   const origin = c.req.header("Origin") ?? "";

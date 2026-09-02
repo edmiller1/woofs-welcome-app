@@ -392,8 +392,8 @@ export class LocationService {
           : undefined;
 
       const locationFilter = filters.bbox
-        ? sql`${Place.latitude}::numeric BETWEEN ${filters.bbox.swLat} AND ${filters.bbox.neLat}
-            AND ${Place.longitude}::numeric BETWEEN ${filters.bbox.swLng} AND ${filters.bbox.neLng}`
+        ? sql`${Place.latitude} BETWEEN ${filters.bbox.swLat} AND ${filters.bbox.neLat}
+            AND ${Place.longitude} BETWEEN ${filters.bbox.swLng} AND ${filters.bbox.neLng}`
         : sql`${CityLocation.path} LIKE ${locationPathSchema.parse(path) + "%"}`;
 
       const whereClause = and(typeFilter, locationFilter);

@@ -15,15 +15,22 @@
 <div
   class="visible z-99 flex overflow-hidden rounded-t-sm w-90 sm:w-81.75 flex-col"
 >
-  <div class="relative overflow-hidden" role="img" aria-label="Popup image">
+  <div
+    class="relative overflow-hidden rounded-t-sm"
+    role="img"
+    aria-label="Popup image"
+  >
     <div class="flex transition-transform duration-500 ease-out">
       <OptimizedImage
         imageId={place.imageId}
         alt={place.name || ""}
         class="h-52 w-full shrink-0 object-cover object-center"
-        width="208"
-        height="208"
+        height="13rem"
         variant="small"
+        sizes="320px"
+        loading="eager"
+        fetchpriority="high"
+        showPlaceholder
       />
     </div>
 

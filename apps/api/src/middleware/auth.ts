@@ -18,10 +18,55 @@ declare module "hono" {
   }
 }
 
+const SESSION_CACHE_SECONDS = 60;
+
+function fetchUserSession(db: Db, token: string) {
+  return db.query.session.findFirst({
+    where: eq(session.token, token),
+    with: {
+      user: true,
+    },
+  });
+}
+
+type UserSessionRecord = NonNullable<
+  Awaited<ReturnType<typeof fetchUserSession>>
+>;
+
+/**
+ * Looks up a session by token, cached briefly by token in Redis.
+ *
+ * This runs on nearly every authenticated (and many public/optional-auth)
+ * request, so a short TTL cache meaningfully cuts DB load. Expired/deleted
+ * sessions are still deleted from the DB below on a cache miss; a cache hit
+ * just means up to SESSION_CACHE_SECONDS of staleness before that cleanup
+ * (and any sign-out/account-deletion) is reflected here.
+ */
+async function findUserSession(
+  db: Db,
+  redis: Redis,
+  token: string,
+): Promise<UserSessionRecord | null> {
+  const cacheKey = `session:${token}`;
+  const cached = await redis.get<UserSessionRecord | null>(cacheKey);
+  if (cached !== null && cached !== undefined) {
+    return cached;
+  }
+
+  const userSession = await fetchUserSession(db, token);
+
+  await redis.set(cacheKey, userSession ?? null, {
+    ex: SESSION_CACHE_SECONDS,
+  });
+
+  return userSession ?? null;
+}
+
 // Authentication middleware
 export const authMiddleware = async (c: Context, next: Next) => {
   try {
     const db = c.get("db");
+    const redis = c.get("redis");
     const authHeader = c.req.header("Authorization");
     const token = authHeader?.split(" ")[1] || "";
 
@@ -30,19 +75,14 @@ export const authMiddleware = async (c: Context, next: Next) => {
       return c.json({ error: "Unauthorized - No token" }, 401);
     }
 
-    const userSession = await db.query.session.findFirst({
-      where: eq(session.token, token),
-      with: {
-        user: true,
-      },
-    });
+    const userSession = await findUserSession(db, redis, token);
 
     if (!userSession) {
       return c.json({ error: "Unauthorized - Invalid session" }, 401);
     }
 
     // Check if session is expired — delete it so it can't be reused
-    if (userSession.expiresAt < new Date()) {
+    if (new Date(userSession.expiresAt) < new Date()) {
       await db.delete(session).where(eq(session.token, token));
       return c.json({ error: "Unauthorized - Session expired" }, 401);
     }
@@ -71,6 +111,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 
 export const optionalAuthMiddleware = async (c: Context, next: Next) => {
   const db = c.get("db");
+  const redis = c.get("redis");
   const authHeader = c.req.header("Authorization");
   const token = authHeader?.split(" ")[1] || "";
 
@@ -78,12 +119,7 @@ export const optionalAuthMiddleware = async (c: Context, next: Next) => {
     return next();
   }
 
-  const userSession = await db.query.session.findFirst({
-    where: eq(session.token, token),
-    with: {
-      user: true,
-    },
-  });
+  const userSession = await findUserSession(db, redis, token);
 
   if (!userSession || userSession.user.deletedAt) {
     c.set("user", null);
