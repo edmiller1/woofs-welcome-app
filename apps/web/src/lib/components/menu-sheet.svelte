@@ -136,7 +136,7 @@
           <a
             href={`/profile/${user.id}/${profileLink}`}
             class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {profileActive
-              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
               : 'text-foreground'}"
           >
             <User class="text-primary size-4" />
@@ -145,7 +145,7 @@
           <a
             href={`/profile/${user.id}/${profileLink}/collections`}
             class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {collectionsActive
-              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
               : 'text-foreground'}"
           >
             <Heart class="text-primary size-4" />
@@ -165,7 +165,7 @@
           <a
             href={`/profile/${user.id}/${profileLink}/support`}
             class="flex items-center gap-3.5 rounded-xl px-3.5 py-3.5 text-[15.5px] font-semibold text-foreground no-underline hover:bg-muted {supportActive
-              ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+              ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
               : 'text-foreground'}"
           >
             <CircleQuestionMark class="text-primary size-4" />

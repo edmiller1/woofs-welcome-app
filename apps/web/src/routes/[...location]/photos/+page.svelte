@@ -55,7 +55,7 @@
 
 <Navbar {user} />
 
-<main class="min-h-screen bg-surface">
+<main class="min-h-screen bg-background">
   <div class="max-w-7xl mx-auto px-8 py-12">
     <!-- Breadcrumbs -->
     {#if locationQuery.isSuccess}

@@ -34,6 +34,23 @@ export const deleteCollectionSchema = z.object({
   collectionId: z.string(),
 });
 
+export const updateCollectionSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters")
+    .optional(),
+  description: z
+    .string()
+    .min(2, "Description must be at least 2 characters")
+    .max(50, "Description must be less than 50 characters")
+    .optional(),
+});
+
+export const updateCollectionParamsSchema = z.object({
+  collectionId: z.string(),
+});
+
 export const getCollectionWithPlacesSchema = z.object({
   profileId: z.string(),
   id: z.string(),

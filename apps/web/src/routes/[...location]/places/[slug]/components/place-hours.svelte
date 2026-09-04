@@ -11,7 +11,7 @@
 
 {#if hours}
   <div
-    class="bg-surface-container-lowest border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+    class="bg-card border border-border/10 rounded-2xl p-6 shadow-sm"
   >
     <div class="flex justify-between items-center mb-6">
       <h4 class="text-xl font-headline font-bold">Opening Hours</h4>
@@ -67,8 +67,8 @@
             ? 'bg-primary/30 font-bold'
             : ''}"
         >
-          <span class="text-text-subtle">{day.day}</span>
-          <span class="text-text font-medium">{day.hours}</span>
+          <span class="text-muted-foreground">{day.day}</span>
+          <span class="text-foreground font-medium">{day.hours}</span>
         </div>
       {/each}
     </div>

@@ -728,7 +728,7 @@
         <Popover.Root bind:open={distanceOpen}>
           <Popover.Trigger
             class={cn(
-              "shrink-0 cursor-pointer bg-white border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              "shrink-0 cursor-pointer bg-card border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
               appliedDistanceFilter !== null &&
                 "bg-primary text-white border-primary",
             )}
@@ -777,7 +777,7 @@
         >
           <Select.Trigger
             class={cn(
-              "shrink-0 w-auto cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              "shrink-0 w-auto cursor-pointer bg-card border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
               ratingFilter && "bg-primary text-white border-primary",
             )}
           >
@@ -816,7 +816,7 @@
         >
           <Select.Trigger
             class={cn(
-              "shrink-0 w-auto cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+              "shrink-0 w-auto cursor-pointer bg-card border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
               typeFilters.length > 0 && "bg-primary text-white border-primary",
             )}
           >
@@ -847,7 +847,7 @@
           >
             <Select.Trigger
               class={cn(
-                "shrink-0 w-auto capitalize cursor-pointer bg-white border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+                "shrink-0 w-auto capitalize cursor-pointer bg-card border-input rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
                 difficultyFilter && "bg-primary text-white border-primary",
               )}
             >
@@ -873,7 +873,7 @@
           <Popover.Root bind:open={lengthOpen}>
             <Popover.Trigger
               class={cn(
-                "shrink-0 cursor-pointer bg-white border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
+                "shrink-0 cursor-pointer bg-card border-input flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap shadow-sm",
                 appliedLengthFilter !== null &&
                   "bg-primary text-white border-primary",
               )}
@@ -928,7 +928,7 @@
 
     <!-- Desktop place list -->
     <div
-      class="hidden md:block absolute top-4 left-4 bottom-4 shrink-0 z-50 rounded-lg bg-white overflow-hidden"
+      class="hidden md:block absolute top-4 left-4 bottom-4 shrink-0 z-50 rounded-lg bg-card overflow-hidden"
       style="
         max-height: {listCollapsed ? '75px' : 'calc(100% - 2rem)'};
         max-width: {listCollapsed ? 'calc(25% - 50px)' : '25%'};
@@ -1039,7 +1039,7 @@
         transition: top 300ms ease;
       "
     >
-      <div class="bg-white shadow-2xl flex flex-col h-full overflow-hidden">
+      <div class="bg-card shadow-2xl flex flex-col h-full overflow-hidden">
         <div
           class="px-4 pt-4 pb-6 shrink-0 border-b flex items-center justify-between"
         >
@@ -1134,7 +1134,7 @@
       <Popover.Root bind:open={distanceOpen}>
         <Popover.Trigger
           class={cn(
-            "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+            "w-48 cursor-pointer bg-card border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
             distanceOpen && "text-accent-foreground",
           )}
           >{appliedDistanceFilter === null
@@ -1184,7 +1184,7 @@
         bind:open={ratingOpen}
         onValueChange={() => syncUrl()}
       >
-        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-muted"
+        <Select.Trigger class="w-36 bg-card cursor-pointer hover:bg-muted"
           ><div class="flex items-center gap-2">
             {#if ratingFilter}<Star
                 class="size-4 fill-yellow-400 text-yellow-400"
@@ -1237,7 +1237,7 @@
         bind:open={typesOpen}
         onValueChange={() => syncUrl()}
       >
-        <Select.Trigger class="w-36 bg-white cursor-pointer hover:bg-muted"
+        <Select.Trigger class="w-36 bg-card cursor-pointer hover:bg-muted"
           >{typeContent}
         </Select.Trigger>
         <Select.Content class="h-64">
@@ -1268,7 +1268,7 @@
           bind:open={difficultyOpen}
         >
           <Select.Trigger
-            class="capitalize w-36 bg-white cursor-pointer hover:bg-muted"
+            class="capitalize w-36 bg-card cursor-pointer hover:bg-muted"
             >{difficultyContent}
           </Select.Trigger>
           <Select.Content>
@@ -1299,7 +1299,7 @@
         <Popover.Root bind:open={lengthOpen}>
           <Popover.Trigger
             class={cn(
-              "w-48 cursor-pointer bg-white border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              "w-48 cursor-pointer bg-card border-input [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex items-center justify-between gap-2 rounded-md border hover:bg-muted px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
               lengthOpen && "text-accent-foreground",
             )}
             >{appliedLengthFilter === null
@@ -1349,7 +1349,7 @@
       {#if hasActiveFilters}
         <button
           onclick={clearAllFilters}
-          class="cursor-pointer bg-white border border-input rounded-md px-3 py-2 text-sm font-medium hover:bg-muted shadow-xs whitespace-nowrap"
+          class="cursor-pointer bg-card border border-input rounded-md px-3 py-2 text-sm font-medium hover:bg-muted shadow-xs whitespace-nowrap"
         >
           Clear all
         </button>
@@ -1357,7 +1357,7 @@
       <div class="absolute top-2 right-0">
         <button
           onclick={getCurrentLocation}
-          class="rounded-full p-4 hover:bg-muted cursor-pointer bg-white border-input shadow-xl"
+          class="rounded-full p-4 hover:bg-muted cursor-pointer bg-card border-input shadow-xl"
           ><Navigation class="size-5" /></button
         >
       </div>
@@ -1366,7 +1366,7 @@
           <Tooltip.Trigger>
             <button
               onclick={toggleMapStyle}
-              class="rounded-full p-4 hover:bg-muted cursor-pointer bg-white border-input shadow-xl"
+              class="rounded-full p-4 hover:bg-muted cursor-pointer bg-card border-input shadow-xl"
             >
               {#if streetsMap}
                 <TentTree class="size-5" />

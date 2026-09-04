@@ -91,7 +91,7 @@
     </label>
     <div class="relative group">
       <Input
-        class="w-full h-14 px-6 rounded-full border-forground focus:ring-2 focus:ring-primary transition-all text-text placeholder:text-border-strong"
+        class="w-full h-14 px-6 rounded-full border-border focus:ring-2 focus:ring-primary transition-all text-foreground placeholder:text-muted-foreground"
         id="email"
         placeholder="explorer@woofswelcome.app"
         type="email"
@@ -142,7 +142,7 @@
   >
   <Button
     variant="outline"
-    class="h-14 bg-text hover:opacity-90 font-bold text-base hover:bg-muted rounded-full"
+    class="h-14 bg-white hover:bg-muted font-bold text-base rounded-full"
     onclick={handleAppleLogin}
     disabled={loading || appleLoading}
   >

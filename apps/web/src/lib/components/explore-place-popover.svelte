@@ -14,7 +14,7 @@
 <a
   href={`/location/${place.locationPath}/places/${place.slug}`}
   target="_blank"
-  class="flex items-center gap-3 w-72 bg-white rounded-2xl overflow-hidden shadow-lg p-2 cursor-pointer hover:shadow-xl transition-shadow"
+  class="flex items-center gap-3 w-72 bg-card rounded-2xl overflow-hidden shadow-lg p-2 cursor-pointer hover:shadow-xl transition-shadow"
 >
   <div class="shrink-0 w-16 h-16 rounded-xl overflow-hidden">
     {#if place.imageId}

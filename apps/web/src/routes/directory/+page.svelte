@@ -139,26 +139,26 @@
 
 <Navbar {user} />
 
-<main class="min-h-screen bg-surface-container-low">
+<main class="min-h-screen bg-muted">
   <!-- Header -->
-  <div class="bg-white border-b border-outline/10">
+  <div class="bg-card border-b border-border/10">
     <div class="max-w-7xl mx-auto px-8 py-12">
-      <h1 class="font-serif text-5xl text-on-surface mb-2">Directory</h1>
-      <p class="text-on-surface-variant">
+      <h1 class="font-serif text-5xl text-foreground mb-2">Directory</h1>
+      <p class="text-muted-foreground">
         Browse all dog-friendly destinations and place types.
       </p>
     </div>
 
     <!-- Tabs -->
     <div class="max-w-7xl mx-auto px-8">
-      <div class="flex gap-0 border-b border-outline/10">
+      <div class="flex gap-0 border-b border-border/10">
         {#each tabs as tab}
           <button
             onclick={() => setTab(tab.id)}
             class="px-6 py-4 text-sm font-medium tracking-wide border-b-2 transition-colors cursor-pointer {activeTab ===
             tab.id
               ? 'border-primary text-primary'
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'}"
+              : 'border-transparent text-muted-foreground hover:text-foreground'}"
           >
             {tab.label}
           </button>
@@ -176,7 +176,7 @@
         {#each PLACE_TYPES as type}
           <a
             href="/explore?types={encodeURIComponent(type.slug)}"
-            class="flex items-center gap-3 p-4 bg-white rounded-xl border border-outline/10 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+            class="flex items-center gap-3 p-4 bg-card rounded-xl border border-border/10 hover:border-primary/40 hover:bg-primary/5 transition-all group"
           >
             <type.icon class="size-4 text-primary shrink-0" />
             <span
@@ -194,7 +194,7 @@
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
         >
           {#each Array(30) as _}
-            <div class="h-5 bg-surface-container rounded animate-pulse"></div>
+            <div class="h-5 bg-muted rounded animate-pulse"></div>
           {/each}
         </div>
       {:else if directory.isSuccess}
@@ -204,7 +204,7 @@
           {#each directory.data.locations as loc}
             <a
               href="/location/{loc.path}"
-              class="text-sm text-on-surface hover:text-primary transition-colors py-1 border-b border-outline/5"
+              class="text-sm text-foreground hover:text-primary transition-colors py-1 border-b border-border/5"
             >
               {loc.name}
             </a>
@@ -217,7 +217,7 @@
       <!-- Letter bar -->
       <div class="flex flex-wrap gap-1 mb-8">
         <span
-          class="text-xs font-bold tracking-widest uppercase text-on-surface-variant self-center mr-2"
+          class="text-xs font-bold tracking-widest uppercase text-muted-foreground self-center mr-2"
           >Browse by</span
         >
         {#each LETTERS as letter}
@@ -226,7 +226,7 @@
             class="w-8 h-8 rounded text-xs font-bold transition-colors cursor-pointer {activeLetter ===
             letter
               ? 'bg-primary text-white'
-              : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}"
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground'}"
           >
             {letter}
           </button>
@@ -238,7 +238,7 @@
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3"
         >
           {#each Array(30) as _}
-            <div class="h-5 bg-surface-container rounded animate-pulse"></div>
+            <div class="h-5 bg-muted rounded animate-pulse"></div>
           {/each}
         </div>
       {:else if directory.isSuccess && directory.data.locations.length > 0}
@@ -248,10 +248,10 @@
           {#each directory.data.locations as loc}
             <a
               href="/location/{loc.path}"
-              class="text-sm text-on-surface hover:text-primary transition-colors py-1 border-b border-outline/5"
+              class="text-sm text-foreground hover:text-primary transition-colors py-1 border-b border-border/5"
             >
               {loc.name}{#if activeTab !== "regions"}<span
-                  class="text-on-surface-variant">, {loc.countryCode}</span
+                  class="text-muted-foreground">, {loc.countryCode}</span
                 >{/if}
             </a>
           {/each}
@@ -263,24 +263,24 @@
             <button
               onclick={() => setPage(activePage - 1)}
               disabled={activePage === 1}
-              class="px-4 py-2 text-sm rounded-lg border border-outline/20 disabled:opacity-40 hover:bg-surface-container transition-colors cursor-pointer disabled:cursor-default"
+              class="px-4 py-2 text-sm rounded-lg border border-border/20 disabled:opacity-40 hover:bg-muted transition-colors cursor-pointer disabled:cursor-default"
             >
               Previous
             </button>
-            <span class="text-sm text-on-surface-variant px-4">
+            <span class="text-sm text-muted-foreground px-4">
               Page {activePage} of {totalPages}
             </span>
             <button
               onclick={() => setPage(activePage + 1)}
               disabled={activePage === totalPages}
-              class="px-4 py-2 text-sm rounded-lg border border-outline/20 disabled:opacity-40 hover:bg-surface-container transition-colors cursor-pointer disabled:cursor-default"
+              class="px-4 py-2 text-sm rounded-lg border border-border/20 disabled:opacity-40 hover:bg-muted transition-colors cursor-pointer disabled:cursor-default"
             >
               Next
             </button>
           </div>
         {/if}
       {:else if directory.isSuccess}
-        <p class="text-on-surface-variant text-sm">
+        <p class="text-muted-foreground text-sm">
           No {activeTab} found starting with "{activeLetter}".
         </p>
       {/if}

@@ -93,7 +93,7 @@
     review.user && review.user.image
       ? review.user.image
       : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
-  <div class="rounded-lg p-5 bg-white shadow-sm">
+  <div class="rounded-lg p-5 bg-card shadow-sm">
     <div class="mb-4 flex items-start gap-4">
       <Avatar.Root class="size-11 shrink-0">
         <Avatar.Image
@@ -144,7 +144,7 @@
                   </Button>
                 </Tooltip.Trigger>
                 <Tooltip.Content
-                  class="border border-muted-foreground/20 bg-white"
+                  class="border border-muted-foreground/20 bg-card"
                 >
                   <p>
                     {review.hasReported
@@ -215,7 +215,7 @@
   <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4">
     {#if reviewsQuery.isLoading}
       {#each Array(3) as _}
-        <div class="rounded-lg p-5 bg-white shadow-sm space-y-3">
+        <div class="rounded-lg p-5 bg-card shadow-sm space-y-3">
           <div class="flex items-start gap-3">
             <Skeleton class="size-11 rounded-full shrink-0" />
             <div class="flex-1 space-y-2">

@@ -52,15 +52,15 @@
     onOpenChange={(open) => (imagesOpen = open)}
   >
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay class="fixed inset-0 z-50 bg-white" />
+      <DialogPrimitive.Overlay class="fixed inset-0 z-50 bg-background" />
       <DialogPrimitive.Content
-        class="fixed inset-0 z-50 flex flex-col bg-white outline-none"
+        class="fixed inset-0 z-50 flex flex-col bg-background outline-none"
       >
         <!-- Top bar -->
         <div class="shrink-0 flex items-center justify-between px-2 py-3">
           <button
             onclick={() => (imagesOpen = false)}
-            class="cursor-pointer mt-1 flex items-center gap-1.5 text-black/80 hover:text-black transition-colors text-sm font-medium"
+            class="cursor-pointer mt-1 flex items-center gap-1.5 text-foreground/80 hover:text-foreground transition-colors text-sm font-medium"
             aria-label="Close"
           >
             <svg
@@ -82,7 +82,7 @@
             >
             Close
           </button>
-          <span class="text-black/60 text-sm">{current + 1} / {count}</span>
+          <span class="text-muted-foreground text-sm">{current + 1} / {count}</span>
           <div class="w-16"></div>
         </div>
 
@@ -146,13 +146,13 @@
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay class="fixed inset-0 z-50 bg-black" />
       <DialogPrimitive.Content
-        class="fixed inset-0 z-50 flex flex-col bg-white outline-none"
+        class="fixed inset-0 z-50 flex flex-col bg-background outline-none"
       >
         <!-- Top bar -->
         <div class="shrink-0 flex items-center justify-between px-6 py-4">
           <button
             onclick={() => (imagesOpen = false)}
-            class="cursor-pointer flex items-center gap-2 text-black/80 hover:text-black transition-colors text-sm font-medium"
+            class="cursor-pointer flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors text-sm font-medium"
             aria-label="Close"
           >
             <svg
@@ -161,7 +161,7 @@
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#000000"
+              stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -174,7 +174,7 @@
             >
             Close
           </button>
-          <span class="text-black/60 text-sm">{current + 1} / {count}</span>
+          <span class="text-muted-foreground text-sm">{current + 1} / {count}</span>
           <div class="w-16"></div>
         </div>
 

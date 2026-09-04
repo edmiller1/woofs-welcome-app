@@ -103,12 +103,12 @@
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-start mb-1">
-                <p class="text-sm font-label font-bold text-on-surface">
+                <p class="text-sm font-label font-bold text-foreground">
                   {notification.title}
                 </p>
               </div>
               <p
-                class="text-[13px] leading-relaxed text-on-surface-variant font-body"
+                class="text-[13px] leading-relaxed text-muted-foreground font-body"
               >
                 {notification.message}
               </p>

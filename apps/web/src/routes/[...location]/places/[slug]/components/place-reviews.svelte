@@ -128,7 +128,7 @@
     {#if reviews.isLoading}
       <div class="space-y-6 my-6">
         {#each Array(3) as _}
-          <div class="rounded-lg p-6 bg-white shadow-sm space-y-4">
+          <div class="rounded-lg p-6 bg-card shadow-sm space-y-4">
             <div class="flex items-start gap-4">
               <Skeleton class="size-12 rounded-full shrink-0" />
               <div class="flex-1 space-y-2">
@@ -179,7 +179,7 @@
                   "thumbnail",
                 )}
           <div
-            class="rounded-lg bg-white border p-6 border-secondary shadow-sm"
+            class="rounded-lg bg-card border p-6 border-secondary shadow-sm"
           >
             <div class="mb-4 flex items-start gap-4">
               <Avatar.Root class="size-12">
@@ -326,7 +326,7 @@
             review.user && review.user.image
               ? review.user.image
               : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
-          <div class="rounded-lg p-6 bg-white shadow-sm">
+          <div class="rounded-lg p-6 bg-card shadow-sm">
             <div class="mb-4 flex items-start gap-4">
               <Avatar.Root class="size-12">
                 <Avatar.Image

@@ -47,8 +47,8 @@
               selected === image.imageId
                 ? "absolute inset-0 z-50 m-auto flex h-1/2 w-full cursor-pointer flex-col flex-wrap items-center justify-center rounded-lg md:w-1/2"
                 : lastSelected === image.imageId
-                  ? "z-40 h-full w-full rounded-xl bg-white"
-                  : "h-full w-full rounded-xl bg-white",
+                  ? "z-40 h-full w-full rounded-xl bg-muted"
+                  : "h-full w-full rounded-xl bg-muted",
             )}
           >
             {#if selected === image.imageId}

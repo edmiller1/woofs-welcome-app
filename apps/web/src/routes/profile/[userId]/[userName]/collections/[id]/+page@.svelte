@@ -1,6 +1,5 @@
 <script lang="ts">
   import { api } from "$lib/api-helper";
-  import { Spinner } from "$lib/components/ui/spinner";
   import {
     createMutation,
     createQuery,
@@ -16,14 +15,13 @@
     ArrowLeft,
     ArrowUpDown,
     BookMarked,
-    ChevronRight,
-    Heart,
+    Pencil,
     Search,
     Share,
-    SlidersHorizontal,
     Star,
     X,
   } from "@lucide/svelte";
+  import EditCollectionDialog from "./components/edit-collection-dialog.svelte";
   import { Input } from "$lib/components/ui/input";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import { Badge } from "$lib/components/ui/badge";
@@ -32,12 +30,12 @@
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
   import CollectionMap from "$lib/components/collection-map.svelte";
   import Footer from "$lib/components/footer.svelte";
-  import MobileBottomNav from "$lib/components/mobile-bottom-nav.svelte";
   import { Drawer } from "$lib/components/ui/drawer";
   import { Drawer as DrawerPrimitive } from "vaul-svelte";
-  import Button from "$lib/components/ui/button/button.svelte";
   import { toast } from "svelte-sonner";
   import Navbar from "$lib/components/navbar.svelte";
+  import BreadcrumbPage from "$lib/components/ui/breadcrumb/breadcrumb-page.svelte";
+  import { Button } from "$lib/components/ui/button";
 
   interface Props {
     data: {
@@ -52,6 +50,9 @@
   const { data }: Props = $props();
   const { initialCollectionWithPlaces, userId, userName, id, user } =
     $derived(data);
+
+  const isOwner = $derived(user?.id === userId);
+  let editDialogOpen = $state(false);
 
   const queryClient = useQueryClient();
 
@@ -94,22 +95,6 @@
     placeholderData: keepPreviousData,
   }));
 
-  const removePlaceFromCollection = createMutation(() => ({
-    mutationFn: ({
-      placeId,
-      collectionId,
-    }: {
-      placeId: string;
-      collectionId: string;
-    }) => api.collection.removePlaceFromCollection(placeId, collectionId),
-    onSuccess: () => {
-      toast.success("Place removed from collection!");
-      queryClient.invalidateQueries({
-        queryKey: ["collectionWithPlaces", userId, id, debouncedSearch, page],
-      });
-    },
-  }));
-
   $effect(() => {
     if (collectionWithPlaces.data?.places) {
       collectionPlaces.set(collectionWithPlaces.data.places);
@@ -129,23 +114,21 @@
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   });
+
+  async function handleShare() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
+  }
 </script>
 
 <Navbar {user} />
 
-<!-- Mobile back bar -->
-<div class="lg:hidden sticky top-16 z-40 bg-white backdrop-blur-sm px-4 py-2.5">
-  <a
-    href={`/profile/${userId}/${userName}/collections`}
-    class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-on-surface transition-colors"
-  >
-    <ArrowLeft class="size-4" />
-    Collections
-  </a>
-</div>
-
 <main class="min-h-screen">
-  <section class="w-full bg-surface-container-lowest pt-12 pb-16">
+  <section class="w-full bg-card pt-12 pb-16">
     <div
       class="max-w-360 mx-auto px-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"
     >
@@ -188,30 +171,47 @@
           <Skeleton class="h-16 w-full max-w-xl rounded-lg" />
           <Skeleton class="h-11 w-40 rounded-full mt-3" />
         {:else if collectionWithPlaces.isError}
-          <p class="text-muted-foreground">Failed to load collection. Please try refreshing the page.</p>
+          <p class="text-muted-foreground">
+            Failed to load collection. Please try refreshing the page.
+          </p>
         {:else}
           <!-- Breadcrumbs -->
           <div class="flex items-center gap-3">
-            <Badge variant="secondary" class="rounded-full text-base"
+            <Badge variant="secondary" class="rounded-full text-sm p-2"
               >Collection</Badge
             >
-            <span class="text-on-surface-variant font-label-sm text-label-sm"
-              >{collectionWithPlaces.data?.places.length} Places • Created by
+            <span class="text-muted-foreground font-label-sm text-label-sm"
+              >{collectionWithPlaces.data?.places.length} Place {collectionWithPlaces
+                .data?.places.length === 1
+                ? ""
+                : "s"} • Created by
               <span class="capitalize font-semibold"
                 >{userName.split("-").join(" ").toLowerCase()}</span
               ></span
             >
           </div>
-          <h1 class="font-bold text-4xl text-on-surface tracking-tight">
-            {collectionWithPlaces.data?.collection.name}
-          </h1>
-          <p class="text-on-surface-variant max-w-xl">
+          <div class="flex items-center gap-8">
+            <h1 class="font-bold text-4xl text-foreground tracking-tight">
+              {collectionWithPlaces.data?.collection.name}
+            </h1>
+            {#if isOwner}
+              <Button
+                variant="outline"
+                onclick={() => (editDialogOpen = true)}
+                aria-label="Edit collection"
+              >
+                <Pencil class="size-4" /> Edit
+              </Button>
+            {/if}
+          </div>
+          <p class="text-muted-foreground max-w-xl">
             {collectionWithPlaces.data?.collection.description ||
               "No description provided for this collection."}
           </p>
           <div class="pt-3">
             <button
-              class="bg-primary-container gap-2 cursor-pointer text-on-primary-container px-10 py-3 rounded-full font-bold flex items-center gap-xs hover:shadow-lg transition-all active:scale-95"
+              onclick={handleShare}
+              class="bg-primary gap-2 cursor-pointer text-background px-10 py-3 rounded-full font-bold flex items-center gap-xs hover:shadow-lg transition-all active:scale-95"
             >
               <Share class="size-4" />
               Share List
@@ -229,6 +229,7 @@
             class="w-full h-full object-cover"
             alt="Places"
             imageId={collectionWithPlaces.data.places[0].imageId}
+            height="100%"
           />
           <div
             class="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"
@@ -256,11 +257,14 @@
     <div class="flex gap-10">
       <div class="w-md shrink-0 space-y-6">
         <div class="flex justify-between items-center pb-6">
-          <h2 class="font-semibold text-lg text-on-surface">
+          <h2 class="font-semibold text-lg text-foreground">
             {#if collectionWithPlaces.isLoading}
               <Skeleton class="h-6 w-24 rounded" />
             {:else}
-              {collectionWithPlaces.data?.places.length} Places
+              {collectionWithPlaces.data?.places.length} Place {collectionWithPlaces
+                .data?.places.length === 1
+                ? ""
+                : "s"}
             {/if}
           </h2>
           <Select.Root
@@ -269,7 +273,7 @@
             onValueChange={() => (page = 1)}
           >
             <Select.Trigger
-              class="h-8 text-xs border-none shadow-none text-primary gap-1.5 pl-2 pr-3 rounded-full hover:bg-muted w-auto"
+              class="h-8 text-xs border-none shadow-none text-walnut gap-1.5 pl-2 pr-3 rounded-full hover:bg-muted w-auto"
             >
               <ArrowUpDown class="size-3" />
               {#if sortBy === "name_asc"}Name A–Z
@@ -295,7 +299,7 @@
           {#if collectionWithPlaces.isLoading}
             {#each { length: 5 } as _}
               <div
-                class="bg-white rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"
+                class="bg-background rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"
               >
                 <div class="flex gap-4 p-3">
                   <Skeleton class="size-20 shrink-0 rounded-xl" />
@@ -311,28 +315,37 @@
               </div>
             {/each}
           {:else if collectionWithPlaces.isError}
-            <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <p class="font-medium text-on-surface">Failed to load places</p>
-              <p class="text-sm text-muted-foreground">Something went wrong. Please try refreshing the page.</p>
+            <div
+              class="flex flex-col items-center justify-center py-16 gap-3 text-center"
+            >
+              <p class="font-medium text-foreground">Failed to load places</p>
+              <p class="text-sm text-muted-foreground">
+                Something went wrong. Please try refreshing the page.
+              </p>
             </div>
           {:else if (collectionWithPlaces.data?.places ?? []).length === 0}
-            <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+            <div
+              class="flex flex-col items-center justify-center py-16 gap-3 text-center"
+            >
               <BookMarked class="size-10 text-muted-foreground opacity-40" />
-              <p class="font-medium text-on-surface">
-                {debouncedSearch ? `No places found for "${debouncedSearch}"` : "No places in this collection yet"}
+              <p class="font-medium text-foreground">
+                {debouncedSearch
+                  ? `No places found for "${debouncedSearch}"`
+                  : "No places in this collection yet"}
               </p>
               {#if !debouncedSearch}
-                <p class="text-sm text-muted-foreground">Save places to this collection to see them here</p>
+                <p class="text-sm text-muted-foreground">
+                  Save places to this collection to see them here
+                </p>
               {/if}
             </div>
           {:else}
             {#each collectionWithPlaces.data?.places ?? [] as place}
               <div
-                class="trail-card group bg-white rounded-2xl shadow-sm border border-secondary/5 cursor-pointer overflow-hidden"
+                class="trail-card group bg-card rounded-2xl shadow-sm border border-secondary/5 cursor-pointer overflow-hidden"
                 role="button"
                 tabindex="0"
                 onmouseenter={() => (hoveredPlaceId = place.id)}
-                onmouseleave={() => (hoveredPlaceId = null)}
               >
                 <div class="flex gap-4 p-3">
                   <div class="size-20 shrink-0 rounded-xl overflow-hidden">
@@ -349,7 +362,7 @@
                     <div class="flex items-center justify-between gap-2">
                       <Badge
                         variant="secondary"
-                        class="text-xs rounded-full font-normal text-muted-foreground"
+                        class="text-xs rounded-full font-normal"
                         >{place.types[0]}</Badge
                       >
                       <div class="flex items-center gap-1 shrink-0">
@@ -359,9 +372,10 @@
                     </div>
                     <a
                       href={`/location/${place.locationPath}/places/${place.slug}`}
+                      target="_blank"
                     >
                       <h3
-                        class="font-bold hover:text-secondary text-base text-on-surface leading-tight"
+                        class="font-bold text-base text-foreground leading-tight"
                       >
                         {place.name}
                       </h3>
@@ -394,7 +408,6 @@
     <CollectionMap places={$collectionPlaces} collectionId={id} />
   </div>
 </main>
-<div class="hidden"><Footer /></div>
 
 {#if isMobile}
   <div>
@@ -409,7 +422,7 @@
     >
       <DrawerPrimitive.Portal>
         <DrawerPrimitive.Content
-          class="fixed inset-x-0 bottom-0 z-50 flex h-full max-h-[92dvh] flex-col rounded-t-2xl bg-white shadow-xl border-0"
+          class="fixed inset-x-0 bottom-0 z-50 flex h-full max-h-[92dvh] flex-col rounded-t-2xl bg-card shadow-xl border-0"
         >
           <!-- Handle -->
           <div
@@ -424,7 +437,7 @@
                   <Skeleton class="h-5 w-40 rounded mb-1" />
                   <Skeleton class="h-3 w-24 rounded" />
                 {:else}
-                  <h2 class="font-bold text-base text-on-surface">
+                  <h2 class="font-bold text-base text-foreground">
                     {collectionWithPlaces.data?.collection.name}
                   </h2>
                   <p class="text-xs text-muted-foreground">
@@ -503,7 +516,7 @@
             {#if collectionWithPlaces.isLoading}
               {#each { length: 5 } as _}
                 <div
-                  class="bg-white rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"
+                  class="bg-card rounded-2xl shadow-sm border border-secondary/5 overflow-hidden"
                 >
                   <div class="flex gap-3 p-3">
                     <Skeleton class="size-16 shrink-0 rounded-xl" />
@@ -519,24 +532,36 @@
                 </div>
               {/each}
             {:else if collectionWithPlaces.isError}
-              <div class="flex flex-col items-center justify-center py-12 gap-3 text-center">
-                <p class="font-medium text-sm text-on-surface">Failed to load places</p>
-                <p class="text-xs text-muted-foreground">Something went wrong. Please try refreshing the page.</p>
+              <div
+                class="flex flex-col items-center justify-center py-12 gap-3 text-center"
+              >
+                <p class="font-medium text-sm text-foreground">
+                  Failed to load places
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  Something went wrong. Please try refreshing the page.
+                </p>
               </div>
             {:else if (collectionWithPlaces.data?.places ?? []).length === 0}
-              <div class="flex flex-col items-center justify-center py-12 gap-3 text-center">
+              <div
+                class="flex flex-col items-center justify-center py-12 gap-3 text-center"
+              >
                 <BookMarked class="size-10 text-muted-foreground opacity-40" />
-                <p class="font-medium text-sm text-on-surface">
-                  {debouncedSearch ? `No places found for "${debouncedSearch}"` : "No places in this collection yet"}
+                <p class="font-medium text-sm text-foreground">
+                  {debouncedSearch
+                    ? `No places found for "${debouncedSearch}"`
+                    : "No places in this collection yet"}
                 </p>
                 {#if !debouncedSearch}
-                  <p class="text-xs text-muted-foreground">Save places to this collection to see them here</p>
+                  <p class="text-xs text-muted-foreground">
+                    Save places to this collection to see them here
+                  </p>
                 {/if}
               </div>
             {:else}
               {#each collectionWithPlaces.data?.places ?? [] as place}
                 <div
-                  class="bg-white rounded-2xl shadow-sm border border-secondary/5 cursor-pointer overflow-hidden active:scale-[0.98] transition-transform"
+                  class="bg-card rounded-2xl shadow-sm border border-secondary/5 cursor-pointer overflow-hidden active:scale-[0.98] transition-transform"
                   role="button"
                   tabindex="0"
                   onkeydown={(e) =>
@@ -570,7 +595,7 @@
                         href={`/location/${place.locationPath}/places/${place.slug}`}
                       >
                         <h3
-                          class="font-bold text-sm text-on-surface leading-tight"
+                          class="font-bold text-sm text-foreground leading-tight"
                         >
                           {place.name}
                         </h3>
@@ -589,6 +614,19 @@
     </Drawer>
   </div>
 {/if}
+
+{#if isOwner && collectionWithPlaces.data}
+  <EditCollectionDialog
+    bind:open={editDialogOpen}
+    {userId}
+    {id}
+    collectionWithPlaces={collectionWithPlaces.data}
+    {debouncedSearch}
+    {page}
+  />
+{/if}
+
+<Footer />
 
 <style>
   .no-scrollbar::-webkit-scrollbar {

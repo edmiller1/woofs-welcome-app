@@ -418,7 +418,7 @@
         <!-- Contact & Location Bento -->
         <section class="grid grid-cols-2 gap-4 mb-10">
           <!-- Address + Map -->
-          <div class="bg-white p-4 rounded-2xl shadow-sm border col-span-2">
+          <div class="bg-card p-4 rounded-2xl shadow-sm border col-span-2">
             {#if place.data.address}
               <div class="flex items-center gap-3 mb-3">
                 <div
@@ -477,7 +477,7 @@
           {#if place.data.email}
             <a
               href="mailto:{place.data.email}"
-              class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-card p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Mail class="text-primary size-5 mb-2" />
               <span
@@ -490,7 +490,7 @@
           {#if place.data.phone}
             <a
               href="tel:{place.data.phone}"
-              class="bg-white p-4 border rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-card p-4 border rounded-2xl shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Phone class="text-primary size-5 mb-2" />
               <span
@@ -505,7 +505,7 @@
               href={place.data.website}
               target="_blank"
               rel="noopener noreferrer"
-              class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
+              class="bg-card p-4 rounded-2xl border shadow-sm flex flex-col items-center justify-center text-center"
             >
               <Globe class="text-primary size-5 mb-2" />
               <span
@@ -661,7 +661,7 @@
                 {#if place.data.description}
                   <h3 class="text-3xl font-headline font-bold mb-3">About</h3>
                   <div
-                    class="max-w-none text-text-subtle font-body leading-relaxed space-y-4"
+                    class="max-w-none text-muted-foreground font-body leading-relaxed space-y-4"
                   >
                     <p>{place.data.description}</p>
                   </div>
@@ -679,7 +679,7 @@
               </div>
 
               <!-- Community Review Section -->
-              <div class="pt-12 border-t border-border-subtle/30 space-y-12">
+              <div class="pt-12 border-t border-border/30 space-y-12">
                 <!-- Section Header & Rating Summary -->
                 <div
                   class="flex flex-col md:flex-row md:items-end justify-between gap-6"
@@ -743,7 +743,7 @@
               <!-- Contact & Connect Card -->
               {#if place.data.address || place.data.phone || place.data.email || place.data.website}
                 <div
-                  class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+                  class="bg-card border border-border/10 rounded-2xl p-6 shadow-sm"
                 >
                   <h4 class="text-xl font-headline font-bold mb-6">Contact</h4>
                   <div class="space-y-4">
@@ -754,7 +754,7 @@
                         </div>
                         <div>
                           <p class="font-bold text-sm font-body">Address</p>
-                          <p class="text-xs text-text-subtle font-body">
+                          <p class="text-xs text-muted-foreground font-body">
                             {place.data.address}
                           </p>
                         </div>
@@ -767,7 +767,7 @@
                         </div>
                         <div>
                           <p class="font-bold text-sm font-body">Phone</p>
-                          <p class="text-xs text-text-subtle font-body">
+                          <p class="text-xs text-muted-foreground font-body">
                             {place.data.phone}
                           </p>
                         </div>
@@ -780,7 +780,7 @@
                         </div>
                         <div>
                           <p class="font-bold text-sm font-body">Email</p>
-                          <p class="text-xs text-text-subtle font-body">
+                          <p class="text-xs text-muted-foreground font-body">
                             {place.data.email}
                           </p>
                         </div>
@@ -806,7 +806,7 @@
               {/if}
               <!-- Location & Amenities Card -->
               <div
-                class="bg-white border border-border-subtle/10 rounded-2xl p-6 shadow-sm"
+                class="bg-card border border-border/10 rounded-2xl p-6 shadow-sm"
               >
                 <h4 class="text-xl font-headline font-bold mb-6">Location</h4>
                 {#if coordinates() !== null}

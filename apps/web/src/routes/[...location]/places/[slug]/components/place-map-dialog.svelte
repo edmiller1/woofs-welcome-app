@@ -332,7 +332,7 @@
 </script>
 
 <Dialog.Root bind:open {onOpenChange}>
-  <Dialog.Content class="bg-white z-99 h-[95vh]! w-[95vw]! max-w-[95vw]! p-0">
+  <Dialog.Content class="bg-card z-99 h-[95vh]! w-[95vw]! max-w-[95vw]! p-0">
     <div class="flex h-full flex-col p-4">
       <Dialog.Header class="shrink-0 pb-3">
         <Dialog.Title class="flex items-center gap-2">
@@ -345,7 +345,7 @@
         <div class="relative flex-1 min-h-0">
           {#if placesQuery.isFetching}
             <div
-              class="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-white rounded-full px-4 py-2 shadow-md"
+              class="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-card rounded-full px-4 py-2 shadow-md"
             >
               <span class="dot"></span>
               <span class="dot"></span>

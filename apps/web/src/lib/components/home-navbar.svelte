@@ -85,19 +85,19 @@
       <nav class="flex items-center">
         <a
           class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {exploreActive
-            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
             : 'text-foreground'}"
           href="/explore">Explore</a
         >
         <a
           class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {aboutActive
-            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
             : 'text-foreground'}"
           href="/about">About</a
         >
         <a
           class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {contactActive
-            ? 'bg-muted py-1.75 px-3.5 rounded-full text-[#3f2d1d] font-extrabold'
+            ? 'bg-muted py-1.75 px-3.5 rounded-full text-primary font-extrabold'
             : 'text-foreground'}"
           href="/contact">Contact</a
         >

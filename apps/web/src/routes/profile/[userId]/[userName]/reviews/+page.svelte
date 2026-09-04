@@ -134,7 +134,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each Array(6) as _}
         <div
-          class="bg-white p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
+          class="bg-card p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
         >
           <div class="flex items-start justify-between w-full">
             <div class="flex flex-col gap-2 flex-1">
@@ -165,7 +165,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {#each allReviews as review}
         <div
-          class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-secondary/10 flex flex-col gap-3"
+          class="bg-card p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-secondary/10 flex flex-col gap-3"
         >
           <div>
             <div class="flex flex-col gap-3 flex-1">
@@ -175,7 +175,7 @@
                     href={`/location/${review.place.location.path}/places/${review.place.slug}?reviewId=${review.id}`}
                     class="hover:underline"
                   >
-                    <h3 class="text-on-surface text-[18px]">
+                    <h3 class="text-foreground text-[18px]">
                       {review.place.name}
                     </h3>
                   </a>
@@ -257,7 +257,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {#each Array(3) as _}
           <div
-            class="bg-white p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
+            class="bg-card p-6 rounded-3xl border border-secondary/10 flex flex-col gap-3"
           >
             <div class="flex items-start justify-between w-full">
               <div class="flex flex-col gap-2 flex-1">

@@ -179,7 +179,7 @@
 <div class="relative w-full h-full {className}">
   <div bind:this={mapContainer} class="w-full h-full"></div>
   {#if isLoading}
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-surface/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-md text-xs font-bold text-on-surface-variant tracking-wide pointer-events-none">
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-background/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-md text-xs font-bold text-muted-foreground tracking-wide pointer-events-none">
       <span class="flex gap-1">
         <span class="dot-pulse"></span>
         <span class="dot-pulse" style="animation-delay: 0.15s"></span>

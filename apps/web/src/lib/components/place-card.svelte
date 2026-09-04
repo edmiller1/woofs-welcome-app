@@ -125,7 +125,7 @@
                       <OptimizedImage
                         imageId={image}
                         alt={name}
-                        class="h-full w-full rounded-lg object-cover"
+                        class="h-full w-full rounded-lg overflow-hidden object-cover"
                         variant="small"
                         sizes="(max-width: 640px) 100vw, 320px"
                         height="100%"
@@ -280,7 +280,7 @@
             <OptimizedImage
               imageId={images[0]}
               alt={name}
-              class="h-full w-full rounded-lg object-cover"
+              class="h-full w-full rounded-lg overflow-hidden object-cover"
               variant="small"
               sizes="(max-width: 640px) 100vw, 320px"
               height="200"

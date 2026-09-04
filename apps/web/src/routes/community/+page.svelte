@@ -72,7 +72,7 @@
   });
 </script>
 
-<div class="bg-surface text-on-surface overflow-x-hidden">
+<div class="bg-background text-foreground overflow-x-hidden">
   <HomeNavbar {user} />
 
   <!-- Hero -->
@@ -102,7 +102,7 @@
         class="lg:col-span-3 block space-y-6 pt-16 self-start lg:sticky lg:top-0"
       >
         <div
-          class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
+          class="bg-card rounded-xl p-6 border border-border/10 shadow-sm"
         >
           {#if communityStats.isLoading}
             <div class="space-y-6">
@@ -116,19 +116,19 @@
           {:else if communityStats.isSuccess}
             <div class="space-y-6">
               <div class="flex items-center justify-between">
-                <span class="text-on-surface-variant">Check-ins</span>
+                <span class="text-muted-foreground">Check-ins</span>
                 <span class="font-bold text-primary"
                   >{communityStats.data.checkIns}</span
                 >
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-on-surface-variant">Places saved</span>
+                <span class="text-muted-foreground">Places saved</span>
                 <span class="font-bold text-primary"
                   >{communityStats.data.placesSaved}</span
                 >
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-on-surface-variant">Reviews</span>
+                <span class="text-muted-foreground">Reviews</span>
                 <span class="font-bold text-primary"
                   >{communityStats.data.totalReviews}</span
                 >
@@ -145,7 +145,7 @@
         {#if communityReviews.isLoading}
           {#each [1, 2, 3] as _}
             <div
-              class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+              class="bg-card rounded-xl overflow-hidden border border-border/10 shadow-sm"
             >
               <div class="p-6 flex items-center gap-3">
                 <Skeleton class="size-12 rounded-full shrink-0" />
@@ -171,7 +171,7 @@
               ? review.user.image.replace(/=s\d+-c$/, "=s400-c")
               : buildImageUrl(review.user?.profileImageId ?? "", "thumbnail")}
           <article
-            class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+            class="bg-card rounded-xl overflow-hidden border border-border/10 shadow-sm"
           >
             <div class="p-6 flex items-center gap-3">
               <img
@@ -181,11 +181,11 @@
               />
               <div class="flex flex-col gap-1 min-w-0">
                 <div class="flex items-center gap-1 flex-wrap">
-                  <h4 class="font-label-md text-on-surface">
+                  <h4 class="font-label-md text-foreground">
                     {review.user.name}
                   </h4>
-                  <span class="text-on-surface-variant/40">·</span>
-                  <p class="text-[12px] text-on-surface-variant truncate">
+                  <span class="text-muted-foreground/40">·</span>
+                  <p class="text-[12px] text-muted-foreground truncate">
                     {formatRelative(new Date(review.createdAt), new Date())} · {review
                       .place.name}
                   </p>
@@ -210,12 +210,12 @@
               </div>
             {/if}
             <div class="p-6">
-              <p class="mb-2 font-semibold text-on-surface">{review.title}</p>
-              <p class="text-on-surface-variant text-sm mb-6">
+              <p class="mb-2 font-semibold text-foreground">{review.title}</p>
+              <p class="text-muted-foreground text-sm mb-6">
                 {review.content}
               </p>
               <div
-                class="flex items-center gap-2 border-t border-outline/10 pt-4"
+                class="flex items-center gap-2 border-t border-border/10 pt-4"
               >
                 <Button variant="outline" class="rounded-full p-1">
                   <ThumbsUp class="h-4 w-4 text-muted-foreground" />
@@ -235,7 +235,7 @@
             <div class="space-y-6 pt-2">
               {#each [1, 2] as _}
                 <div
-                  class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline/10 shadow-sm"
+                  class="bg-card rounded-xl overflow-hidden border border-border/10 shadow-sm"
                 >
                   <div class="p-6 flex items-center gap-3">
                     <Skeleton class="size-12 rounded-full shrink-0" />
@@ -261,9 +261,9 @@
         class="lg:col-span-4 space-y-6 pt-16 self-start lg:sticky lg:top-0"
       >
         <div
-          class="bg-surface-container-lowest rounded-xl p-6 border border-outline/10 shadow-sm"
+          class="bg-card rounded-xl p-6 border border-border/10 shadow-sm"
         >
-          <h3 class="font-semibold text-base text-on-surface mb-md">
+          <h3 class="font-semibold text-base text-foreground mb-md">
             Trending Places
           </h3>
           <div class="space-y-6 mt-6">
@@ -286,7 +286,7 @@
                 >
                   <div class="flex items-center gap-3">
                     <div
-                      class="size-14 rounded-lg overflow-hidden bg-surface-container shrink-0"
+                      class="size-14 rounded-lg overflow-hidden bg-muted shrink-0"
                     >
                       {#if place.imageId}
                         <OptimizedImage
@@ -300,11 +300,11 @@
                     </div>
                     <div>
                       <h5
-                        class="truncate text-sm text-on-surface group-hover:text-primary w-40 transition-colors"
+                        class="truncate text-sm text-foreground group-hover:text-primary w-40 transition-colors"
                       >
                         {place.name}
                       </h5>
-                      <p class="text-[12px] text-on-surface-variant">
+                      <p class="text-[12px] text-muted-foreground">
                         {place.location.name}, {place.countryCode}
                       </p>
                       <p class="text-[10px] text-primary font-bold">

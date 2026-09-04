@@ -69,7 +69,9 @@
       {/each}
     </div>
   {:else if profileCollections.data.isPrivate}
-    <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+    <div
+      class="flex flex-col items-center justify-center py-16 gap-3 text-center"
+    >
       <Lock class="size-12 text-muted-foreground" />
       <p class="font-medium">Collections are private</p>
       <p class="text-sm text-muted-foreground">
@@ -100,9 +102,10 @@
                 imageId={collection.previewImages[0]}
                 alt={collection.name}
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                height="100%"
               />
               <div
-                class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6 text-white"
+                class="absolute rounded-3xl inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6 text-white"
               >
                 <h4 class="font-semibold text-2xl">{collection.name}</h4>
                 <p class="opacity-80">

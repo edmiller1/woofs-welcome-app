@@ -11,6 +11,8 @@ import {
   getCollectionWithPlacesSchema,
   getCollectionWithPlacesQuerySchema,
   deleteCollectionSchema,
+  updateCollectionSchema,
+  updateCollectionParamsSchema,
 } from "./schemas";
 import { CollectionService } from "../../services/collection.service";
 import { ImageUploadService } from "../../services/image-upload.service";
@@ -219,6 +221,37 @@ collectionRouter.get(
     const result = await collectionService.getProfileCollections(
       userId,
       auth?.id,
+    );
+
+    return c.json(result, 200);
+  },
+);
+
+collectionRouter.patch(
+  "/update/:collectionId",
+  authMiddleware,
+  zValidator("json", updateCollectionSchema),
+  zValidator("param", updateCollectionParamsSchema),
+  async (c) => {
+    const auth = c.get("user");
+    const db = c.get("db");
+    const env = c.get("env");
+
+    const imageUploadService = new ImageUploadService(db, env);
+    const collectionService = new CollectionService(db, imageUploadService);
+
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const { collectionId } = c.req.valid("param");
+    const { name, description } = c.req.valid("json");
+
+    const result = await collectionService.updateCollection(
+      collectionId,
+      auth.id,
+      name,
+      description,
     );
 
     return c.json(result, 200);

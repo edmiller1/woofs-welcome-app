@@ -103478,6 +103478,43 @@ var CollectionService = class {
       });
     }
   }
+  async updateCollection(collectionId, userId, name2, description) {
+    try {
+      const [collection] = await this.db.select({ id: Collection.id }).from(Collection).where(
+        and(eq(Collection.id, collectionId), eq(Collection.userId, userId))
+      ).limit(1);
+      if (!collection) {
+        throw new NotFoundError("Collection not found");
+      }
+      const updates = {};
+      if (name2 !== void 0) {
+        const sanitizedName = sanitizePlainText(name2);
+        if (!sanitizedName || sanitizedName.length < 2) {
+          throw new BadRequestError("Name must be at least 2 characters");
+        }
+        updates.name = sanitizedName;
+      }
+      if (description !== void 0) {
+        const sanitizedDescription = sanitizePlainText(description);
+        if (sanitizedDescription.length < 2) {
+          throw new BadRequestError(
+            "Description must be at least 2 characters"
+          );
+        }
+        updates.description = sanitizedDescription;
+      }
+      await this.db.update(Collection).set(updates).where(eq(Collection.id, collectionId));
+      return { isSuccess: true };
+    } catch (error50) {
+      if (error50 instanceof AppError) {
+        console.error("Update collection error:", error50);
+        throw error50;
+      }
+      throw new DatabaseError("Failed to update collection", {
+        originalError: error50
+      });
+    }
+  }
   async getProfileCollections(profileId, userId) {
     try {
       const userRecord = await this.db.query.user.findFirst({
@@ -104759,6 +104796,13 @@ var getProfileCollectionsSchema = zod_default.object({
 var deleteCollectionSchema = zod_default.object({
   collectionId: zod_default.string()
 });
+var updateCollectionSchema = zod_default.object({
+  name: zod_default.string().min(2, "Name must be at least 2 characters").max(50, "Name must be less than 50 characters").optional(),
+  description: zod_default.string().min(2, "Description must be at least 2 characters").max(50, "Description must be less than 50 characters").optional()
+});
+var updateCollectionParamsSchema = zod_default.object({
+  collectionId: zod_default.string()
+});
 var getCollectionWithPlacesSchema = zod_default.object({
   profileId: zod_default.string(),
   id: zod_default.string()
@@ -104915,6 +104959,31 @@ collectionRouter.get(
     const result = await collectionService.getProfileCollections(
       userId,
       auth?.id
+    );
+    return c2.json(result, 200);
+  }
+);
+collectionRouter.patch(
+  "/update/:collectionId",
+  authMiddleware,
+  zValidator("json", updateCollectionSchema),
+  zValidator("param", updateCollectionParamsSchema),
+  async (c2) => {
+    const auth = c2.get("user");
+    const db = c2.get("db");
+    const env2 = c2.get("env");
+    const imageUploadService = new ImageUploadService(db, env2);
+    const collectionService = new CollectionService(db, imageUploadService);
+    if (!auth) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+    const { collectionId } = c2.req.valid("param");
+    const { name: name2, description } = c2.req.valid("json");
+    const result = await collectionService.updateCollection(
+      collectionId,
+      auth.id,
+      name2,
+      description
     );
     return c2.json(result, 200);
   }

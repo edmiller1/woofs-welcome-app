@@ -20,6 +20,16 @@
     timestamp: number;
   }
 
+  interface Props {
+    size?: "default" | "hero";
+    placeholder?: string;
+  }
+
+  let {
+    size = "default",
+    placeholder = "Search places or locations...",
+  }: Props = $props();
+
   let inputEl = $state<HTMLInputElement | null>(null);
   let wrapperEl = $state<HTMLDivElement | null>(null);
   let query = $state("");
@@ -198,39 +208,66 @@
   });
 </script>
 
-<div bind:this={wrapperEl} class="relative ml-auto w-full max-w-160">
+<div
+  bind:this={wrapperEl}
+  class="relative w-full {size === 'hero' ? 'max-w-140' : 'ml-auto max-w-160'}"
+>
   <div
-    class="flex w-full items-center gap-2.5 rounded-full border border-border bg-muted px-4 py-2.5"
+    class={size === "hero"
+      ? "flex w-full flex-col items-stretch gap-2 rounded-2xl bg-popover p-2 sm:flex-row sm:items-center sm:rounded-full"
+      : "flex w-full items-center gap-2.5 rounded-full border border-border bg-muted px-4 py-2.5"}
   >
-    <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
-    <input
-      bind:this={inputEl}
-      bind:value={query}
-      onfocus={() => (focused = true)}
-      onkeydown={handleKeydown}
-      class="min-w-0 flex-1 border-0 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"
-      placeholder="Search places or locations..."
-      type="text"
-      autocomplete="off"
-    />
-    {#if query}
+    <label
+      class={size === "hero"
+        ? "flex flex-1 items-center gap-2.5 px-3.5 py-1.5"
+        : "contents"}
+    >
+      <Search class="h-4 w-4 shrink-0 text-muted-foreground" />
+      <span class="sr-only">Search destinations</span>
+      <input
+        bind:this={inputEl}
+        bind:value={query}
+        onfocus={() => (focused = true)}
+        onkeydown={handleKeydown}
+        class={size === "hero"
+          ? "min-w-0 flex-1 border-0 bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
+          : "min-w-0 flex-1 border-0 bg-transparent text-[13.5px] outline-none placeholder:text-muted-foreground"}
+        {placeholder}
+        type="text"
+        autocomplete="off"
+      />
+      {#if query && size !== "hero"}
+        <button
+          type="button"
+          onclick={() => {
+            query = "";
+            inputEl?.focus();
+          }}
+          class="text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Clear search"
+        >
+          <X class="h-4 w-4" />
+        </button>
+      {/if}
+    </label>
+    {#if size === "hero"}
       <button
         type="button"
         onclick={() => {
-          query = "";
-          inputEl?.focus();
+          if (trimmed) {
+            focused = false;
+            goto(`/explore?q=${encodeURIComponent(trimmed)}`);
+          }
         }}
-        class="text-muted-foreground hover:text-on-surface transition-colors"
-        aria-label="Clear search"
+        class="cursor-pointer rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-primary-foreground hover:bg-walnut dark:hover:bg-primary/80"
+        >Explore</button
       >
-        <X class="h-4 w-4" />
-      </button>
     {/if}
   </div>
 
   {#if showDropdown}
     <div
-      class="absolute top-full mt-2 left-0 w-full min-w-72 bg-white rounded-2xl shadow-xl border border-border/40 z-50 overflow-hidden"
+      class="absolute top-full mt-2 left-0 w-full min-w-72 bg-card rounded-2xl shadow-xl border border-border/40 z-50 overflow-hidden"
     >
       {#if showRecent}
         <!-- Recent searches -->

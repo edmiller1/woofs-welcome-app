@@ -15,12 +15,16 @@
 <main class="flex flex-col lg:flex-row h-screen overflow-hidden w-full">
   <!-- Left side -->
   <div
-    class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-surface-bright relative overflow-hidden"
+    class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-background relative overflow-hidden"
   >
     <header
       class="absolute top-0 left-0 right-0 px-8 py-6 flex justify-between items-center bg-transparent"
     >
-      <a href="/" class="text-3xl text-primary font-semibold">Woofs Welcome</a>
+      <a
+        href="/"
+        class="text-3xl text-primary font-extrabold tracking-[-0.02em]"
+        >Woofs Welcome</a
+      >
     </header>
     <div class="w-full max-w-110 mt-40 sm:mt-12">
       <div class="mb-10 text-left">

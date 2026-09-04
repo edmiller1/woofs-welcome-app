@@ -387,7 +387,7 @@
       <!-- Left: scrollable list -->
       <div class="w-full lg:w-1/2 xl:w-[55%] flex flex-col overflow-hidden">
         <!-- Type filter chips -->
-        <div class="px-6 py-4 border-b border-border-subtle/20 overflow-x-auto">
+        <div class="px-6 py-4 border-b border-border/20 overflow-x-auto">
           <div class="flex gap-2 min-w-max">
             {#each ALL_TYPES as type}
               <button
@@ -395,7 +395,7 @@
                 class="cursor-pointer px-3 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap
                   {activeTypes.includes(type)
                   ? 'bg-primary text-white border-primary'
-                  : 'bg-white text-text border-border-subtle/40 hover:border-primary/60'}"
+                  : 'bg-card text-foreground border-border/40 hover:border-primary/60'}"
               >
                 {type}
               </button>
@@ -460,7 +460,7 @@
                   <button
                     onclick={() => setPage(currentPage - 1)}
                     disabled={currentPage <= 1}
-                    class="px-4 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 hover:bg-surface-subtle transition-colors"
+                    class="px-4 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 hover:bg-muted transition-colors"
                   >
                     Previous
                   </button>
@@ -470,7 +470,7 @@
                   <button
                     onclick={() => setPage(currentPage + 1)}
                     disabled={currentPage >= totalPages}
-                    class="px-4 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 hover:bg-surface-subtle transition-colors"
+                    class="px-4 py-2 rounded-lg border text-sm font-medium disabled:opacity-40 hover:bg-muted transition-colors"
                   >
                     Next
                   </button>
@@ -494,7 +494,7 @@
             {#if showSearchAreaButton}
               <button
                 onclick={searchThisArea}
-                class="cursor-pointer bg-white text-text text-sm font-semibold px-4 py-2 rounded-full shadow-lg border border-border-subtle/30 hover:bg-surface-subtle transition-colors"
+                class="cursor-pointer bg-card text-foreground text-sm font-semibold px-4 py-2 rounded-full shadow-lg border border-border/30 hover:bg-muted transition-colors"
               >
                 Search this area
               </button>
@@ -502,7 +502,7 @@
             {#if activeBbox()}
               <button
                 onclick={resetMapSearch}
-                class="cursor-pointer bg-white text-secondary text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-border-subtle/30 hover:bg-surface-subtle transition-colors"
+                class="cursor-pointer bg-card text-secondary text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-border/30 hover:bg-muted transition-colors"
               >
                 Reset
               </button>
@@ -530,7 +530,7 @@
         {#if showSearchAreaButton}
           <button
             onclick={searchThisArea}
-            class="cursor-pointer bg-white text-text text-sm font-semibold px-4 py-2 rounded-full shadow-lg border border-border-subtle/30"
+            class="cursor-pointer bg-card text-foreground text-sm font-semibold px-4 py-2 rounded-full shadow-lg border border-border/30"
           >
             Search this area
           </button>
@@ -538,7 +538,7 @@
         {#if activeBbox()}
           <button
             onclick={resetMapSearch}
-            class="cursor-pointer bg-white text-secondary text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-border-subtle/30"
+            class="cursor-pointer bg-card text-secondary text-sm font-medium px-4 py-2 rounded-full shadow-lg border border-border/30"
           >
             Reset
           </button>
@@ -560,7 +560,7 @@
 
     <!-- Bottom drawer -->
     <div
-      class="absolute left-0 right-0 bottom-0 z-20 flex flex-col bg-white rounded-t-2xl shadow-[0_-4px_32px_rgba(0,0,0,0.12)]"
+      class="absolute left-0 right-0 bottom-0 z-20 flex flex-col bg-card rounded-t-2xl shadow-[0_-4px_32px_rgba(0,0,0,0.12)]"
       style="height: {drawerHeight}; transition: {isDragging
         ? 'none'
         : 'height 0.3s cubic-bezier(0.32,0.72,0,1)'};"
@@ -578,9 +578,9 @@
         <div class="w-10 h-1 rounded-full bg-border-subtle/50 mb-3"></div>
         <div class="flex items-center gap-3">
           {#if explore.isLoading}
-            <p class="text-sm font-semibold text-text">Loading...</p>
+            <p class="text-sm font-semibold text-foreground">Loading...</p>
           {:else if explore.isSuccess}
-            <p class="text-sm font-semibold text-text">
+            <p class="text-sm font-semibold text-foreground">
               {explore.data.total} places found
             </p>
           {/if}
@@ -597,7 +597,7 @@
             class="cursor-pointer shrink-0 px-3 py-1 rounded-full text-xs font-medium border transition-colors whitespace-nowrap
               {activeTypes.includes(type)
               ? 'bg-primary text-white border-primary'
-              : 'bg-white text-text border-border-subtle/40'}"
+              : 'bg-card text-foreground border-border/40'}"
           >
             {type}
           </button>

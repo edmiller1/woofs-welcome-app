@@ -9,6 +9,8 @@
   import type { FeaturedLocation, PopularPlace } from "@woofs/types";
   import OptimizedImage from "$lib/components/optimized-image.svelte";
   import PlaceCard from "$lib/components/place-card.svelte";
+  import NavbarSearch from "$lib/components/navbar-search.svelte";
+  import UserNav from "$lib/components/user-nav.svelte";
 
   let { data } = $props();
   const user = $derived(data.user);
@@ -75,11 +77,15 @@
           >
         </div>
         <div class="flex-1"></div>
-        <a
-          href="/sign-in"
-          class="rounded-full border-[1.5px] border-primary px-4 py-2 text-[13px] font-bold text-primary no-underline hover:bg-primary/20 dark:border-walnut dark:text-walnut dark:hover:bg-walnut/20"
-          >Sign in</a
-        >
+        {#if user}
+          <UserNav {user} />
+        {:else}
+          <a
+            href="/sign-in"
+            class="rounded-full border-[1.5px] border-primary px-4 py-2 text-[13px] font-bold text-primary no-underline hover:bg-primary/20 dark:border-walnut dark:text-walnut dark:hover:bg-walnut/20"
+            >Sign in</a
+          >
+        {/if}
       </nav>
 
       <div class="absolute bottom-10 left-6 max-w-155 sm:left-10 sm:bottom-11">
@@ -96,32 +102,9 @@
           Discover thousands of verified dog-friendly cafés, parks, stays and
           more across New Zealand.
         </p>
-        <form
-          class="mt-6 flex max-w-140 flex-col items-stretch gap-2 rounded-2xl bg-popover p-2 sm:flex-row sm:items-center sm:rounded-full"
-        >
-          <label class="flex flex-1 items-center gap-2.5 px-3.5 py-1.5">
-            <svg
-              width="17"
-              height="17"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--muted-foreground)"
-              stroke-width="2.2"
-              ><circle cx="11" cy="11" r="7" /><path d="M20 20l-4.3-4.3" /></svg
-            >
-            <span class="sr-only">Search destinations</span>
-            <input
-              type="search"
-              placeholder="Where are you headed?"
-              class="min-w-0 flex-1 border-0 bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
-            />
-          </label>
-          <button
-            type="submit"
-            class="cursor-pointer rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-primary-foreground hover:bg-walnut dark:hover:bg-primary/80"
-            >Explore</button
-          >
-        </form>
+        <div class="mt-6">
+          <NavbarSearch size="hero" placeholder="Where are you headed?" />
+        </div>
       </div>
     </header>
 
@@ -301,7 +284,7 @@
             {#each row1 as loc, i}
               <a
                 href={`/location/${loc.path}`}
-                class="group relative rounded-3xl h-full cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all border border-outline/10"
+                class="group relative rounded-3xl h-full cursor-pointer overflow-hidden shadow-lg hover:shadow-xl transition-all border border-border/10"
               >
                 {#if loc.image}
                   <OptimizedImage
@@ -349,7 +332,7 @@
             {#each row2 as loc, i}
               <a
                 href={`/location/${loc.path}`}
-                class="group relative rounded-3xl h-full overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all border border-outline/10"
+                class="group relative rounded-3xl h-full overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all border border-border/10"
               >
                 {#if loc.image}
                   <OptimizedImage

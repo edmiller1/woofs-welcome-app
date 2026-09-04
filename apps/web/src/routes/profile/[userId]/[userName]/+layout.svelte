@@ -104,7 +104,7 @@
                 >{profile.data.reviewCount}</span
               >
               <span
-                class="text-on-surface-variant text-sm uppercase tracking-widest"
+                class="text-muted-foreground text-sm uppercase tracking-widest"
                 >Review{profile.data.reviewCount === 1 ? "" : "s"}</span
               >
             </div>
@@ -113,7 +113,7 @@
                 >{profile.data.averageRating}</span
               >
               <span
-                class="text-on-surface-variant text-sm uppercase tracking-widest"
+                class="text-muted-foreground text-sm uppercase tracking-widest"
                 >AVG Rating</span
               >
             </div>
@@ -122,7 +122,7 @@
                 >{profile.data.collectionCount}</span
               >
               <span
-                class="text-on-surface-variant text-sm uppercase tracking-widest"
+                class="text-muted-foreground text-sm uppercase tracking-widest"
                 >Collection{profile.data.collectionCount === 1 ? "" : "s"}</span
               >
             </div>
@@ -131,7 +131,7 @@
                 >{profile.data.photoCount}</span
               >
               <span
-                class="text-on-surface-variant text-sm uppercase tracking-widest"
+                class="text-muted-foreground text-sm uppercase tracking-widest"
                 >Photo{profile.data.photoCount === 1 ? "" : "s"}</span
               >
             </div>
@@ -142,7 +142,7 @@
 
     <!-- Navigation Tabs -->
     <div
-      class="flex overflow-x-auto gap-10 border-b border-outline-variant/30 mb-10 pb-2"
+      class="flex overflow-x-auto gap-10 border-b border-border-variant/30 mb-10 pb-2"
     >
       <a
         href={`/profile/${userId}/${profileSlug}/reviews`}

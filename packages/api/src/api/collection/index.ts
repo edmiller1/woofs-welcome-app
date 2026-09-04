@@ -7,6 +7,7 @@ import { getProfileCollections } from "./getProfileCollections";
 import { getCollectionWithPlaces } from "./getCollectionWithPlaces";
 import { getCollectionsOnly } from "./getCollectionsOnly";
 import { deleteCollection } from "./deleteCollection";
+import { updateCollection } from "./updateCollection";
 
 export const collection = {
   createCollection,
@@ -18,4 +19,5 @@ export const collection = {
   getCollectionWithPlaces,
   getCollectionsOnly,
   deleteCollection,
+  updateCollection,
 };

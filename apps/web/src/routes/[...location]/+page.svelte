@@ -216,7 +216,7 @@
       </div>
     </div>
     <!-- Community moments skeleton -->
-    <section class="py-24 bg-surface-container-low">
+    <section class="py-24 bg-muted">
       <div class="max-w-7xl mx-auto px-8">
         <Skeleton class="h-12 w-64 mb-4" />
         <Skeleton class="h-5 w-96 mb-16" />
@@ -243,7 +243,7 @@
       </div>
     </section>
     <!-- Map skeleton -->
-    <section class="py-32 bg-surface-container">
+    <section class="py-32 bg-muted">
       <div class="max-w-7xl mx-auto px-8">
         <Skeleton class="h-12 w-56 mb-16" />
         <Skeleton class="rounded-3xl h-150 w-full" />
@@ -419,7 +419,7 @@
             {#if canScrollLeft && carouselHovered}
               <button
                 onclick={scrollLeft}
-                class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
+                class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-border/10 flex items-center justify-center text-foreground hover:bg-muted transition-all cursor-pointer"
                 aria-label="Scroll left"
               >
                 <ChevronLeft class="size-5" />
@@ -429,7 +429,7 @@
             {#if canScrollRight && carouselHovered}
               <button
                 onclick={scrollRight}
-                class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-outline/10 flex items-center justify-center text-on-surface hover:bg-surface-container transition-all cursor-pointer"
+                class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-10 w-12 h-12 rounded-full bg-background shadow-xl border border-border/10 flex items-center justify-center text-foreground hover:bg-muted transition-all cursor-pointer"
                 aria-label="Scroll right"
               >
                 <ChevronRight class="size-5" />

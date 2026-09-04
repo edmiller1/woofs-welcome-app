@@ -244,9 +244,9 @@
 <Dialog.Root bind:open>
   <Dialog.Content
     showCloseButton={false}
-    class="max-h-[85vh] bg-white overflow-y-auto sm:max-w-3xl p-0 m-0"
+    class="max-h-[85vh] bg-card overflow-y-auto sm:max-w-3xl p-0 m-0"
   >
-    <Dialog.Header class="sticky top-0 z-50 bg-white p-4">
+    <Dialog.Header class="sticky top-0 z-50 bg-card p-4">
       <Dialog.Title>Account Settings</Dialog.Title>
       <Dialog.Description>
         {currentTab === "Account"
@@ -364,7 +364,9 @@
             <h3 class="text-lg font-medium">Delete Account</h3>
             <Alert.Root variant="destructive" class="my-4">
               <CircleAlert />
-              <Alert.Title>Permanently delete your account.</Alert.Title>
+              <Alert.Title class="text-destructive"
+                >Permanently delete your account.</Alert.Title
+              >
               <Alert.Description
                 >This action is not reversible. Proceed with caution.</Alert.Description
               >
@@ -501,8 +503,8 @@
     <AlertDialog.Header>
       <AlertDialog.Title>Delete your account?</AlertDialog.Title>
       <AlertDialog.Description>
-        This will permanently remove your personal information and sign you
-        out everywhere. This action cannot be undone.
+        This will permanently remove your personal information and sign you out
+        everywhere. This action cannot be undone.
       </AlertDialog.Description>
     </AlertDialog.Header>
     <AlertDialog.Footer>

@@ -61,14 +61,15 @@
     </button>
   </div>
 
-  <div class="rounded-b-xl bg-white px-2 pb-3 pt-2 text-black">
+  <div class="rounded-b-xl bg-card px-2 pb-3 pt-2 text-foreground">
     <div class="flex items-center justify-between pb-2">
       <span class="mt-1 text-[1.01rem] font-bold text-primary">
         {place.name}
       </span>
       <div class="mt-1 flex items-center space-x-1 text-[1.01rem]">
         <Star class="size-4 fill-yellow-500 text-yellow-500" />
-        <span class="text-black text-sm">{Number(place.rating).toFixed(1)}</span
+        <span class="text-foreground text-sm"
+          >{Number(place.rating).toFixed(1)}</span
         >
       </div>
     </div>

@@ -443,6 +443,62 @@ export class CollectionService {
     }
   }
 
+  async updateCollection(
+    collectionId: string,
+    userId: string,
+    name?: string,
+    description?: string,
+  ) {
+    try {
+      const [collection] = await this.db
+        .select({ id: Collection.id })
+        .from(Collection)
+        .where(
+          and(eq(Collection.id, collectionId), eq(Collection.userId, userId)),
+        )
+        .limit(1);
+
+      if (!collection) {
+        throw new NotFoundError("Collection not found");
+      }
+
+      const updates: { name?: string; description?: string } = {};
+
+      if (name !== undefined) {
+        const sanitizedName = sanitizePlainText(name);
+        if (!sanitizedName || sanitizedName.length < 2) {
+          throw new BadRequestError("Name must be at least 2 characters");
+        }
+        updates.name = sanitizedName;
+      }
+
+      if (description !== undefined) {
+        const sanitizedDescription = sanitizePlainText(description);
+        if (sanitizedDescription.length < 2) {
+          throw new BadRequestError(
+            "Description must be at least 2 characters",
+          );
+        }
+        updates.description = sanitizedDescription;
+      }
+
+      await this.db
+        .update(Collection)
+        .set(updates)
+        .where(eq(Collection.id, collectionId));
+
+      return { isSuccess: true };
+    } catch (error) {
+      if (error instanceof AppError) {
+        console.error("Update collection error:", error);
+        throw error;
+      }
+      throw new DatabaseError("Failed to update collection", {
+        originalError: error,
+      });
+    }
+  }
+
   async getProfileCollections(profileId: string, userId?: string) {
     try {
       const userRecord = await this.db.query.user.findFirst({

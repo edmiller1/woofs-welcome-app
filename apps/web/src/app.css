@@ -32,7 +32,7 @@
   --accent: oklch(73.14% 0.085 72.99);              /* light tan badge */
   --accent-foreground: oklch(31.37% 0.0374 62.43);
 
-  --destructive: oklch(50.89% 0.1344 35.51);
+  --destructive: oklch(50.89% 0.16 27);
   --destructive-foreground: oklch(98.35% 0.009 78.28);
 
   /* lines & controls */
@@ -92,7 +92,7 @@
   --accent: oklch(60.16% 0.0807 63.34);
   --accent-foreground: oklch(98.35% 0.009 78.28);
 
-  --destructive: oklch(59.23% 0.1444 36.52);
+  --destructive: oklch(59.23% 0.17 27);
   --destructive-foreground: oklch(98.35% 0.009 78.28);
 
   --border: oklch(34.49% 0.0357 61.02);

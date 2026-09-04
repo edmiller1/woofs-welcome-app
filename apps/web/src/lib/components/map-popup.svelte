@@ -232,7 +232,7 @@
           {/snippet}
         </PopoverPrimitive.Trigger>
         <PopoverPrimitive.Content
-          class="z-200 w-56 rounded-xl border bg-white p-2 shadow-lg"
+          class="z-200 w-56 rounded-xl border bg-card p-2 shadow-lg"
           side="bottom"
           align="end"
           sideOffset={4}
@@ -336,14 +336,16 @@
     {/if}
   </div>
 
-  <div class="rounded-b-xl bg-white px-2 pb-3 pt-2 text-black">
+  <div class="rounded-b-xl bg-card px-2 pb-3 pt-2 text-foreground">
     <div class="flex items-center justify-between">
       <span class="truncate mt-1 text-sm font-bold">
         {activePlace.name}
       </span>
       <div class="mt-1 flex items-center space-x-1 text-sm">
         <Star class="size-3 fill-yellow-500 text-yellow-500" />
-        <span class="text-black">{Number(activePlace.rating).toFixed(1)}</span>
+        <span class="text-foreground"
+          >{Number(activePlace.rating).toFixed(1)}</span
+        >
       </div>
     </div>
     <span class="text-muted-foreground text-xs mb-1"

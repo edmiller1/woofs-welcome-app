@@ -50,6 +50,7 @@
       queryClient.invalidateQueries({
         queryKey: ["place-collections", placeId],
       });
+      queryClient.invalidateQueries({ queryKey: ["collections-limit"] });
     },
   }));
 
@@ -156,7 +157,7 @@
       {/if}
     {/snippet}
   </Dialog.Trigger>
-  <Dialog.Content class="max-w-md bg-white">
+  <Dialog.Content class="max-w-md bg-card">
     <Dialog.Header>
       <Dialog.Title>Save to collection</Dialog.Title>
       <Dialog.Description>

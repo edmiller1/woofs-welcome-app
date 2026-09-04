@@ -28,7 +28,7 @@
       <Bookmark />
     </button></Sheet.Trigger
   >
-  <Sheet.Content side="right" class="bg-white">
+  <Sheet.Content side="right" class="bg-card">
     <Sheet.Header class="mb-0">
       <Sheet.Title class="text-2xl font-headline text-primary"
         >My Collections</Sheet.Title
@@ -65,10 +65,10 @@
             </div>
             <div class="flex justify-between items-start">
               <div>
-                <h3 class="text-lg font-bold text-on-surface">
+                <h3 class="text-lg font-bold text-foreground">
                   {collection.name}
                 </h3>
-                <p class="text-sm text-secondary font-medium">
+                <p class="text-sm text-muted-foreground font-medium">
                   {collection.itemCount} Places
                 </p>
               </div>
