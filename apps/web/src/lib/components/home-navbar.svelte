@@ -79,7 +79,7 @@
       <a
         class="text-xl font-extrabold tracking-[-0.02em] text-primary no-underline"
         href="/"
-        >WoofsWelcome
+        >Woofs Welcome
       </a>
       <a href="/" class="lg:hidden text-2xl font-bold text-primary-tint">WW</a>
       <nav class="flex items-center">

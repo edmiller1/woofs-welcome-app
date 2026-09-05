@@ -32,7 +32,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// .wrangler/tmp/bundle-8TOjqb/checked-fetch.js
+// .wrangler/tmp/bundle-MASD32/checked-fetch.js
 function checkURL(request, init2) {
   const url2 = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init2) : request).url
@@ -50,7 +50,7 @@ function checkURL(request, init2) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-8TOjqb/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-MASD32/checked-fetch.js"() {
     "use strict";
     urls = /* @__PURE__ */ new Set();
     __name(checkURL, "checkURL");
@@ -38781,7 +38781,7 @@ var init_get_tables = __esm({
           }
         }
       } };
-      const { user: user3, session: session2, account: account2, verification: verification2, ...pluginTables } = pluginSchema;
+      const { user: user4, session: session2, account: account2, verification: verification2, ...pluginTables } = pluginSchema;
       const sessionTable = { session: {
         modelName: options.session?.modelName || "session",
         fields: {
@@ -38876,7 +38876,7 @@ var init_get_tables = __esm({
               required: true,
               fieldName: options.user?.fields?.updatedAt || "updatedAt"
             },
-            ...user3?.fields,
+            ...user4?.fields,
             ...options.user?.additionalFields
           },
           order: 1
@@ -60175,11 +60175,11 @@ var init_kysely_adapter2 = __esm({
   }
 });
 
-// .wrangler/tmp/bundle-8TOjqb/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-MASD32/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-MASD32/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -99585,7 +99585,7 @@ var NotificationService = class {
   async getPreferences(userId) {
     try {
       const userRecord = await this.db.query.user.findFirst({
-        where: /* @__PURE__ */ __name((user3, { eq: eq2 }) => eq2(user3.id, userId), "where")
+        where: /* @__PURE__ */ __name((user4, { eq: eq2 }) => eq2(user4.id, userId), "where")
       });
       if (!userRecord) {
         throw new NotFoundError("User not found");
@@ -107796,58 +107796,62 @@ adminRouter.get("/locations", async (c2) => {
   }).from(Location).orderBy(asc(Location.name));
   return c2.json(locations, 200);
 });
-adminRouter.post(
-  "/place",
-  zValidator("json", createPlaceSchema),
-  async (c2) => {
-    const db = c2.get("db");
-    const env2 = c2.get("env");
-    const body = c2.req.valid("json");
-    const imageUploadService = new ImageUploadService(db, env2);
-    const collectionService = new CollectionService(db, imageUploadService);
-    const placeService = new PlaceService(db, imageUploadService, collectionService, env2);
-    const [place] = await db.insert(Place).values({
-      name: body.name,
-      slug: body.slug,
-      types: body.types,
-      description: body.description ?? null,
-      locationId: body.locationId,
-      countryCode: body.countryCode,
-      address: body.address ?? null,
-      latitude: body.latitude != null ? String(body.latitude) : null,
-      longitude: body.longitude != null ? String(body.longitude) : null,
-      phone: body.phone ?? null,
-      email: body.email ?? null,
-      website: body.website ?? null,
-      hours: body.hours ?? null,
-      dogRules: body.dogRules ?? [],
-      dogAmenities: body.dogAmenities ?? [],
-      offLeadAllowed: body.offLeadAllowed ?? false,
-      waterAvailable: body.waterAvailable ?? false,
-      distanceKm: body.distanceKm ?? 0,
-      durationMins: body.durationMins ?? 0,
-      difficulty: body.difficulty ?? null,
-      isVerified: body.isVerified ?? false,
-      isFeatured: body.isFeatured ?? false
-    }).returning();
-    const [location] = await db.select({ countryCode: Location.countryCode, name: Location.name }).from(Location).where(eq(Location.id, place.locationId)).limit(1);
-    if (location) {
-      const fetchImages = placeService.fetchAndStoreGoogleImages(
-        place.id,
-        place.name,
-        location.countryCode,
-        location.name
-      );
-      try {
-        c2.executionCtx.waitUntil(fetchImages);
-      } catch {
-        fetchImages.catch(() => {
-        });
-      }
-    }
-    return c2.json({ id: place.id, name: place.name }, 201);
+adminRouter.post("/place", zValidator("json", createPlaceSchema), async (c2) => {
+  const db = c2.get("db");
+  const env2 = c2.get("env");
+  const body = c2.req.valid("json");
+  const imageUploadService = new ImageUploadService(db, env2);
+  const collectionService = new CollectionService(db, imageUploadService);
+  const placeService = new PlaceService(
+    db,
+    imageUploadService,
+    collectionService,
+    env2
+  );
+  const [place] = await db.insert(Place).values({
+    name: body.name,
+    slug: body.slug,
+    types: body.types,
+    description: body.description ?? null,
+    locationId: body.locationId,
+    countryCode: body.countryCode,
+    address: body.address ?? null,
+    latitude: body.latitude != null ? String(body.latitude) : null,
+    longitude: body.longitude != null ? String(body.longitude) : null,
+    phone: body.phone ?? null,
+    email: body.email ?? null,
+    website: body.website ?? null,
+    hours: body.hours ?? null,
+    dogRules: body.dogRules ?? [],
+    dogAmenities: body.dogAmenities ?? [],
+    offLeadAllowed: body.offLeadAllowed ?? false,
+    waterAvailable: body.waterAvailable ?? false,
+    distanceKm: body.distanceKm ?? 0,
+    durationMins: body.durationMins ?? 0,
+    difficulty: body.difficulty ?? null,
+    isVerified: body.isVerified ?? false,
+    isFeatured: body.isFeatured ?? false
+  }).returning();
+  if (!place) {
+    throw new NotFoundError("Place not found");
   }
-);
+  const [location] = await db.select({ countryCode: Location.countryCode, name: Location.name }).from(Location).where(eq(Location.id, place.locationId)).limit(1);
+  if (location) {
+    const fetchImages = placeService.fetchAndStoreGoogleImages(
+      place.id,
+      place.name,
+      location.countryCode,
+      location.name
+    );
+    try {
+      c2.executionCtx.waitUntil(fetchImages);
+    } catch {
+      fetchImages.catch(() => {
+      });
+    }
+  }
+  return c2.json({ id: place.id, name: place.name }, 201);
+});
 
 // src/lib/auth.ts
 init_checked_fetch();
@@ -119835,8 +119839,8 @@ function getFields(options, table, mode) {
   return schema10;
 }
 __name(getFields, "getFields");
-function parseUserOutput(options, user3) {
-  return parseOutputData(user3, { fields: getFields(options, "user", "output") });
+function parseUserOutput(options, user4) {
+  return parseOutputData(user4, { fields: getFields(options, "user", "output") });
 }
 __name(parseUserOutput, "parseUserOutput");
 function parseSessionOutput(options, session2) {
@@ -119891,16 +119895,16 @@ function parseInputData(data, schema10) {
   return parsedData;
 }
 __name(parseInputData, "parseInputData");
-function parseUserInput(options, user3 = {}, action) {
-  return parseInputData(user3, {
+function parseUserInput(options, user4 = {}, action) {
+  return parseInputData(user4, {
     fields: getFields(options, "user", "input"),
     action
   });
 }
 __name(parseUserInput, "parseUserInput");
-function parseAdditionalUserInput(options, user3) {
+function parseAdditionalUserInput(options, user4) {
   const schema10 = getFields(options, "user", "input");
-  return parseInputData(user3 || {}, { fields: schema10 });
+  return parseInputData(user4 || {}, { fields: schema10 });
 }
 __name(parseAdditionalUserInput, "parseAdditionalUserInput");
 function parseAccountInput(options, account2) {
@@ -121434,9 +121438,9 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
   const secondaryStorage = options.secondaryStorage;
   const sessionExpiration = options.session?.expiresIn || 3600 * 24 * 7;
   const { createWithHooks, updateWithHooks, updateManyWithHooks, deleteWithHooks, deleteManyWithHooks } = getWithHooks(adapter, ctx);
-  async function refreshUserSessions(user3) {
+  async function refreshUserSessions(user4) {
     if (!secondaryStorage) return;
-    const listRaw = await secondaryStorage.get(`active-sessions-${user3.id}`);
+    const listRaw = await secondaryStorage.get(`active-sessions-${user4.id}`);
     if (!listRaw) return;
     const now2 = Date.now();
     const validSessions = (safeJSONParse(listRaw) || []).filter((s2) => s2.expiresAt > now2);
@@ -121448,18 +121452,18 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
       const sessionTTL = Math.max(Math.floor(new Date(parsed.session.expiresAt).getTime() - now2) / 1e3, 0);
       await secondaryStorage.set(token2, JSON.stringify({
         session: parsed.session,
-        user: user3
+        user: user4
       }), Math.floor(sessionTTL));
     }));
   }
   __name(refreshUserSessions, "refreshUserSessions");
   return {
-    createOAuthUser: /* @__PURE__ */ __name(async (user3, account2) => {
+    createOAuthUser: /* @__PURE__ */ __name(async (user4, account2) => {
       return runWithTransaction(adapter, async () => {
         const createdUser = await createWithHooks({
           createdAt: /* @__PURE__ */ new Date(),
           updatedAt: /* @__PURE__ */ new Date(),
-          ...user3
+          ...user4
         }, "user", void 0);
         return {
           user: createdUser,
@@ -121472,12 +121476,12 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
         };
       });
     }, "createOAuthUser"),
-    createUser: /* @__PURE__ */ __name(async (user3) => {
+    createUser: /* @__PURE__ */ __name(async (user4) => {
       return await createWithHooks({
         createdAt: /* @__PURE__ */ new Date(),
         updatedAt: /* @__PURE__ */ new Date(),
-        ...user3,
-        email: user3.email?.toLowerCase()
+        ...user4,
+        email: user4.email?.toLowerCase()
       }, "user", void 0);
     }, "createUser"),
     createAccount: /* @__PURE__ */ __name(async (account2) => {
@@ -121581,7 +121585,7 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
           const furthestSessionExp = sorted.at(-1)?.expiresAt ?? data.expiresAt.getTime();
           const furthestSessionTTL = Math.max(Math.floor((furthestSessionExp - now2) / 1e3), 0);
           if (furthestSessionTTL > 0) await secondaryStorage.set(`active-sessions-${userId}`, JSON.stringify(sorted), furthestSessionTTL);
-          const user3 = await adapter.findOne({
+          const user4 = await adapter.findOne({
             model: "user",
             where: [{
               field: "id",
@@ -121591,7 +121595,7 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
           const sessionTTL = Math.max(Math.floor((data.expiresAt.getTime() - now2) / 1e3), 0);
           if (sessionTTL > 0) await secondaryStorage.set(data.token, JSON.stringify({
             session: sessionData,
-            user: user3
+            user: user4
           }), sessionTTL);
           return sessionData;
         }, "fn"),
@@ -121629,11 +121633,11 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
         join: { user: true }
       });
       if (!result) return null;
-      const { user: user3, ...session2 } = result;
-      if (!user3) return null;
+      const { user: user4, ...session2 } = result;
+      if (!user4) return null;
       return {
         session: parseSessionOutput(ctx.options, session2),
-        user: parseUserOutput(ctx.options, user3)
+        user: parseUserOutput(ctx.options, user4)
       };
     }, "findSession"),
     findSessions: /* @__PURE__ */ __name(async (sessionTokens) => {
@@ -121672,10 +121676,10 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
       if (!sessions.length) return [];
       if (sessions.some((session2) => !session2.user)) return [];
       return sessions.map((_session) => {
-        const { user: user3, ...session2 } = _session;
+        const { user: user4, ...session2 } = _session;
         return {
           session: session2,
-          user: user3
+          user: user4
         };
       });
     }, "findSessions"),
@@ -121793,33 +121797,33 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
         accounts: [account2]
       };
       else {
-        const user3 = await (await getCurrentAdapter(adapter)).findOne({
+        const user4 = await (await getCurrentAdapter(adapter)).findOne({
           model: "user",
           where: [{
             value: email4.toLowerCase(),
             field: "email"
           }]
         });
-        if (user3) return {
-          user: user3,
+        if (user4) return {
+          user: user4,
           accounts: [account2]
         };
         return null;
       }
       else {
-        const user3 = await (await getCurrentAdapter(adapter)).findOne({
+        const user4 = await (await getCurrentAdapter(adapter)).findOne({
           model: "user",
           where: [{
             value: email4.toLowerCase(),
             field: "email"
           }]
         });
-        if (user3) return {
-          user: user3,
+        if (user4) return {
+          user: user4,
           accounts: await (await getCurrentAdapter(adapter)).findMany({
             model: "account",
             where: [{
-              value: user3.id,
+              value: user4.id,
               field: "userId"
             }]
           }) || []
@@ -121837,9 +121841,9 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
         join: { ...options$1?.includeAccounts ? { account: true } : {} }
       });
       if (!result) return null;
-      const { account: accounts, ...user3 } = result;
+      const { account: accounts, ...user4 } = result;
       return {
-        user: user3,
+        user: user4,
         accounts: accounts ?? []
       };
     }, "findUserByEmail"),
@@ -121861,20 +121865,20 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
       }, "account", void 0);
     }, "linkAccount"),
     updateUser: /* @__PURE__ */ __name(async (userId, data) => {
-      const user3 = await updateWithHooks(data, [{
+      const user4 = await updateWithHooks(data, [{
         field: "id",
         value: userId
       }], "user", void 0);
-      await refreshUserSessions(user3);
-      return user3;
+      await refreshUserSessions(user4);
+      return user4;
     }, "updateUser"),
     updateUserByEmail: /* @__PURE__ */ __name(async (email4, data) => {
-      const user3 = await updateWithHooks(data, [{
+      const user4 = await updateWithHooks(data, [{
         field: "email",
         value: email4.toLowerCase()
       }], "user", void 0);
-      await refreshUserSessions(user3);
-      return user3;
+      await refreshUserSessions(user4);
+      return user4;
     }, "updateUserByEmail"),
     updatePassword: /* @__PURE__ */ __name(async (userId, password) => {
       await updateManyWithHooks({ password }, [{
@@ -124067,7 +124071,7 @@ var facebook = /* @__PURE__ */ __name((options) => {
       if (options.getUserInfo) return options.getUserInfo(token2);
       if (token2.idToken && token2.idToken.split(".").length === 3) {
         const profile$1 = decodeJwt(token2.idToken);
-        const user3 = {
+        const user4 = {
           id: profile$1.sub,
           name: profile$1.name,
           email: profile$1.email,
@@ -124079,12 +124083,12 @@ var facebook = /* @__PURE__ */ __name((options) => {
           } }
         };
         const userMap$1 = await options.mapProfileToUser?.({
-          ...user3,
+          ...user4,
           email_verified: false
         });
         return {
           user: {
-            ...user3,
+            ...user4,
             emailVerified: false,
             ...userMap$1
           },
@@ -124425,18 +124429,18 @@ var google = /* @__PURE__ */ __name((options) => {
     async getUserInfo(token2) {
       if (options.getUserInfo) return options.getUserInfo(token2);
       if (!token2.idToken) return null;
-      const user3 = decodeJwt(token2.idToken);
-      const userMap = await options.mapProfileToUser?.(user3);
+      const user4 = decodeJwt(token2.idToken);
+      const userMap = await options.mapProfileToUser?.(user4);
       return {
         user: {
-          id: user3.sub,
-          name: user3.name,
-          email: user3.email,
-          image: user3.picture,
-          emailVerified: user3.email_verified,
+          id: user4.sub,
+          name: user4.name,
+          email: user4.email,
+          image: user4.picture,
+          emailVerified: user4.email_verified,
           ...userMap
         },
-        data: user3
+        data: user4
       };
     },
     options
@@ -124947,7 +124951,7 @@ var microsoft = /* @__PURE__ */ __name((options) => {
     async getUserInfo(token2) {
       if (options.getUserInfo) return options.getUserInfo(token2);
       if (!token2.idToken) return null;
-      const user3 = decodeJwt(token2.idToken);
+      const user4 = decodeJwt(token2.idToken);
       const profilePhotoSize = options.profilePhotoSize || 48;
       await betterFetch(`https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`, {
         headers: { Authorization: `Bearer ${token2.accessToken}` },
@@ -124955,24 +124959,24 @@ var microsoft = /* @__PURE__ */ __name((options) => {
           if (options.disableProfilePhoto || !context.response.ok) return;
           try {
             const pictureBuffer = await context.response.clone().arrayBuffer();
-            user3.picture = `data:image/jpeg;base64, ${base643.encode(pictureBuffer)}`;
+            user4.picture = `data:image/jpeg;base64, ${base643.encode(pictureBuffer)}`;
           } catch (e3) {
             logger2.error(e3 && typeof e3 === "object" && "name" in e3 ? e3.name : "", e3);
           }
         }
       });
-      const userMap = await options.mapProfileToUser?.(user3);
-      const emailVerified = user3.email_verified !== void 0 ? user3.email_verified : user3.email && (user3.verified_primary_email?.includes(user3.email) || user3.verified_secondary_email?.includes(user3.email)) ? true : false;
+      const userMap = await options.mapProfileToUser?.(user4);
+      const emailVerified = user4.email_verified !== void 0 ? user4.email_verified : user4.email && (user4.verified_primary_email?.includes(user4.email) || user4.verified_secondary_email?.includes(user4.email)) ? true : false;
       return {
         user: {
-          id: user3.sub,
-          name: user3.name,
-          email: user3.email,
-          image: user3.picture,
+          id: user4.sub,
+          name: user4.name,
+          email: user4.email,
+          image: user4.picture,
           emailVerified,
           ...userMap
         },
-        data: user3
+        data: user4
       };
     },
     refreshAccessToken: options.refreshAccessToken ? options.refreshAccessToken : async (refreshToken2) => {
@@ -125189,18 +125193,18 @@ var paybin = /* @__PURE__ */ __name((options) => {
     async getUserInfo(token2) {
       if (options.getUserInfo) return options.getUserInfo(token2);
       if (!token2.idToken) return null;
-      const user3 = decodeJwt(token2.idToken);
-      const userMap = await options.mapProfileToUser?.(user3);
+      const user4 = decodeJwt(token2.idToken);
+      const userMap = await options.mapProfileToUser?.(user4);
       return {
         user: {
-          id: user3.sub,
-          name: user3.name || user3.preferred_username || (user3.email ? user3.email.split("@")[0] : "User") || "User",
-          email: user3.email,
-          image: user3.picture,
-          emailVerified: user3.email_verified || false,
+          id: user4.sub,
+          name: user4.name || user4.preferred_username || (user4.email ? user4.email.split("@")[0] : "User") || "User",
+          email: user4.email,
+          image: user4.picture,
+          emailVerified: user4.email_verified || false,
           ...userMap
         },
-        data: user3
+        data: user4
       };
     },
     options
@@ -125598,22 +125602,22 @@ var salesforce = /* @__PURE__ */ __name((options) => {
     async getUserInfo(token2) {
       if (options.getUserInfo) return options.getUserInfo(token2);
       try {
-        const { data: user3 } = await betterFetch(userInfoEndpoint, { headers: { Authorization: `Bearer ${token2.accessToken}` } });
-        if (!user3) {
+        const { data: user4 } = await betterFetch(userInfoEndpoint, { headers: { Authorization: `Bearer ${token2.accessToken}` } });
+        if (!user4) {
           logger2.error("Failed to fetch user info from Salesforce");
           return null;
         }
-        const userMap = await options.mapProfileToUser?.(user3);
+        const userMap = await options.mapProfileToUser?.(user4);
         return {
           user: {
-            id: user3.user_id,
-            name: user3.name,
-            email: user3.email,
-            image: user3.photos?.picture || user3.photos?.thumbnail,
-            emailVerified: user3.email_verified ?? false,
+            id: user4.user_id,
+            name: user4.name,
+            email: user4.email,
+            image: user4.photos?.picture || user4.photos?.thumbnail,
+            emailVerified: user4.email_verified ?? false,
             ...userMap
           },
-          data: user3
+          data: user4
         };
       } catch (error50) {
         logger2.error("Failed to fetch user info from Salesforce:", error50);
@@ -126670,16 +126674,16 @@ async function createEmailVerificationToken(secret, email4, updateTo, expiresIn 
   }, secret, expiresIn);
 }
 __name(createEmailVerificationToken, "createEmailVerificationToken");
-async function sendVerificationEmailFn(ctx, user3) {
+async function sendVerificationEmailFn(ctx, user4) {
   if (!ctx.context.options.emailVerification?.sendVerificationEmail) {
     ctx.context.logger.error("Verification email isn't enabled.");
     throw new APIError2("BAD_REQUEST", { message: "Verification email isn't enabled" });
   }
-  const token2 = await createEmailVerificationToken(ctx.context.secret, user3.email, void 0, ctx.context.options.emailVerification?.expiresIn);
+  const token2 = await createEmailVerificationToken(ctx.context.secret, user4.email, void 0, ctx.context.options.emailVerification?.expiresIn);
   const callbackURL = ctx.body.callbackURL ? encodeURIComponent(ctx.body.callbackURL) : encodeURIComponent("/");
   const url2 = `${ctx.context.baseURL}/verify-email?token=${token2}&callbackURL=${callbackURL}`;
   await ctx.context.runInBackgroundOrAwait(ctx.context.options.emailVerification.sendVerificationEmail({
-    user: user3,
+    user: user4,
     url: url2,
     token: token2
   }, ctx.request));
@@ -126745,12 +126749,12 @@ var sendVerificationEmail = createAuthEndpoint("/send-verification-email", {
   const { email: email4 } = ctx.body;
   const session2 = await getSessionFromCtx(ctx);
   if (!session2) {
-    const user3 = await ctx.context.internalAdapter.findUserByEmail(email4);
-    if (!user3) {
+    const user4 = await ctx.context.internalAdapter.findUserByEmail(email4);
+    if (!user4) {
       await createEmailVerificationToken(ctx.context.secret, email4, void 0, ctx.context.options.emailVerification?.expiresIn);
       return ctx.json({ status: true });
     }
-    await sendVerificationEmailFn(ctx, user3.user);
+    await sendVerificationEmailFn(ctx, user4.user);
     return ctx.json({ status: true });
   }
   if (session2?.user.email !== email4) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.EMAIL_MISMATCH });
@@ -126821,8 +126825,8 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
     updateTo: string2().optional(),
     requestType: string2().optional()
   }).parse(jwt3.payload);
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(parsed.email);
-  if (!user3) return redirectOnError("user_not_found");
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(parsed.email);
+  if (!user4) return redirectOnError("user_not_found");
   if (parsed.updateTo) {
     const session2 = await getSessionFromCtx(ctx);
     if (session2 && session2.user.email !== parsed.email) return redirectOnError("unauthorized");
@@ -126833,7 +126837,7 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
         const url2 = `${ctx.context.baseURL}/verify-email?token=${newToken}&callbackURL=${updateCallbackURL}`;
         if (ctx.context.options.emailVerification?.sendVerificationEmail) await ctx.context.runInBackgroundOrAwait(ctx.context.options.emailVerification.sendVerificationEmail({
           user: {
-            ...user3.user,
+            ...user4.user,
             email: parsed.updateTo
           },
           url: url2,
@@ -126845,14 +126849,14 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
       case "change-email-verification": {
         let activeSession = session2;
         if (!activeSession) {
-          const newSession = await ctx.context.internalAdapter.createSession(user3.user.id);
+          const newSession = await ctx.context.internalAdapter.createSession(user4.user.id);
           if (!newSession) throw new APIError2("INTERNAL_SERVER_ERROR", { message: BASE_ERROR_CODES.FAILED_TO_CREATE_SESSION });
           activeSession = {
             session: newSession,
-            user: user3.user
+            user: user4.user
           };
         }
-        if (ctx.context.options.emailVerification?.onEmailVerification) await ctx.context.options.emailVerification.onEmailVerification(user3.user, ctx.request);
+        if (ctx.context.options.emailVerification?.onEmailVerification) await ctx.context.options.emailVerification.onEmailVerification(user4.user, ctx.request);
         const updatedUser$1 = await ctx.context.internalAdapter.updateUserByEmail(parsed.email, {
           email: parsed.updateTo,
           emailVerified: true
@@ -126875,11 +126879,11 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
       default: {
         let activeSession = session2;
         if (!activeSession) {
-          const newSession = await ctx.context.internalAdapter.createSession(user3.user.id);
+          const newSession = await ctx.context.internalAdapter.createSession(user4.user.id);
           if (!newSession) throw new APIError2("INTERNAL_SERVER_ERROR", { message: BASE_ERROR_CODES.FAILED_TO_CREATE_SESSION });
           activeSession = {
             session: newSession,
-            user: user3.user
+            user: user4.user
           };
         }
         const updatedUser$1 = await ctx.context.internalAdapter.updateUserByEmail(parsed.email, {
@@ -126909,26 +126913,26 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
       }
     }
   }
-  if (user3.user.emailVerified) {
+  if (user4.user.emailVerified) {
     if (ctx.query.callbackURL) throw ctx.redirect(ctx.query.callbackURL);
     return ctx.json({
       status: true,
       user: null
     });
   }
-  if (ctx.context.options.emailVerification?.beforeEmailVerification) await ctx.context.options.emailVerification.beforeEmailVerification(user3.user, ctx.request);
-  if (ctx.context.options.emailVerification?.onEmailVerification) await ctx.context.options.emailVerification.onEmailVerification(user3.user, ctx.request);
+  if (ctx.context.options.emailVerification?.beforeEmailVerification) await ctx.context.options.emailVerification.beforeEmailVerification(user4.user, ctx.request);
+  if (ctx.context.options.emailVerification?.onEmailVerification) await ctx.context.options.emailVerification.onEmailVerification(user4.user, ctx.request);
   const updatedUser = await ctx.context.internalAdapter.updateUserByEmail(parsed.email, { emailVerified: true });
   if (ctx.context.options.emailVerification?.afterEmailVerification) await ctx.context.options.emailVerification.afterEmailVerification(updatedUser, ctx.request);
   if (ctx.context.options.emailVerification?.autoSignInAfterVerification) {
     const currentSession = await getSessionFromCtx(ctx);
     if (!currentSession || currentSession.user.email !== parsed.email) {
-      const session2 = await ctx.context.internalAdapter.createSession(user3.user.id);
+      const session2 = await ctx.context.internalAdapter.createSession(user4.user.id);
       if (!session2) throw new APIError2("INTERNAL_SERVER_ERROR", { message: "Failed to create session" });
       await setSessionCookie(ctx, {
         session: session2,
         user: {
-          ...user3.user,
+          ...user4.user,
           emailVerified: true
         }
       });
@@ -126956,8 +126960,8 @@ async function handleOAuthUserInfo(c2, opts) {
     const errorURL = c2.context.options.onAPIError?.errorURL || `${c2.context.baseURL}/error`;
     throw c2.redirect(`${errorURL}?error=internal_server_error`);
   });
-  let user3 = dbUser?.user;
-  const isRegister = !user3;
+  let user4 = dbUser?.user;
+  const isRegister = !user4;
   if (dbUser) {
     const hasBeenLinked = dbUser.accounts.find((a2) => a2.providerId === account2.providerId && a2.accountId === account2.accountId);
     if (!hasBeenLinked) {
@@ -127009,7 +127013,7 @@ async function handleOAuthUserInfo(c2, opts) {
     }
     if (overrideUserInfo) {
       const { id: _3, ...restUserInfo } = userInfo;
-      user3 = await c2.context.internalAdapter.updateUser(dbUser.user.id, {
+      user4 = await c2.context.internalAdapter.updateUser(dbUser.user.id, {
         ...restUserInfo,
         email: userInfo.email.toLowerCase(),
         emailVerified: userInfo.email.toLowerCase() === dbUser.user.email ? dbUser.user.emailVerified || userInfo.emailVerified : userInfo.emailVerified
@@ -127037,13 +127041,13 @@ async function handleOAuthUserInfo(c2, opts) {
         ...restUserInfo,
         email: userInfo.email.toLowerCase()
       }, accountData);
-      user3 = createdUser;
+      user4 = createdUser;
       if (c2.context.options.account?.storeAccountCookie) await setAccountCookie(c2, createdAccount);
-      if (!userInfo.emailVerified && user3 && c2.context.options.emailVerification?.sendOnSignUp && c2.context.options.emailVerification?.sendVerificationEmail) {
-        const token2 = await createEmailVerificationToken(c2.context.secret, user3.email, void 0, c2.context.options.emailVerification?.expiresIn);
+      if (!userInfo.emailVerified && user4 && c2.context.options.emailVerification?.sendOnSignUp && c2.context.options.emailVerification?.sendVerificationEmail) {
+        const token2 = await createEmailVerificationToken(c2.context.secret, user4.email, void 0, c2.context.options.emailVerification?.expiresIn);
         const url2 = `${c2.context.baseURL}/verify-email?token=${token2}&callbackURL=${callbackURL}`;
         await c2.context.runInBackgroundOrAwait(c2.context.options.emailVerification.sendVerificationEmail({
-          user: user3,
+          user: user4,
           url: url2,
           token: token2
         }, c2.request));
@@ -127062,12 +127066,12 @@ async function handleOAuthUserInfo(c2, opts) {
       };
     }
   }
-  if (!user3) return {
+  if (!user4) return {
     error: "unable to create user",
     data: null,
     isRegister: false
   };
-  const session2 = await c2.context.internalAdapter.createSession(user3.id);
+  const session2 = await c2.context.internalAdapter.createSession(user4.id);
   if (!session2) return {
     error: "unable to create session",
     data: null,
@@ -127076,7 +127080,7 @@ async function handleOAuthUserInfo(c2, opts) {
   return {
     data: {
       session: session2,
-      user: user3
+      user: user4
     },
     error: null,
     isRegister
@@ -127236,10 +127240,10 @@ var callbackOAuth = createAuthEndpoint("/callback/:id", {
     c2.context.logger.error(result.error.split(" ").join("_"));
     return redirectOnError(result.error.split(" ").join("_"));
   }
-  const { session: session2, user: user3 } = result.data;
+  const { session: session2, user: user4 } = result.data;
   await setSessionCookie(c2, {
     session: session2,
-    user: user3
+    user: user4
   });
   let toRedirectTo;
   try {
@@ -127728,8 +127732,8 @@ var requestPasswordReset = createAuthEndpoint("/request-password-reset", {
     throw new APIError2("BAD_REQUEST", { message: "Reset password isn't enabled" });
   }
   const { email: email4, redirectTo } = ctx.body;
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
-  if (!user3) {
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
+  if (!user4) {
     generateId(24);
     await ctx.context.internalAdapter.findVerificationValue("dummy-verification-token");
     ctx.context.logger.error("Reset Password: User not found", { email: email4 });
@@ -127741,14 +127745,14 @@ var requestPasswordReset = createAuthEndpoint("/request-password-reset", {
   const expiresAt = getDate(ctx.context.options.emailAndPassword.resetPasswordTokenExpiresIn || 3600 * 1, "sec");
   const verificationToken = generateId(24);
   await ctx.context.internalAdapter.createVerificationValue({
-    value: user3.user.id,
+    value: user4.user.id,
     identifier: `reset-password:${verificationToken}`,
     expiresAt
   });
   const callbackURL = redirectTo ? encodeURIComponent(redirectTo) : "";
   const url2 = `${ctx.context.baseURL}/reset-password/${verificationToken}?callbackURL=${callbackURL}`;
   await ctx.context.runInBackgroundOrAwait(ctx.context.options.emailAndPassword.sendResetPassword({
-    user: user3.user,
+    user: user4.user,
     url: url2,
     token: verificationToken
   }, ctx.request));
@@ -127835,8 +127839,8 @@ var resetPassword = createAuthEndpoint("/reset-password", {
   else await ctx.context.internalAdapter.updatePassword(userId, hashedPassword);
   await ctx.context.internalAdapter.deleteVerificationValue(verification2.id);
   if (ctx.context.options.emailAndPassword?.onPasswordReset) {
-    const user3 = await ctx.context.internalAdapter.findUserById(userId);
-    if (user3) await ctx.context.options.emailAndPassword.onPasswordReset({ user: user3 }, ctx.request);
+    const user4 = await ctx.context.internalAdapter.findUserById(userId);
+    if (user4) await ctx.context.options.emailAndPassword.onPasswordReset({ user: user4 }, ctx.request);
   }
   if (ctx.context.options.emailAndPassword?.revokeSessionsOnPasswordReset) await ctx.context.internalAdapter.deleteSessions(userId);
   return ctx.json({ status: true });
@@ -128056,13 +128060,13 @@ var signInEmail = /* @__PURE__ */ __name(() => createAuthEndpoint("/sign-in/emai
   }
   const { email: email4, password } = ctx.body;
   if (!email2().safeParse(email4).success) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.INVALID_EMAIL });
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
-  if (!user3) {
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
+  if (!user4) {
     await ctx.context.password.hash(password);
     ctx.context.logger.error("User not found", { email: email4 });
     throw new APIError2("UNAUTHORIZED", { message: BASE_ERROR_CODES.INVALID_EMAIL_OR_PASSWORD });
   }
-  const credentialAccount = user3.accounts.find((a2) => a2.providerId === "credential");
+  const credentialAccount = user4.accounts.find((a2) => a2.providerId === "credential");
   if (!credentialAccount) {
     await ctx.context.password.hash(password);
     ctx.context.logger.error("Credential account not found", { email: email4 });
@@ -128081,35 +128085,35 @@ var signInEmail = /* @__PURE__ */ __name(() => createAuthEndpoint("/sign-in/emai
     ctx.context.logger.error("Invalid password");
     throw new APIError2("UNAUTHORIZED", { message: BASE_ERROR_CODES.INVALID_EMAIL_OR_PASSWORD });
   }
-  if (ctx.context.options?.emailAndPassword?.requireEmailVerification && !user3.user.emailVerified) {
+  if (ctx.context.options?.emailAndPassword?.requireEmailVerification && !user4.user.emailVerified) {
     if (!ctx.context.options?.emailVerification?.sendVerificationEmail) throw new APIError2("FORBIDDEN", { message: BASE_ERROR_CODES.EMAIL_NOT_VERIFIED });
     if (ctx.context.options?.emailVerification?.sendOnSignIn) {
-      const token2 = await createEmailVerificationToken(ctx.context.secret, user3.user.email, void 0, ctx.context.options.emailVerification?.expiresIn);
+      const token2 = await createEmailVerificationToken(ctx.context.secret, user4.user.email, void 0, ctx.context.options.emailVerification?.expiresIn);
       const callbackURL = ctx.body.callbackURL ? encodeURIComponent(ctx.body.callbackURL) : encodeURIComponent("/");
       const url2 = `${ctx.context.baseURL}/verify-email?token=${token2}&callbackURL=${callbackURL}`;
       await ctx.context.runInBackgroundOrAwait(ctx.context.options.emailVerification.sendVerificationEmail({
-        user: user3.user,
+        user: user4.user,
         url: url2,
         token: token2
       }, ctx.request));
     }
     throw new APIError2("FORBIDDEN", { message: BASE_ERROR_CODES.EMAIL_NOT_VERIFIED });
   }
-  const session2 = await ctx.context.internalAdapter.createSession(user3.user.id, ctx.body.rememberMe === false);
+  const session2 = await ctx.context.internalAdapter.createSession(user4.user.id, ctx.body.rememberMe === false);
   if (!session2) {
     ctx.context.logger.error("Failed to create session");
     throw new APIError2("UNAUTHORIZED", { message: BASE_ERROR_CODES.FAILED_TO_CREATE_SESSION });
   }
   await setSessionCookie(ctx, {
     session: session2,
-    user: user3.user
+    user: user4.user
   }, ctx.body.rememberMe === false);
   if (ctx.body.callbackURL) ctx.setHeader("Location", ctx.body.callbackURL);
   return ctx.json({
     redirect: !!ctx.body.callbackURL,
     token: session2.token,
     url: ctx.body.callbackURL,
-    user: parseUserOutput(ctx.context.options, user3.user)
+    user: parseUserOutput(ctx.context.options, user4.user)
   });
 }), "signInEmail");
 
@@ -131447,11 +131451,11 @@ var verifyEmailOTP = /* @__PURE__ */ __name((opts) => createAuthEndpoint("/email
     throw new APIError2("BAD_REQUEST", { message: ERROR_CODES2.INVALID_OTP });
   }
   await ctx.context.internalAdapter.deleteVerificationValue(verificationValue.id);
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(email4);
-  if (!user3)
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(email4);
+  if (!user4)
     throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.USER_NOT_FOUND });
-  if (ctx.context.options.emailVerification?.beforeEmailVerification) await ctx.context.options.emailVerification.beforeEmailVerification(user3.user, ctx.request);
-  const updatedUser = await ctx.context.internalAdapter.updateUser(user3.user.id, {
+  if (ctx.context.options.emailVerification?.beforeEmailVerification) await ctx.context.options.emailVerification.beforeEmailVerification(user4.user, ctx.request);
+  const updatedUser = await ctx.context.internalAdapter.updateUser(user4.user.id, {
     email: email4,
     emailVerified: true
   });
@@ -131530,8 +131534,8 @@ var signInEmailOTP = /* @__PURE__ */ __name((opts) => createAuthEndpoint("/sign-
     throw new APIError2("BAD_REQUEST", { message: ERROR_CODES2.INVALID_OTP });
   }
   await ctx.context.internalAdapter.deleteVerificationValue(verificationValue.id);
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(email4);
-  if (!user3) {
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(email4);
+  if (!user4) {
     if (opts.disableSignUp) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.USER_NOT_FOUND });
     const newUser = await ctx.context.internalAdapter.createUser({
       email: email4,
@@ -131548,15 +131552,15 @@ var signInEmailOTP = /* @__PURE__ */ __name((opts) => createAuthEndpoint("/sign-
       user: parseUserOutput(ctx.context.options, newUser)
     });
   }
-  if (!user3.user.emailVerified) await ctx.context.internalAdapter.updateUser(user3.user.id, { emailVerified: true });
-  const session2 = await ctx.context.internalAdapter.createSession(user3.user.id);
+  if (!user4.user.emailVerified) await ctx.context.internalAdapter.updateUser(user4.user.id, { emailVerified: true });
+  const session2 = await ctx.context.internalAdapter.createSession(user4.user.id);
   await setSessionCookie(ctx, {
     session: session2,
-    user: user3.user
+    user: user4.user
   });
   return ctx.json({
     token: session2.token,
-    user: parseUserOutput(ctx.context.options, user3.user)
+    user: parseUserOutput(ctx.context.options, user4.user)
   });
 }), "signInEmailOTP");
 var forgetPasswordEmailOTPBodySchema = object({ email: string2().meta({ description: "Email address to send the OTP" }) });
@@ -131638,23 +131642,23 @@ var resetPasswordEmailOTP = /* @__PURE__ */ __name((opts) => createAuthEndpoint(
     throw new APIError2("BAD_REQUEST", { message: ERROR_CODES2.INVALID_OTP });
   }
   await ctx.context.internalAdapter.deleteVerificationValue(verificationValue.id);
-  const user3 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
-  if (!user3) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.USER_NOT_FOUND });
+  const user4 = await ctx.context.internalAdapter.findUserByEmail(email4, { includeAccounts: true });
+  if (!user4) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.USER_NOT_FOUND });
   const minPasswordLength = ctx.context.password.config.minPasswordLength;
   if (ctx.body.password.length < minPasswordLength) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.PASSWORD_TOO_SHORT });
   const maxPasswordLength = ctx.context.password.config.maxPasswordLength;
   if (ctx.body.password.length > maxPasswordLength) throw new APIError2("BAD_REQUEST", { message: BASE_ERROR_CODES.PASSWORD_TOO_LONG });
   const passwordHash = await ctx.context.password.hash(ctx.body.password);
-  if (!user3.accounts?.find((account2) => account2.providerId === "credential")) await ctx.context.internalAdapter.createAccount({
-    userId: user3.user.id,
+  if (!user4.accounts?.find((account2) => account2.providerId === "credential")) await ctx.context.internalAdapter.createAccount({
+    userId: user4.user.id,
     providerId: "credential",
-    accountId: user3.user.id,
+    accountId: user4.user.id,
     password: passwordHash
   });
-  else await ctx.context.internalAdapter.updatePassword(user3.user.id, passwordHash);
-  if (ctx.context.options.emailAndPassword?.onPasswordReset) await ctx.context.options.emailAndPassword.onPasswordReset({ user: user3.user }, ctx.request);
-  if (!user3.user.emailVerified) await ctx.context.internalAdapter.updateUser(user3.user.id, { emailVerified: true });
-  if (ctx.context.options.emailAndPassword?.revokeSessionsOnPasswordReset) await ctx.context.internalAdapter.deleteSessions(user3.user.id);
+  else await ctx.context.internalAdapter.updatePassword(user4.user.id, passwordHash);
+  if (ctx.context.options.emailAndPassword?.onPasswordReset) await ctx.context.options.emailAndPassword.onPasswordReset({ user: user4.user }, ctx.request);
+  if (!user4.user.emailVerified) await ctx.context.internalAdapter.updateUser(user4.user.id, { emailVerified: true });
+  if (ctx.context.options.emailAndPassword?.revokeSessionsOnPasswordReset) await ctx.context.internalAdapter.deleteSessions(user4.user.id);
   return ctx.json({ success: true });
 }), "resetPasswordEmailOTP");
 var defaultOTPGenerator = /* @__PURE__ */ __name((options) => generateRandomString(options.otpLength ?? 6, "0-9"), "defaultOTPGenerator");
@@ -132246,8 +132250,8 @@ var oneTap = /* @__PURE__ */ __name((options) => ({
     }
     const { email: email4, email_verified, name: name2, picture, sub } = payload;
     if (!email4) return ctx.json({ error: "Email not available in token" });
-    const user3 = await ctx.context.internalAdapter.findUserByEmail(email4);
-    if (!user3) {
+    const user4 = await ctx.context.internalAdapter.findUserByEmail(email4);
+    if (!user4) {
       if (options?.disableSignup) throw new APIError2("BAD_GATEWAY", { message: "User not found" });
       const newUser = await ctx.context.internalAdapter.createOAuthUser({
         email: email4,
@@ -132272,7 +132276,7 @@ var oneTap = /* @__PURE__ */ __name((options) => ({
     if (!await ctx.context.internalAdapter.findAccount(sub)) {
       const accountLinking = ctx.context.options.account?.accountLinking;
       if (accountLinking?.enabled !== false && (accountLinking?.trustedProviders?.includes("google") || email_verified)) await ctx.context.internalAdapter.linkAccount({
-        userId: user3.user.id,
+        userId: user4.user.id,
         providerId: "google",
         accountId: sub,
         scope: "openid,profile,email",
@@ -132280,14 +132284,14 @@ var oneTap = /* @__PURE__ */ __name((options) => ({
       });
       else throw new APIError2("UNAUTHORIZED", { message: "Google sub doesn't match" });
     }
-    const session2 = await ctx.context.internalAdapter.createSession(user3.user.id);
+    const session2 = await ctx.context.internalAdapter.createSession(user4.user.id);
     await setSessionCookie(ctx, {
-      user: user3.user,
+      user: user4.user,
       session: session2
     });
     return ctx.json({
       token: session2.token,
-      user: parseUserOutput(ctx.context.options, user3.user)
+      user: parseUserOutput(ctx.context.options, user4.user)
     });
   }) },
   options
@@ -133177,10 +133181,10 @@ function getAuth(env2, db, redis) {
       }
     },
     plugins: [
-      customSession(async ({ user: user3, session: session2 }) => {
-        const cacheKey = `auth-context:${user3.id}`;
+      customSession(async ({ user: user4, session: session2 }) => {
+        const cacheKey = `auth-context:${user4.id}`;
         const cached3 = await redis.get(cacheKey);
-        const authContext = cached3 ?? await getUserAuthContext(db, user3.id).then(async (result) => {
+        const authContext = cached3 ?? await getUserAuthContext(db, user4.id).then(async (result) => {
           await redis.set(cacheKey, result, {
             ex: AUTH_CONTEXT_CACHE_SECONDS
           });
@@ -133188,7 +133192,7 @@ function getAuth(env2, db, redis) {
         });
         return {
           user: {
-            ...user3,
+            ...user4,
             provider: authContext?.provider || "google",
             activeContext: authContext?.activeContext || "personal",
             isAdmin: authContext?.isAdmin ?? false,
@@ -133257,6 +133261,54 @@ function getAuth(env2, db, redis) {
 }
 __name(getAuth, "getAuth");
 
+// src/routes/app/index.ts
+init_checked_fetch();
+init_modules_watch_stub();
+
+// src/services/app.service.ts
+init_checked_fetch();
+init_modules_watch_stub();
+var AppService = class {
+  constructor(db) {
+    this.db = db;
+  }
+  static {
+    __name(this, "AppService");
+  }
+  async getAppStats() {
+    try {
+      const [mau, totalPlaces, totalReviews, totalCollections, totalLocations] = await Promise.all([
+        await this.db.select({ count: count() }).from(user),
+        await this.db.select({ count: count() }).from(Place),
+        await this.db.select({ count: count() }).from(Review),
+        await this.db.select({ count: count() }).from(Collection),
+        await this.db.select({ count: count() }).from(Location)
+      ]);
+      return {
+        monthlyActiveUsers: mau[0]?.count ?? 0,
+        totalPlaces: totalPlaces[0]?.count ?? 0,
+        totalReviews: totalReviews[0]?.count ?? 0,
+        totalCollections: totalCollections[0]?.count ?? 0,
+        totalLocations: totalLocations[0]?.count ?? 0
+      };
+    } catch (error50) {
+      if (error50 instanceof AppError) throw error50;
+      throw new DatabaseError("Failed to get places sum", {
+        originalError: error50
+      });
+    }
+  }
+};
+
+// src/routes/app/index.ts
+var appRouter = new Hono2();
+appRouter.get("/stats", async (c2) => {
+  const db = c2.get("db");
+  const appService = new AppService(db);
+  const result = await appService.getAppStats();
+  return c2.json(result, 200);
+});
+
 // src/index.ts
 var app = new Hono2();
 app.use("*", async (c2, next) => {
@@ -133288,7 +133340,10 @@ app.use(
   })(c2, next)
 );
 app.use("*", logger());
-app.use("*", (c2, next) => globalRateLimiter(c2.get("redis"))(c2, next));
+app.use(
+  "*",
+  (c2, next) => globalRateLimiter(c2.get("redis"))(c2, next)
+);
 app.all("/api/auth/*", async (c2) => {
   const auth = getAuth(c2.get("env"), c2.get("db"), c2.get("redis"));
   const response = await auth.handler(c2.req.raw);
@@ -133297,16 +133352,31 @@ app.all("/api/auth/*", async (c2) => {
     const headers = new Headers(response.headers);
     headers.set("Access-Control-Allow-Origin", origin);
     headers.set("Access-Control-Allow-Credentials", "true");
-    headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-User-Context");
+    headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+    );
+    headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, X-User-Context"
+    );
     headers.set("Vary", "Origin");
     return new Response(response.body, { status: response.status, headers });
   }
   return response;
 });
-app.use("/api/auth/get-session", (c2, next) => sessionRateLimiter(c2.get("redis"))(c2, next));
-app.use("/api/auth/email-otp/*", (c2, next) => authRateLimiter(c2.get("redis"))(c2, next));
-app.use("/api/auth/sign-in/*", (c2, next) => authRateLimiter(c2.get("redis"))(c2, next));
+app.use(
+  "/api/auth/get-session",
+  (c2, next) => sessionRateLimiter(c2.get("redis"))(c2, next)
+);
+app.use(
+  "/api/auth/email-otp/*",
+  (c2, next) => authRateLimiter(c2.get("redis"))(c2, next)
+);
+app.use(
+  "/api/auth/sign-in/*",
+  (c2, next) => authRateLimiter(c2.get("redis"))(c2, next)
+);
 app.use("/api/user", authMiddleware);
 app.route("/api/user", authRouter);
 app.route("/api/notification", notificationRouter);
@@ -133318,6 +133388,7 @@ app.route("/api/profile", profileRouter);
 app.route("/api/event", eventRouter);
 app.route("/api/contact", contactRouter);
 app.route("/api/admin", adminRouter);
+app.route("/api/app", appRouter);
 app.get("/", (c2) => {
   return c2.text("Hello Hono!");
 });
@@ -133373,7 +133444,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-MASD32/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -133407,7 +133478,7 @@ function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-8TOjqb/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-MASD32/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

@@ -22,6 +22,7 @@ import { adminRouter } from "./routes/admin";
 import { createDb } from "./db";
 import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
+import { appRouter } from "./routes/app";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -56,7 +57,9 @@ app.use("*", async (c, next) =>
 );
 
 app.use("*", logger());
-app.use("*", (c, next) => globalRateLimiter(c.get("redis"))(c as Context, next));
+app.use("*", (c, next) =>
+  globalRateLimiter(c.get("redis"))(c as Context, next),
+);
 
 app.all("/api/auth/*", async (c) => {
   const auth = getAuth(c.get("env"), c.get("db"), c.get("redis"));
@@ -68,8 +71,14 @@ app.all("/api/auth/*", async (c) => {
     const headers = new Headers(response.headers);
     headers.set("Access-Control-Allow-Origin", origin);
     headers.set("Access-Control-Allow-Credentials", "true");
-    headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-User-Context");
+    headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+    );
+    headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, X-User-Context",
+    );
     headers.set("Vary", "Origin");
     return new Response(response.body, { status: response.status, headers });
   }
@@ -77,9 +86,15 @@ app.all("/api/auth/*", async (c) => {
   return response;
 });
 
-app.use("/api/auth/get-session", (c, next) => sessionRateLimiter(c.get("redis"))(c as Context, next));
-app.use("/api/auth/email-otp/*", (c, next) => authRateLimiter(c.get("redis"))(c as Context, next));
-app.use("/api/auth/sign-in/*", (c, next) => authRateLimiter(c.get("redis"))(c as Context, next));
+app.use("/api/auth/get-session", (c, next) =>
+  sessionRateLimiter(c.get("redis"))(c as Context, next),
+);
+app.use("/api/auth/email-otp/*", (c, next) =>
+  authRateLimiter(c.get("redis"))(c as Context, next),
+);
+app.use("/api/auth/sign-in/*", (c, next) =>
+  authRateLimiter(c.get("redis"))(c as Context, next),
+);
 app.use("/api/user", authMiddleware);
 
 // custom routes
@@ -93,6 +108,7 @@ app.route("/api/profile", profileRouter);
 app.route("/api/event", eventRouter);
 app.route("/api/contact", contactRouter);
 app.route("/api/admin", adminRouter);
+app.route("/api/app", appRouter);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

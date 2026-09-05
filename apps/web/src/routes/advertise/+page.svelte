@@ -3,9 +3,13 @@
   import HomeNavbar from "$lib/components/home-navbar.svelte";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
   import { MapPin, Search, Star, TrendingUp, Users, Zap } from "@lucide/svelte";
+  import type { AppStats } from "../../../../../packages/api/src/api/app/getAppStats.js";
+  import { formatStatCount } from "$lib/helpers/index.js";
 
   const { data } = $props();
   const { user } = $derived(data);
+
+  const appStats = $derived(data.appStats) as AppStats;
 
   const placements = [
     {
@@ -51,10 +55,16 @@
   ];
 
   const platformStats = [
-    { value: "500+", label: "Monthly active users" },
-    { value: "200+", label: "Places listed" },
-    { value: "50+", label: "Reviews" },
-    { value: "10+", label: "Regions covered" },
+    {
+      value: formatStatCount(appStats.monthlyActiveUsers),
+      label: "Monthly active users",
+    },
+    { value: formatStatCount(appStats.totalPlaces), label: "Places listed" },
+    { value: formatStatCount(appStats.totalReviews), label: "Reviews" },
+    {
+      value: formatStatCount(appStats.totalLocations),
+      label: "Locations covered",
+    },
   ];
 
   const adInventory = [
@@ -296,7 +306,7 @@
           >
             Don't see your location? <a
               href="/contact?subject=partnership"
-              class="font-bold text-foreground">Get in touch</a
+              class="font-bold text-foreground hover:underline">Get in touch</a
             > — we're adding new locations regularly.
           </p>
         </div>

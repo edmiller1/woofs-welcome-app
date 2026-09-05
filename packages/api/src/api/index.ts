@@ -8,6 +8,7 @@ import { review } from "./review";
 import { profile } from "./profile";
 import { event } from "./event";
 import { contact } from "./contact";
+import { app } from "./app";
 
 export const api = {
   admin,
@@ -20,4 +21,5 @@ export const api = {
   profile,
   event,
   contact,
+  app,
 };

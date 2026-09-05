@@ -3,12 +3,12 @@
 // export dynamically through wrangler, or we can potentially let users directly
 // add them as a sort of "plugin" system.
 
-import ENTRY, { __INTERNAL_WRANGLER_MIDDLEWARE__ } from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js";
+import ENTRY, { __INTERNAL_WRANGLER_MIDDLEWARE__ } from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-MASD32/middleware-insertion-facade.js";
 import { __facade_invoke__, __facade_register__, Dispatcher } from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/node_modules/.pnpm/wrangler@4.59.2_@cloudflare+workers-types@4.20260120.0/node_modules/wrangler/templates/middleware/common.ts";
-import type { WorkerEntrypointConstructor } from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js";
+import type { WorkerEntrypointConstructor } from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-MASD32/middleware-insertion-facade.js";
 
 // Preserve all the exports from the worker
-export * from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-8TOjqb/middleware-insertion-facade.js";
+export * from "/Users/edwardmiller/Documents/GitHub/woofs-welcome-app/apps/api/.wrangler/tmp/bundle-MASD32/middleware-insertion-facade.js";
 
 class __Facade_ScheduledController__ implements ScheduledController {
 	readonly #noRetry: ScheduledController["noRetry"];

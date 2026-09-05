@@ -15,12 +15,14 @@ import { alias } from "drizzle-orm/pg-core";
 import { AppError, DatabaseError, NotFoundError } from "../lib/errors";
 import {
   CheckIn,
+  Collection,
   CollectionItem,
   Location,
   Place,
   PlaceImage,
   placeTypeEnum,
   Review,
+  user,
 } from "../db/schema";
 import { Google } from "../lib/google";
 import { ImageUploadService } from "./image-upload.service";

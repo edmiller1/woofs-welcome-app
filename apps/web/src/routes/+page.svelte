@@ -11,6 +11,8 @@
   import PlaceCard from "$lib/components/place-card.svelte";
   import NavbarSearch from "$lib/components/navbar-search.svelte";
   import UserNav from "$lib/components/user-nav.svelte";
+  import type { AppStats } from "../../../../packages/api/src/api/app/getAppStats.js";
+  import { formatStatCount } from "$lib/helpers";
 
   let { data } = $props();
   const user = $derived(data.user);
@@ -20,6 +22,7 @@
   const popularPlaces = $derived((data.popularPlaces ?? []) as PopularPlace[]);
   const row1 = $derived(featuredLocations.slice(0, 2));
   const row2 = $derived(featuredLocations.slice(2, 4));
+  const appStats = $derived(data.appStats) as AppStats;
 </script>
 
 <svelte:head>
@@ -243,7 +246,9 @@
       </div>
       <dl class="m-0 flex gap-6 sm:gap-6.5">
         <div>
-          <dd class="m-0 text-[28px] font-extrabold text-tan-soft">4,100</dd>
+          <dd class="m-0 text-[28px] font-extrabold text-tan-soft">
+            {formatStatCount(appStats.totalPlaces)}
+          </dd>
           <dt
             class="text-[11.5px] uppercase tracking-[0.08em] text-walnut-foreground/72"
           >
@@ -251,7 +256,9 @@
           </dt>
         </div>
         <div>
-          <dd class="m-0 text-[28px] font-extrabold text-tan-soft">12k</dd>
+          <dd class="m-0 text-[28px] font-extrabold text-tan-soft">
+            {formatStatCount(appStats.totalCollections)}
+          </dd>
           <dt
             class="text-[11.5px] uppercase tracking-[0.08em] text-walnut-foreground/72"
           >
@@ -393,7 +400,7 @@
           </p>
         </div>
         <a
-          href="/explore?rating=5"
+          href="/explore?rating=3.5"
           class="text-sm font-bold text-link no-underline hover:underline"
           >View all →</a
         >

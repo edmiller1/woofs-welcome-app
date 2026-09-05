@@ -265,3 +265,22 @@ export const getPlaceDifficulty = (difficulty: string) => {
       return "Unknown";
   }
 };
+
+const STAT_STEPS = [
+  10, 25, 50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 25_000, 50_000,
+  100_000,
+];
+
+/**
+ * Rounds a count down to the nearest "nice" step and appends a `+`,
+ * so stats read as impressive without ever overstating the real number.
+ * Values below the smallest step are shown as-is (no `+`).
+ */
+export const formatStatCount = (value: number): string => {
+  if (value < STAT_STEPS[0]) {
+    return String(value);
+  }
+
+  const step = [...STAT_STEPS].reverse().find((s) => s <= value)!;
+  return `${step.toLocaleString()}+`;
+};
