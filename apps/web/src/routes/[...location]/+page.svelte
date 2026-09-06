@@ -305,12 +305,12 @@
         <div class="absolute bottom-8 left-8 max-w-140">
           <span
             class="inline-block rounded-full bg-accent px-2.75 py-1.5 text-[11px] font-extrabold uppercase tracking-widest text-accent-foreground"
-            >Country</span
+            >{location.data.type}</span
           >
           <h1
             class="m-0 mt-3 text-[52px] leading-[1.02] tracking-[-0.035em] text-[#fdf9f3]"
           >
-            New Zealand
+            {location.data.name}
           </h1>
           <!-- <p class="mt-3 text-[16px] text-[#fdf9f3]/90">
             64 dog-friendly places across both islands — cafés that mean it,
@@ -362,47 +362,49 @@
       </div>
     </section>
 
-    <section class="px-6 pt-14 sm:px-10">
-      <div class="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 class="m-0 text-[28px] tracking-[-0.025em]">
-            Popular picks in {locationArticle}{location.data.name}
-          </h2>
-          <p class="mt-1.5 text-[15px] text-muted-foreground">
-            The places dog owners keep coming back to.
-          </p>
+    {#if location.data.popularPlaces.length > 0}
+      <section class="px-6 pt-14 sm:px-10">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="m-0 text-[28px] tracking-[-0.025em]">
+              Popular picks in {locationArticle}{location.data.name}
+            </h2>
+            <p class="mt-1.5 text-[15px] text-muted-foreground">
+              The places dog owners keep coming back to.
+            </p>
+          </div>
+          <a
+            href="/explore?lat={location.data.latitude}&lng={location.data
+              .longitude}&zoom={zoom}&rating=4"
+            class="text-sm font-bold text-primary no-underline hover:underline"
+            >View all →</a
+          >
         </div>
-        <a
-          href="/explore?lat={location.data.latitude}&lng={location.data
-            .longitude}&zoom={zoom}&rating=4"
-          class="text-sm font-bold text-primary no-underline hover:underline"
-          >View all →</a
-        >
-      </div>
-      <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        {#each location.data.popularPlaces as place}
-          <PlaceCard
-            id={place.id}
-            name={place.name}
-            slug={place.slug}
-            types={place.types}
-            rating={place.rating}
-            reviewCount={place.reviewsCount}
-            isVerified={place.isVerified}
-            countryCode={place.countryCode}
-            dogAmenities={place.dogAmenities}
-            imageId={place.imageId}
-            {user}
-            locationPath={place.locationPath}
-            isSaved={place.isSaved}
-            memberFavourite={place.memberFavourite}
-            difficulty={place.difficulty}
-            cityName={place.cityName}
-            regionName={place.regionName}
-          />
-        {/each}
-      </div>
-    </section>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {#each location.data.popularPlaces as place}
+            <PlaceCard
+              id={place.id}
+              name={place.name}
+              slug={place.slug}
+              types={place.types}
+              rating={place.rating}
+              reviewCount={place.reviewsCount}
+              isVerified={place.isVerified}
+              countryCode={place.countryCode}
+              dogAmenities={place.dogAmenities}
+              imageId={place.imageId}
+              {user}
+              locationPath={place.locationPath}
+              isSaved={place.isSaved}
+              memberFavourite={place.memberFavourite}
+              difficulty={place.difficulty}
+              cityName={place.cityName}
+              regionName={place.regionName}
+            />
+          {/each}
+        </div>
+      </section>
+    {/if}
 
     {#snippet locationCarousel(items: typeof childLocations, heading: string)}
       <section class="w-full px-6 pt-14 sm:px-10">
@@ -523,10 +525,10 @@
               Captured moments from our community's most memorable visits.
             </p>
           </div>
-          <a
-            href="#"
+          <button
+            onclick={() => openGalleryAt(0)}
             class="text-sm font-bold text-primary no-underline hover:underline"
-            >View more →</a
+            >View more →</button
           >
         </div>
         <div
@@ -669,8 +671,7 @@
           class="flex min-h-0 flex-1 items-stretch gap-3 px-3 sm:gap-5 sm:px-8"
         >
           <button
-            onclick={() =>
-              prevGalleryPhoto(communityPhotos.data.photos.length)}
+            onclick={() => prevGalleryPhoto(communityPhotos.data.photos.length)}
             type="button"
             data-gallery-prev
             aria-label="Previous photo"
@@ -725,8 +726,7 @@
             </figcaption>
           </figure>
           <button
-            onclick={() =>
-              nextGalleryPhoto(communityPhotos.data.photos.length)}
+            onclick={() => nextGalleryPhoto(communityPhotos.data.photos.length)}
             type="button"
             data-gallery-next
             aria-label="Next photo"

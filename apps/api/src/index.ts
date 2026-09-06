@@ -23,6 +23,7 @@ import { createDb } from "./db";
 import { Redis } from "@upstash/redis/cloudflare";
 import { getAuth } from "./lib/auth";
 import { appRouter } from "./routes/app";
+import { AppError } from "./lib/errors";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -117,6 +118,13 @@ app.get("/", (c) => {
 showRoutes(app);
 
 app.onError((err, c) => {
+  if (err instanceof AppError) {
+    if (!err.isOperational) {
+      console.error("Unhandled error:", err);
+    }
+    return c.json({ error: err.message, code: err.code }, err.statusCode);
+  }
+
   console.error("Unhandled error:", err);
   return c.json({ error: "Internal server error" }, 500);
 });

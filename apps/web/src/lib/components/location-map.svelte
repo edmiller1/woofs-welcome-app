@@ -4,7 +4,7 @@
   import maplibregl from "maplibre-gl";
   import "maplibre-gl/dist/maplibre-gl.css";
   import type { LocationPlace } from "@woofs/types";
-  import MapPlaceCard from "./map-place-card.svelte";
+  import ExplorePlacePopover from "./explore-place-popover.svelte";
   import { api } from "$lib/api-helper";
 
   interface Props {
@@ -54,7 +54,7 @@
       }
 
       const container = document.createElement("div");
-      activeMounted = mount(MapPlaceCard, {
+      activeMounted = mount(ExplorePlacePopover, {
         target: container,
         props: {
           place,

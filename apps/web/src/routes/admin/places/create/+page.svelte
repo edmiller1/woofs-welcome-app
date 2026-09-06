@@ -10,6 +10,7 @@
   import { goto } from "$app/navigation";
   import type { BAUser } from "@woofs/types";
   import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+  import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
 
   const { data } = $props();
   const { user } = $derived(data);
@@ -101,6 +102,68 @@
   let isVerified = $state(false);
   let isFeatured = $state(false);
   let showHours = $state(false);
+
+  // ── Address autocomplete ─────────────────────────────────────────────────────
+
+  const maptilerKey = PUBLIC_MAPTILER_API_KEY;
+
+  interface AddressSuggestion {
+    id: string;
+    placeName: string;
+    lat: number;
+    lng: number;
+  }
+
+  let addressSuggestions = $state<AddressSuggestion[]>([]);
+  let addressLoading = $state(false);
+  let showAddressDropdown = $state(false);
+  let addressDebounceTimer: ReturnType<typeof setTimeout>;
+
+  const searchAddress = async (query: string) => {
+    if (query.length < 3) {
+      addressSuggestions = [];
+      showAddressDropdown = false;
+      return;
+    }
+    addressLoading = true;
+    try {
+      const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${maptilerKey}&country=nz&language=en`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("MapTiler error:", res.status, text);
+        addressSuggestions = [];
+        return;
+      }
+      const data = await res.json();
+      addressSuggestions = (data.features ?? []).map((f: any) => ({
+        id: f.id,
+        placeName: f.place_name ?? f.text,
+        lat: f.center?.[1],
+        lng: f.center?.[0],
+      }));
+      showAddressDropdown = addressSuggestions.length > 0;
+    } catch (e) {
+      console.error("Address search failed:", e);
+      addressSuggestions = [];
+    } finally {
+      addressLoading = false;
+    }
+  };
+
+  function handleAddressInput(value: string) {
+    address = value;
+    clearTimeout(addressDebounceTimer);
+    addressDebounceTimer = setTimeout(() => searchAddress(value), 300);
+  }
+
+  function selectAddress(suggestion: AddressSuggestion) {
+    address = suggestion.placeName;
+    if (suggestion.lat !== undefined) latitude = String(suggestion.lat);
+    if (suggestion.lng !== undefined) longitude = String(suggestion.lng);
+    addressSuggestions = [];
+    showAddressDropdown = false;
+  }
 
   type DayHours = { open: string; close: string; closed: boolean };
   let hours = $state<Record<string, DayHours>>(
@@ -506,17 +569,50 @@
               >Address & contact</legend
             >
 
-            <div>
+            <div class="relative">
               <label for="address" class="block text-sm font-bold mb-2"
                 >Address</label
               >
               <input
                 id="address"
                 type="text"
-                bind:value={address}
+                value={address}
+                oninput={(e) =>
+                  handleAddressInput((e.target as HTMLInputElement).value)}
+                onfocus={() => {
+                  if (addressSuggestions.length > 0)
+                    showAddressDropdown = true;
+                }}
+                onblur={() =>
+                  setTimeout(() => (showAddressDropdown = false), 150)}
                 placeholder="123 Main Street, Christchurch"
+                autocomplete="off"
                 class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
+              <p class="text-xs text-muted-foreground mt-1">
+                Pick a suggestion to auto-fill latitude/longitude below.
+              </p>
+              {#if showAddressDropdown && addressSuggestions.length > 0}
+                <div
+                  class="absolute z-20 mt-1 w-full rounded-xl border border-border bg-background shadow-lg overflow-hidden"
+                >
+                  {#each addressSuggestions as suggestion}
+                    <button
+                      type="button"
+                      class="w-full text-left px-4 py-2.5 text-sm hover:bg-muted"
+                      onmousedown={() => selectAddress(suggestion)}
+                    >
+                      {suggestion.placeName}
+                    </button>
+                  {/each}
+                </div>
+              {:else if addressLoading}
+                <div
+                  class="absolute z-20 mt-1 w-full rounded-xl border border-border bg-background shadow-lg px-4 py-2.5 text-sm text-muted-foreground"
+                >
+                  Searching...
+                </div>
+              {/if}
             </div>
 
             {#if showContact}

@@ -1,10 +1,10 @@
 <script lang="ts">
   import OptimizedImage from "./optimized-image.svelte";
   import { Star } from "@lucide/svelte";
-  import type { ExplorePlaceItem } from "@woofs/types";
+  import type { ExplorePlaceItem, LocationPlace } from "@woofs/types";
 
   interface Props {
-    place: ExplorePlaceItem;
+    place: ExplorePlaceItem | LocationPlace;
     onclose: () => void;
   }
 
@@ -25,6 +25,9 @@
         variant="thumbnail"
         width="64"
         height="64"
+        loading="eager"
+        fetchpriority="high"
+        showPlaceholder
       />
     {:else}
       <div class="w-full h-full bg-muted"></div>
@@ -38,7 +41,7 @@
     <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
       <div class="flex items-center gap-0.5">
         <Star class="size-3 fill-yellow-400 text-yellow-400" />
-        <span class="font-semibold text-black"
+        <span class="font-semibold text-foreground"
           >{Number(place.rating).toFixed(1)}</span
         >
       </div>

@@ -283,7 +283,7 @@
       source: "places",
       filter: ["has", "point_count"],
       paint: {
-        "circle-color": "#3d7a6e",
+        "circle-color": "#a3764c",
         "circle-radius": ["step", ["get", "point_count"], 18, 10, 24, 50, 30],
       },
     });
@@ -442,7 +442,6 @@
         "font-size:12px",
         "font-weight:700",
         "box-shadow:0 2px 8px rgba(0,0,0,0.18)",
-        "border:1.5px solid var(--border)",
         "cursor:pointer",
         "white-space:nowrap",
         "display:flex",

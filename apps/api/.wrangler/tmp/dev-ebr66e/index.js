@@ -103830,7 +103830,7 @@ var PlaceService = class {
         )
       ).limit(1);
       if (!result) {
-        throw new NotFoundError("Place not found");
+        throw new NotFoundError("Place");
       }
       const { place, location, region } = result;
       const images = await this.db.select().from(PlaceImage).where(eq(PlaceImage.placeId, place.id));
@@ -133394,6 +133394,12 @@ app.get("/", (c2) => {
 });
 showRoutes(app);
 app.onError((err, c2) => {
+  if (err instanceof AppError) {
+    if (!err.isOperational) {
+      console.error("Unhandled error:", err);
+    }
+    return c2.json({ error: err.message, code: err.code }, err.statusCode);
+  }
   console.error("Unhandled error:", err);
   return c2.json({ error: "Internal server error" }, 500);
 });

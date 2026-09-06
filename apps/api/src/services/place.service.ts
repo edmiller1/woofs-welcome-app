@@ -78,7 +78,7 @@ export class PlaceService {
         .limit(1);
 
       if (!result) {
-        throw new NotFoundError("Place not found");
+        throw new NotFoundError("Place");
       }
 
       const { place, location, region } = result;

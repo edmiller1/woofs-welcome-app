@@ -201,10 +201,12 @@
                 <Badge variant="secondary">$$</Badge>
               {/if}
               {#if difficulty}
-                <div
-                  class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
-                ></div>
-                <span>{getPlaceDifficulty(difficulty)}</span>
+                <div class="flex items-center gap-2">
+                  <div
+                    class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+                  ></div>
+                  <span>{getPlaceDifficulty(difficulty)}</span>
+                </div>
               {/if}
             </div>
             {#if amenity}
@@ -255,10 +257,12 @@
               <Badge variant="secondary">$$</Badge>
             {/if}
             {#if difficulty}
-              <div
-                class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
-              ></div>
-              <span>{getPlaceDifficulty(difficulty)}</span>
+              <div class="flex items-center gap-2">
+                <div
+                  class={`w-2 h-2 shrink-0 ${difficulty === "beginner" ? "bg-green-800" : difficulty === "intermediate" ? "bg-yellow-600" : "bg-red-800"}`}
+                ></div>
+                <span>{getPlaceDifficulty(difficulty)}</span>
+              </div>
             {/if}
           </div>
           {#if amenity}
