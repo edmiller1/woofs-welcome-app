@@ -77,11 +77,11 @@
   <div class="hidden md:flex justify-between items-center w-full px-8 py-4">
     <div class="flex items-center gap-8">
       <a
-        class="text-xl font-extrabold tracking-[-0.02em] text-primary no-underline"
+        class="hidden lg:block text-xl font-extrabold tracking-[-0.02em] text-primary no-underline"
         href="/"
         >Woofs Welcome
       </a>
-      <a href="/" class="lg:hidden text-2xl font-bold text-primary-tint">WW</a>
+      <a href="/" class="lg:hidden text-xl font-bold text-primary">WW</a>
       <nav class="flex items-center">
         <a
           class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {exploreActive
@@ -110,11 +110,13 @@
         > -->
       </nav>
     </div>
-    <div class="flex flex-1 items-center gap-4">
+    <div class="flex flex-1 items-center gap-6 ml-6">
       <NavbarSearch />
       {#if user}
-        <NotificationsMenu />
-        <CollectionsSheet {user} />
+        <div class="flex items-center gap-2">
+          <NotificationsMenu />
+          <CollectionsSheet {user} />
+        </div>
         <UserNav {user} />
       {:else}
         <a href={signInUrl}>

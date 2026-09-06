@@ -128,11 +128,13 @@
           >Explore more →</a
         >
       </div>
-      <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr]">
+      <div
+        class="mt-5 grid gap-5 sm:grid-cols-2 sm:grid-rows-2 lg:grid-cols-[1.6fr_1fr_1fr] lg:grid-rows-1"
+      >
         <a
           href="/explore?types=Hotel%2CMotel%2CAirBnb"
           aria-label="stays"
-          class="group relative block h-75 overflow-hidden rounded-xl no-underline"
+          class="group relative block h-75 overflow-hidden rounded-xl no-underline sm:row-span-2 sm:h-auto lg:row-span-1 lg:h-75"
         >
           <div
             class="photo absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
@@ -163,7 +165,7 @@
         <a
           href="/explore?types=Hike%2CTrail%2CRiver%2CLake"
           aria-label="adventures"
-          class="group relative block h-75 overflow-hidden rounded-xl no-underline"
+          class="group relative block h-75 overflow-hidden rounded-xl no-underline sm:h-35 lg:h-75"
         >
           <div
             class="photo absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
@@ -198,7 +200,7 @@
         <a
           href="/explore?types=Restaurant%2CCafé%2CBar%2CWinery"
           aria-label="eats"
-          class="group relative block h-75 overflow-hidden rounded-xl no-underline"
+          class="group relative block h-75 overflow-hidden rounded-xl no-underline sm:h-35 lg:h-75"
         >
           <div
             class="photo absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
@@ -406,7 +408,9 @@
         >
       </div>
       {#if popularPlaces.length > 0}
-        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        <div
+          class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
+        >
           {#each popularPlaces as place}
             <PlaceCard
               id={place.id}

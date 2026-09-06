@@ -40,7 +40,7 @@
     class={cn("cursor-pointer", className)}
     onmouseenter={() => preloadData(`/profile/${user.id}/${profileLink}`)}
   >
-    <Avatar class="ml-auto">
+    <Avatar class="ml-auto border-2 border-white">
       <AvatarImage
         src={userImage}
         alt={user.name}

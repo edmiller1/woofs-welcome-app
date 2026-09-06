@@ -70,7 +70,7 @@
       </Breadcrumb.List>
     </Breadcrumb.Root>
     <section
-      class="flex flex-col md:flex-row items-start md:items-center gap-12 md:gap-24"
+      class="flex flex-col xl:flex-row items-start xl:items-center gap-12 md:gap-24"
     >
       <div class="flex-1 min-w-0">
         <div class="mb-8 sm:mb-12">
@@ -182,12 +182,12 @@
           {/if}
         </div>
       </div>
-      <div class="flex-1 min-w-0 relative">
+      <div class="xl:flex-1 min-w-0 relative w-full">
         <div
-          class="relative rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2"
+          class="relative mx-auto max-w-100 rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2 xl:max-w-none xl:mx-0"
         >
           <img
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover object-center"
             alt="A man sitting with a rough collie between his legs"
             src={dogs}
           />

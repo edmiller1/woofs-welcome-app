@@ -4,7 +4,7 @@
   import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
   import { buttonVariants } from "$lib/components/ui/button";
   import { cn } from "$lib/utils";
-  import peggyForest from "$lib/assets/peggy-forest.jpeg";
+  import about from "$lib/assets/about.jpeg";
 
   const { data } = $props();
   const { user } = $derived(data);
@@ -86,12 +86,12 @@
         </div>
         <div class="lg:col-span-5 relative">
           <div
-            class="relative rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2"
+            class="relative mx-auto max-w-100 rounded-2xl overflow-hidden aspect-4/5 editorial-shadow transform rotate-2 lg:max-w-none lg:mx-0"
           >
             <img
-              class="w-full h-full object-cover"
-              alt="A cocker spaniel looking towards a forest"
-              src={peggyForest}
+              class="w-full h-full object-cover object-center"
+              alt="A man sitting on the beach with 4 dogs"
+              src={about}
             />
           </div>
         </div>

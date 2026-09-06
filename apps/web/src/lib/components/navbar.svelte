@@ -78,7 +78,7 @@
       <a class="hidden lg:block text-2xl font-bold text-primary" href="/"
         >Woofs Welcome
       </a>
-      <a href="/" class="lg:hidden text-2xl font-bold text-primary">WW</a>
+      <a href="/" class="lg:hidden text-xl font-bold text-primary">WW</a>
       <nav class="flex gap-2 items-center">
         <a
           class="rounded-full px-3.5 py-1.75 text-sm font-semibold text-foreground no-underline hover:bg-muted {exploreActive
@@ -106,11 +106,13 @@
         > -->
       </nav>
     </div>
-    <div class="flex flex-1 items-center gap-4">
+    <div class="flex flex-1 items-center gap-6 ml-6">
       <NavbarSearch />
       {#if user}
-        <NotificationsMenu />
-        <CollectionsSheet {user} />
+        <div class="flex items-center gap-2">
+          <NotificationsMenu />
+          <CollectionsSheet {user} />
+        </div>
         <UserNav {user} />
       {:else}
         <a href={signInUrl}>
