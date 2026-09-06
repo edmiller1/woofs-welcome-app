@@ -24,6 +24,9 @@ out
 
 apps/images/.dev.vars
 
+# One-off scripts (may contain credentials during local runs)
+apps/api/scripts/
+
 # IDE
 .idea
 .vscode
