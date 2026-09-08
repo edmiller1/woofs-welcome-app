@@ -15,7 +15,7 @@
   import { cn } from "$lib/utils";
   import PlaceHours from "./components/place-hours.svelte";
   import { Button, buttonVariants } from "$lib/components/ui/button";
-  import PlaceMap from "$lib/components/place-map.svelte";
+  import { onMount } from "svelte";
   import PlaceReviews from "./components/place-reviews.svelte";
   import ReviewDrawer from "$lib/components/review-drawer.svelte";
   import StickyHeader from "./components/sticky-header.svelte";
@@ -66,7 +66,11 @@
 
   let imagesOpen = $state<boolean>(false);
   let currentTab = $state<string>("About");
-  let mapComponent = $state<any>();
+  type PlaceMapComponent = typeof import("$lib/components/place-map.svelte").default;
+  let PlaceMap = $state<PlaceMapComponent | null>(null);
+  onMount(async () => {
+    PlaceMap = (await import("$lib/components/place-map.svelte")).default;
+  });
   let scrollY = $state(0);
   let headerElement = $state<HTMLElement>();
   let showStickyHeader = $state(false);
@@ -441,14 +445,18 @@
             {#if coordinates() !== null}
               {@const coords = coordinates()}
               <div class="w-full h-48 rounded-xl overflow-hidden">
-                <PlaceMap
-                  lng={coords!.lng}
-                  lat={coords!.lat}
-                  zoom={14}
-                  markerLabel={place.data.name}
-                  className="h-48 z-0"
-                  onclick={handleMapOpen}
-                />
+                {#if PlaceMap}
+                  <PlaceMap
+                    lng={coords!.lng}
+                    lat={coords!.lat}
+                    zoom={14}
+                    markerLabel={place.data.name}
+                    className="h-48 z-0"
+                    onclick={handleMapOpen}
+                  />
+                {:else}
+                  <div class="w-full h-48 bg-muted animate-pulse"></div>
+                {/if}
               </div>
               <div class="mt-3 flex gap-2">
                 <Button
@@ -812,15 +820,18 @@
                 {#if coordinates() !== null}
                   {@const coords = coordinates()}
                   <div class="w-full h-48 rounded-xl mb-3 overflow-hidden">
-                    <PlaceMap
-                      bind:this={mapComponent}
-                      lng={coords!.lng}
-                      lat={coords!.lat}
-                      zoom={15}
-                      markerLabel={place.data.name}
-                      className="h-48 z-0"
-                      onclick={handleMapOpen}
-                    />
+                    {#if PlaceMap}
+                      <PlaceMap
+                        lng={coords!.lng}
+                        lat={coords!.lat}
+                        zoom={15}
+                        markerLabel={place.data.name}
+                        className="h-48 z-0"
+                        onclick={handleMapOpen}
+                      />
+                    {:else}
+                      <div class="w-full h-48 bg-muted animate-pulse"></div>
+                    {/if}
                   </div>
                   <div class="flex gap-2">
                     <Button

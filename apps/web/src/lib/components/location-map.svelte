@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy, mount, unmount } from "svelte";
   import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
-  import maplibregl from "maplibre-gl";
-  import "maplibre-gl/dist/maplibre-gl.css";
+  import type MapLibreGL from "maplibre-gl";
   import type { LocationPlace } from "@woofs/types";
   import ExplorePlacePopover from "./explore-place-popover.svelte";
   import { api } from "$lib/api-helper";
@@ -20,12 +19,13 @@
 
   const MIN_ZOOM_FOR_FETCH = 8;
 
+  let maplibregl: typeof MapLibreGL;
   let mapContainer = $state<HTMLDivElement>();
-  let map = $state<maplibregl.Map>();
+  let map = $state<MapLibreGL.Map>();
   let isLoading = $state(false);
-  let activePopup: maplibregl.Popup | null = null;
+  let activePopup: MapLibreGL.Popup | null = null;
   let activeMounted: Record<string, unknown> | null = null;
-  const markers = new Map<string, maplibregl.Marker>();
+  const markers = new Map<string, MapLibreGL.Marker>();
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   function createMarkerEl(place: LocationPlace) {
@@ -144,7 +144,13 @@
     debounceTimer = setTimeout(fetchPlacesForBounds, 400);
   }
 
-  onMount(() => {
+  onMount(async () => {
+    const [{ default: maplibreglModule }] = await Promise.all([
+      import("maplibre-gl"),
+      import("maplibre-gl/dist/maplibre-gl.css"),
+    ]);
+    maplibregl = maplibreglModule;
+
     if (!mapContainer) return;
 
     map = new maplibregl.Map({

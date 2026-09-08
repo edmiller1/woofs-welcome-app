@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { PlaceWithDetails } from "@woofs/types";
   import { PUBLIC_MAPTILER_API_KEY } from "$env/static/public";
-  import "maplibre-gl/dist/maplibre-gl.css";
-  import maplibregl from "maplibre-gl";
+  import type MapLibreGL from "maplibre-gl";
   import ExplorePlacePopover from "$lib/components/explore-place-popover.svelte";
   import * as Dialog from "$lib/components/ui/dialog/index.js";
   import { MapPin } from "@lucide/svelte";
@@ -23,13 +22,14 @@
 
   let { open, lat, lng, zoom = 13, place, onOpenChange }: Props = $props();
 
+  let maplibregl: typeof MapLibreGL;
   let mapContainer = $state<HTMLDivElement>();
-  let map = $state<maplibregl.Map | undefined>(undefined);
+  let map = $state<MapLibreGL.Map | undefined>(undefined);
   let bbox = $state<{ swLat: number; swLng: number; neLat: number; neLng: number } | null>(null);
 
-  const markers = new Map<string, maplibregl.Marker>();
-  let mainMarker: maplibregl.Marker | undefined;
-  let activePopup: maplibregl.Popup | null = null;
+  const markers = new Map<string, MapLibreGL.Marker>();
+  let mainMarker: MapLibreGL.Marker | undefined;
+  let activePopup: MapLibreGL.Popup | null = null;
   let activeMounted: ReturnType<typeof mount> | null = null;
   let activeMarkerId: string | null = null;
 
@@ -153,7 +153,7 @@
     });
   }
 
-  function addPlacesLayer(mapInstance: maplibregl.Map) {
+  function addPlacesLayer(mapInstance: MapLibreGL.Map) {
     mapInstance.addSource("dialog-places", {
       type: "geojson",
       data: { type: "FeatureCollection", features: [] },
@@ -186,7 +186,7 @@
     mapInstance.on("click", "dialog-clusters", async (e) => {
       const features = mapInstance.queryRenderedFeatures(e.point, { layers: ["dialog-clusters"] });
       const clusterId = features[0].properties?.cluster_id;
-      const zoom = await (mapInstance.getSource("dialog-places") as maplibregl.GeoJSONSource)
+      const zoom = await (mapInstance.getSource("dialog-places") as MapLibreGL.GeoJSONSource)
         .getClusterExpansionZoom(clusterId);
       mapInstance.easeTo({
         center: (features[0].geometry as GeoJSON.Point).coordinates as [number, number],
@@ -197,7 +197,7 @@
     mapInstance.on("mouseleave", "dialog-clusters", () => { mapInstance.getCanvas().style.cursor = ""; });
   }
 
-  function addMainMarker(mapInstance: maplibregl.Map) {
+  function addMainMarker(mapInstance: MapLibreGL.Map) {
     mainMarker?.remove();
     mainMarker = undefined;
     const el = makeMarkerEl(place.rating, true);
@@ -210,7 +210,7 @@
       .addTo(mapInstance);
   }
 
-  function syncMarkers(mapInstance: maplibregl.Map, places: ExplorePlaceItem[]) {
+  function syncMarkers(mapInstance: MapLibreGL.Map, places: ExplorePlaceItem[]) {
     const incoming = new Set(places.map((p) => p.id));
 
     // Remove stale markers (skip main place)
@@ -245,7 +245,7 @@
     }
 
     // Update GeoJSON source for clustering
-    const source = mapInstance.getSource("dialog-places") as maplibregl.GeoJSONSource | undefined;
+    const source = mapInstance.getSource("dialog-places") as MapLibreGL.GeoJSONSource | undefined;
     source?.setData({
       type: "FeatureCollection",
       features: places
@@ -287,24 +287,38 @@
     syncMarkers(map, places);
   });
 
+  async function initMap() {
+    if (!maplibregl) {
+      const [{ default: maplibreglModule }] = await Promise.all([
+        import("maplibre-gl"),
+        import("maplibre-gl/dist/maplibre-gl.css"),
+      ]);
+      maplibregl = maplibreglModule;
+    }
+
+    if (!open || !mapContainer || map) return;
+
+    const m = new maplibregl.Map({
+      container: mapContainer,
+      style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
+      center: [lng, lat],
+      zoom,
+      fadeDuration: 0,
+    });
+    m.addControl(new maplibregl.NavigationControl(), "top-right");
+    m.on("moveend", updateBbox);
+    m.on("click", () => { activePopup?.remove(); activePopup = null; });
+    m.once("load", () => {
+      addPlacesLayer(m);
+      map = m;
+      updateBbox();
+    });
+  }
+
   // Init/destroy map when dialog opens/closes
   $effect(() => {
     if (open && mapContainer && !map) {
-      const m = new maplibregl.Map({
-        container: mapContainer,
-        style: `https://api.maptiler.com/maps/streets/style.json?key=${PUBLIC_MAPTILER_API_KEY}`,
-        center: [lng, lat],
-        zoom,
-        fadeDuration: 0,
-      });
-      m.addControl(new maplibregl.NavigationControl(), "top-right");
-      m.on("moveend", updateBbox);
-      m.on("click", () => { activePopup?.remove(); activePopup = null; });
-      m.once("load", () => {
-        addPlacesLayer(m);
-        map = m;
-        updateBbox();
-      });
+      initMap();
     }
 
     if (!open && map) {
