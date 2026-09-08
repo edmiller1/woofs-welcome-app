@@ -62,6 +62,27 @@ app.use("*", (c, next) =>
   globalRateLimiter(c.get("redis"))(c as Context, next),
 );
 
+// TEMPORARY: diagnostic logging to identify the source of periodic
+// requests to these endpoints. Remove once identified.
+const DIAGNOSTIC_PATHS = new Set([
+  "/api/app/stats",
+  "/api/location/featured",
+  "/api/place/popular",
+  "/api/auth/get-session",
+]);
+app.use("*", async (c, next) => {
+  if (DIAGNOSTIC_PATHS.has(c.req.path)) {
+    console.log("DIAGNOSTIC:", {
+      path: c.req.path,
+      userAgent: c.req.header("User-Agent"),
+      ip: c.req.header("CF-Connecting-IP"),
+      referer: c.req.header("Referer"),
+      origin: c.req.header("Origin"),
+    });
+  }
+  await next();
+});
+
 app.all("/api/auth/*", async (c) => {
   const auth = getAuth(c.get("env"), c.get("db"), c.get("redis"));
   const response = await auth.handler(c.req.raw);
