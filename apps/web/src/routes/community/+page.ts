@@ -1,12 +1,11 @@
-import { getUser } from "$lib/auth/guard";
 import { redirect, type Load } from "@sveltejs/kit";
 import { api } from "$lib/api-helper";
 import { QueryClient, dehydrate } from "@tanstack/svelte-query";
 
-export const load: Load = async ({ fetch }) => {
+export const load: Load = async ({ parent }) => {
   redirect(302, "/");
 
-  const user = await getUser(fetch);
+  const { user } = await parent();
 
   const queryClient = new QueryClient();
 

@@ -1,9 +1,8 @@
-import { getUser } from "$lib/auth/guard";
 import type { Load } from "@sveltejs/kit";
 
 export const ssr = false;
 
-export const load: Load = async ({ fetch }) => {
-  const user = await getUser(fetch);
+export const load: Load = async ({ parent }) => {
+  const { user } = await parent();
   return { user };
 };

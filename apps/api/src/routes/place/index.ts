@@ -9,6 +9,7 @@ import { CollectionService } from "../../services/collection.service";
 import { PlaceSuggestedEdit, Place, Location } from "../../db/schema";
 import { eq, and, count, asc } from "drizzle-orm";
 import { sendDiscordSuggestedEditNotification } from "../../lib/discord";
+import { getOrSetCache } from "../../lib/cache";
 
 export const placeRouter = new Hono();
 
@@ -239,12 +240,15 @@ placeRouter.get("/sitemap", async (c) => {
 placeRouter.get("/popular", async (c) => {
   const db = c.get("db");
   const env = c.get("env");
+  const redis = c.get("redis");
 
   const imageUploadService = new ImageUploadService(db, env);
   const collectionService = new CollectionService(db, imageUploadService);
   const placeService = new PlaceService(db, imageUploadService, collectionService, env);
 
-  const result = await placeService.getPopularPlaces(4);
+  const result = await getOrSetCache(redis, "popular-places", 300, () =>
+    placeService.getPopularPlaces(4),
+  );
   return c.json(result, 200);
 });
 

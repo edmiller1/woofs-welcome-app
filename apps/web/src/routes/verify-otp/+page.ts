@@ -1,10 +1,9 @@
 import { browser } from "$app/environment";
-import { getUser } from "$lib/auth/guard";
 import { redirect, type Load } from "@sveltejs/kit";
 
-export const load: Load = async ({ url, fetch }) => {
+export const load: Load = async ({ url, parent }) => {
   const searchParams = url.searchParams;
-  const user = await getUser(fetch);
+  const { user } = await parent();
 
   if (browser) {
     if (user) {

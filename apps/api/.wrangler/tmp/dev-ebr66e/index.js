@@ -102985,14 +102985,34 @@ var LocationService = class {
   }
 };
 
+// src/lib/cache.ts
+init_checked_fetch();
+init_modules_watch_stub();
+async function getOrSetCache(redis, key, ttlSeconds, fn2) {
+  const cached3 = await redis.get(key);
+  if (cached3 !== null && cached3 !== void 0) {
+    return cached3;
+  }
+  const result = await fn2();
+  await redis.set(key, result, { ex: ttlSeconds });
+  return result;
+}
+__name(getOrSetCache, "getOrSetCache");
+
 // src/routes/location/index.ts
 var locationRouter = new Hono2();
 locationRouter.get("/featured", async (c2) => {
   const db = c2.get("db");
   const env2 = c2.get("env");
+  const redis = c2.get("redis");
   const imageUploadService = new ImageUploadService(db, env2);
   const locationService = new LocationService(db, imageUploadService);
-  const result = await locationService.getFeaturedLocations(8);
+  const result = await getOrSetCache(
+    redis,
+    "featured-locations",
+    300,
+    () => locationService.getFeaturedLocations(8)
+  );
   return c2.json(result, 200);
 });
 locationRouter.get("/directory", async (c2) => {
@@ -104667,10 +104687,16 @@ placeRouter.get("/sitemap", async (c2) => {
 placeRouter.get("/popular", async (c2) => {
   const db = c2.get("db");
   const env2 = c2.get("env");
+  const redis = c2.get("redis");
   const imageUploadService = new ImageUploadService(db, env2);
   const collectionService = new CollectionService(db, imageUploadService);
   const placeService = new PlaceService(db, imageUploadService, collectionService, env2);
-  const result = await placeService.getPopularPlaces(4);
+  const result = await getOrSetCache(
+    redis,
+    "popular-places",
+    300,
+    () => placeService.getPopularPlaces(4)
+  );
   return c2.json(result, 200);
 });
 placeRouter.post(
@@ -133304,8 +133330,14 @@ var AppService = class {
 var appRouter = new Hono2();
 appRouter.get("/stats", async (c2) => {
   const db = c2.get("db");
+  const redis = c2.get("redis");
   const appService = new AppService(db);
-  const result = await appService.getAppStats();
+  const result = await getOrSetCache(
+    redis,
+    "app-stats",
+    300,
+    () => appService.getAppStats()
+  );
   return c2.json(result, 200);
 });
 

@@ -1,9 +1,8 @@
-import { getUser } from "$lib/auth/guard";
 import { api } from "$lib/api-helper";
 import type { Load } from "@sveltejs/kit";
 
-export const load: Load = async ({ params, url, fetch }) => {
-  const user = await getUser(fetch);
+export const load: Load = async ({ params, url, parent }) => {
+  const { user } = await parent();
   const { slug } = params;
   const locationPath = url.pathname
     .replace(/^\/location\//, "")

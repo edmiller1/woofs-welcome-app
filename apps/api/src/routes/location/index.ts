@@ -4,15 +4,19 @@ import { LocationService } from "../../services/location.service";
 import { ImageUploadService } from "../../services/image-upload.service";
 import { Location } from "../../db/schema";
 import { asc } from "drizzle-orm";
+import { getOrSetCache } from "../../lib/cache";
 
 export const locationRouter = new Hono();
 
 locationRouter.get("/featured", async (c) => {
   const db = c.get("db");
   const env = c.get("env");
+  const redis = c.get("redis");
   const imageUploadService = new ImageUploadService(db, env);
   const locationService = new LocationService(db, imageUploadService);
-  const result = await locationService.getFeaturedLocations(8);
+  const result = await getOrSetCache(redis, "featured-locations", 300, () =>
+    locationService.getFeaturedLocations(8),
+  );
   return c.json(result, 200);
 });
 

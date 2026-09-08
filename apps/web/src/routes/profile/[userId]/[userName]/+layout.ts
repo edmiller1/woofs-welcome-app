@@ -1,17 +1,16 @@
 import { api } from "$lib/api-helper";
-import { getUser } from "$lib/auth/guard";
 import { redirect, type Load } from "@sveltejs/kit";
 
 export const ssr = false;
 
-export const load: Load = async ({ params, fetch }) => {
+export const load: Load = async ({ params, parent }) => {
   const { userId, userName } = params;
 
   if (!userId || !userName) {
     throw redirect(302, "/");
   }
 
-  const user = await getUser(fetch);
+  const { user } = await parent();
 
   const [initialProfile, initialProfileReviews, initialProfileReviewStats, initialProfileCollections, initialProfilePhotos] =
     await Promise.all([
