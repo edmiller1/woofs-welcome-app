@@ -133376,24 +133376,6 @@ app.use(
   "*",
   (c2, next) => globalRateLimiter(c2.get("redis"))(c2, next)
 );
-var DIAGNOSTIC_PATHS = /* @__PURE__ */ new Set([
-  "/api/app/stats",
-  "/api/location/featured",
-  "/api/place/popular",
-  "/api/auth/get-session"
-]);
-app.use("*", async (c2, next) => {
-  if (DIAGNOSTIC_PATHS.has(c2.req.path)) {
-    console.log("DIAGNOSTIC:", {
-      path: c2.req.path,
-      userAgent: c2.req.header("User-Agent"),
-      ip: c2.req.header("CF-Connecting-IP"),
-      referer: c2.req.header("Referer"),
-      origin: c2.req.header("Origin")
-    });
-  }
-  await next();
-});
 app.all("/api/auth/*", async (c2) => {
   const auth = getAuth(c2.get("env"), c2.get("db"), c2.get("redis"));
   const response = await auth.handler(c2.req.raw);

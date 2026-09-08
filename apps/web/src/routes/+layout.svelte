@@ -44,12 +44,19 @@
   let {
     children,
     data,
-  }: { children: Snippet<[]>; data: { user: BAUser | null } } = $props();
+  }: {
+    children: Snippet<[]>;
+    data: { user: BAUser | null; hasSessionCookie?: boolean };
+  } = $props();
 
   const user = $derived(data.user);
 
   onMount(() => {
-    auth.initialize();
+    if (data.hasSessionCookie !== false) {
+      auth.initialize();
+    } else {
+      loading.set(false);
+    }
     // if (user) {
     //   contextStore.set(user.activeContext);
     // }
