@@ -2,7 +2,7 @@
   import { notification } from "./../../../../../packages/api/src/api/notification/index.ts";
   import { format, formatDistanceToNow } from "date-fns";
   import { api } from "$lib/api-helper";
-  import { createQuery, QueryClient } from "@tanstack/svelte-query";
+  import { createQuery } from "@tanstack/svelte-query";
   import type { BAUser } from "@woofs/types";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
   import {
@@ -20,11 +20,10 @@
     Send,
     ThumbsUp,
   } from "@lucide/svelte";
-  const queryClient = new QueryClient();
-
   const notifications = createQuery(() => ({
     queryKey: ["notifications"],
     queryFn: async () => api.notification.getUserNotifications(),
+    staleTime: 60 * 1000,
   }));
 
   const getNotificationIcon = (type: string) => {
