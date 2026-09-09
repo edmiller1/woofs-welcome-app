@@ -249,6 +249,7 @@ placeRouter.get("/popular", async (c) => {
   const result = await getOrSetCache(redis, "popular-places", 300, () =>
     placeService.getPopularPlaces(4),
   );
+  c.header("Cache-Control", "public, max-age=60");
   return c.json(result, 200);
 });
 

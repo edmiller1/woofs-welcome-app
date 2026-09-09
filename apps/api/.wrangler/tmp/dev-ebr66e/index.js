@@ -40016,10 +40016,10 @@ var init_adapter = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/memory-adapter/memory-adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/memory-adapter/memory-adapter.mjs
 var memoryAdapter;
 var init_memory_adapter = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/memory-adapter/memory-adapter.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/memory-adapter/memory-adapter.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_env();
@@ -40243,13 +40243,13 @@ var init_memory_adapter = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/memory-adapter/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/memory-adapter/index.mjs
 var memory_adapter_exports = {};
 __export(memory_adapter_exports, {
   memoryAdapter: () => memoryAdapter
 });
 var init_memory_adapter2 = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/memory-adapter/index.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/memory-adapter/index.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_memory_adapter();
@@ -59409,14 +59409,14 @@ var init_esm7 = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/bun-sqlite-dialect.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/bun-sqlite-dialect.mjs
 var bun_sqlite_dialect_exports = {};
 __export(bun_sqlite_dialect_exports, {
   BunSqliteDialect: () => BunSqliteDialect
 });
 var BunSqliteAdapter, BunSqliteDriver, BunSqliteConnection, ConnectionMutex2, BunSqliteIntrospector, BunSqliteQueryCompiler, BunSqliteDialect;
 var init_bun_sqlite_dialect = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/bun-sqlite-dialect.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/bun-sqlite-dialect.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_esm7();
@@ -59595,14 +59595,14 @@ var init_bun_sqlite_dialect = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/node-sqlite-dialect.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/node-sqlite-dialect.mjs
 var node_sqlite_dialect_exports = {};
 __export(node_sqlite_dialect_exports, {
   NodeSqliteDialect: () => NodeSqliteDialect
 });
 var NodeSqliteAdapter, NodeSqliteDriver, NodeSqliteConnection, ConnectionMutex3, NodeSqliteIntrospector, NodeSqliteQueryCompiler, NodeSqliteDialect;
 var init_node_sqlite_dialect = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/node-sqlite-dialect.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/node-sqlite-dialect.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_esm7();
@@ -59781,7 +59781,7 @@ var init_node_sqlite_dialect = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/dialect.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/dialect.mjs
 function getKyselyDatabaseType(db) {
   if (!db) return null;
   if ("dialect" in db) return getKyselyDatabaseType(db.dialect);
@@ -59800,7 +59800,7 @@ function getKyselyDatabaseType(db) {
 }
 var createKyselyAdapter;
 var init_dialect2 = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/dialect.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/dialect.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_esm7();
@@ -59858,10 +59858,10 @@ var init_dialect2 = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/kysely-adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/kysely-adapter.mjs
 var kyselyAdapter;
 var init_kysely_adapter = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/kysely-adapter.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/kysely-adapter.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_esm7();
@@ -60159,7 +60159,7 @@ var init_kysely_adapter = __esm({
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/index.mjs
 var kysely_adapter_exports = {};
 __export(kysely_adapter_exports, {
   createKyselyAdapter: () => createKyselyAdapter,
@@ -60167,7 +60167,7 @@ __export(kysely_adapter_exports, {
   kyselyAdapter: () => kyselyAdapter
 });
 var init_kysely_adapter2 = __esm({
-  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/kysely-adapter/index.mjs"() {
+  "../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/kysely-adapter/index.mjs"() {
     init_checked_fetch();
     init_modules_watch_stub();
     init_dialect2();
@@ -103013,6 +103013,7 @@ locationRouter.get("/featured", async (c2) => {
     300,
     () => locationService.getFeaturedLocations(8)
   );
+  c2.header("Cache-Control", "public, max-age=60");
   return c2.json(result, 200);
 });
 locationRouter.get("/directory", async (c2) => {
@@ -104697,6 +104698,7 @@ placeRouter.get("/popular", async (c2) => {
     300,
     () => placeService.getPopularPlaces(4)
   );
+  c2.header("Cache-Control", "public, max-age=60");
   return c2.json(result, 200);
 });
 placeRouter.post(
@@ -107883,15 +107885,15 @@ adminRouter.post("/place", zValidator("json", createPlaceSchema), async (c2) => 
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/oauth2/state.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/oauth2/state.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/oauth.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/oauth.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -108062,20 +108064,20 @@ var runWithTransaction = /* @__PURE__ */ __name(async (adapter, fn2) => {
   });
 }, "runWithTransaction");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/oauth.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/oauth.mjs
 var { get: getOAuthState, set: setOAuthState } = defineRequestState(() => null);
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/random.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/random.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_random();
 var generateRandomString = createRandomStringGenerator("a-z", "0-9", "A-Z", "-_");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/buffer.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/buffer.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function constantTimeEqual(a2, b4) {
@@ -108090,7 +108092,7 @@ function constantTimeEqual(a2, b4) {
 }
 __name(constantTimeEqual, "constantTimeEqual");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/jwt.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/jwt.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -111955,7 +111957,7 @@ function decodeJwt(jwt3) {
 }
 __name(decodeJwt, "decodeJwt");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/jwt.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/jwt.mjs
 async function signJWT(payload, secret, expiresIn = 3600) {
   return await new SignJWT(payload).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime(Math.floor(Date.now() / 1e3) + expiresIn).sign(new TextEncoder().encode(secret));
 }
@@ -112047,7 +112049,7 @@ async function symmetricDecodeJWT(token2, secret, salt) {
 }
 __name(symmetricDecodeJWT, "symmetricDecodeJWT");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/password.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/password.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -112301,7 +112303,7 @@ async function scryptAsync(password, salt, opts) {
 }
 __name(scryptAsync, "scryptAsync");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/password.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/password.mjs
 var config2 = {
   N: 16384,
   r: 16,
@@ -113324,7 +113326,7 @@ var _poly1305_aead = /* @__PURE__ */ __name((xorStream) => (key, nonce, AAD) => 
 var chacha20poly1305 = /* @__PURE__ */ wrapCipher({ blockSize: 64, nonceLength: 12, tagLength: 16 }, _poly1305_aead(chacha20));
 var xchacha20poly1305 = /* @__PURE__ */ wrapCipher({ blockSize: 64, nonceLength: 24, tagLength: 16 }, _poly1305_aead(xchacha20));
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/crypto/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/crypto/index.mjs
 var symmetricEncrypt = /* @__PURE__ */ __name(async ({ key, data }) => {
   const keyAsBytes = await createHash("SHA-256").digest(key);
   const dataAsBytes = utf8ToBytes2(data);
@@ -113337,18 +113339,18 @@ var symmetricDecrypt = /* @__PURE__ */ __name(async ({ key, data }) => {
   return new TextDecoder().decode(chacha.decrypt(dataAsBytes));
 }, "symmetricDecrypt");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/cookies/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/cookies/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/date.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/date.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var getDate = /* @__PURE__ */ __name((span, unit = "ms") => {
   return new Date(Date.now() + (unit === "sec" ? span * 1e3 : span));
 }, "getDate");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -119829,7 +119831,7 @@ var createRouter$1 = /* @__PURE__ */ __name((endpoints, config4) => {
   };
 }, "createRouter$1");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/schema.mjs
 var cache2 = /* @__PURE__ */ new WeakMap();
 function parseOutputData(data, schema10) {
   const fields = schema10.fields;
@@ -119956,7 +119958,7 @@ function mergeSchema(schema10, newSchema) {
 }
 __name(mergeSchema, "mergeSchema");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/cookies/session-store.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/cookies/session-store.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -120135,7 +120137,7 @@ var getSessionQuerySchema = optional(object({
   disableRefresh: coerce_exports.boolean().meta({ description: "Disable session refresh. Useful for checking session status, without updating the session" }).optional()
 }));
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/time.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/time.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var SEC = 1e3;
@@ -120212,7 +120214,7 @@ function sec(value) {
 }
 __name(sec, "sec");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/cookies/cookie-utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/cookies/cookie-utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var SECURE_COOKIE_PREFIX = "__Secure-";
@@ -120261,7 +120263,7 @@ function parseSetCookieHeader(setCookie) {
 }
 __name(parseSetCookieHeader, "parseSetCookieHeader");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/cookies/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/cookies/index.mjs
 init_env();
 init_error();
 init_utils();
@@ -120336,7 +120338,7 @@ var createHMAC = /* @__PURE__ */ __name((algorithm2 = "SHA-256", encoding = "non
   return hmac2;
 }, "createHMAC");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/cookies/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/cookies/index.mjs
 function createCookieGetter(options) {
   const secureCookiePrefix = (options.advanced?.useSecureCookies !== void 0 ? options.advanced?.useSecureCookies : options.baseURL !== void 0 ? options.baseURL.startsWith("https://") ? true : false : isProduction) ? SECURE_COOKIE_PREFIX : "";
   const crossSubdomainEnabled = !!options.advanced?.crossSubDomainCookies?.enabled;
@@ -120498,7 +120500,7 @@ function parseCookies2(cookieHeader) {
 }
 __name(parseCookies2, "parseCookies");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/oauth2/state.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/oauth2/state.mjs
 async function generateState(c2, link, additionalData) {
   const callbackURL = c2.body?.callbackURL || c2.context.options.baseURL;
   if (!callbackURL) throw new APIError2("BAD_REQUEST", { message: "callbackURL is required" });
@@ -120621,21 +120623,21 @@ async function parseState(c2) {
 }
 __name(parseState, "parseState");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/hide-metadata.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/hide-metadata.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var HIDE_METADATA = { scope: "server" };
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/get-request-ip.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/get-request-ip.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -120662,15 +120664,15 @@ function isValidIP(ip) {
 }
 __name(isValidIP, "isValidIP");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/auth/trusted-origins.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/auth/trusted-origins.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/url.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/url.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -120769,7 +120771,7 @@ function getHost(url2) {
 }
 __name(getHost, "getHost");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/wildcard.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/wildcard.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function escapeRegExpChar(char2) {
@@ -120856,7 +120858,7 @@ function wildcardMatch(pattern, options) {
 }
 __name(wildcardMatch, "wildcardMatch");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/auth/trusted-origins.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/auth/trusted-origins.mjs
 var matchesOriginPattern = /* @__PURE__ */ __name((url2, pattern, settings) => {
   if (url2.startsWith("/")) {
     if (settings?.allowRelativePaths) return url2.startsWith("/") && /^\/(?!\/|\\|%2f|%5c)[\w\-.\+/@]*(?:\?[\w\-.\+/=&%@]*)?$/.test(url2);
@@ -120872,7 +120874,7 @@ var matchesOriginPattern = /* @__PURE__ */ __name((url2, pattern, settings) => {
   return protocol === "http:" || protocol === "https:" || !protocol ? pattern === getOrigin(url2) : url2.startsWith(pattern);
 }, "matchesOriginPattern");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
 init_error();
 init_utils();
 
@@ -120901,7 +120903,7 @@ function createAuthEndpoint(pathOrOptions, handlerOrOptions, handlerOrNever) {
 }
 __name(createAuthEndpoint, "createAuthEndpoint");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/origin-check.mjs
 function shouldSkipCSRFForBackwardCompat(ctx) {
   return ctx.context.skipOriginCheck && ctx.context.options.advanced?.disableCSRFCheck === void 0;
 }
@@ -120996,11 +120998,11 @@ async function validateFormCsrf(ctx) {
 }
 __name(validateFormCsrf, "validateFormCsrf");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/middlewares/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/middlewares/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/rate-limiter/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/rate-limiter/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -121174,15 +121176,15 @@ function getDefaultSpecialRules() {
 }
 __name(getDefaultSpecialRules, "getDefaultSpecialRules");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/session.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/session.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/_virtual/rolldown_runtime.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/_virtual/rolldown_runtime.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var __defProp3 = Object.defineProperty;
@@ -121224,7 +121226,7 @@ var __reExport = /* @__PURE__ */ __name((target, mod, secondTarget, symbols) => 
   __copyProps2(target, mod, "default"), secondTarget && __copyProps2(secondTarget, mod, "default");
 }, "__reExport");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/adapter-base.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/adapter-base.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -121250,7 +121252,7 @@ async function getBaseAdapter(options, handleDirectDatabase) {
 }
 __name(getBaseAdapter, "getBaseAdapter");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/adapter-kysely.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/adapter-kysely.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -121269,7 +121271,7 @@ async function getAdapter(options) {
 }
 __name(getAdapter, "getAdapter");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/field.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/field.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var createFieldAttribute = /* @__PURE__ */ __name((type, config4) => {
@@ -121279,7 +121281,7 @@ var createFieldAttribute = /* @__PURE__ */ __name((type, config4) => {
   };
 }, "createFieldAttribute");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/field-converter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/field-converter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function convertToDB(fields, values) {
@@ -121301,7 +121303,7 @@ function convertFromDB(fields, values) {
 }
 __name(convertFromDB, "convertFromDB");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/with-hooks.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/with-hooks.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function getWithHooks(adapter, ctx) {
@@ -121454,7 +121456,7 @@ function getWithHooks(adapter, ctx) {
 }
 __name(getWithHooks, "getWithHooks");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/internal-adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/internal-adapter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -122008,7 +122010,7 @@ var createInternalAdapter = /* @__PURE__ */ __name((adapter, ctx) => {
   };
 }, "createInternalAdapter");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/to-zod.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/to-zod.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function toZodSchema({ fields, isClientSide }) {
@@ -122032,7 +122034,7 @@ function toZodSchema({ fields, isClientSide }) {
 }
 __name(toZodSchema, "toZodSchema");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/get-schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/get-schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function getSchema(config4) {
@@ -122069,7 +122071,7 @@ function getSchema(config4) {
 }
 __name(getSchema, "getSchema");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/get-migration.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/get-migration.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_dialect2();
@@ -122409,7 +122411,7 @@ async function getMigrations(config4) {
 }
 __name(getMigrations, "getMigrations");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/db/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/db/index.mjs
 var db_exports2 = /* @__PURE__ */ __export3({
   convertFromDB: /* @__PURE__ */ __name(() => convertFromDB, "convertFromDB"),
   convertToDB: /* @__PURE__ */ __name(() => convertToDB, "convertToDB"),
@@ -122434,7 +122436,7 @@ var db_exports2 = /* @__PURE__ */ __export3({
 });
 __reExport(db_exports2, db_exports);
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/session.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/session.mjs
 init_error();
 init_utils();
 var getSession = /* @__PURE__ */ __name(() => createAuthEndpoint("/get-session", {
@@ -122809,11 +122811,11 @@ var revokeOtherSessions = createAuthEndpoint("/revoke-other-sessions", {
   return ctx.json({ status: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/account.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/account.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/oauth2/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/oauth2/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function decryptOAuthToken(token2, ctx) {
@@ -122834,7 +122836,7 @@ function setTokenUtil(token2, ctx) {
 }
 __name(setTokenUtil, "setTokenUtil");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/account.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/account.mjs
 init_error();
 
 // ../../node_modules/.pnpm/@better-auth+core@1.4.15_@better-auth+utils@0.3.0_@better-fetch+fetch@1.1.21_better-cal_f830531087ca8f0affef793b1364c723/node_modules/@better-auth/core/dist/social-providers/index.mjs
@@ -126230,7 +126232,7 @@ var socialProviders = {
 var socialProviderList = Object.keys(socialProviders);
 var SocialProviderListEnum = _enum3(socialProviderList).or(string5());
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/account.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/account.mjs
 var listUserAccounts = createAuthEndpoint("/list-accounts", {
   method: "GET",
   use: [sessionMiddleware],
@@ -126680,15 +126682,15 @@ var accountInfo = createAuthEndpoint("/account-info", {
   return ctx.json(info2);
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/callback.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/callback.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/oauth2/link-account.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/oauth2/link-account.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/email-verification.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/email-verification.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -126977,7 +126979,7 @@ var verifyEmail = createAuthEndpoint("/verify-email", {
   });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/oauth2/link-account.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/oauth2/link-account.mjs
 init_env();
 async function handleOAuthUserInfo(c2, opts) {
   const { userInfo, account: account2, callbackURL, disableSignUp, overrideUserInfo } = opts;
@@ -127114,7 +127116,7 @@ async function handleOAuthUserInfo(c2, opts) {
 }
 __name(handleOAuthUserInfo, "handleOAuthUserInfo");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/callback.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/callback.mjs
 init_utils();
 var schema = object({
   code: string2().optional(),
@@ -127280,7 +127282,7 @@ var callbackOAuth = createAuthEndpoint("/callback/:id", {
   throw c2.redirect(toRedirectTo);
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/error.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/error.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -127663,7 +127665,7 @@ var error49 = createAuthEndpoint("/error", {
   return new Response(html(c2.context.options, safeCode, safeDescription), { headers: { "Content-Type": "text/html" } });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/ok.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/ok.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var ok = createAuthEndpoint("/ok", {
@@ -127689,11 +127691,11 @@ var ok = createAuthEndpoint("/ok", {
   return ctx.json({ ok: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/password.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/password.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/password.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/password.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 async function validatePassword(ctx, data) {
@@ -127718,7 +127720,7 @@ async function checkPassword(userId, c2) {
 }
 __name(checkPassword, "checkPassword");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/password.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/password.mjs
 init_error();
 function redirectError(ctx, callbackURL, query) {
   const url2 = callbackURL ? new URL(callbackURL, ctx.baseURL) : new URL(`${ctx.baseURL}/error`);
@@ -127899,7 +127901,7 @@ var verifyPassword2 = createAuthEndpoint("/verify-password", {
   return ctx.json({ status: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/sign-in.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/sign-in.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -128143,7 +128145,7 @@ var signInEmail = /* @__PURE__ */ __name(() => createAuthEndpoint("/sign-in/emai
   });
 }), "signInEmail");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/sign-out.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/sign-out.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var signOut = createAuthEndpoint("/sign-out", {
@@ -128172,7 +128174,7 @@ var signOut = createAuthEndpoint("/sign-out", {
   return ctx.json({ success: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/sign-up.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/sign-up.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -128377,7 +128379,7 @@ var signUpEmail = /* @__PURE__ */ __name(() => createAuthEndpoint("/sign-up/emai
   });
 }), "signUpEmail");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/update-user.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/update-user.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -128849,11 +128851,11 @@ var changeEmail = createAuthEndpoint("/change-email", {
   return ctx.json({ status: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/routes/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/routes/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/to-auth-endpoints.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/to-auth-endpoints.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -128931,7 +128933,7 @@ var defuArrayFn = createDefu((object3, key, currentValue) => {
   }
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/to-auth-endpoints.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/to-auth-endpoints.mjs
 var defuReplaceArrays = createDefu((obj, key, value) => {
   if (Array.isArray(obj[key]) && Array.isArray(value)) {
     obj[key] = value;
@@ -129105,7 +129107,7 @@ function getHooks(authContext) {
 }
 __name(getHooks, "getHooks");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/api/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/api/index.mjs
 init_env();
 function checkEndpointConflicts(options, logger$1) {
   const endpointRegistry = /* @__PURE__ */ new Map();
@@ -129285,25 +129287,25 @@ var router = /* @__PURE__ */ __name((ctx, options) => {
   });
 }, "router");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/auth/full.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/auth/full.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/init.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/init.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_dialect2();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/create-context.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/create-context.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/constants.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/constants.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var DEFAULT_SECRET = "better-auth-secret-12345678901234567890";
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/is-promise.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/is-promise.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function isPromise(obj) {
@@ -129311,7 +129313,7 @@ function isPromise(obj) {
 }
 __name(isPromise, "isPromise");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/helpers.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/helpers.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -129371,7 +129373,7 @@ async function getTrustedOrigins(options, request) {
 }
 __name(getTrustedOrigins, "getTrustedOrigins");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/create-context.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/create-context.mjs
 init_env();
 init_error();
 init_utils();
@@ -129875,7 +129877,7 @@ async function createTelemetry(options, context) {
 }
 __name(createTelemetry, "createTelemetry");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/create-context.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/create-context.mjs
 function estimateEntropy(str) {
   const unique2 = new Set(str).size;
   if (unique2 === 0) return 0;
@@ -130045,7 +130047,7 @@ async function createAuthContext(adapter, options, getDatabaseType) {
 }
 __name(createAuthContext, "createAuthContext");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/context/init.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/context/init.mjs
 init_error();
 var init = /* @__PURE__ */ __name(async (options) => {
   const adapter = await getAdapter(options);
@@ -130059,7 +130061,7 @@ var init = /* @__PURE__ */ __name(async (options) => {
   return ctx;
 }, "init");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/auth/base.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/auth/base.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -130097,7 +130099,7 @@ var createBetterAuth = /* @__PURE__ */ __name((options, initFn) => {
   };
 }, "createBetterAuth");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/auth/full.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/auth/full.mjs
 var betterAuth = /* @__PURE__ */ __name((options) => {
   return createBetterAuth(options, init);
 }, "betterAuth");
@@ -130106,16 +130108,16 @@ var betterAuth = /* @__PURE__ */ __name((options) => {
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/index.mjs
 init_env();
 init_error();
 init_utils();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/drizzle-adapter/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/drizzle-adapter/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/adapters/drizzle-adapter/drizzle-adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/adapters/drizzle-adapter/drizzle-adapter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
@@ -130401,11 +130403,11 @@ var drizzleAdapter = /* @__PURE__ */ __name((db, config4) => {
   };
 }, "drizzleAdapter");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/access/access.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/access/access.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -130451,19 +130453,19 @@ function createAccessControl(s2) {
 }
 __name(createAccessControl, "createAccessControl");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/access/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/access/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/client.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/client.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/admin.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/admin.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/access/statement.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/access/statement.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var defaultStatements = {
@@ -130508,11 +130510,11 @@ var userAc = defaultAc.newRole({
   session: []
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/access/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/access/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/plugin-helper.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/plugin-helper.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var getEndpointResponse = /* @__PURE__ */ __name(async (ctx) => {
@@ -130526,7 +130528,7 @@ var getEndpointResponse = /* @__PURE__ */ __name(async (ctx) => {
   return returned;
 }, "getEndpointResponse");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130554,15 +130556,15 @@ var ADMIN_ERROR_CODES = defineErrorCodes({
   INVALID_ROLE_TYPE: "Invalid role type"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/routes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/has-permission.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/has-permission.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/routes.mjs
 init_error();
 var adminMiddleware = createAuthMiddleware(async (ctx) => {
   const session2 = await getSessionFromCtx(ctx);
@@ -130635,22 +130637,22 @@ var userHasPermissionBodySchema = object({
   permissions: record(string2(), array(string2()))
 })]));
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/admin.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/admin.mjs
 init_error();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/admin/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/admin/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/anonymous/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/anonymous/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/anonymous/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/anonymous/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130664,42 +130666,42 @@ var ANONYMOUS_ERROR_CODES = defineErrorCodes({
   DELETE_ANONYMOUS_USER_DISABLED: "Deleting anonymous users is disabled"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/anonymous/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/anonymous/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/anonymous/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/anonymous/index.mjs
 init_utils();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/verify-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/verify-api-key.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/adapter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/rate-limit.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/rate-limit.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/verify-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/verify-api-key.mjs
 init_utils();
 var verifyApiKeyBodySchema = object({
   key: string2().meta({ description: "The key to verify" }),
   permissions: record(string2(), array(string2())).meta({ description: "The permissions to verify." }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/create-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/create-api-key.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130718,27 +130720,27 @@ var createApiKeyBodySchema = object({
   permissions: record(string2(), array(string2())).meta({ description: "Permissions of the Api Key." }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/delete-all-expired-api-keys.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/delete-all-expired-api-keys.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/delete-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/delete-api-key.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var deleteApiKeyBodySchema = object({ keyId: string2().meta({ description: "The id of the Api Key" }) });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/get-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/get-api-key.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
 var getApiKeyQuerySchema = object({ id: string2().meta({ description: "The id of the Api Key" }) });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/list-api-keys.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/list-api-keys.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/routes/update-api-key.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/routes/update-api-key.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130758,11 +130760,11 @@ var updateApiKeyBodySchema = object({
   permissions: record(string2(), array(string2())).meta({ description: "Update the permissions on the API Key. server-only." }).optional().nullable()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/client/parser.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/client/parser.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var SPECIAL_VALUES = {
@@ -130775,7 +130777,7 @@ var SPECIAL_VALUES = {
   "-infinity": Number.NEGATIVE_INFINITY
 };
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/api-key/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/api-key/index.mjs
 init_utils();
 var ERROR_CODES = defineErrorCodes({
   INVALID_METADATA_TYPE: "metadata must be an object or undefined",
@@ -130805,19 +130807,19 @@ var ERROR_CODES = defineErrorCodes({
   NAME_REQUIRED: "API Key name is required."
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/bearer/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/bearer/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/middleware-response.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/middleware-response.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/constants.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/constants.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var Providers = {
@@ -130833,7 +130835,7 @@ var siteVerifyMap = {
   [Providers.CAPTCHAFOX]: "https://api.captchafox.com/siteverify"
 };
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130847,31 +130849,31 @@ var INTERNAL_ERROR_CODES = defineErrorCodes({
   SERVICE_UNAVAILABLE: "CAPTCHA service unavailable"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/verify-handlers/captchafox.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/verify-handlers/captchafox.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/verify-handlers/cloudflare-turnstile.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/verify-handlers/cloudflare-turnstile.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/verify-handlers/google-recaptcha.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/verify-handlers/google-recaptcha.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/verify-handlers/h-captcha.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/verify-handlers/h-captcha.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/captcha/verify-handlers/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/captcha/verify-handlers/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/custom-session/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/custom-session/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var getSessionQuerySchema2 = optional(object({
@@ -130934,11 +130936,11 @@ var customSession = /* @__PURE__ */ __name((fn2, options, pluginOptions) => {
   };
 }, "customSession");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/device-authorization/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/device-authorization/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/device-authorization/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/device-authorization/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -130957,7 +130959,7 @@ var DEVICE_AUTHORIZATION_ERROR_CODES = defineErrorCodes({
   AUTHENTICATION_REQUIRED: "Authentication required"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/device-authorization/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/device-authorization/routes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var deviceCodeBodySchema = object({
@@ -131150,7 +131152,7 @@ var deviceDeny = createAuthEndpoint("/device/deny", {
   return ctx.json({ success: true });
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/device-authorization/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/device-authorization/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 object({
@@ -131166,7 +131168,7 @@ object({
   scope: string2().optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/device-authorization/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/device-authorization/index.mjs
 var timeStringSchema = custom((val) => {
   if (typeof val !== "string") return false;
   try {
@@ -131189,15 +131191,15 @@ var deviceAuthorizationOptionsSchema = object({
   schema: custom(() => true)
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/otp-token.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/otp-token.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var defaultKeyHasher2 = /* @__PURE__ */ __name(async (otp) => {
@@ -131211,7 +131213,7 @@ function splitAtLastColon(input) {
 }
 __name(splitAtLastColon, "splitAtLastColon");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/otp-token.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/otp-token.mjs
 async function storeOTP(ctx, opts, otp) {
   if (opts.storeOTP === "encrypted") return await symmetricEncrypt({
     key: ctx.context.secret,
@@ -131235,7 +131237,7 @@ async function verifyStoredOTP(ctx, opts, storedOtp, otp) {
 }
 __name(verifyStoredOTP, "verifyStoredOTP");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/routes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -131689,7 +131691,7 @@ var resetPasswordEmailOTP = /* @__PURE__ */ __name((opts) => createAuthEndpoint(
 }), "resetPasswordEmailOTP");
 var defaultOTPGenerator = /* @__PURE__ */ __name((options) => generateRandomString(options.otpLength ?? 6, "0-9"), "defaultOTPGenerator");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/email-otp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/email-otp/index.mjs
 var defaultOTPGenerator2 = /* @__PURE__ */ __name((options) => generateRandomString(options.otpLength ?? 6, "0-9"), "defaultOTPGenerator");
 var emailOTP = /* @__PURE__ */ __name((options) => {
   const opts = {
@@ -131785,47 +131787,47 @@ var emailOTP = /* @__PURE__ */ __name((options) => {
   };
 }, "emailOTP");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/auth0.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/auth0.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/gumroad.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/gumroad.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/hubspot.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/hubspot.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/keycloak.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/keycloak.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/line.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/line.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/microsoft-entra-id.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/microsoft-entra-id.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/okta.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/okta.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/patreon.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/patreon.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/slack.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/slack.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -131838,7 +131840,7 @@ var GENERIC_OAUTH_ERROR_CODES = defineErrorCodes({
   SESSION_REQUIRED: "Session is required"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/routes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -131865,42 +131867,42 @@ var OAuth2LinkAccountBodySchema = object({
   errorCallbackURL: string2().meta({ description: "The URL to redirect to if there is an error during the link process" }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/generic-oauth/providers/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/generic-oauth/providers/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/haveibeenpwned/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/haveibeenpwned/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
 var ERROR_CODES3 = defineErrorCodes({ PASSWORD_COMPROMISED: "The password you entered has been compromised. Please choose a different password." });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/adapter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/sign.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/sign.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/verify.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/verify.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/jwt/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/jwt/index.mjs
 init_error();
 var signJWTBodySchema = object({
   payload: record(string2(), any()),
@@ -131911,19 +131913,19 @@ var verifyJWTBodySchema = object({
   issuer: string2().optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/last-login-method/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/last-login-method/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/magic-link/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/magic-link/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/magic-link/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/magic-link/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/magic-link/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/magic-link/index.mjs
 var signInMagicLinkBodySchema = object({
   email: email2().meta({ description: "Email address to send the magic link" }),
   name: string2().meta({ description: 'User display name. Only used if the user is registering for the first time. Eg: "my-name"' }).optional(),
@@ -131938,23 +131940,23 @@ var magicLinkVerifyQuerySchema = object({
   newUserCallbackURL: string2().meta({ description: "URL to redirect after new user signup. Only used if the user is registering for the first time." }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/utils/prompt.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/utils/prompt.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/error.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/error.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/authorize.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/authorize.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 object({
@@ -131976,11 +131978,11 @@ object({
   updatedAt: date3()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oidc-provider/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oidc-provider/index.mjs
 var oAuthConsentBodySchema = object({
   accept: boolean2(),
   consent_code: string2().optional().nullish()
@@ -132018,15 +132020,15 @@ var registerOAuthApplicationBodySchema = object({
   software_statement: string2().meta({ description: "The software statement of the application." }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/mcp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/mcp/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/mcp/authorize.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/mcp/authorize.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/mcp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/mcp/index.mjs
 init_env();
 init_utils();
 var registerMcpClientBodySchema = object({
@@ -132062,7 +132064,7 @@ var registerMcpClientBodySchema = object({
 });
 var mcpOAuthTokenBodySchema = record(any(), any());
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/multi-session/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/multi-session/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -132211,26 +132213,26 @@ var multiSession = /* @__PURE__ */ __name((options) => {
   };
 }, "multiSession");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oauth-proxy/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oauth-proxy/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oauth-proxy/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oauth-proxy/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_env();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/oauth-proxy/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/oauth-proxy/index.mjs
 var oAuthProxyQuerySchema = object({
   callbackURL: string2().meta({ description: "The URL to redirect to after the proxy" }),
   cookies: string2().meta({ description: "The cookies to set after the proxy" })
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/one-tap/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/one-tap/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/boolean.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/boolean.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 function toBoolean2(value) {
@@ -132238,7 +132240,7 @@ function toBoolean2(value) {
 }
 __name(toBoolean2, "toBoolean");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/one-tap/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/one-tap/index.mjs
 var oneTapCallbackBodySchema = object({ idToken: string2().meta({ description: "Google ID token, which the client obtains from the One Tap API" }) });
 var oneTap = /* @__PURE__ */ __name((options) => ({
   id: "one-tap",
@@ -132323,39 +132325,39 @@ var oneTap = /* @__PURE__ */ __name((options) => ({
   options
 }), "oneTap");
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/one-time-token/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/one-time-token/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/one-time-token/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/one-time-token/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/one-time-token/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/one-time-token/index.mjs
 var verifyOneTimeTokenBodySchema = object({ token: string2().meta({ description: 'The token to verify. Eg: "some-token"' }) });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/open-api/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/open-api/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/open-api/generator.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/open-api/generator.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/open-api/logo.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/open-api/logo.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/adapter.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/adapter.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/organization.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/organization.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/access/statement.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/access/statement.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var defaultStatements2 = {
@@ -132427,15 +132429,15 @@ var memberAc = defaultAc2.newRole({
   ac: ["read"]
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/access/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/access/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/shim.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/shim.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/call.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/call.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var orgMiddleware = createAuthMiddleware(async () => {
@@ -132445,7 +132447,7 @@ var orgSessionMiddleware = createAuthMiddleware({ use: [sessionMiddleware] }, as
   return { session: ctx.context.session };
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -132508,15 +132510,15 @@ var ORGANIZATION_ERROR_CODES = defineErrorCodes({
   CANNOT_DELETE_A_PRE_DEFINED_ROLE: "Cannot delete a pre-defined role"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/has-permission.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/has-permission.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/permission.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/permission.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-access-control.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-access-control.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var DEFAULT_MAXIMUM_ROLES_PER_ORGANIZATION = Number.POSITIVE_INFINITY;
@@ -132530,7 +132532,7 @@ var listOrgRolesQuerySchema = object({ organizationId: string2().optional().meta
 var getOrgRoleQuerySchema = object({ organizationId: string2().optional().meta({ description: "The id of the organization to read a role for. If not provided, the user's active organization will be used." }) }).and(union([object({ roleName: string2().nonempty().meta({ description: "The name of the role to read" }) }), object({ roleId: string2().nonempty().meta({ description: "The id of the role to read" }) })])).optional();
 var roleNameOrIdSchema = union([object({ roleName: string2().nonempty().meta({ description: "The name of the role to update" }) }), object({ roleId: string2().nonempty().meta({ description: "The id of the role to update" }) })]);
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-invites.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-invites.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -132547,7 +132549,7 @@ var cancelInvitationBodySchema = object({ invitationId: string2().meta({ descrip
 var getInvitationQuerySchema = object({ id: string2().meta({ description: "The ID of the invitation to get" }) });
 var listInvitationQuerySchema = object({ organizationId: string2().meta({ description: "The ID of the organization to list invitations for" }).optional() }).optional();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-members.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-members.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -132573,7 +132575,7 @@ var getActiveMemberRoleQuerySchema = object({
   organizationSlug: string2().meta({ description: `The organization slug to list members for. If not provided, will default to the user's active organization. Eg: "organization-slug"` }).optional()
 }).optional();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-org.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-org.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var baseOrganizationSchema = object({
@@ -132602,11 +132604,11 @@ var setActiveOrganizationBodySchema = object({
   organizationSlug: string2().meta({ description: 'The organization slug to set as active. It can be null to unset the active organization if organizationId is not provided. Eg: "org-slug"' }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-team.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-team.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var roleSchema = string2();
@@ -132670,7 +132672,7 @@ var defaultRoles3 = [
 ];
 var defaultRolesSchema = union([_enum2(defaultRoles3), array(_enum2(defaultRoles3))]);
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/routes/crud-team.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/routes/crud-team.mjs
 var teamBaseSchema = object({
   name: string2().meta({ description: 'The name of the team. Eg: "my-team"' }),
   organizationId: string2().meta({ description: 'The organization ID which the team will be created in. Defaults to the active organization. Eg: "organization-id"' }).optional()
@@ -132691,7 +132693,7 @@ var removeTeamMemberBodySchema = object({
   userId: coerce_exports.string().meta({ description: "The user which should be removed from the team." })
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/organization.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/organization.mjs
 var createHasPermissionBodySchema = object({ organizationId: string2().optional() }).and(union([object({
   permission: record(string2(), array(string2())),
   permissions: _undefined3()
@@ -132700,15 +132702,15 @@ var createHasPermissionBodySchema = object({ organizationId: string2().optional(
   permissions: record(string2(), array(string2()))
 })]));
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/organization/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/organization/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/phone-number/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/phone-number/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/phone-number/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/phone-number/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -132727,7 +132729,7 @@ var PHONE_NUMBER_ERROR_CODES = defineErrorCodes({
   TOO_MANY_ATTEMPTS: "Too many attempts"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/phone-number/routes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/phone-number/routes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -132750,29 +132752,29 @@ var resetPasswordPhoneNumberBodySchema = object({
   newPassword: string2().meta({ description: `The new password. Eg: "new-and-secure-password"` })
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/phone-number/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/phone-number/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/siwe/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/siwe/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/utils/hashing.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/utils/hashing.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/siwe/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/siwe/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/siwe/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/siwe/index.mjs
 var getSiweNonceBodySchema = object({
   walletAddress: string2().regex(/^0[xX][a-fA-F0-9]{40}$/i).length(42),
   chainId: number2().int().positive().max(2147483647).optional().default(1)
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/error-code.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/error-code.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -132788,24 +132790,24 @@ var TWO_FACTOR_ERROR_CODES = defineErrorCodes({
   INVALID_TWO_FACTOR_COOKIE: "Invalid two factor cookie"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/constant.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/constant.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 var TRUST_DEVICE_COOKIE_MAX_AGE = 720 * 60 * 60;
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/backup-codes/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/backup-codes/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/verify-two-factor.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/verify-two-factor.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/backup-codes/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/backup-codes/index.mjs
 init_utils();
 var verifyBackupCodeBodySchema = object({
   code: string2().meta({ description: `A backup code to verify. Eg: "123456"` }),
@@ -132815,15 +132817,15 @@ var verifyBackupCodeBodySchema = object({
 var viewBackupCodesBodySchema = object({ userId: coerce_exports.string().meta({ description: `The user ID to view all backup codes. Eg: "user-id"` }) });
 var generateBackupCodesBodySchema = object({ password: string2().meta({ description: "The users password." }) });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/otp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/otp/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/utils.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/utils.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/otp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/otp/index.mjs
 init_error();
 var verifyOTPBodySchema = object({
   code: string2().meta({ description: 'The otp code to verify. Eg: "012345"' }),
@@ -132831,11 +132833,11 @@ var verifyOTPBodySchema = object({
 });
 var send2FaOTPBodySchema = object({ trustDevice: boolean2().optional().meta({ description: "If true, the device will be trusted for 30 days. It'll be refreshed on every sign in request within this time. Eg: true" }) }).optional();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/totp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/totp/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_error();
@@ -132848,7 +132850,7 @@ init_modules_watch_stub();
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/totp/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/totp/index.mjs
 var generateTOTPBodySchema = object({ secret: string2().meta({ description: "The secret to generate the TOTP code" }) });
 var getTOTPURIBodySchema = object({ password: string2().meta({ description: "User password" }) });
 var verifyTOTPBodySchema = object({
@@ -132856,7 +132858,7 @@ var verifyTOTPBodySchema = object({
   trustDevice: boolean2().meta({ description: "If true, the device will be trusted for 30 days. It'll be refreshed on every sign in request within this time. Eg: true" }).optional()
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/two-factor/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/two-factor/index.mjs
 init_error();
 var enableTwoFactorBodySchema = object({
   password: string2().meta({ description: "User password" }),
@@ -132864,7 +132866,7 @@ var enableTwoFactorBodySchema = object({
 });
 var disableTwoFactorBodySchema = object({ password: string2().meta({ description: "User password" }) });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/username/error-codes.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/username/error-codes.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 init_utils();
@@ -132879,15 +132881,15 @@ var USERNAME_ERROR_CODES = defineErrorCodes({
   INVALID_DISPLAY_USERNAME: "Display username is invalid"
 });
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/username/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/username/index.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/username/schema.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/username/schema.mjs
 init_checked_fetch();
 init_modules_watch_stub();
 
-// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_e48326d43a4c780aa5b98d5b1ff661e0/node_modules/better-auth/dist/plugins/username/index.mjs
+// ../../node_modules/.pnpm/better-auth@1.4.15_@sveltejs+kit@2.50.0_@opentelemetry+api@1.9.0_@sveltejs+vite-plugin-_0d22d484b71db0dcc5d17868064e97ff/node_modules/better-auth/dist/plugins/username/index.mjs
 init_error();
 var signInUsernameBodySchema = object({
   username: string2().meta({ description: "The username of the user" }),
@@ -133338,6 +133340,7 @@ appRouter.get("/stats", async (c2) => {
     300,
     () => appService.getAppStats()
   );
+  c2.header("Cache-Control", "public, max-age=60");
   return c2.json(result, 200);
 });
 

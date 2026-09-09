@@ -271,23 +271,23 @@
     </section>
 
     <!-- Featured destinations -->
-    <section class="px-6 pt-14 sm:px-10">
-      <div class="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 class="font-extrabold m-0 text-[30px] tracking-[-0.025em]">
-            Featured destinations
-          </h2>
-          <p class="mt-1.5 text-[15px] text-muted-foreground">
-            Dog-friendly towns for your next adventure or slow day out.
-          </p>
+    {#if featuredLocations.length > 0}
+      <section class="px-6 pt-14 sm:px-10">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold m-0 text-[30px] tracking-[-0.025em]">
+              Featured destinations
+            </h2>
+            <p class="mt-1.5 text-[15px] text-muted-foreground">
+              Dog-friendly towns for your next adventure or slow day out.
+            </p>
+          </div>
+          <a
+            href="/explore"
+            class="text-sm font-bold text-link no-underline hover:underline"
+            >View more →</a
+          >
         </div>
-        <a
-          href="/explore"
-          class="text-sm font-bold text-link no-underline hover:underline"
-          >View more →</a
-        >
-      </div>
-      {#if featuredLocations.length > 0}
         <div class="flex flex-col gap-2 mt-5">
           <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 h-96">
             {#each row1 as loc, i}
@@ -387,54 +387,56 @@
             {/each}
           </div>
         </div>
-      {/if}
-    </section>
+      </section>
+    {/if}
 
     <!-- Popular places -->
-    <section class="px-6 pt-14 sm:px-10">
-      <div class="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 class="font-extrabold m-0 text-[30px] tracking-[-0.025em]">
-            Popular places
-          </h2>
-          <p class="mt-1.5 text-[15px] text-muted-foreground">
-            Our most loved dog-friendly spots.
-          </p>
+    {#if popularPlaces.length > 0}
+      <section class="px-6 pt-14 sm:px-10">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="font-extrabold m-0 text-[30px] tracking-[-0.025em]">
+              Popular places
+            </h2>
+            <p class="mt-1.5 text-[15px] text-muted-foreground">
+              Our most loved dog-friendly spots.
+            </p>
+          </div>
+          <a
+            href="/explore?rating=3.5"
+            class="text-sm font-bold text-link no-underline hover:underline"
+            >View all →</a
+          >
         </div>
-        <a
-          href="/explore?rating=3.5"
-          class="text-sm font-bold text-link no-underline hover:underline"
-          >View all →</a
-        >
-      </div>
-      {#if popularPlaces.length > 0}
-        <div
-          class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
-        >
-          {#each popularPlaces as place}
-            <PlaceCard
-              id={place.id}
-              name={place.name}
-              slug={place.slug}
-              types={place.types}
-              rating={place.rating}
-              reviewCount={place.reviewsCount}
-              isVerified={place.isVerified}
-              countryCode={place.countryCode}
-              dogAmenities={place.dogAmenities}
-              imageId={place.imageId ?? undefined}
-              cityName={place.cityName}
-              regionName={place.regionName ?? ""}
-              locationPath={place.locationPath}
-              isSaved={place.isSaved}
-              memberFavourite={place.memberFavourite}
-              difficulty={place.difficulty}
-              {user}
-            />
-          {/each}
-        </div>
-      {/if}
-    </section>
+        {#if popularPlaces.length > 0}
+          <div
+            class="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"
+          >
+            {#each popularPlaces as place}
+              <PlaceCard
+                id={place.id}
+                name={place.name}
+                slug={place.slug}
+                types={place.types}
+                rating={place.rating}
+                reviewCount={place.reviewsCount}
+                isVerified={place.isVerified}
+                countryCode={place.countryCode}
+                dogAmenities={place.dogAmenities}
+                imageId={place.imageId ?? undefined}
+                cityName={place.cityName}
+                regionName={place.regionName ?? ""}
+                locationPath={place.locationPath}
+                isSaved={place.isSaved}
+                memberFavourite={place.memberFavourite}
+                difficulty={place.difficulty}
+                {user}
+              />
+            {/each}
+          </div>
+        {/if}
+      </section>
+    {/if}
 
     <!-- App CTA -->
     <section

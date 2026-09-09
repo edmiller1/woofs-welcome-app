@@ -17,6 +17,7 @@ locationRouter.get("/featured", async (c) => {
   const result = await getOrSetCache(redis, "featured-locations", 300, () =>
     locationService.getFeaturedLocations(8),
   );
+  c.header("Cache-Control", "public, max-age=60");
   return c.json(result, 200);
 });
 

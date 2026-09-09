@@ -14,5 +14,6 @@ appRouter.get("/stats", async (c) => {
     appService.getAppStats(),
   );
 
+  c.header("Cache-Control", "public, max-age=60");
   return c.json(result, 200);
 });
